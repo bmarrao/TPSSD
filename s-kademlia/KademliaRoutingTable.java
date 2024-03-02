@@ -1,3 +1,4 @@
-public class KademliaRoutingTable {
+public class KademliaRoutingTable
+{
     // Implement the routing table logic here
 }
