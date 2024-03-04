@@ -13,7 +13,7 @@ public class KademliaNode
 
     public KademliaNode(String ipAddress, int port)
     {
-        this.nodeId = generateNodeIdFromIPAddress(ipAddress);
+
     }
 
 
