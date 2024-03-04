@@ -26,8 +26,31 @@ public class KademliaRoutingTable
         {
             //Fazer get do kbucket da ordem da distancia
             Map<BigInteger,KademliaNode> kbucket = rt.get(order);
+            // Ver se esse ja no ja se encontra no kbucket
+            if (kbucket.containsKey(node.nodeId))
+            {
+                //Fazer get no kbucket do no
+                KademliaNode newNode = kbucket.get(node.nodeId);
+                //Atualizando o tempo do no
+                newNode.time = LocalDateTime.now();
+            }
+            else
+            {
+                if (kbucket.length == k)
+                {
 
-
+                }
+                else
+                {
+                    kbucket.put(node.nodeId, node);
+                }
+            }
+        }
+        else
+        {
+            Map<BigInteger,KademliaNode> kbucket = new HashMap<BigInteger, KademliaNode>();
+            kbucket.put(nodeId, node);
+            this.rt.put(order,kbucket);
         }
 
 
