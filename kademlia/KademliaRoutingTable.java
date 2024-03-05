@@ -1,6 +1,8 @@
 import java.time.LocalDateTime;
 import java.lang.Math;
 import java.util.ArrayList;
+import java.util.Collection;
+import java.util.HashMap;
 import java.util.Map;
 import java.math.BigInteger;
 public class KademliaRoutingTable
@@ -36,10 +38,27 @@ public class KademliaRoutingTable
             }
             else
             {
-                if (kbucket.length == k)
+                // Testa se já tem K membros no kbucket
+                if (kbucket.size() == k)
                 {
+                    //KademliaNode testPing = leastRecentlySeen(kbucket);
+                    //boolean notActive =  ping(testPing)
+                    // Ping least recently active node
+                    /*
+                    if (!notActive)
+                    {
+                        kbucket.remove(testPing.nodeID);
+                        kbucket.put(node.nodeId, node);
+                    }
+                    else
+                    {
+                        testPing.setTime();
+                    }
+
+                     */
 
                 }
+                //Caso contrario adiciona no kbucket
                 else
                 {
                     kbucket.put(node.nodeId, node);
@@ -67,6 +86,25 @@ public class KademliaRoutingTable
             }
         }
         return i;
+    }
+
+    private KademliaNode leastRecentlySeen(Map<BigInteger,KademliaNode> kbucket)
+    {
+
+        Collection<KademliaNode> nodes = kbucket.values();
+        KademliaNode menor = null;
+        LocalDateTime dateTime = LocalDateTime.of(2025, 3, 5, 12, 30);
+
+        for (KademliaNode node : nodes)
+        {
+            if (dateTime.isAfter(node.time))
+            {
+                menor = node;
+                dateTime = node.time;
+            }
+        }
+
+        return menor;
     }
 
     // Implement the routing table logic here
