@@ -1,9 +1,6 @@
 import java.time.LocalDateTime;
 import java.lang.Math;
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.HashMap;
-import java.util.Map;
+import java.util.*;
 import java.math.BigInteger;
 public class KademliaRoutingTable
 {
@@ -15,6 +12,7 @@ public class KademliaRoutingTable
     {
         this.k = k;
         this.nodeId = nodeId;
+        this.rt = new HashMap<Integer, Map<BigInteger, KademliaNode>>();
     }
 
     public void newActivity(KademliaNode node)
@@ -103,9 +101,9 @@ public class KademliaRoutingTable
                 dateTime = node.time;
             }
         }
-
         return menor;
     }
+
 
     // Implement the routing table logic here
 }
