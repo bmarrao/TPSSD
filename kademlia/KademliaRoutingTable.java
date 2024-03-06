@@ -14,22 +14,25 @@ class Node
         left = right = null;
         this.kc = 0;
     }
-    public void createKBucket(String nodeId, KademliaNode node)
+    public void createKBucket()
     {
         this.kbucket = new HashMap<String, KademliaNode>();
-        this.kbucket.put(nodeId, node);
         this.kc = 1;
     }
+
 }
 
 class BinaryTree
 {
     Node root;
     String myNodeId;
+
+    int n_kbuckets;
     public BinaryTree(String nodeId)
     {
         this.root = new Node();
-        this.root.createKBucket(nodeId, null);
+        this.root.createKBucket();
+        // Colocar o proprio node this.insert(OWN NODE)
         this.myNodeId = nodeId;
 
     }
@@ -38,43 +41,87 @@ class BinaryTree
     {
         Node curr = root;
         String otherId = node.nodeId;
-        for (int i = 0 ; i < 160; i++)
+        insertRec(node, curr, k, 0, 'e');
+    }
+    public void insertRec(KademliaNode node, Node curr, int k, int i, char prevDir )
+    {
+        if (i < 160)
         {
             if (curr.kc >= 1)
             {
-                break;
-            }
-            else
-            {
-                if (myNodeId.charAt(i) == otherId.charAt(0))
+                if (curr.kc == k)
                 {
-                    curr = curr.left;
+                    if (prevDir =='e')
+                    {
+                        curr.kc = 0;
+                        curr.left = new Node();
+                        curr.left.createKBucket();
+                        curr.right = new Node();
+                        curr.right.createKBucket();
+                        this.addToBuckets(curr.left, curr.right, curr.kbucket, node);
+                        //Creates new kbuckets
+                    }
+                    else
+                    {
+                        KademliaNode testPing = leastRecentlySeen(curr.kbucket);
+                        /*
+                        //boolean notActive =  ping(testPing)
+                        // Ping least recently active node
+                        if (!notActive)
+                        {
+                            kbucket.remove(testPing.nodeID);
+                            kbucket.put(node.nodeId, node);
+                        }
+                        else
+                        {
+                            testPing.setTime();
+                        }
+
+                         */
+                    }
                 }
                 else
                 {
-                    curr = curr.right;
+                    curr.kc++;
+                    curr.kbucket.put(node.nodeId,node);
+                }
+            }
+            else
+            {
+                if (myNodeId.charAt(i) == node.nodeId.charAt(0))
+                {
+                    insertRec(node, curr.left,k,i++,'e');
+                }
+                else
+                {
+                    insertRec(node, curr.right,k,i++,'d');
                 }
             }
         }
     }
 
-    /*
-    private Node insertRec(Node root, int data) {
-        if (root == null) {
-            root = new Node(data);
-            return root;
-        }
 
-        if (data < root.data) {
-            root.left = insertRec(root.left, data);
-        } else if (data > root.data) {
-            root.right = insertRec(root.right, data);
-        }
-
-        return root;
+    private void addToBucket(Node left, Node right, Map<String,KademliaNode> kbucket,KademliaNode node)
+    {
+        //Adds the previous kbuckets to the newly created ones, and also the new one 
     }
-    */
-    
+    private KademliaNode leastRecentlySeen(Map<String,KademliaNode> kbucket)
+    {
+
+        Collection<KademliaNode> nodes = kbucket.values();
+        KademliaNode menor = null;
+        LocalDateTime dateTime = LocalDateTime.of(2025, 3, 5, 12, 30);
+
+        for (KademliaNode node : nodes)
+        {
+            if (dateTime.isAfter(node.time))
+            {
+                menor = node;
+                dateTime = node.time;
+            }
+        }
+        return menor;
+    }
 }
 
 
