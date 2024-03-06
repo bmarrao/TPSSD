@@ -2,11 +2,72 @@ import java.time.LocalDateTime;
 import java.lang.Math;
 import java.util.*;
 import java.math.BigInteger;
+
+class Node
+{
+    Map<String,KademliaNode> kbucket;
+    int kc;
+    Node left, right;
+
+    public Node()
+    {
+        this.kbucket = new HashMap<String, KademliaNode>();
+        left = right = null;
+        this.kc = 0;
+    }
+}
+
+class BinaryTree {
+    Node root;
+
+    public BinaryTree()
+    {
+        this.root = null;
+    }
+
+    public void insert(int data)
+    {
+        //root = insertRec(root, data);
+    }
+
+    /*
+    private Node insertRec(Node root, int data) {
+        if (root == null) {
+            root = new Node(data);
+            return root;
+        }
+
+        if (data < root.data) {
+            root.left = insertRec(root.left, data);
+        } else if (data > root.data) {
+            root.right = insertRec(root.right, data);
+        }
+
+        return root;
+    }
+    */
+    
+}
+
+
+public class KademliaRoutingTable {
+    private String nodeId;
+    private int k;
+    private BinaryTree bt;
+
+    public KademliaRoutingTable(int k, String nodeId) {
+        this.k = k;
+        this.nodeId = nodeId;
+        this.bt = new BinaryTree();
+    }
+}
+/*
+
 public class KademliaRoutingTable
 {
     private BigInteger nodeId;
     private int k;
-    private Map<Integer, Map<BigInteger,KademliaNode>> rt;
+    private Map<Integer, Map<BigInteger,KademliaNode>> BinaryTree;
 
     public KademliaRoutingTable(int k , BigInteger nodeId)
     {
@@ -42,7 +103,6 @@ public class KademliaRoutingTable
                     //KademliaNode testPing = leastRecentlySeen(kbucket);
                     //boolean notActive =  ping(testPing)
                     // Ping least recently active node
-                    /*
                     if (!notActive)
                     {
                         kbucket.remove(testPing.nodeID);
@@ -53,7 +113,6 @@ public class KademliaRoutingTable
                         testPing.setTime();
                     }
 
-                     */
 
                 }
                 //Caso contrario adiciona no kbucket
@@ -108,3 +167,4 @@ public class KademliaRoutingTable
     // Implement the routing table logic here
 }
 
+*/
