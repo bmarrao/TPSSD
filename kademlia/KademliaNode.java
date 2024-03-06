@@ -5,7 +5,7 @@ public class KademliaNode
 {
     public String ipAdress ;
 
-    public BigInteger nodeId;
+    public String nodeId;
     public int port;
     public LocalDateTime time;
 

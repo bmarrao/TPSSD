@@ -5,29 +5,57 @@ import java.math.BigInteger;
 
 class Node
 {
-    Map<String,KademliaNode> kbucket;
-    int kc;
-    Node left, right;
+    public Map<String,KademliaNode> kbucket;
+    public int kc;
+    public Node left, right;
 
     public Node()
     {
-        this.kbucket = new HashMap<String, KademliaNode>();
         left = right = null;
         this.kc = 0;
     }
+    public void createKBucket(String nodeId, KademliaNode node)
+    {
+        this.kbucket = new HashMap<String, KademliaNode>();
+        this.kbucket.put(nodeId, node);
+        this.kc = 1;
+    }
 }
 
-class BinaryTree {
+class BinaryTree
+{
     Node root;
-
-    public BinaryTree()
+    String myNodeId;
+    public BinaryTree(String nodeId)
     {
-        this.root = null;
+        this.root = new Node();
+        this.root.createKBucket(nodeId, null);
+        this.myNodeId = nodeId;
+
     }
 
-    public void insert(int data)
+    public void insert(KademliaNode node, int k )
     {
-        //root = insertRec(root, data);
+        Node curr = root;
+        String otherId = node.nodeId;
+        for (int i = 0 ; i < 160; i++)
+        {
+            if (curr.kc >= 1)
+            {
+                break;
+            }
+            else
+            {
+                if (myNodeId.charAt(i) == otherId.charAt(0))
+                {
+                    curr = curr.left;
+                }
+                else
+                {
+                    curr = curr.right;
+                }
+            }
+        }
     }
 
     /*
@@ -50,7 +78,8 @@ class BinaryTree {
 }
 
 
-public class KademliaRoutingTable {
+public class KademliaRoutingTable
+{
     private String nodeId;
     private int k;
     private BinaryTree bt;
@@ -58,7 +87,7 @@ public class KademliaRoutingTable {
     public KademliaRoutingTable(int k, String nodeId) {
         this.k = k;
         this.nodeId = nodeId;
-        this.bt = new BinaryTree();
+        this.bt = new BinaryTree(nodeId);
     }
 }
 /*
