@@ -145,6 +145,57 @@ class BinaryTree
 
          */
     }
+
+    private KademliaNode findClosestNode(String nodeId)
+    {
+        findClosestNodeRec(this.root,nodeId, 0);
+    }
+
+    private KademliaNode findClosestNodeRec(Node curr, String nodeId, int i)
+    {
+        if (i < 160)
+        {
+            if (curr.kc >= 1)
+            {
+                return searchMapClosest(curr.kbucket, nodeId);
+            }
+            else
+            {
+                if (nodeId.charAt(i) == this.myNodeId.charAt(i))
+                {
+                    findClosestNodeRec(curr.left,nodeId, i++);
+
+                }
+                else
+                {
+                    findClosestNodeRec(curr.right,nodeId, i++);
+                }
+            }
+        }
+    }
+
+
+    private KademliaNode searchMapClosest(Map<String,KademliaNode> kbucket,String nodeId)
+    {
+        int distance = -1;
+        KademliaNode node;
+        for (KademliaNode bnode : kbucket.values())
+        {
+            int new_distance = calculateDistance(nodeId,bnode.nodeId);
+            if (new_distance< distance)
+            {
+                distance = new_distance;
+                node = bnode;
+            }
+        }
+        return node;
+
+    }
+
+    private int calculateDistance (String node1, String node2)
+    {
+        return 0;
+    }
     private KademliaNode leastRecentlySeen(Map<String,KademliaNode> kbucket)
     {
 
