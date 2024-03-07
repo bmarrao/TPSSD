@@ -27,29 +27,30 @@ class BinaryTree
     Node root;
     String myNodeId;
 
-    int n_kbuckets;
-    public BinaryTree(String nodeId)
+    int k;
+    public BinaryTree(String nodeId, int k )
     {
         this.root = new Node();
         this.root.createKBucket();
         // Colocar o proprio node this.insert(OWN NODE)
         this.myNodeId = nodeId;
+        this.k = k;
 
     }
 
-    public void insert(KademliaNode node, int k )
+    public void insert(KademliaNode node)
     {
         Node curr = root;
         String otherId = node.nodeId;
-        insertRec(node, curr, k, 0, 'e');
+        insertRec(node, curr,0, 'e');
     }
-    public void insertRec(KademliaNode node, Node curr, int k, int i, char prevDir )
+    public void insertRec(KademliaNode node, Node curr,int i, char prevDir )
     {
         if (i < 160)
         {
             if (curr.kc >= 1)
             {
-                if (curr.kc == k)
+                if (curr.kc == this.k)
                 {
                     if (prevDir =='e')
                     {
@@ -58,26 +59,13 @@ class BinaryTree
                         curr.left.createKBucket();
                         curr.right = new Node();
                         curr.right.createKBucket();
-                        this.addToBuckets(curr.left, curr.right, curr.kbucket, node);
+                        this.addToBuckets(curr.left, curr.right, curr.kbucket, node,i++);
+                        curr.kbucket = null;
                         //Creates new kbuckets
                     }
                     else
                     {
-                        KademliaNode testPing = leastRecentlySeen(curr.kbucket);
-                        /*
-                        //boolean notActive =  ping(testPing)
-                        // Ping least recently active node
-                        if (!notActive)
-                        {
-                            kbucket.remove(testPing.nodeID);
-                            kbucket.put(node.nodeId, node);
-                        }
-                        else
-                        {
-                            testPing.setTime();
-                        }
-
-                         */
+                        testLeastRecentlySeen(curr.kbucket, node);
                     }
                 }
                 else
@@ -90,20 +78,72 @@ class BinaryTree
             {
                 if (myNodeId.charAt(i) == node.nodeId.charAt(0))
                 {
-                    insertRec(node, curr.left,k,i++,'e');
+                    insertRec(node, curr.left,i++,'e');
                 }
                 else
                 {
-                    insertRec(node, curr.right,k,i++,'d');
+                    insertRec(node, curr.right,i++,'d');
                 }
             }
         }
     }
 
 
-    private void addToBucket(Node left, Node right, Map<String,KademliaNode> kbucket,KademliaNode node)
+    private void addToBuckets(Node left, Node right, Map<String,KademliaNode> kbucket,KademliaNode node, int i )
     {
-        //Adds the previous kbuckets to the newly created ones, and also the new one 
+        int count_right = 0;
+        for (KademliaNode BNode: kbucket.values())
+        {
+            if(BNode.nodeId.charAt(i) == this.myNodeId.charAt(i))
+            {
+                left.kbucket.put(BNode.nodeId, BNode);
+            }
+            else
+            {
+                right.kbucket.put(BNode.nodeId, BNode);
+                count_right++;
+            }
+        }
+        if (count_right == this.k)
+        {
+            testLeastRecentlySeen(right.kbucket,node);
+        }
+        else if (count_right == 0)
+        {
+            testLeastRecentlySeen(left.kbucket, node);
+
+        }
+        else
+        {
+            if(node.nodeId.charAt(i) == this.myNodeId.charAt(i))
+            {
+                left.kbucket.put(node.nodeId, node);
+            }
+            else
+            {
+                right.kbucket.put(node.nodeId, node);
+            }
+        }
+        //Adds the previous kbuckets to the newly created ones, and also the new one
+    }
+
+    private void testLeastRecentlySeen(Map<String,KademliaNode> kbucket, KademliaNode node)
+    {
+        KademliaNode testPing = leastRecentlySeen(kbucket);
+        /*
+        //boolean notActive =  ping(testPing)
+        // Ping least recently active node
+        if (!notActive)
+        {
+            kbucket.remove(testPing.nodeID);
+            kbucket.put(node.nodeId, node);
+        }
+        else
+        {
+            testPing.setTime();
+        }
+
+         */
     }
     private KademliaNode leastRecentlySeen(Map<String,KademliaNode> kbucket)
     {
@@ -131,10 +171,11 @@ public class KademliaRoutingTable
     private int k;
     private BinaryTree bt;
 
-    public KademliaRoutingTable(int k, String nodeId) {
+    public KademliaRoutingTable(int k, String nodeId)
+    {
         this.k = k;
         this.nodeId = nodeId;
-        this.bt = new BinaryTree(nodeId);
+        this.bt = new BinaryTree(nodeId,k);
     }
 }
 /*
