@@ -17,5 +17,11 @@ public class KademliaNode
     }
 
 
+
+    private String generateNodeIdFromIPAddress(String ipAddress2) {
+        return "";
+    }
+
+
     // Constructor, getters, setters, etc.
 }

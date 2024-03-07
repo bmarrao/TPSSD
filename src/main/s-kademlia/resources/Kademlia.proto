@@ -1,0 +1,71 @@
+syntax = "proto3";
+
+option java_package = "io.grpc.kademlia";
+
+service Kademlia {
+  // probe a node to see if it is online
+  rpc pingRpc(Ping) returns (Pong);
+  
+  // store a [key, value] pair for later retrieval
+  rpc store(StoreRequest) returns (StoreResponse);
+
+  // 160-bit key as an argument, returns (IP address, UDP port, Node ID) for each k closest nodes to target id
+  rpc findNode(FindNodeRequest) returns (FindNodeResponse);
+  
+  // similar to findNode + if RPC recipient received a STORE for the given key then it returns the stored value
+  rpc findValue(FindValueRequest) returns (FindValueResponse);
+
+}
+
+message Node {
+  bytes id = 1;
+  bytes ip = 2;
+  uint32 port = 3;
+}
+
+message Ping {
+  bytes id_sender = 1;
+}
+
+message Pong {
+  bytes id = 1;
+}
+
+
+message StoreRequest {
+  bytes id = 1;
+  bytes key = 2;
+  bytes val = 3;
+  uint32 ip = 4;
+  uint32 port = 5;
+}
+
+message StoreResponse {
+  bool stored = 1;
+}
+
+message FindNodeRequest {
+  bytes id = 1;
+  bytes ip = 2;
+  uint32 port = 3;
+  bytes key = 4;
+}
+
+message FindNodeResponse {
+  bytes id = 1;
+  repeated Node nodes = 2;
+}
+
+message FindValueRequest {
+  bytes id = 1;
+  bytes ip = 2;
+  uint32 port = 3;
+  bytes key = 4;
+}
+
+message FindValueResponse {
+  bytes id = 1;
+  bytes val = 2;
+  repeated Node nodes = 3;
+}
+
