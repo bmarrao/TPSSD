@@ -1,3 +1,4 @@
+import java.math.BigInteger;
 import java.time.LocalDateTime;
 import java.util.*;
 
@@ -57,7 +58,7 @@ class KademliaRoutingTable
     // Função recursiva
     public void insertRec(KademliaNode node, Node curr,int i, char prevDir )
     {
-        if (i >= 0)
+        if (i < 160)
         {
             // Testa se tem um kbucket no node curr
             if (curr.kc >= 1)
@@ -77,7 +78,7 @@ class KademliaRoutingTable
                         curr.right = new Node();
                         curr.right.createKBucket();
                         // Agora vamos popular os novos buckets que criamos com os nos que estavam no anterios e adicionar o novo
-                        this.addToBuckets(curr.left, curr.right, curr.kbucket, node,i--);
+                        this.addToBuckets(curr.left, curr.right, curr.kbucket, node,i++);
                         // Depois disso marcamos o kbucket do no atual como null
                         curr.kbucket = null;
                     }
@@ -98,11 +99,11 @@ class KademliaRoutingTable
                 // Testa se o no
                 if (myNodeId.charAt(i) == node.nodeId.charAt(0))
                 {
-                    insertRec(node, curr.left,i--,'d');
+                    insertRec(node, curr.left,i++,'d');
                 }
                 else
                 {
-                    insertRec(node, curr.right,i--,'e');
+                    insertRec(node, curr.right,i++,'e');
                 }
             }
         }
@@ -198,7 +199,7 @@ class KademliaRoutingTable
     //
     private KademliaNode findClosestNodeRec(Node curr, String nodeId, int i)
     {
-        if (i >= 0)
+        if (i < 160)
         {
             // Testa se tem um kbucket
             if (curr.kc >= 1)
@@ -211,12 +212,12 @@ class KademliaRoutingTable
                 // Caso contrario continua percorrendo a arvore e chamando a função recursiva
                 if (nodeId.charAt(i) == this.myNodeId.charAt(i))
                 {
-                    return findClosestNodeRec(curr.right,nodeId, i--);
+                    return findClosestNodeRec(curr.right,nodeId, i++);
 
                 }
                 else
                 {
-                    return findClosestNodeRec(curr.left,nodeId, i--);
+                    return findClosestNodeRec(curr.left,nodeId, i++);
                 }
             }
         }
@@ -228,29 +229,38 @@ class KademliaRoutingTable
     private KademliaNode searchMapClosest(Map<String,KademliaNode> kbucket,String nodeId)
     {
         // Iniciamos a distancia por 1
-        int distance = -1;
+        BigInteger distance = new BigInteger("-1");
         // Iniciamos uma variavel para guardar o no mais perto para retorrmos
         KademliaNode node = null;
         // Percorremos a lista procurando a distancia mais perto
         for (KademliaNode bnode : kbucket.values())
         {
             // Calcula a distancia relativamente ao no 'bnode'
-            int new_distance = calculateDistance(nodeId,bnode.nodeId);
             // Caso seja menor guardamos como o node mais perto e a menor distancia
-            if (new_distance< distance)
-            {
-                distance = new_distance;
+            BigInteger newDistance = calculateDistance(nodeId, bnode.nodeId);
+            // Caso seja menor guardamos como o node mais perto e a menor distancia
+            if (newDistance.compareTo(distance) < 0) {
+                distance = newDistance;
                 node = bnode;
             }
+
         }
         return node;
 
     }
 
     // Função que calcula a distancia de um no
-    private int calculateDistance (String node1, String node2)
+    private BigInteger calculateDistance (String node1, String node2)
     {
-        return 0;
+        BigInteger distance = new BigInteger("0");
+        for (int i = 0; i <= 159; i++)
+        {
+            if (node1.charAt(i) != node2.charAt(i))
+            {
+                distance = distance.add(BigInteger.valueOf((long) Math.pow(2, 160 - i)));
+            }
+        }
+        return distance;
     }
     // Função que calcula o node visto pela ultima vez online em um kbucket
     private KademliaNode leastRecentlySeen(Map<String,KademliaNode> kbucket)
