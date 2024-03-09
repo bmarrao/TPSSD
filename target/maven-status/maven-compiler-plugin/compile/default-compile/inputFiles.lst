@@ -1,0 +1,9 @@
+/home/brenin/TPSSD/src/main/java/kademlia/server/KademliaImpl.java
+/home/brenin/TPSSD/target/generated-sources/protobuf/java/kademlia/PingRequestOrBuilder.java
+/home/brenin/TPSSD/target/generated-sources/protobuf/java/kademlia/KademliaOuterClass.java
+/home/brenin/TPSSD/target/generated-sources/protobuf/java/kademlia/PingRequest.java
+/home/brenin/TPSSD/src/main/java/kademlia/server/KademliaServer.java
+/home/brenin/TPSSD/target/generated-sources/protobuf/java/kademlia/PingResponseOrBuilder.java
+/home/brenin/TPSSD/src/main/java/kademlia/client/KademliaClient.java
+/home/brenin/TPSSD/target/generated-sources/protobuf/grpc-java/kademlia/KademliaGrpc.java
+/home/brenin/TPSSD/target/generated-sources/protobuf/java/kademlia/PingResponse.java

@@ -1,0 +1,24 @@
+syntax = "proto3";
+
+option java_multiple_files =  true;
+
+package kademlia;
+
+message PingRequest 
+{
+  string myNodeId = 1;
+}
+
+message PingResponse 
+{
+  string result = 1;
+}
+
+
+
+service Kademlia {
+
+  // Unary
+  rpc ping(PingRequest) returns (PingResponse);
+
+}
