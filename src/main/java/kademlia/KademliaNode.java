@@ -1,10 +1,10 @@
+package kademlia;
 import java.math.BigInteger;
 import java.time.LocalDateTime;
 
 public class KademliaNode
 {
     public String ipAdress ;
-
     public String nodeId;
     public int port;
     public LocalDateTime time;

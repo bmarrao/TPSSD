@@ -1,7 +1,8 @@
+package kademlia;
 import java.math.BigInteger;
 import java.time.LocalDateTime;
 import java.util.*;
-
+import
 
 // Classe do no da arvore
 class Node
@@ -28,7 +29,7 @@ class Node
 
 }
 
-class KademliaRoutingTable
+public class KademliaRoutingTable
 {
     // Raiz da arvore
     Node root;
