@@ -16,6 +16,7 @@ public class KademliaNode
         this.ipAdress = ipAdress;
         // Create nodeID this.nodeId= nodeId;
         this.port = port;
+        this.nodeId = nodeId;
         this.time = LocalDateTime.now();
     }
 

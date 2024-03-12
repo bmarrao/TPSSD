@@ -66,7 +66,7 @@ public class KademliaRoutingTable
             if (curr.kc >= 1)
             {
                 // Testa se o node curr esta na capacidade maxima
-                if (curr.kc == this.k)
+                if (curr.kbucket.size() == this.k)
                 {
                     // Testa se ele vem da direção que tem uma distancia mais perto do no
                     if (prevDir =='d')
@@ -285,9 +285,47 @@ public class KademliaRoutingTable
         return menor;
     }
 
+    public void printTree()
+    {
+        printTreeRec(this.root,0);
+    }
+
+    private static void printTreeRec(TreeNode node, int depth)
+    {
+        if (node == null) {
+            return;
+        }
+
+        // Adjust the indentation based on the depth
+        for (int i = 0; i < depth; i++) {
+            System.out.print("  ");
+        }
+        if (node.kc >= 1)
+        {
+            System.out.println("Node with kbucket: ");
+            for (Map.Entry<String, KademliaNode> entry : node.kbucket.entrySet()) {
+                System.out.print("Key = " + new BigInteger(entry.getKey(), 2) +
+                        ", Value = " + entry.getValue());
+            }
+            System.out.println("");
+        }
+
+
+        // Recursively print left and right subtrees
+        printTreeRec(node.left, depth + 1);
+        printTreeRec(node.right, depth + 1);
+    }
     public static void main(String[] args)
     {
-        //KademliaRoutingTable  krt = KademliaRoutingTable("000000000")
+        Kademlia kd = new Kademlia();
+        KademliaRoutingTable  krt = new KademliaRoutingTable(kd.generateNodeId(),5);
+        System.out.println(kd.generateNodeId());
+        for (int i  = 0 ; i < 10; i++)
+        {
+            krt.insert(new KademliaNode("localhost",kd.generateNodeId(),5000));
+            krt.printTree();
+        }
+        krt.printTree();
     }
 }
 
