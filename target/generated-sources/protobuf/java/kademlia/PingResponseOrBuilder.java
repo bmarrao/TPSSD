@@ -8,12 +8,7 @@ public interface PingResponseOrBuilder extends
     com.google.protobuf.MessageOrBuilder {
 
   /**
-   * <code>string result = 1;</code>
+   * <code>bool response = 1;</code>
    */
-  java.lang.String getResult();
-  /**
-   * <code>string result = 1;</code>
-   */
-  com.google.protobuf.ByteString
-      getResultBytes();
+  boolean getResponse();
 }

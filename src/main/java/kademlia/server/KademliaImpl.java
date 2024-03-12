@@ -4,6 +4,7 @@ import kademlia.KademliaGrpc;
 import kademlia.PingRequest;
 import kademlia.PingResponse;
 
+
 public class KademliaImpl extends KademliaGrpc.KademliaImplBase {
 
     @Override
@@ -13,11 +14,9 @@ public class KademliaImpl extends KademliaGrpc.KademliaImplBase {
         String sender = request.getMyNodeId();
 
         // Atualizar o horario da ultima vez online do sender
-        String resultMsg = "I'm online";
-
         PingResponse pingResponse = PingResponse
                 .newBuilder()
-                .setResult(resultMsg)
+                .setResponse(true)
                 .build();
 
         // Send the response to the client.
@@ -25,8 +24,6 @@ public class KademliaImpl extends KademliaGrpc.KademliaImplBase {
 
         // Notifies the customer that the call is completed.
         responseObserver.onCompleted();
-        System.out.println(resultMsg);
-
     }
 
     /*
@@ -71,7 +68,8 @@ public class KademliaImpl extends KademliaGrpc.KademliaImplBase {
         responseObserver.onCompleted();
     }
 
-
-
      */
+
 }
+
+

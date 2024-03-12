@@ -10,7 +10,7 @@ public class KademliaClient
 {
 
     //TODO: Initiate class , rt , create random operations requests
-    /*
+
     public static void main(String[] args)
     {
 
@@ -28,9 +28,8 @@ public class KademliaClient
                 .build();
 
         PingResponse pingResponse = stub.ping(pingRequest);
-        System.out.println("Response for the first call: " + pingResponse.getResult());
+        System.out.println("Response for the first call: " + pingResponse.getResponse());
 
     }
 
-     */
 }

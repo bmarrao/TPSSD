@@ -2,20 +2,20 @@ package kademlia;
 import java.math.BigInteger;
 import java.time.LocalDateTime;
 import java.util.*;
-import
+
 
 // Classe do no da arvore
-class Node
+class TreeNode
 {
     //Variavel que guarda o kbucket caso exista , caso contrario tera o valor de null
     public Map<String,KademliaNode> kbucket;
     //Variavel que diz se o no tem um kbucket, caso o valor seja zero não tem kbucket , caso contrario tem
     public int kc;
     //Continuação da arvore 
-    public Node left, right;
+    public TreeNode left, right;
 
     // Inicialização da classe
-    public Node()
+    public TreeNode()
     {
         left = right = null;
         this.kc = 0;
@@ -31,8 +31,9 @@ class Node
 
 public class KademliaRoutingTable
 {
+    public KademliaProtocol protocol;
     // Raiz da arvore
-    Node root;
+    TreeNode root;
     // Id do node ao qual pertence a arvore
     String myNodeId;
     // Tamanho dos buckets
@@ -40,24 +41,24 @@ public class KademliaRoutingTable
     //Inicialização da classe
     public KademliaRoutingTable(String nodeId, int k )
     {
-        this.root = new Node();
+        this.root = new TreeNode();
         this.root.createKBucket();
         // Colocar o proprio node this.insert(OWN NODE)
         this.myNodeId = nodeId;
         this.k = k;
-
+        this.protocol = new KademliaProtocol();
     }
 
     //  Função que insere um no na arvore
     public void insert(KademliaNode node)
     {
-        Node curr = root;
+        TreeNode curr = root;
         // Função recursiva que ira percorrer a arvore
         insertRec(node, curr,159, 'd');
     }
     
     // Função recursiva
-    public void insertRec(KademliaNode node, Node curr,int i, char prevDir )
+    public void insertRec(KademliaNode node, TreeNode curr,int i, char prevDir )
     {
         if (i < 160)
         {
@@ -74,9 +75,9 @@ public class KademliaRoutingTable
                         //Marcamos o no atual como não tendo kbucket
                         curr.kc = 0;
                         // Criamos um no novo a esquerda e a direita cada um deles com um kbucket
-                        curr.left = new Node();
+                        curr.left = new TreeNode();
                         curr.left.createKBucket();
-                        curr.right = new Node();
+                        curr.right = new TreeNode();
                         curr.right.createKBucket();
                         // Agora vamos popular os novos buckets que criamos com os nos que estavam no anterios e adicionar o novo
                         this.addToBuckets(curr.left, curr.right, curr.kbucket, node,i++);
@@ -112,7 +113,7 @@ public class KademliaRoutingTable
 
     // Adiciona os nodes que estão na variavel kbucket para os novos buckets criados de acordo com a distancia
     // em relação ao id do Node ao qual pertence a routing table
-    private void addToBuckets(Node left, Node right, Map<String,KademliaNode> kbucket,KademliaNode node, int i )
+    private void addToBuckets(TreeNode left, TreeNode right, Map<String,KademliaNode> kbucket,KademliaNode node, int i )
     {
         // Conta quantos nos estão indo na direção a direita
         int count_right = 0;
@@ -174,21 +175,20 @@ public class KademliaRoutingTable
     {
         // Função que ira retornar o node ultimo visto no kbucket
         KademliaNode testPing = leastRecentlySeen(kbucket);
-        /*
-        //boolean notActive =  ping(testPing)
+        boolean notActive =  this.protocol.ping(testPing,this.myNodeId);
         // Ping least recently active node
         if (!notActive)
         {
-            kbucket.remove(testPing.nodeID);
+            kbucket.remove(testPing.nodeId);
             kbucket.put(node.nodeId, node);
         }
         else
         {
             testPing.setTime();
         }
-
-         */
     }
+
+
 
     // Função para achar o node mais perto da variavel 'nodeId'
     private KademliaNode findClosestNode(String nodeId)
@@ -198,7 +198,7 @@ public class KademliaRoutingTable
     }
 
     //
-    private KademliaNode findClosestNodeRec(Node curr, String nodeId, int i)
+    private KademliaNode findClosestNodeRec(TreeNode curr, String nodeId, int i)
     {
         if (i < 160)
         {
@@ -283,6 +283,11 @@ public class KademliaRoutingTable
         }
         // Retornamos os nos
         return menor;
+    }
+
+    public static void main(String[] args)
+    {
+        //KademliaRoutingTable  krt = KademliaRoutingTable("000000000")
     }
 }
 

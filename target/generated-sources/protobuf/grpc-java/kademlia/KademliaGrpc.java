@@ -39,6 +39,42 @@ public final class KademliaGrpc {
           .setResponseMarshaller(io.grpc.protobuf.ProtoUtils.marshaller(
               kademlia.PingResponse.getDefaultInstance()))
           .build();
+  @io.grpc.ExperimentalApi("https://github.com/grpc/grpc-java/issues/1901")
+  public static final io.grpc.MethodDescriptor<kademlia.StoreRequest,
+      kademlia.StoreResponse> METHOD_STORE =
+      io.grpc.MethodDescriptor.<kademlia.StoreRequest, kademlia.StoreResponse>newBuilder()
+          .setType(io.grpc.MethodDescriptor.MethodType.UNARY)
+          .setFullMethodName(generateFullMethodName(
+              "kademlia.Kademlia", "store"))
+          .setRequestMarshaller(io.grpc.protobuf.ProtoUtils.marshaller(
+              kademlia.StoreRequest.getDefaultInstance()))
+          .setResponseMarshaller(io.grpc.protobuf.ProtoUtils.marshaller(
+              kademlia.StoreResponse.getDefaultInstance()))
+          .build();
+  @io.grpc.ExperimentalApi("https://github.com/grpc/grpc-java/issues/1901")
+  public static final io.grpc.MethodDescriptor<kademlia.FindNodeRequest,
+      kademlia.FindNodeResponse> METHOD_FIND_NODE =
+      io.grpc.MethodDescriptor.<kademlia.FindNodeRequest, kademlia.FindNodeResponse>newBuilder()
+          .setType(io.grpc.MethodDescriptor.MethodType.UNARY)
+          .setFullMethodName(generateFullMethodName(
+              "kademlia.Kademlia", "findNode"))
+          .setRequestMarshaller(io.grpc.protobuf.ProtoUtils.marshaller(
+              kademlia.FindNodeRequest.getDefaultInstance()))
+          .setResponseMarshaller(io.grpc.protobuf.ProtoUtils.marshaller(
+              kademlia.FindNodeResponse.getDefaultInstance()))
+          .build();
+  @io.grpc.ExperimentalApi("https://github.com/grpc/grpc-java/issues/1901")
+  public static final io.grpc.MethodDescriptor<kademlia.FindValueRequest,
+      kademlia.FindValueResponse> METHOD_FIND_VALUE =
+      io.grpc.MethodDescriptor.<kademlia.FindValueRequest, kademlia.FindValueResponse>newBuilder()
+          .setType(io.grpc.MethodDescriptor.MethodType.UNARY)
+          .setFullMethodName(generateFullMethodName(
+              "kademlia.Kademlia", "findValue"))
+          .setRequestMarshaller(io.grpc.protobuf.ProtoUtils.marshaller(
+              kademlia.FindValueRequest.getDefaultInstance()))
+          .setResponseMarshaller(io.grpc.protobuf.ProtoUtils.marshaller(
+              kademlia.FindValueResponse.getDefaultInstance()))
+          .build();
 
   /**
    * Creates a new async stub that supports all call types for the service
@@ -77,6 +113,36 @@ public final class KademliaGrpc {
       asyncUnimplementedUnaryCall(METHOD_PING, responseObserver);
     }
 
+    /**
+     * <pre>
+     * store a [key, value] pair for later retrieval
+     * </pre>
+     */
+    public void store(kademlia.StoreRequest request,
+        io.grpc.stub.StreamObserver<kademlia.StoreResponse> responseObserver) {
+      asyncUnimplementedUnaryCall(METHOD_STORE, responseObserver);
+    }
+
+    /**
+     * <pre>
+     * 160-bit key as an argument, returns (IP address, UDP port, Node ID) for each k closest nodes to target id
+     * </pre>
+     */
+    public void findNode(kademlia.FindNodeRequest request,
+        io.grpc.stub.StreamObserver<kademlia.FindNodeResponse> responseObserver) {
+      asyncUnimplementedUnaryCall(METHOD_FIND_NODE, responseObserver);
+    }
+
+    /**
+     * <pre>
+     * similar to findNode + if RPC recipient received a STORE for the given key then it returns the stored value
+     * </pre>
+     */
+    public void findValue(kademlia.FindValueRequest request,
+        io.grpc.stub.StreamObserver<kademlia.FindValueResponse> responseObserver) {
+      asyncUnimplementedUnaryCall(METHOD_FIND_VALUE, responseObserver);
+    }
+
     @java.lang.Override public final io.grpc.ServerServiceDefinition bindService() {
       return io.grpc.ServerServiceDefinition.builder(getServiceDescriptor())
           .addMethod(
@@ -86,6 +152,27 @@ public final class KademliaGrpc {
                 kademlia.PingRequest,
                 kademlia.PingResponse>(
                   this, METHODID_PING)))
+          .addMethod(
+            METHOD_STORE,
+            asyncUnaryCall(
+              new MethodHandlers<
+                kademlia.StoreRequest,
+                kademlia.StoreResponse>(
+                  this, METHODID_STORE)))
+          .addMethod(
+            METHOD_FIND_NODE,
+            asyncUnaryCall(
+              new MethodHandlers<
+                kademlia.FindNodeRequest,
+                kademlia.FindNodeResponse>(
+                  this, METHODID_FIND_NODE)))
+          .addMethod(
+            METHOD_FIND_VALUE,
+            asyncUnaryCall(
+              new MethodHandlers<
+                kademlia.FindValueRequest,
+                kademlia.FindValueResponse>(
+                  this, METHODID_FIND_VALUE)))
           .build();
     }
   }
@@ -118,6 +205,39 @@ public final class KademliaGrpc {
       asyncUnaryCall(
           getChannel().newCall(METHOD_PING, getCallOptions()), request, responseObserver);
     }
+
+    /**
+     * <pre>
+     * store a [key, value] pair for later retrieval
+     * </pre>
+     */
+    public void store(kademlia.StoreRequest request,
+        io.grpc.stub.StreamObserver<kademlia.StoreResponse> responseObserver) {
+      asyncUnaryCall(
+          getChannel().newCall(METHOD_STORE, getCallOptions()), request, responseObserver);
+    }
+
+    /**
+     * <pre>
+     * 160-bit key as an argument, returns (IP address, UDP port, Node ID) for each k closest nodes to target id
+     * </pre>
+     */
+    public void findNode(kademlia.FindNodeRequest request,
+        io.grpc.stub.StreamObserver<kademlia.FindNodeResponse> responseObserver) {
+      asyncUnaryCall(
+          getChannel().newCall(METHOD_FIND_NODE, getCallOptions()), request, responseObserver);
+    }
+
+    /**
+     * <pre>
+     * similar to findNode + if RPC recipient received a STORE for the given key then it returns the stored value
+     * </pre>
+     */
+    public void findValue(kademlia.FindValueRequest request,
+        io.grpc.stub.StreamObserver<kademlia.FindValueResponse> responseObserver) {
+      asyncUnaryCall(
+          getChannel().newCall(METHOD_FIND_VALUE, getCallOptions()), request, responseObserver);
+    }
   }
 
   /**
@@ -146,6 +266,36 @@ public final class KademliaGrpc {
     public kademlia.PingResponse ping(kademlia.PingRequest request) {
       return blockingUnaryCall(
           getChannel(), METHOD_PING, getCallOptions(), request);
+    }
+
+    /**
+     * <pre>
+     * store a [key, value] pair for later retrieval
+     * </pre>
+     */
+    public kademlia.StoreResponse store(kademlia.StoreRequest request) {
+      return blockingUnaryCall(
+          getChannel(), METHOD_STORE, getCallOptions(), request);
+    }
+
+    /**
+     * <pre>
+     * 160-bit key as an argument, returns (IP address, UDP port, Node ID) for each k closest nodes to target id
+     * </pre>
+     */
+    public kademlia.FindNodeResponse findNode(kademlia.FindNodeRequest request) {
+      return blockingUnaryCall(
+          getChannel(), METHOD_FIND_NODE, getCallOptions(), request);
+    }
+
+    /**
+     * <pre>
+     * similar to findNode + if RPC recipient received a STORE for the given key then it returns the stored value
+     * </pre>
+     */
+    public kademlia.FindValueResponse findValue(kademlia.FindValueRequest request) {
+      return blockingUnaryCall(
+          getChannel(), METHOD_FIND_VALUE, getCallOptions(), request);
     }
   }
 
@@ -177,9 +327,45 @@ public final class KademliaGrpc {
       return futureUnaryCall(
           getChannel().newCall(METHOD_PING, getCallOptions()), request);
     }
+
+    /**
+     * <pre>
+     * store a [key, value] pair for later retrieval
+     * </pre>
+     */
+    public com.google.common.util.concurrent.ListenableFuture<kademlia.StoreResponse> store(
+        kademlia.StoreRequest request) {
+      return futureUnaryCall(
+          getChannel().newCall(METHOD_STORE, getCallOptions()), request);
+    }
+
+    /**
+     * <pre>
+     * 160-bit key as an argument, returns (IP address, UDP port, Node ID) for each k closest nodes to target id
+     * </pre>
+     */
+    public com.google.common.util.concurrent.ListenableFuture<kademlia.FindNodeResponse> findNode(
+        kademlia.FindNodeRequest request) {
+      return futureUnaryCall(
+          getChannel().newCall(METHOD_FIND_NODE, getCallOptions()), request);
+    }
+
+    /**
+     * <pre>
+     * similar to findNode + if RPC recipient received a STORE for the given key then it returns the stored value
+     * </pre>
+     */
+    public com.google.common.util.concurrent.ListenableFuture<kademlia.FindValueResponse> findValue(
+        kademlia.FindValueRequest request) {
+      return futureUnaryCall(
+          getChannel().newCall(METHOD_FIND_VALUE, getCallOptions()), request);
+    }
   }
 
   private static final int METHODID_PING = 0;
+  private static final int METHODID_STORE = 1;
+  private static final int METHODID_FIND_NODE = 2;
+  private static final int METHODID_FIND_VALUE = 3;
 
   private static final class MethodHandlers<Req, Resp> implements
       io.grpc.stub.ServerCalls.UnaryMethod<Req, Resp>,
@@ -201,6 +387,18 @@ public final class KademliaGrpc {
         case METHODID_PING:
           serviceImpl.ping((kademlia.PingRequest) request,
               (io.grpc.stub.StreamObserver<kademlia.PingResponse>) responseObserver);
+          break;
+        case METHODID_STORE:
+          serviceImpl.store((kademlia.StoreRequest) request,
+              (io.grpc.stub.StreamObserver<kademlia.StoreResponse>) responseObserver);
+          break;
+        case METHODID_FIND_NODE:
+          serviceImpl.findNode((kademlia.FindNodeRequest) request,
+              (io.grpc.stub.StreamObserver<kademlia.FindNodeResponse>) responseObserver);
+          break;
+        case METHODID_FIND_VALUE:
+          serviceImpl.findValue((kademlia.FindValueRequest) request,
+              (io.grpc.stub.StreamObserver<kademlia.FindValueResponse>) responseObserver);
           break;
         default:
           throw new AssertionError();
@@ -236,6 +434,9 @@ public final class KademliaGrpc {
           serviceDescriptor = result = io.grpc.ServiceDescriptor.newBuilder(SERVICE_NAME)
               .setSchemaDescriptor(new KademliaDescriptorSupplier())
               .addMethod(METHOD_PING)
+              .addMethod(METHOD_STORE)
+              .addMethod(METHOD_FIND_NODE)
+              .addMethod(METHOD_FIND_VALUE)
               .build();
         }
       }

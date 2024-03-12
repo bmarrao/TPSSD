@@ -15,7 +15,7 @@ public  final class PingResponse extends
     super(builder);
   }
   private PingResponse() {
-    result_ = "";
+    response_ = false;
   }
 
   @java.lang.Override
@@ -43,10 +43,9 @@ public  final class PingResponse extends
             }
             break;
           }
-          case 10: {
-            java.lang.String s = input.readStringRequireUtf8();
+          case 8: {
 
-            result_ = s;
+            response_ = input.readBool();
             break;
           }
         }
@@ -72,38 +71,13 @@ public  final class PingResponse extends
             kademlia.PingResponse.class, kademlia.PingResponse.Builder.class);
   }
 
-  public static final int RESULT_FIELD_NUMBER = 1;
-  private volatile java.lang.Object result_;
+  public static final int RESPONSE_FIELD_NUMBER = 1;
+  private boolean response_;
   /**
-   * <code>string result = 1;</code>
+   * <code>bool response = 1;</code>
    */
-  public java.lang.String getResult() {
-    java.lang.Object ref = result_;
-    if (ref instanceof java.lang.String) {
-      return (java.lang.String) ref;
-    } else {
-      com.google.protobuf.ByteString bs = 
-          (com.google.protobuf.ByteString) ref;
-      java.lang.String s = bs.toStringUtf8();
-      result_ = s;
-      return s;
-    }
-  }
-  /**
-   * <code>string result = 1;</code>
-   */
-  public com.google.protobuf.ByteString
-      getResultBytes() {
-    java.lang.Object ref = result_;
-    if (ref instanceof java.lang.String) {
-      com.google.protobuf.ByteString b = 
-          com.google.protobuf.ByteString.copyFromUtf8(
-              (java.lang.String) ref);
-      result_ = b;
-      return b;
-    } else {
-      return (com.google.protobuf.ByteString) ref;
-    }
+  public boolean getResponse() {
+    return response_;
   }
 
   private byte memoizedIsInitialized = -1;
@@ -118,8 +92,8 @@ public  final class PingResponse extends
 
   public void writeTo(com.google.protobuf.CodedOutputStream output)
                       throws java.io.IOException {
-    if (!getResultBytes().isEmpty()) {
-      com.google.protobuf.GeneratedMessageV3.writeString(output, 1, result_);
+    if (response_ != false) {
+      output.writeBool(1, response_);
     }
   }
 
@@ -128,8 +102,9 @@ public  final class PingResponse extends
     if (size != -1) return size;
 
     size = 0;
-    if (!getResultBytes().isEmpty()) {
-      size += com.google.protobuf.GeneratedMessageV3.computeStringSize(1, result_);
+    if (response_ != false) {
+      size += com.google.protobuf.CodedOutputStream
+        .computeBoolSize(1, response_);
     }
     memoizedSize = size;
     return size;
@@ -147,8 +122,8 @@ public  final class PingResponse extends
     kademlia.PingResponse other = (kademlia.PingResponse) obj;
 
     boolean result = true;
-    result = result && getResult()
-        .equals(other.getResult());
+    result = result && (getResponse()
+        == other.getResponse());
     return result;
   }
 
@@ -159,8 +134,9 @@ public  final class PingResponse extends
     }
     int hash = 41;
     hash = (19 * hash) + getDescriptor().hashCode();
-    hash = (37 * hash) + RESULT_FIELD_NUMBER;
-    hash = (53 * hash) + getResult().hashCode();
+    hash = (37 * hash) + RESPONSE_FIELD_NUMBER;
+    hash = (53 * hash) + com.google.protobuf.Internal.hashBoolean(
+        getResponse());
     hash = (29 * hash) + unknownFields.hashCode();
     memoizedHashCode = hash;
     return hash;
@@ -290,7 +266,7 @@ public  final class PingResponse extends
     }
     public Builder clear() {
       super.clear();
-      result_ = "";
+      response_ = false;
 
       return this;
     }
@@ -314,7 +290,7 @@ public  final class PingResponse extends
 
     public kademlia.PingResponse buildPartial() {
       kademlia.PingResponse result = new kademlia.PingResponse(this);
-      result.result_ = result_;
+      result.response_ = response_;
       onBuilt();
       return result;
     }
@@ -356,9 +332,8 @@ public  final class PingResponse extends
 
     public Builder mergeFrom(kademlia.PingResponse other) {
       if (other == kademlia.PingResponse.getDefaultInstance()) return this;
-      if (!other.getResult().isEmpty()) {
-        result_ = other.result_;
-        onChanged();
+      if (other.getResponse() != false) {
+        setResponse(other.getResponse());
       }
       onChanged();
       return this;
@@ -386,71 +361,28 @@ public  final class PingResponse extends
       return this;
     }
 
-    private java.lang.Object result_ = "";
+    private boolean response_ ;
     /**
-     * <code>string result = 1;</code>
+     * <code>bool response = 1;</code>
      */
-    public java.lang.String getResult() {
-      java.lang.Object ref = result_;
-      if (!(ref instanceof java.lang.String)) {
-        com.google.protobuf.ByteString bs =
-            (com.google.protobuf.ByteString) ref;
-        java.lang.String s = bs.toStringUtf8();
-        result_ = s;
-        return s;
-      } else {
-        return (java.lang.String) ref;
-      }
+    public boolean getResponse() {
+      return response_;
     }
     /**
-     * <code>string result = 1;</code>
+     * <code>bool response = 1;</code>
      */
-    public com.google.protobuf.ByteString
-        getResultBytes() {
-      java.lang.Object ref = result_;
-      if (ref instanceof String) {
-        com.google.protobuf.ByteString b = 
-            com.google.protobuf.ByteString.copyFromUtf8(
-                (java.lang.String) ref);
-        result_ = b;
-        return b;
-      } else {
-        return (com.google.protobuf.ByteString) ref;
-      }
-    }
-    /**
-     * <code>string result = 1;</code>
-     */
-    public Builder setResult(
-        java.lang.String value) {
-      if (value == null) {
-    throw new NullPointerException();
-  }
-  
-      result_ = value;
+    public Builder setResponse(boolean value) {
+      
+      response_ = value;
       onChanged();
       return this;
     }
     /**
-     * <code>string result = 1;</code>
+     * <code>bool response = 1;</code>
      */
-    public Builder clearResult() {
+    public Builder clearResponse() {
       
-      result_ = getDefaultInstance().getResult();
-      onChanged();
-      return this;
-    }
-    /**
-     * <code>string result = 1;</code>
-     */
-    public Builder setResultBytes(
-        com.google.protobuf.ByteString value) {
-      if (value == null) {
-    throw new NullPointerException();
-  }
-  checkByteStringIsUtf8(value);
-      
-      result_ = value;
+      response_ = false;
       onChanged();
       return this;
     }
