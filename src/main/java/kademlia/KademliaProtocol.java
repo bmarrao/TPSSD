@@ -7,6 +7,8 @@ import kademlia.PingRequest;
 import kademlia.PingResponse;
 public class KademliaProtocol
 {
+    private ManagedChannel channel;
+
     public KademliaProtocol()
     {
 
@@ -24,8 +26,10 @@ public class KademliaProtocol
         // Start calling the `parkVehicle` method
         PingRequest pingRequest = PingRequest.newBuilder().setMyNodeId(nodeId)
                 .build();
+        PingResponse pingResponse = stub.ping(pingRequest);
 
+        System.out.println("Response for the first call: " + pingResponse.getResponse());
         //return true;
-        return stub.ping(pingRequest).getResponse();
+        return pingResponse.getResponse();
     }
 }
