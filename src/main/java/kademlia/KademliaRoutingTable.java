@@ -93,6 +93,7 @@ public class KademliaRoutingTable
                 else
                 {
                     //Adiciona o no a o kbucket
+                    curr.kc++;
                     curr.kbucket.put(node.nodeId,node);
                 }
             }
@@ -123,12 +124,14 @@ public class KademliaRoutingTable
             // Testa se está indo na mesma direçao do proprio no
             if(BNode.nodeId.charAt(i) == this.myNodeId.charAt(i))
             {
+                right.kc++;
                 right.kbucket.put(BNode.nodeId, BNode);
                 count_right++;
             }
             else
             {
-                right.kbucket.put(BNode.nodeId, BNode);
+                left.kc++;
+                left.kbucket.put(BNode.nodeId, BNode);
             }
         }
         // Testa se todos os nos estão indo para uma direção ou outra pois neste caso teremos que adicionar o novo no por um outro metodo
@@ -141,6 +144,7 @@ public class KademliaRoutingTable
             }
             else
             {
+                left.kc++;
                 left.kbucket.put(node.nodeId, node);
             }
         }
@@ -148,6 +152,7 @@ public class KademliaRoutingTable
         {
             if (direction)
             {
+                right.kc++;
                 right.kbucket.put(node.nodeId, node);
             }
             else
@@ -160,10 +165,12 @@ public class KademliaRoutingTable
         {
             if(direction)
             {
+                left.kc++;
                 left.kbucket.put(node.nodeId, node);
             }
             else
             {
+                right.kc++;
                 right.kbucket.put(node.nodeId, node);
             }
         }
@@ -175,7 +182,8 @@ public class KademliaRoutingTable
     {
         // Função que ira retornar o node ultimo visto no kbucket
         KademliaNode testPing = leastRecentlySeen(kbucket);
-        boolean notActive =  this.protocol.ping(testPing,this.myNodeId);
+        //boolean notActive =  this.protocol.ping(testPing,this.myNodeId)
+        boolean notActive = true;
         // Ping least recently active node
         if (!notActive)
         {
@@ -203,11 +211,13 @@ public class KademliaRoutingTable
         if (i < 160)
         {
             // Testa se tem um kbucket
-            if (curr.kc >= 1)
+            if (curr.kc >= 2)
             {
+                System.out.println("Procurando num Map");
                 // Neste caso pesquisa pela função 'searchMapClosest' o node mais perto
                 return searchMapClosest(curr.kbucket, nodeId);
             }
+            //TODO CASO O curr.kc == 1 ou seja não tem elementos
             else
             {
                 // Caso contrario continua percorrendo a arvore e chamando a função recursiva
@@ -230,24 +240,28 @@ public class KademliaRoutingTable
     private KademliaNode searchMapClosest(Map<String,KademliaNode> kbucket,String nodeId)
     {
         // Iniciamos a distancia por 1
-        BigInteger distance = new BigInteger("-1");
         // Iniciamos uma variavel para guardar o no mais perto para retorrmos
-        KademliaNode node = null;
         // Percorremos a lista procurando a distancia mais perto
-        for (KademliaNode bnode : kbucket.values())
+        System.out.println(kbucket);
+        Collection<KademliaNode> values = kbucket.values();
+        int size = values.size();
+        KademliaNode[] array = values.toArray(new KademliaNode[values.size()]);
+        KademliaNode node = array[0];
+        BigInteger distance = calculateDistance(nodeId, node.nodeId);
+        for (int i = 1 ; i <size;i++)
         {
+            KademliaNode bnode = array[i];
             // Calcula a distancia relativamente ao no 'bnode'
             // Caso seja menor guardamos como o node mais perto e a menor distancia
             BigInteger newDistance = calculateDistance(nodeId, bnode.nodeId);
+            System.out.println(newDistance.compareTo(distance));
             // Caso seja menor guardamos como o node mais perto e a menor distancia
-            if (newDistance.compareTo(distance) < 0) {
+            if (newDistance.compareTo(distance) >= 0) {
                 distance = newDistance;
                 node = bnode;
             }
-
         }
         return node;
-
     }
 
     // Função que calcula a distancia de um no
@@ -287,45 +301,53 @@ public class KademliaRoutingTable
 
     public void printTree()
     {
-        printTreeRec(this.root,0);
+        printTreeRec("Root",this.root,0);
     }
 
-    private static void printTreeRec(TreeNode node, int depth)
+    private static void printTreeRec(String dir,TreeNode node, int depth)
     {
+
         if (node == null) {
             return;
         }
 
-        // Adjust the indentation based on the depth
-        for (int i = 0; i < depth; i++) {
-            System.out.print("  ");
-        }
         if (node.kc >= 1)
         {
-            System.out.println("Node with kbucket: ");
+            /*
+            System.out.println("Node with kbucket: {");
             for (Map.Entry<String, KademliaNode> entry : node.kbucket.entrySet()) {
                 System.out.print("Key = " + new BigInteger(entry.getKey(), 2) +
-                        ", Value = " + entry.getValue());
-            }
-            System.out.println("");
+                    ", Value = " + entry.getValue()+ ", ");
+            */
+                System.out.println("Direction " + dir+ "And depth " + depth+ " Kbucket with size "+ node.kc);
+
+            //System.out.println("}");
+            //System.out.println("");
+            // Recursively print left and right subtrees
+            printTreeRec("right",node.right, depth + 1);
+        }
+        else
+        {
+            // Recursively print left and right subtrees
+            printTreeRec("left",node.left, depth + 1);
+            printTreeRec("right",node.right, depth + 1);
         }
 
 
-        // Recursively print left and right subtrees
-        printTreeRec(node.left, depth + 1);
-        printTreeRec(node.right, depth + 1);
+
     }
     public static void main(String[] args)
     {
         Kademlia kd = new Kademlia();
         KademliaRoutingTable  krt = new KademliaRoutingTable(kd.generateNodeId(),5);
         System.out.println(kd.generateNodeId());
-        for (int i  = 0 ; i < 10; i++)
+        for (int i  = 0 ; i < 100; i++)
         {
             krt.insert(new KademliaNode("localhost",kd.generateNodeId(),5000));
-            krt.printTree();
         }
         krt.printTree();
+        //TODO: when printing tree there are some trees there are bigger than k
+        System.out.println(krt.findClosestNode(kd.generateNodeId()));
     }
 }
 
