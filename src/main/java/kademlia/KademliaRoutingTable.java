@@ -60,13 +60,13 @@ public class KademliaRoutingTable
     // Função recursiva
     public void insertRec(KademliaNode node, TreeNode curr,int i, char prevDir )
     {
-        if (i < 160)
+        if (i >= 0)
         {
             // Testa se tem um kbucket no node curr
             if (curr.kc >= 1)
             {
                 // Testa se o node curr esta na capacidade maxima
-                if (curr.kbucket.size() == this.k)
+                if (curr.kbucket.size() >= this.k)
                 {
                     // Testa se ele vem da direção que tem uma distancia mais perto do no
                     if (prevDir =='d')
@@ -102,11 +102,11 @@ public class KademliaRoutingTable
                 // Testa se o no
                 if (myNodeId.charAt(i) == node.nodeId.charAt(0))
                 {
-                    insertRec(node, curr.left,i++,'d');
+                    insertRec(node, curr.right,i++,'d');
                 }
                 else
                 {
-                    insertRec(node, curr.right,i++,'e');
+                    insertRec(node, curr.left,i++,'e');
                 }
             }
         }
@@ -324,13 +324,13 @@ public class KademliaRoutingTable
             //System.out.println("}");
             //System.out.println("");
             // Recursively print left and right subtrees
-            printTreeRec("right",node.right, depth + 1);
+            printTreeRec(dir+" r",node.right, depth + 1);
         }
         else
         {
             // Recursively print left and right subtrees
-            printTreeRec("left",node.left, depth + 1);
-            printTreeRec("right",node.right, depth + 1);
+            printTreeRec(dir+" l",node.left, depth + 1);
+            printTreeRec(dir+" r",node.right, depth + 1);
         }
 
 
@@ -341,13 +341,13 @@ public class KademliaRoutingTable
         Kademlia kd = new Kademlia();
         KademliaRoutingTable  krt = new KademliaRoutingTable(kd.generateNodeId(),5);
         System.out.println(kd.generateNodeId());
-        for (int i  = 0 ; i < 100; i++)
+        for (int i  = 0 ; i < 20; i++)
         {
             krt.insert(new KademliaNode("localhost",kd.generateNodeId(),5000));
         }
         krt.printTree();
         //TODO: when printing tree there are some trees there are bigger than k
-        System.out.println(krt.findClosestNode(kd.generateNodeId()));
+        //System.out.println(krt.findClosestNode(kd.generateNodeId()));
     }
 }
 
