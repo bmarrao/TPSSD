@@ -60,11 +60,13 @@ public class KademliaRoutingTable
     // Função recursiva
     public void insertRec(KademliaNode node, TreeNode curr,int i, char prevDir )
     {
+        System.out.println(i);
         if (i >= 0)
         {
             // Testa se tem um kbucket no node curr
             if (curr.kc >= 1)
             {
+                System.out.println("Kbucket has size of " + curr.kc);
                 // Testa se o node curr esta na capacidade maxima
                 if (curr.kbucket.size() >= this.k)
                 {
@@ -83,6 +85,7 @@ public class KademliaRoutingTable
                         this.addToBuckets(curr.left, curr.right, curr.kbucket, node,i++);
                         // Depois disso marcamos o kbucket do no atual como null
                         curr.kbucket = null;
+                        System.out.println("New Kbucket has size of " + curr.left.kc + "And " + curr.right.kc);
                     }
                     else
                     {
@@ -102,11 +105,11 @@ public class KademliaRoutingTable
                 // Testa se o no
                 if (myNodeId.charAt(i) == node.nodeId.charAt(0))
                 {
-                    insertRec(node, curr.right,i++,'d');
+                    insertRec(node, curr.right,i-1,'d');
                 }
                 else
                 {
-                    insertRec(node, curr.left,i++,'e');
+                    insertRec(node, curr.left,i-1,'e');
                 }
             }
         }
@@ -319,7 +322,7 @@ public class KademliaRoutingTable
                 System.out.print("Key = " + new BigInteger(entry.getKey(), 2) +
                     ", Value = " + entry.getValue()+ ", ");
             */
-                System.out.println("Direction " + dir+ "And depth " + depth+ " Kbucket with size "+ node.kc);
+                System.out.println("Direction " + dir+ "And depth " + depth+ " Kbucket with size "+ (node.kc-1));
 
             //System.out.println("}");
             //System.out.println("");
@@ -339,15 +342,13 @@ public class KademliaRoutingTable
     public static void main(String[] args)
     {
         Kademlia kd = new Kademlia();
-        KademliaRoutingTable  krt = new KademliaRoutingTable(kd.generateNodeId(),5);
+        KademliaRoutingTable  krt = new KademliaRoutingTable(kd.generateNodeId(),20 );
         System.out.println(kd.generateNodeId());
-        for (int i  = 0 ; i < 20; i++)
+        for (int i  = 0 ; i < 2000; i++)
         {
             krt.insert(new KademliaNode("localhost",kd.generateNodeId(),5000));
         }
         krt.printTree();
-        //TODO: when printing tree there are some trees there are bigger than k
-        //System.out.println(krt.findClosestNode(kd.generateNodeId()));
     }
 }
 
