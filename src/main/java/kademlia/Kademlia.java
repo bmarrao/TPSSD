@@ -12,18 +12,39 @@ public class Kademlia
 {
     public static String nodeId;
     public static String ipAddress;
-    public static int port;
-    public static KademliaRoutingTable rt ;
 
-    public static void main(String[] args) throws IOException, InterruptedException {
+    public static int port;
+
+    public boolean bootstrapNode;
+    public static KademliaRoutingTable rt ;
+    // TODO Public e private Key - Quando for implementar blockchain
+    // TODO Inicialização do no kademlia , contacto com boostrap node - Cristina
+    // TODO Criar bootstrap node - Breno
+    public static void main(String[] args) throws IOException, InterruptedException
+    {
         ipAddress = args[0];
+
         port = Integer.parseInt(args[1]);
 
         nodeId = generateNodeId();
 
-        System.out.println("Generated nodeId: " + nodeId);
+        new KademliaServer(port);
 
-        new KademliaNode(ipAddress, nodeId, port);
+
+        /*
+        if (args[2] != null)
+        {
+            rt = new KademliaRoutingTableBootStrap(this.nodeId)
+        }
+        else
+        {
+            rt = new KademliaRoutingTableNormal(this.nodeId);
+        }
+
+
+
+        */
+        System.out.println("Generated nodeId: " + nodeId);
 
         new KademliaServer(port);
 
@@ -34,18 +55,21 @@ public class Kademlia
 
 
     // node id is 160-bit and is based on SHA-1
-    public static String generateNodeId() {
+    public static String generateNodeId()
+    {
         byte[] array = new byte[20];
         // SecureRandom() assures that random generated word is safe for crypto purposes
         new SecureRandom().nextBytes(array);
         String randomString = new String(array, StandardCharsets.UTF_8);
 
-        try {
+        try
+        {
             MessageDigest md = MessageDigest.getInstance("SHA-1");
             byte[] hash = md.digest(randomString.getBytes());
 
             StringBuilder sb = new StringBuilder();
-            for (byte b : hash) {
+            for (byte b : hash)
+            {
                 sb.append(String.format("%02x", b));
             }
             return sb.toString();

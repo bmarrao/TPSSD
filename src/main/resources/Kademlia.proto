@@ -68,6 +68,8 @@ message FindValueResponse
 service Kademlia
 {
 
+  //TODO Adicionar metodos pro Bootstrap node - Cristina
+  //rpc iniateBootstrap()
   // Unary
   rpc ping(PingRequest) returns (PingResponse);
 

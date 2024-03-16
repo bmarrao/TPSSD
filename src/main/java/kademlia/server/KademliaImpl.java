@@ -4,8 +4,10 @@ import kademlia.*;
 
 import java.util.ArrayList;
 import java.util.List;
-
-public class KademliaImpl extends KademliaGrpc.KademliaImplBase {
+// TODO Hugo Implementar metodos dessa classe
+//  TODO parte do bootstrap - Cristina
+public class KademliaImpl extends KademliaGrpc.KademliaImplBase
+{
 
     @Override
     public void ping(PingRequest request, StreamObserver<PingResponse> responseObserver)
@@ -69,7 +71,8 @@ public class KademliaImpl extends KademliaGrpc.KademliaImplBase {
     }
 
     @Override
-    public void findValue(FindValueRequest request, StreamObserver<FindValueResponse> responseObserver) {
+    public void findValue(FindValueRequest request, StreamObserver<FindValueResponse> responseObserver)
+    {
         // TODO: define findClosestNodes function
         List<Node> closestNodes = findClosestNodes(request.getId());
         String value = "";

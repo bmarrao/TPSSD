@@ -7,7 +7,8 @@ public class KademliaFindOpResult {
     String val;
     List<Node> nodesList;
 
-    public KademliaFindOpResult(String nodeId, String val, List<Node> nodesList) {
+    public KademliaFindOpResult(String nodeId, String val, List<Node> nodesList)
+    {
         this.nodeId = nodeId;
         this.val = val;
         this.nodesList = nodesList;

@@ -3,7 +3,7 @@ import java.math.BigInteger;
 import java.time.LocalDateTime;
 import java.util.*;
 
-
+// TODO Colocar LOCKS, Alterar nodeID para bytes - Breno
 // Classe do no da arvore
 class TreeNode
 {

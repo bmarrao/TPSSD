@@ -7,6 +7,7 @@
         <sourceTestOutputDir name="target/generated-test-sources/test-annotations" />
         <outputRelativeToContentRoot value="true" />
         <module name="grpc-sample" />
+        <module name="Kademlia" />
       </profile>
     </annotationProcessing>
   </component>
