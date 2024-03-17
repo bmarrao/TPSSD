@@ -5,13 +5,13 @@ import java.time.LocalDateTime;
 public class KademliaNode
 {
     public String ipAdress ;
-    public String nodeId;
+    public byte[] nodeId;
 
     public int port;
     public LocalDateTime time;
 
 
-    public KademliaNode(String ipAdress, String nodeId,int port)
+    public KademliaNode(String ipAdress, byte[] nodeId,int port)
     {
         this.ipAdress = ipAdress;
         // Create nodeID this.nodeId= nodeId;

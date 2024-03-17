@@ -14,6 +14,7 @@ public class KademliaProtocol
     }
 
     // TODO Fix errors in this class - Cristina
+    /*
     public boolean ping(KademliaNode testPing, String nodeId)
     {
         ManagedChannel channel = ManagedChannelBuilder.forAddress(testPing.ipAdress, testPing.port)
@@ -81,4 +82,6 @@ public class KademliaProtocol
 
         return new KademliaFindOpResult(response.getId(), response.getVal(), response.getNodesList());
     }
+
+     */
 }

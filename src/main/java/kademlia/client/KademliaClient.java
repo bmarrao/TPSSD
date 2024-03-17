@@ -8,11 +8,11 @@ import kademlia.*;
 
 public class KademliaClient
 {
-    public String nodeId;
+    public byte [] nodeId;
     public KademliaRoutingTable rt;
     public KademliaGrpc.KademliaBlockingStub stub;
 
-    public KademliaClient(String nodeId, String serverIp, int serverPort, KademliaRoutingTable rt)
+    public KademliaClient(byte[] nodeId, String serverIp, int serverPort, KademliaRoutingTable rt)
     {
         this.rt = rt;
         this.nodeId = nodeId;

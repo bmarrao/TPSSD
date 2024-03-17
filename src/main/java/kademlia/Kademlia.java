@@ -10,7 +10,7 @@ import java.security.MessageDigest;
 
 public class Kademlia
 {
-    public static String nodeId;
+    public static byte[] nodeId;
     public static String ipAddress;
 
     public static int port;
@@ -50,12 +50,12 @@ public class Kademlia
 
         KademliaClient client = new KademliaClient(nodeId, ipAddress, port, rt);
 
-        callOps(client, nodeId, ipAddress, port);
+        //callOps(client, nodeId, ipAddress, port);
     }
 
 
     // node id is 160-bit and is based on SHA-1
-    public static String generateNodeId()
+    public static byte[] generateNodeId()
     {
         byte[] array = new byte[20];
         // SecureRandom() assures that random generated word is safe for crypto purposes
@@ -66,13 +66,16 @@ public class Kademlia
         {
             MessageDigest md = MessageDigest.getInstance("SHA-1");
             byte[] hash = md.digest(randomString.getBytes());
-
+            return hash;
+            /*
             StringBuilder sb = new StringBuilder();
             for (byte b : hash)
             {
                 sb.append(String.format("%02x", b));
             }
             return sb.toString();
+
+             */
         }
         catch(Exception e) {
             e.printStackTrace();
@@ -80,7 +83,8 @@ public class Kademlia
         }
     }
 
-    public static void callOps(KademliaClient client, String nodeId, String ip, int port)
+    /*
+    public static void callOps(KademliaClient client, byte []nodeId, String ip, int port)
     {
         String key = "key123";
         String val = "val123";
@@ -106,4 +110,6 @@ public class Kademlia
             System.out.println(n);
         }
     }
+
+     */
 }

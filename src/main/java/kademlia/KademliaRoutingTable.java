@@ -35,11 +35,11 @@ public class KademliaRoutingTable
     // Raiz da arvore
     TreeNode root;
     // Id do node ao qual pertence a arvore
-    String myNodeId;
+    byte[] myNodeId;
     // Tamanho dos buckets
     int k;
     //Inicialização da classe
-    public KademliaRoutingTable(String nodeId, int k )
+    public KademliaRoutingTable(byte[] nodeId, int k )
     {
         this.root = new TreeNode();
         this.root.createKBucket();
@@ -54,14 +54,14 @@ public class KademliaRoutingTable
     {
         TreeNode curr = root;
         // Função recursiva que ira percorrer a arvore
-        insertRec(node, curr,159, 'd');
+        insertRec(node, curr,0, 7, 'd');
     }
     
     // Função recursiva
-    public void insertRec(KademliaNode node, TreeNode curr,int i, char prevDir )
+    public void insertRec(KademliaNode node, TreeNode curr,int i,int j, char prevDir )
     {
         System.out.println(i);
-        if (i >= 0)
+        if (i < 20)
         {
             // Testa se tem um kbucket no node curr
             if (curr.kc >= 1)
@@ -102,14 +102,34 @@ public class KademliaRoutingTable
             }
             else
             {
+
+                boolean bit1 = ((myNodeId[i] >> j) & 1) == 1;
+                boolean bit2 = ((node.nodeId[i] >> j) & 1) == 1;
+
                 // Testa se o no
-                if (myNodeId.charAt(i) == node.nodeId.charAt(0))
+                if (bit1 == bit2)
                 {
-                    insertRec(node, curr.right,i-1,'d');
+                    if (j == 0)
+                    {
+                        insertRec(node, curr.right,i+1,7,'d');
+                    }
+                    else
+                    {
+                        insertRec(node, curr.right,i,j-1,'d');
+
+                    }
                 }
                 else
                 {
-                    insertRec(node, curr.left,i-1,'e');
+                    if (j == 0)
+                    {
+                        insertRec(node, curr.left,i+1,7,'e');
+                    }
+                    else
+                    {
+                        insertRec(node, curr.left,i,j-1,'e');
+
+                    }
                 }
             }
         }
@@ -339,8 +359,72 @@ public class KademliaRoutingTable
 
 
     }
+
+    public static byte[] binaryStringToBytes(String binaryString) {
+        int length = binaryString.length();
+        int numBytes = (length + 7) / 8; // Calculate the number of bytes needed
+        byte[] byteArray = new byte[numBytes];
+
+        for (int i = 0; i < numBytes; i++) {
+            int startIndex = i * 8;
+            int endIndex = Math.min(startIndex + 8, length);
+            String byteString = binaryString.substring(startIndex, endIndex);
+
+            // Convert the binary substring to a byte
+            byte byteValue = (byte) Integer.parseInt(byteString, 2);
+            byteArray[i] = byteValue;
+        }
+
+        return byteArray;
+    }
+
     public static void main(String[] args)
     {
+        String nodeId = "";
+        byte[] id = Kademlia.generateNodeId();
+        for (int j = 0 ; j < 20; j++)
+        {
+            byte b = id[j];
+            for (int i = 7; i >= 0; i--) { // Start from the most significant bit (bit 7)
+                // Extract the i-th bit using bitwise AND operation
+                boolean bit = ((b >> i) & 1) == 1;
+                System.out.println(b >> i);
+                // Print the bit value
+                if (bit)
+                {
+                    nodeId = nodeId+"1";
+                }
+                else
+                {
+                    nodeId = nodeId +"0";
+                }
+            }
+            System.out.println(nodeId);
+            System.out.println(nodeId.length());
+
+        }
+        /*
+
+        byte b = (byte) 0b10101010; // Example byte value
+
+        for (int i = 7; i >= 0; i--) { // Start from the most significant bit (bit 7)
+            // Extract the i-th bit using bitwise AND operation
+            boolean bit = ((b >> i) & 1) == 1;
+            System.out.println(b >> i);
+            // Print the bit value
+            System.out.print(bit ? "1" : "0");
+        }
+        // Convert binary string to byte array
+        //byte[] byteArray = binaryStringToBytes(binaryString);
+
+        // Print the byte array
+        for (byte b : byteArray) {
+            System.out.print(b + " ");
+        };
+
+         */
+        /*
+        // Convert array of bits to bytes
         Kademlia kd = new Kademlia();
         KademliaRoutingTable  krt = new KademliaRoutingTable(kd.generateNodeId(),20 );
         System.out.println(kd.generateNodeId());
@@ -349,6 +433,8 @@ public class KademliaRoutingTable
             krt.insert(new KademliaNode("localhost",kd.generateNodeId(),5000));
         }
         krt.printTree();
+
+         */
     }
 }
 
