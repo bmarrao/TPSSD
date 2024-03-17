@@ -1,6 +1,7 @@
 package kademlia;
 import java.math.BigInteger;
 import java.time.LocalDateTime;
+import java.util.Comparator;
 
 public class KademliaNode
 {
@@ -18,6 +19,12 @@ public class KademliaNode
         this.port = port;
         this.nodeId = nodeId;
         this.time = LocalDateTime.now();
+    }
+
+
+    public LocalDateTime getDateTime()
+    {
+        return time;
     }
 
     public void setTime()
