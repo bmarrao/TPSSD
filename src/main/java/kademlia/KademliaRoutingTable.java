@@ -55,14 +55,14 @@ public class KademliaRoutingTable
     // Tamanho dos buckets
     int k;
     //Inicialização da classe
-    public KademliaRoutingTable(byte[] nodeId, int k )
+    public KademliaRoutingTable(byte[] nodeId, KademliaProtocol protocol, int k )
     {
         this.root = new TreeNode();
         this.root.createKBucket();
         // Colocar o proprio node this.insert(OWN NODE)
         this.myNodeId = nodeId;
         this.k = k;
-        this.protocol = new KademliaProtocol();
+        this.protocol = protocol;
     }
 
     //  Função que insere um no na arvore
@@ -482,7 +482,7 @@ public class KademliaRoutingTable
 
         // Convert array of bits to bytes
         Kademlia kd = new Kademlia();
-        KademliaRoutingTable  krt = new KademliaRoutingTable(kd.generateNodeId(),20 );
+        KademliaRoutingTable  krt = new KademliaRoutingTable(kd.generateNodeId(), kd.getKdProtocol(), 20 );
         //System.out.println(krt.findClosestKbucket(krt.root,krt.root, kd.generateNodeId(),0,7,'r'));
         byte teste = (byte)0b11110000;
 

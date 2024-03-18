@@ -12,14 +12,14 @@ public class KademliaImpl extends KademliaGrpc.KademliaImplBase
     @Override
     public void ping(PingRequest request, StreamObserver<PingResponse> responseObserver)
     {
-        String sender = request.getMyNodeId();
+        // String sender = request.getMyNodeId();
 
         // Atualizar o horario da última vez online do sender
-        boolean resultMsg = true;
+        //boolean resultMsg = true;
 
         PingResponse pingResponse = PingResponse
                 .newBuilder()
-                .setResponse(resultMsg)
+                .setId(request.getMyNodeId())
                 .build();
 
         // Send the response to the client.
@@ -27,7 +27,7 @@ public class KademliaImpl extends KademliaGrpc.KademliaImplBase
 
         // Notifies the customer that the call is completed.
         responseObserver.onCompleted();
-        System.out.println(resultMsg);
+        System.out.println(request.getMyNodeId());
     }
 
 
@@ -51,7 +51,7 @@ public class KademliaImpl extends KademliaGrpc.KademliaImplBase
     @Override
     public void findNode(FindNodeRequest request, StreamObserver<FindNodeResponse> responseObserver) {
         // TODO: define findClosestNodes function
-        List<Node> closestNodes = findClosestNodes(request.getId());
+        List<Node> closestNodes = findClosestNodes(request.getId().toByteArray());
 
         for (Node node : closestNodes) {
         }
@@ -64,7 +64,7 @@ public class KademliaImpl extends KademliaGrpc.KademliaImplBase
         responseObserver.onCompleted();
     }
 
-    public ArrayList<Node> findClosestNodes(String id) {
+    public ArrayList<Node> findClosestNodes(byte[] id) {
         ArrayList<Node> closestNodes = new ArrayList<>();
         // ...
         return closestNodes;
@@ -74,7 +74,7 @@ public class KademliaImpl extends KademliaGrpc.KademliaImplBase
     public void findValue(FindValueRequest request, StreamObserver<FindValueResponse> responseObserver)
     {
         // TODO: define findClosestNodes function
-        List<Node> closestNodes = findClosestNodes(request.getId());
+        List<Node> closestNodes = findClosestNodes(request.getId().toByteArray());
         String value = "";
 
         for (Node node : closestNodes) {

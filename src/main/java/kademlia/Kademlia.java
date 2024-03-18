@@ -1,5 +1,6 @@
 package kademlia;
 
+import com.google.protobuf.ByteString;
 import kademlia.server.KademliaServer;
 import kademlia.client.KademliaClient;
 
@@ -7,6 +8,7 @@ import java.io.IOException;
 import java.nio.charset.StandardCharsets;
 import java.security.SecureRandom;
 import java.security.MessageDigest;
+import java.util.Arrays;
 
 public class Kademlia
 {
@@ -14,9 +16,10 @@ public class Kademlia
     public static String ipAddress;
 
     public static int port;
-
     public boolean bootstrapNode;
     public static KademliaRoutingTable rt ;
+    public static KademliaProtocol protocol;
+
     // TODO Public e private Key - Quando for implementar blockchain
     // TODO Inicialização do no kademlia , contacto com boostrap node - Cristina
     // TODO Criar bootstrap node - Breno
@@ -29,6 +32,11 @@ public class Kademlia
         nodeId = generateNodeId();
 
         new KademliaServer(port);
+
+        protocol = new KademliaProtocol(nodeId, ipAddress, port);
+
+        int k = 20;
+        rt = new KademliaRoutingTable(nodeId, protocol, k);
 
 
         /*
@@ -44,13 +52,9 @@ public class Kademlia
 
 
         */
-        System.out.println("Generated nodeId: " + nodeId);
+        System.out.println("Generated nodeId: " + Arrays.toString(nodeId));
 
-        new KademliaServer(port);
-
-        KademliaClient client = new KademliaClient(nodeId, ipAddress, port, rt);
-
-        //callOps(client, nodeId, ipAddress, port);
+        //callOps(protocol, nodeId, ipAddress, port);
     }
 
 
@@ -60,22 +64,11 @@ public class Kademlia
         byte[] array = new byte[20];
         // SecureRandom() assures that random generated word is safe for crypto purposes
         new SecureRandom().nextBytes(array);
-        String randomString = new String(array, StandardCharsets.UTF_8);
 
         try
         {
             MessageDigest md = MessageDigest.getInstance("SHA-1");
-            byte[] hash = md.digest(randomString.getBytes());
-            return hash;
-            /*
-            StringBuilder sb = new StringBuilder();
-            for (byte b : hash)
-            {
-                sb.append(String.format("%02x", b));
-            }
-            return sb.toString();
-
-             */
+            return md.digest(array);
         }
         catch(Exception e) {
             e.printStackTrace();
@@ -83,18 +76,24 @@ public class Kademlia
         }
     }
 
+    public static KademliaProtocol getKdProtocol()
+    {
+        return protocol;
+    }
+
+
     /*
-    public static void callOps(KademliaClient client, byte []nodeId, String ip, int port)
+    public static void callOps(KademliaProtocol protocol, byte []nodeId, String ip, int port)
     {
         String key = "key123";
         String val = "val123";
 
-        System.out.println("Response for ping: " + client.pingOp(nodeId));
-        System.out.println("Response for store: " + client.storeOp(nodeId, key, val, ip, port));
+        System.out.println("Response for ping: " + Arrays.toString(protocol.pingOp(nodeId)));
+        System.out.println("Response for store: " + protocol.storeOp(nodeId, key, val, ip, port));
 
         System.out.println("Response for find node:");
-        KademliaFindOpResult findNodeRes = client.findNodeOp(nodeId, ip, port, key);
-        System.out.println("   id: " + findNodeRes.getNodeId());
+        KademliaFindOpResult findNodeRes = protocol.findNodeOp(nodeId, ip, port, key);
+        System.out.println("   id: " + Arrays.toString(findNodeRes.getNodeId()));
 
         System.out.println("   nodes: ");
         for (Node n : findNodeRes.getNodesList()) {
@@ -102,14 +101,14 @@ public class Kademlia
         }
 
         System.out.println("Response for find value:");
-        KademliaFindOpResult findValueRes = client.findValueOp(nodeId, ip, port, key);
-        System.out.println("   id: " + findNodeRes.getNodeId());
+        KademliaFindOpResult findValueRes = protocol.findValueOp(nodeId, ip, port, key);
+        System.out.println("   id: " + Arrays.toString(findNodeRes.getNodeId()));
         System.out.println("   value: " + findNodeRes.getVal());
         System.out.println("   nodes: ");
         for (Node n : findValueRes.getNodesList()) {
             System.out.println(n);
         }
     }
-
      */
+
 }

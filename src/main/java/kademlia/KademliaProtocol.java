@@ -1,52 +1,39 @@
 package kademlia;
 
+import com.google.protobuf.ByteString;
 import io.grpc.ManagedChannel;
 import io.grpc.ManagedChannelBuilder;
-import kademlia.KademliaGrpc;
-import kademlia.PingRequest;
-import kademlia.PingResponse;
+
+
 public class KademliaProtocol
 {
+    public byte [] nodeId;
+    public KademliaGrpc.KademliaBlockingStub stub;
 
-    public KademliaProtocol()
+    public KademliaProtocol(byte[] nodeId, String serverIp, int serverPort)
     {
+        this.nodeId = nodeId;
 
+        // Create channel so client communicates with server
+        ManagedChannel channel = ManagedChannelBuilder.forAddress(serverIp, serverPort).usePlaintext().build();
+
+        // Auto generated stub class with the constructor wrapping the channel
+        stub = KademliaGrpc.newBlockingStub(channel);
     }
 
-    // TODO Fix errors in this class - Cristina
-    /*
-    public boolean ping(KademliaNode testPing, String nodeId)
+    public byte[] pingOp(byte[] nodeId)
     {
-        ManagedChannel channel = ManagedChannelBuilder.forAddress(testPing.ipAdress, testPing.port)
-                .usePlaintext()
-                .build();
-
-        // Auto generated stub class with the constructor wrapping the channel.
-        KademliaGrpc.KademliaBlockingStub stub =KademliaGrpc.newBlockingStub(channel);
-
-        // Start calling the `parkVehicle` method
-        PingRequest pingRequest = PingRequest.newBuilder().setMyNodeId(nodeId)
-                .build();
-        PingResponse pingResponse = stub.ping(pingRequest);
-
-        System.out.println("Response for the first call: " + pingResponse.getResponse());
-        //return true;
-        return pingResponse.getResponse();
-    }
-
-    public boolean pingOp(String nodeId)
-    {
-        PingRequest request = PingRequest.newBuilder().setMyNodeId(nodeId).build();
+        PingRequest request = PingRequest.newBuilder().setMyNodeId(ByteString.copyFrom(nodeId)).build();
 
         PingResponse response = stub.ping(request);
 
-        return response.getResponse();
+        return response.getId().toByteArray();
     }
 
-    public boolean storeOp(String nodeId, String key, String val, String ip, int port)
+    public boolean storeOp(byte[] nodeId, String key, String val, String ip, int port)
     {
         StoreRequest request = StoreRequest.newBuilder()
-                .setId(nodeId)
+                .setId(ByteString.copyFrom(nodeId))
                 .setKey(key)
                 .setVal(val)
                 .setIp(ip)
@@ -57,31 +44,29 @@ public class KademliaProtocol
         return response.getStored();
     }
 
-    public KademliaFindOpResult findNodeOp(String nodeId, String ip, int port, String key)
+    public KademliaFindOpResult findNodeOp(byte[] nodeId, String ip, int port, String key)
     {
         FindNodeRequest request = FindNodeRequest.newBuilder()
-                .setId(nodeId)
+                .setId(ByteString.copyFrom(nodeId))
                 .setIp(ip)
                 .setPort(port)
                 .setKey(key).build();
 
         FindNodeResponse response = stub.findNode(request);
 
-        return new KademliaFindOpResult(response.getId(), "", response.getNodesList());
+        return new KademliaFindOpResult(response.getId().toByteArray(), "", response.getNodesList());
     }
 
-    public KademliaFindOpResult findValueOp(String nodeId, String ip, int port, String key)
+    public KademliaFindOpResult findValueOp(byte[] nodeId, String ip, int port, String key)
     {
         FindValueRequest request = FindValueRequest.newBuilder()
-                .setId(nodeId)
+                .setId(ByteString.copyFrom(nodeId))
                 .setIp(ip)
                 .setPort(port)
                 .setKey(key).build();
 
         FindValueResponse response = stub.findValue(request);
 
-        return new KademliaFindOpResult(response.getId(), response.getVal(), response.getNodesList());
+        return new KademliaFindOpResult(response.getId().toByteArray(), response.getVal(), response.getNodesList());
     }
-
-     */
 }
