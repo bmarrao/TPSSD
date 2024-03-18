@@ -68,97 +68,54 @@ public class KademliaRoutingTable
     //  Função que insere um no na arvore
     public void insert(KademliaNode node)
     {
+        System.out.println("My node = " + printId(this.myNodeId));
+        System.out.println("Other Node = " +printId(node.nodeId));
         TreeNode curr = root;
+        Tuple resposta  = findClosestKbucket(curr, curr,node, 7,'d','r');
+        if (resposta.found.kbucket.size() >= this.k)
+        {
+            // Testa se ele vem da direção que tem uma distancia mais perto do no
+            if (resposta.direction =='d')
+            {
+                //Como iremos expandir a arvore e criar dois novos buckets
+                //Marcamos o no atual como não tendo kbucket
+                resposta.found.kc = 0;
+                // Criamos um no novo a esquerda e a direita cada um deles com um kbucket
+                resposta.found.left = new TreeNode();
+                resposta.found.left.createKBucket();
+                resposta.found.right = new TreeNode();
+                resposta.found.right.createKBucket();
+                // Agora vamos popular os novos buckets que criamos com os nos que estavam no anterios e adicionar o novo
+                if (resposta.j == 0)
+                {
+                    this.addToBuckets(resposta.found.left, resposta.found.right, resposta.found.kbucket, node,resposta.i+1,7);
+
+                }
+                else
+                {
+                    this.addToBuckets(resposta.found.left, resposta.found.right, resposta.found.kbucket, node,resposta.i,resposta.j-1);
+                }
+                // Depois disso marcamos o kbucket do no atual como null
+                resposta.found.kbucket = null;
+                System.out.println("New Kbucket has size of " + resposta.found.left.kc + "And " + resposta.found.right.kc);
+            }
+            else
+            {
+                // Caso ele não venha da direção que está mais perto do proprio id e o bucket esta cheio ele tenta inserir no kbucket q ja existe
+                testLeastRecentlySeen(resposta.found.kbucket, node);
+            }
+        }
+        else
+        {
+            //Adiciona o no a o kbucket
+            resposta.found.kc++;
+            resposta.found.kbucket.add(node);
+        }
         // Função recursiva que ira percorrer a arvore
-        insertRec(node, curr,0, 7, 'd');
     }
 
     // Todo testar
     // Função recursiva
-    public void insertRec(KademliaNode node, TreeNode curr,int i,int j, char prevDir )
-    {
-        System.out.println(i);
-        if (i < 20)
-        {
-            // Testa se tem um kbucket no node curr
-            if (curr.kc >= 1)
-            {
-                System.out.println("Kbucket has size of " + curr.kc);
-                // Testa se o node curr esta na capacidade maxima
-                if (curr.kbucket.size() >= this.k)
-                {
-                    // Testa se ele vem da direção que tem uma distancia mais perto do no
-                    if (prevDir =='d')
-                    {
-                        //Como iremos expandir a arvore e criar dois novos buckets
-                        //Marcamos o no atual como não tendo kbucket
-                        curr.kc = 0;
-                        // Criamos um no novo a esquerda e a direita cada um deles com um kbucket
-                        curr.left = new TreeNode();
-                        curr.left.createKBucket();
-                        curr.right = new TreeNode();
-                        curr.right.createKBucket();
-                        // Agora vamos popular os novos buckets que criamos com os nos que estavam no anterios e adicionar o novo
-                        if (j == 0)
-                        {
-                            this.addToBuckets(curr.left, curr.right, curr.kbucket, node,i+1,7);
-
-                        }
-                        else
-                        {
-                            this.addToBuckets(curr.left, curr.right, curr.kbucket, node,i,j-1);
-                        }
-                        // Depois disso marcamos o kbucket do no atual como null
-                        curr.kbucket = null;
-                        System.out.println("New Kbucket has size of " + curr.left.kc + "And " + curr.right.kc);
-                    }
-                    else
-                    {
-                        // Caso ele não venha da direção que está mais perto do proprio id e o bucket esta cheio ele tenta inserir no kbucket q ja existe
-                        testLeastRecentlySeen(curr.kbucket, node);
-                    }
-                }
-                else
-                {
-                    //Adiciona o no a o kbucket
-                    curr.kc++;
-                    curr.kbucket.add(node);
-                }
-            }
-            else
-            {
-
-                boolean bit1 = ((myNodeId[i] >> 7-j) & 1) == 1;
-                boolean bit2 = ((node.nodeId[i] >> 7-j) & 1) == 1;
-
-                // Testa se o no
-                if (bit1 == bit2)
-                {
-                    if (j == 0)
-                    {
-                        insertRec(node, curr.right,i+1,7,'d');
-                    }
-                    else
-                    {
-                        insertRec(node, curr.right,i,j-1,'d');
-
-                    }
-                }
-                else
-                {
-                    if (j == 0)
-                    {
-                        insertRec(node, curr.left,i+1,7,'e');
-                    }
-                    else
-                    {
-                        insertRec(node, curr.left,i,j-1,'e');
-
-                    }
-                }
-            }
-        }
-    }
 
     // TOdo testar
     // Adiciona os nodes que estão na variavel kbucket para os novos buckets criados de acordo com a distancia
@@ -171,8 +128,8 @@ public class KademliaRoutingTable
         for (KademliaNode BNode: kbucket)
         {
 
-            boolean bit1 = ((myNodeId[i] >> 7-j) & 1) == 1;
-            boolean bit2 = ((BNode.nodeId[i] >> 7-j) & 1) == 1;
+            boolean bit1 = ((myNodeId[i] >> j) & 1) == 1;
+            boolean bit2 = ((BNode.nodeId[i] >> j) & 1) == 1;
 
             // Testa se o no
             if (bit1 == bit2)
@@ -188,7 +145,7 @@ public class KademliaRoutingTable
             }
         }
         // Testa se todos os nos estão indo para uma direção ou outra pois neste caso teremos que adicionar o novo no por um outro metodo
-        boolean direction = (((myNodeId[i] >> 7-j) & 1) == 1) == (((node.nodeId[i] >> 7-j) & 1) == 1);
+        boolean direction = (((myNodeId[i] >> j) & 1) == 1) == (((node.nodeId[i] >> j) & 1) == 1);
         if (count_right == this.k)
         {
             if (direction)
@@ -252,6 +209,67 @@ public class KademliaRoutingTable
         }
     }
 
+    private class Tuple
+    {
+        TreeNode found;
+        char direction;
+        TreeNode parent ;
+        int i ;
+        int j ;
+        private Tuple(TreeNode found,TreeNode parent,int i , int j,char d)
+        {
+            this.found = found;
+            this.parent = parent ;
+            this.direction = d;
+            this.i = i;
+            this.j = j;
+        }
+    }
+    private Tuple findClosestKbucket (TreeNode curr, TreeNode parent,KademliaNode node, int i, int j,char d)
+    {
+        System.out.print(d);
+
+        if (i < 20)
+        {
+            // Testa se tem um kbucke
+            if (curr.kc >= 1)
+            {
+                //System.out.println("Procurando num Map");
+                // Neste caso pesquisa pela função 'searchMapClosest' o node mais perto
+                return new Tuple(curr,parent,i,j,d);
+            }
+            else
+            {
+                boolean direction = (((myNodeId[i] >> j) & 1) == 1) == (((node.nodeId[i] >> j) & 1) == 1);
+                // Caso contrario continua percorrendo a arvore e chamando a função recursiva
+                if (direction)
+                {
+                    if (j == 0)
+                    {
+                        return findClosestKbucket(curr.right,curr, node, i+1,7,'d');
+
+                    }
+                    else
+                    {
+                        return findClosestKbucket(curr.right,curr,node, i,j-1,'d');
+                    }
+
+                }
+                else
+                {
+                    if (j == 0)
+                    {
+                        return findClosestKbucket(curr.left,curr, node, i+1,7,'e');
+                    }
+                    else
+                    {
+                        return findClosestKbucket(curr.left,curr,node, i,j-1,'e');
+                    }
+                }
+            }
+        }
+        return null;
+    }
 
     // TODO testar
     // Função para achar o node mais perto da variavel 'nodeId'
@@ -309,7 +327,7 @@ public class KademliaRoutingTable
             }
             else
             {
-                boolean direction = (((myNodeId[i] >> 7 -j) & 1) == 1) == (((nodeId[0] >> 7-j) & 1) == 1);
+                boolean direction = (((myNodeId[i] >> 7 ) & 1) == 1) == (((nodeId[0] >> 7) & 1) == 1);
 
                 // Caso contrario continua percorrendo a arvore e chamando a função recursiva
                 if (direction)
@@ -437,18 +455,60 @@ public class KademliaRoutingTable
     }
 
 
+    public String printId(byte [] id)
+    {
+        String nodeId="";
+        for (int j = 0 ; j < 20; j++)
+        {
+            byte b = id[j];
+            for (int i = 7; i >= 0; i--) { // Start from the most significant bit (bit 7)
+                // Extract the i-th bit using bitwise AND operation
+                boolean bit = ((b >> i) & 1) == 1;
+                // Print the bit value
+                if (bit)
+                {
+                    nodeId = nodeId+"1";
+                }
+                else
+                {
+                    nodeId = nodeId +"0";
+                }
+            }
+        }
+        return nodeId;
+    }
     public static void main(String[] args)
     {
 
         // Convert array of bits to bytes
         Kademlia kd = new Kademlia();
         KademliaRoutingTable  krt = new KademliaRoutingTable(kd.generateNodeId(),20 );
-        for (int i  = 0 ; i < 200000; i++)
+        //System.out.println(krt.findClosestKbucket(krt.root,krt.root, kd.generateNodeId(),0,7,'r'));
+        byte teste = (byte)0b11110000;
+
+        System.out.println(teste);
+        String nodeId ="";
+        for (int j = 7 ; j >= 0; j--)
+        {
+            boolean bit = ((teste>> j) & 1) == 1;
+            // Print the bit value
+            if (bit)
+            {
+                nodeId = nodeId+"1";
+            }
+            else
+            {
+                nodeId = nodeId +"0";
+            }
+        }
+        System.out.println(nodeId);
+        /*
+        for (int i  = 0 ; i < 50; i++)
         {
             krt.insert(new KademliaNode("localhost",kd.generateNodeId(),5000));
         }
-        krt.printTree();
-        System.out.println(krt.findClosestNode(kd.generateNodeId()));
+        */
+        //krt.insert(new KademliaNode("localhost",kd.generateNodeId(),5000));
 
     }
 }
