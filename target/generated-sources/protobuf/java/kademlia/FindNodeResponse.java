@@ -19,7 +19,7 @@ public  final class FindNodeResponse extends
     super(builder);
   }
   private FindNodeResponse() {
-    id_ = "";
+    id_ = com.google.protobuf.ByteString.EMPTY;
     nodes_ = java.util.Collections.emptyList();
   }
 
@@ -49,9 +49,8 @@ public  final class FindNodeResponse extends
             break;
           }
           case 10: {
-            java.lang.String s = input.readStringRequireUtf8();
 
-            id_ = s;
+            id_ = input.readBytes();
             break;
           }
           case 18: {
@@ -91,37 +90,12 @@ public  final class FindNodeResponse extends
 
   private int bitField0_;
   public static final int ID_FIELD_NUMBER = 1;
-  private volatile java.lang.Object id_;
+  private com.google.protobuf.ByteString id_;
   /**
-   * <code>string id = 1;</code>
+   * <code>bytes id = 1;</code>
    */
-  public java.lang.String getId() {
-    java.lang.Object ref = id_;
-    if (ref instanceof java.lang.String) {
-      return (java.lang.String) ref;
-    } else {
-      com.google.protobuf.ByteString bs = 
-          (com.google.protobuf.ByteString) ref;
-      java.lang.String s = bs.toStringUtf8();
-      id_ = s;
-      return s;
-    }
-  }
-  /**
-   * <code>string id = 1;</code>
-   */
-  public com.google.protobuf.ByteString
-      getIdBytes() {
-    java.lang.Object ref = id_;
-    if (ref instanceof java.lang.String) {
-      com.google.protobuf.ByteString b = 
-          com.google.protobuf.ByteString.copyFromUtf8(
-              (java.lang.String) ref);
-      id_ = b;
-      return b;
-    } else {
-      return (com.google.protobuf.ByteString) ref;
-    }
+  public com.google.protobuf.ByteString getId() {
+    return id_;
   }
 
   public static final int NODES_FIELD_NUMBER = 2;
@@ -171,8 +145,8 @@ public  final class FindNodeResponse extends
 
   public void writeTo(com.google.protobuf.CodedOutputStream output)
                       throws java.io.IOException {
-    if (!getIdBytes().isEmpty()) {
-      com.google.protobuf.GeneratedMessageV3.writeString(output, 1, id_);
+    if (!id_.isEmpty()) {
+      output.writeBytes(1, id_);
     }
     for (int i = 0; i < nodes_.size(); i++) {
       output.writeMessage(2, nodes_.get(i));
@@ -184,8 +158,9 @@ public  final class FindNodeResponse extends
     if (size != -1) return size;
 
     size = 0;
-    if (!getIdBytes().isEmpty()) {
-      size += com.google.protobuf.GeneratedMessageV3.computeStringSize(1, id_);
+    if (!id_.isEmpty()) {
+      size += com.google.protobuf.CodedOutputStream
+        .computeBytesSize(1, id_);
     }
     for (int i = 0; i < nodes_.size(); i++) {
       size += com.google.protobuf.CodedOutputStream
@@ -361,7 +336,7 @@ public  final class FindNodeResponse extends
     }
     public Builder clear() {
       super.clear();
-      id_ = "";
+      id_ = com.google.protobuf.ByteString.EMPTY;
 
       if (nodesBuilder_ == null) {
         nodes_ = java.util.Collections.emptyList();
@@ -445,9 +420,8 @@ public  final class FindNodeResponse extends
 
     public Builder mergeFrom(kademlia.FindNodeResponse other) {
       if (other == kademlia.FindNodeResponse.getDefaultInstance()) return this;
-      if (!other.getId().isEmpty()) {
-        id_ = other.id_;
-        onChanged();
+      if (other.getId() != com.google.protobuf.ByteString.EMPTY) {
+        setId(other.getId());
       }
       if (nodesBuilder_ == null) {
         if (!other.nodes_.isEmpty()) {
@@ -502,43 +476,17 @@ public  final class FindNodeResponse extends
     }
     private int bitField0_;
 
-    private java.lang.Object id_ = "";
+    private com.google.protobuf.ByteString id_ = com.google.protobuf.ByteString.EMPTY;
     /**
-     * <code>string id = 1;</code>
+     * <code>bytes id = 1;</code>
      */
-    public java.lang.String getId() {
-      java.lang.Object ref = id_;
-      if (!(ref instanceof java.lang.String)) {
-        com.google.protobuf.ByteString bs =
-            (com.google.protobuf.ByteString) ref;
-        java.lang.String s = bs.toStringUtf8();
-        id_ = s;
-        return s;
-      } else {
-        return (java.lang.String) ref;
-      }
+    public com.google.protobuf.ByteString getId() {
+      return id_;
     }
     /**
-     * <code>string id = 1;</code>
+     * <code>bytes id = 1;</code>
      */
-    public com.google.protobuf.ByteString
-        getIdBytes() {
-      java.lang.Object ref = id_;
-      if (ref instanceof String) {
-        com.google.protobuf.ByteString b = 
-            com.google.protobuf.ByteString.copyFromUtf8(
-                (java.lang.String) ref);
-        id_ = b;
-        return b;
-      } else {
-        return (com.google.protobuf.ByteString) ref;
-      }
-    }
-    /**
-     * <code>string id = 1;</code>
-     */
-    public Builder setId(
-        java.lang.String value) {
+    public Builder setId(com.google.protobuf.ByteString value) {
       if (value == null) {
     throw new NullPointerException();
   }
@@ -548,25 +496,11 @@ public  final class FindNodeResponse extends
       return this;
     }
     /**
-     * <code>string id = 1;</code>
+     * <code>bytes id = 1;</code>
      */
     public Builder clearId() {
       
       id_ = getDefaultInstance().getId();
-      onChanged();
-      return this;
-    }
-    /**
-     * <code>string id = 1;</code>
-     */
-    public Builder setIdBytes(
-        com.google.protobuf.ByteString value) {
-      if (value == null) {
-    throw new NullPointerException();
-  }
-  checkByteStringIsUtf8(value);
-      
-      id_ = value;
       onChanged();
       return this;
     }

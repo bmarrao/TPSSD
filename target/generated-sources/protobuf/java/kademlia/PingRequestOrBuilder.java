@@ -8,12 +8,7 @@ public interface PingRequestOrBuilder extends
     com.google.protobuf.MessageOrBuilder {
 
   /**
-   * <code>string myNodeId = 1;</code>
+   * <code>bytes myNodeId = 1;</code>
    */
-  java.lang.String getMyNodeId();
-  /**
-   * <code>string myNodeId = 1;</code>
-   */
-  com.google.protobuf.ByteString
-      getMyNodeIdBytes();
+  com.google.protobuf.ByteString getMyNodeId();
 }

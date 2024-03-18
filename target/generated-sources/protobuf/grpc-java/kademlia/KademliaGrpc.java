@@ -105,6 +105,8 @@ public final class KademliaGrpc {
 
     /**
      * <pre>
+     *TODO Adicionar metodos pro Bootstrap node - Cristina
+     *rpc iniateBootstrap()
      * Unary
      * </pre>
      */
@@ -197,6 +199,8 @@ public final class KademliaGrpc {
 
     /**
      * <pre>
+     *TODO Adicionar metodos pro Bootstrap node - Cristina
+     *rpc iniateBootstrap()
      * Unary
      * </pre>
      */
@@ -260,6 +264,8 @@ public final class KademliaGrpc {
 
     /**
      * <pre>
+     *TODO Adicionar metodos pro Bootstrap node - Cristina
+     *rpc iniateBootstrap()
      * Unary
      * </pre>
      */
@@ -319,6 +325,8 @@ public final class KademliaGrpc {
 
     /**
      * <pre>
+     *TODO Adicionar metodos pro Bootstrap node - Cristina
+     *rpc iniateBootstrap()
      * Unary
      * </pre>
      */

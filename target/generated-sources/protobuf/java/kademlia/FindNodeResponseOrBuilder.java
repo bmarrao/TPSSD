@@ -8,14 +8,9 @@ public interface FindNodeResponseOrBuilder extends
     com.google.protobuf.MessageOrBuilder {
 
   /**
-   * <code>string id = 1;</code>
+   * <code>bytes id = 1;</code>
    */
-  java.lang.String getId();
-  /**
-   * <code>string id = 1;</code>
-   */
-  com.google.protobuf.ByteString
-      getIdBytes();
+  com.google.protobuf.ByteString getId();
 
   /**
    * <code>repeated .kademlia.Node nodes = 2;</code>

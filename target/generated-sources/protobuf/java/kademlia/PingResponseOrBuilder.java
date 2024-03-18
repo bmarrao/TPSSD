@@ -8,7 +8,7 @@ public interface PingResponseOrBuilder extends
     com.google.protobuf.MessageOrBuilder {
 
   /**
-   * <code>bool response = 1;</code>
+   * <code>bytes id = 1;</code>
    */
-  boolean getResponse();
+  com.google.protobuf.ByteString getId();
 }

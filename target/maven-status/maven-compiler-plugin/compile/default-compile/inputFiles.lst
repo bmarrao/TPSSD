@@ -11,10 +11,12 @@
 /home/brenin/TPSSD/target/generated-sources/protobuf/java/kademlia/StoreResponse.java
 /home/brenin/TPSSD/src/main/java/kademlia/Kademlia.java
 /home/brenin/TPSSD/target/generated-sources/protobuf/java/kademlia/FindValueRequestOrBuilder.java
+/home/brenin/TPSSD/src/main/java/kademlia/KademliaStore.java
 /home/brenin/TPSSD/target/generated-sources/protobuf/grpc-java/kademlia/KademliaGrpc.java
 /home/brenin/TPSSD/target/generated-sources/protobuf/java/kademlia/StoreRequestOrBuilder.java
 /home/brenin/TPSSD/src/main/java/kademlia/server/KademliaImpl.java
 /home/brenin/TPSSD/target/generated-sources/protobuf/java/kademlia/StoreResponseOrBuilder.java
+/home/brenin/TPSSD/src/main/java/kademlia/KademliaFindOpResult.java
 /home/brenin/TPSSD/target/generated-sources/protobuf/java/kademlia/NodeOrBuilder.java
 /home/brenin/TPSSD/target/generated-sources/protobuf/java/kademlia/FindValueRequest.java
 /home/brenin/TPSSD/src/main/java/kademlia/server/KademliaServer.java

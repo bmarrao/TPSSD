@@ -15,6 +15,7 @@ public  final class StoreResponse extends
     super(builder);
   }
   private StoreResponse() {
+    id_ = com.google.protobuf.ByteString.EMPTY;
     stored_ = false;
   }
 
@@ -43,7 +44,12 @@ public  final class StoreResponse extends
             }
             break;
           }
-          case 8: {
+          case 10: {
+
+            id_ = input.readBytes();
+            break;
+          }
+          case 16: {
 
             stored_ = input.readBool();
             break;
@@ -71,10 +77,19 @@ public  final class StoreResponse extends
             kademlia.StoreResponse.class, kademlia.StoreResponse.Builder.class);
   }
 
-  public static final int STORED_FIELD_NUMBER = 1;
+  public static final int ID_FIELD_NUMBER = 1;
+  private com.google.protobuf.ByteString id_;
+  /**
+   * <code>bytes id = 1;</code>
+   */
+  public com.google.protobuf.ByteString getId() {
+    return id_;
+  }
+
+  public static final int STORED_FIELD_NUMBER = 2;
   private boolean stored_;
   /**
-   * <code>bool stored = 1;</code>
+   * <code>bool stored = 2;</code>
    */
   public boolean getStored() {
     return stored_;
@@ -92,8 +107,11 @@ public  final class StoreResponse extends
 
   public void writeTo(com.google.protobuf.CodedOutputStream output)
                       throws java.io.IOException {
+    if (!id_.isEmpty()) {
+      output.writeBytes(1, id_);
+    }
     if (stored_ != false) {
-      output.writeBool(1, stored_);
+      output.writeBool(2, stored_);
     }
   }
 
@@ -102,9 +120,13 @@ public  final class StoreResponse extends
     if (size != -1) return size;
 
     size = 0;
+    if (!id_.isEmpty()) {
+      size += com.google.protobuf.CodedOutputStream
+        .computeBytesSize(1, id_);
+    }
     if (stored_ != false) {
       size += com.google.protobuf.CodedOutputStream
-        .computeBoolSize(1, stored_);
+        .computeBoolSize(2, stored_);
     }
     memoizedSize = size;
     return size;
@@ -122,6 +144,8 @@ public  final class StoreResponse extends
     kademlia.StoreResponse other = (kademlia.StoreResponse) obj;
 
     boolean result = true;
+    result = result && getId()
+        .equals(other.getId());
     result = result && (getStored()
         == other.getStored());
     return result;
@@ -134,6 +158,8 @@ public  final class StoreResponse extends
     }
     int hash = 41;
     hash = (19 * hash) + getDescriptor().hashCode();
+    hash = (37 * hash) + ID_FIELD_NUMBER;
+    hash = (53 * hash) + getId().hashCode();
     hash = (37 * hash) + STORED_FIELD_NUMBER;
     hash = (53 * hash) + com.google.protobuf.Internal.hashBoolean(
         getStored());
@@ -266,6 +292,8 @@ public  final class StoreResponse extends
     }
     public Builder clear() {
       super.clear();
+      id_ = com.google.protobuf.ByteString.EMPTY;
+
       stored_ = false;
 
       return this;
@@ -290,6 +318,7 @@ public  final class StoreResponse extends
 
     public kademlia.StoreResponse buildPartial() {
       kademlia.StoreResponse result = new kademlia.StoreResponse(this);
+      result.id_ = id_;
       result.stored_ = stored_;
       onBuilt();
       return result;
@@ -332,6 +361,9 @@ public  final class StoreResponse extends
 
     public Builder mergeFrom(kademlia.StoreResponse other) {
       if (other == kademlia.StoreResponse.getDefaultInstance()) return this;
+      if (other.getId() != com.google.protobuf.ByteString.EMPTY) {
+        setId(other.getId());
+      }
       if (other.getStored() != false) {
         setStored(other.getStored());
       }
@@ -361,15 +393,44 @@ public  final class StoreResponse extends
       return this;
     }
 
+    private com.google.protobuf.ByteString id_ = com.google.protobuf.ByteString.EMPTY;
+    /**
+     * <code>bytes id = 1;</code>
+     */
+    public com.google.protobuf.ByteString getId() {
+      return id_;
+    }
+    /**
+     * <code>bytes id = 1;</code>
+     */
+    public Builder setId(com.google.protobuf.ByteString value) {
+      if (value == null) {
+    throw new NullPointerException();
+  }
+  
+      id_ = value;
+      onChanged();
+      return this;
+    }
+    /**
+     * <code>bytes id = 1;</code>
+     */
+    public Builder clearId() {
+      
+      id_ = getDefaultInstance().getId();
+      onChanged();
+      return this;
+    }
+
     private boolean stored_ ;
     /**
-     * <code>bool stored = 1;</code>
+     * <code>bool stored = 2;</code>
      */
     public boolean getStored() {
       return stored_;
     }
     /**
-     * <code>bool stored = 1;</code>
+     * <code>bool stored = 2;</code>
      */
     public Builder setStored(boolean value) {
       
@@ -378,7 +439,7 @@ public  final class StoreResponse extends
       return this;
     }
     /**
-     * <code>bool stored = 1;</code>
+     * <code>bool stored = 2;</code>
      */
     public Builder clearStored() {
       

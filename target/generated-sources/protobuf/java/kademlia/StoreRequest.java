@@ -15,7 +15,7 @@ public  final class StoreRequest extends
     super(builder);
   }
   private StoreRequest() {
-    id_ = "";
+    id_ = com.google.protobuf.ByteString.EMPTY;
     key_ = "";
     val_ = "";
     ip_ = "";
@@ -48,9 +48,8 @@ public  final class StoreRequest extends
             break;
           }
           case 10: {
-            java.lang.String s = input.readStringRequireUtf8();
 
-            id_ = s;
+            id_ = input.readBytes();
             break;
           }
           case 18: {
@@ -100,37 +99,12 @@ public  final class StoreRequest extends
   }
 
   public static final int ID_FIELD_NUMBER = 1;
-  private volatile java.lang.Object id_;
+  private com.google.protobuf.ByteString id_;
   /**
-   * <code>string id = 1;</code>
+   * <code>bytes id = 1;</code>
    */
-  public java.lang.String getId() {
-    java.lang.Object ref = id_;
-    if (ref instanceof java.lang.String) {
-      return (java.lang.String) ref;
-    } else {
-      com.google.protobuf.ByteString bs = 
-          (com.google.protobuf.ByteString) ref;
-      java.lang.String s = bs.toStringUtf8();
-      id_ = s;
-      return s;
-    }
-  }
-  /**
-   * <code>string id = 1;</code>
-   */
-  public com.google.protobuf.ByteString
-      getIdBytes() {
-    java.lang.Object ref = id_;
-    if (ref instanceof java.lang.String) {
-      com.google.protobuf.ByteString b = 
-          com.google.protobuf.ByteString.copyFromUtf8(
-              (java.lang.String) ref);
-      id_ = b;
-      return b;
-    } else {
-      return (com.google.protobuf.ByteString) ref;
-    }
+  public com.google.protobuf.ByteString getId() {
+    return id_;
   }
 
   public static final int KEY_FIELD_NUMBER = 2;
@@ -256,8 +230,8 @@ public  final class StoreRequest extends
 
   public void writeTo(com.google.protobuf.CodedOutputStream output)
                       throws java.io.IOException {
-    if (!getIdBytes().isEmpty()) {
-      com.google.protobuf.GeneratedMessageV3.writeString(output, 1, id_);
+    if (!id_.isEmpty()) {
+      output.writeBytes(1, id_);
     }
     if (!getKeyBytes().isEmpty()) {
       com.google.protobuf.GeneratedMessageV3.writeString(output, 2, key_);
@@ -278,8 +252,9 @@ public  final class StoreRequest extends
     if (size != -1) return size;
 
     size = 0;
-    if (!getIdBytes().isEmpty()) {
-      size += com.google.protobuf.GeneratedMessageV3.computeStringSize(1, id_);
+    if (!id_.isEmpty()) {
+      size += com.google.protobuf.CodedOutputStream
+        .computeBytesSize(1, id_);
     }
     if (!getKeyBytes().isEmpty()) {
       size += com.google.protobuf.GeneratedMessageV3.computeStringSize(2, key_);
@@ -469,7 +444,7 @@ public  final class StoreRequest extends
     }
     public Builder clear() {
       super.clear();
-      id_ = "";
+      id_ = com.google.protobuf.ByteString.EMPTY;
 
       key_ = "";
 
@@ -547,9 +522,8 @@ public  final class StoreRequest extends
 
     public Builder mergeFrom(kademlia.StoreRequest other) {
       if (other == kademlia.StoreRequest.getDefaultInstance()) return this;
-      if (!other.getId().isEmpty()) {
-        id_ = other.id_;
-        onChanged();
+      if (other.getId() != com.google.protobuf.ByteString.EMPTY) {
+        setId(other.getId());
       }
       if (!other.getKey().isEmpty()) {
         key_ = other.key_;
@@ -592,43 +566,17 @@ public  final class StoreRequest extends
       return this;
     }
 
-    private java.lang.Object id_ = "";
+    private com.google.protobuf.ByteString id_ = com.google.protobuf.ByteString.EMPTY;
     /**
-     * <code>string id = 1;</code>
+     * <code>bytes id = 1;</code>
      */
-    public java.lang.String getId() {
-      java.lang.Object ref = id_;
-      if (!(ref instanceof java.lang.String)) {
-        com.google.protobuf.ByteString bs =
-            (com.google.protobuf.ByteString) ref;
-        java.lang.String s = bs.toStringUtf8();
-        id_ = s;
-        return s;
-      } else {
-        return (java.lang.String) ref;
-      }
+    public com.google.protobuf.ByteString getId() {
+      return id_;
     }
     /**
-     * <code>string id = 1;</code>
+     * <code>bytes id = 1;</code>
      */
-    public com.google.protobuf.ByteString
-        getIdBytes() {
-      java.lang.Object ref = id_;
-      if (ref instanceof String) {
-        com.google.protobuf.ByteString b = 
-            com.google.protobuf.ByteString.copyFromUtf8(
-                (java.lang.String) ref);
-        id_ = b;
-        return b;
-      } else {
-        return (com.google.protobuf.ByteString) ref;
-      }
-    }
-    /**
-     * <code>string id = 1;</code>
-     */
-    public Builder setId(
-        java.lang.String value) {
+    public Builder setId(com.google.protobuf.ByteString value) {
       if (value == null) {
     throw new NullPointerException();
   }
@@ -638,25 +586,11 @@ public  final class StoreRequest extends
       return this;
     }
     /**
-     * <code>string id = 1;</code>
+     * <code>bytes id = 1;</code>
      */
     public Builder clearId() {
       
       id_ = getDefaultInstance().getId();
-      onChanged();
-      return this;
-    }
-    /**
-     * <code>string id = 1;</code>
-     */
-    public Builder setIdBytes(
-        com.google.protobuf.ByteString value) {
-      if (value == null) {
-    throw new NullPointerException();
-  }
-  checkByteStringIsUtf8(value);
-      
-      id_ = value;
       onChanged();
       return this;
     }

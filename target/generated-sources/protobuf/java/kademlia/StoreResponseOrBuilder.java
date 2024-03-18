@@ -8,7 +8,12 @@ public interface StoreResponseOrBuilder extends
     com.google.protobuf.MessageOrBuilder {
 
   /**
-   * <code>bool stored = 1;</code>
+   * <code>bytes id = 1;</code>
+   */
+  com.google.protobuf.ByteString getId();
+
+  /**
+   * <code>bool stored = 2;</code>
    */
   boolean getStored();
 }

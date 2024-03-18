@@ -71,7 +71,7 @@ public class KademliaRoutingTable
         System.out.println("My node = " + printId(this.myNodeId));
         System.out.println("Other Node = " +printId(node.nodeId));
         TreeNode curr = root;
-        Tuple resposta  = findClosestKbucket(curr, curr,node, 7,'d','r');
+        Tuple resposta  = findClosestKbucket(curr, curr,node, 0,7,'r',"");
         if (resposta.found.kbucket.size() >= this.k)
         {
             // Testa se ele vem da direção que tem uma distancia mais perto do no
@@ -225,9 +225,8 @@ public class KademliaRoutingTable
             this.j = j;
         }
     }
-    private Tuple findClosestKbucket (TreeNode curr, TreeNode parent,KademliaNode node, int i, int j,char d)
+    private Tuple findClosestKbucket (TreeNode curr, TreeNode parent,KademliaNode node, int i, int j,char d, String path)
     {
-        System.out.print(d);
 
         if (i < 20)
         {
@@ -236,70 +235,74 @@ public class KademliaRoutingTable
             {
                 //System.out.println("Procurando num Map");
                 // Neste caso pesquisa pela função 'searchMapClosest' o node mais perto
+                System.out.println("path = "+path);
                 return new Tuple(curr,parent,i,j,d);
             }
             else
             {
-                boolean direction = (((myNodeId[i] >> j) & 1) == 1) == (((node.nodeId[i] >> j) & 1) == 1);
-                // Caso contrario continua percorrendo a arvore e chamando a função recursiva
-                if (direction)
-                {
-                    if (j == 0)
-                    {
-                        return findClosestKbucket(curr.right,curr, node, i+1,7,'d');
 
-                    }
-                    else
-                    {
-                        return findClosestKbucket(curr.right,curr,node, i,j-1,'d');
-                    }
+            boolean direction = (((myNodeId[i] >> j) & 1) == 1) == (((node.nodeId[i] >> j) & 1) == 1);
+            // Caso contrario continua percorrendo a arvore e chamando a função recursiva
+            if (direction)
+            {
+                if (j == 0)
+                {
+                    return findClosestKbucket(curr.right,curr, node, i+1,7,'d',path+'r');
 
                 }
                 else
                 {
-                    if (j == 0)
-                    {
-                        return findClosestKbucket(curr.left,curr, node, i+1,7,'e');
-                    }
-                    else
-                    {
-                        return findClosestKbucket(curr.left,curr,node, i,j-1,'e');
-                    }
+                    return findClosestKbucket(curr.right,curr,node, i,j-1,'d',path+'d');
+                }
+
+            }
+            else
+            {
+                if (j == 0)
+                {
+                    return findClosestKbucket(curr.left,curr, node, i+1,7,'e',path+'e');
+                }
+                else
+                {
+                    return findClosestKbucket(curr.left,curr,node, i,j-1,'e',path+'e');
                 }
             }
+        }
         }
         return null;
     }
 
     // TODO testar
     // Função para achar o node mais perto da variavel 'nodeId'
+    // TODO testar
+    // Função para achar o node mais perto da variavel 'nodeId'
     private KademliaNode findClosestNode(byte[] nodeId)
     {
-            // Testa se tem um kbucket
-            if (this.root.kc >= 2) {
-                // Neste caso pesquisa pela função 'searchMapClosest' o node mais perto
-                return searchMapClosest(this.root.kbucket, nodeId);
-            }
-            else if (this.root.kc == 1)
+        // Testa se tem um kbucket
+        if (this.root.kc >= 2) {
+            // Neste caso pesquisa pela função 'searchMapClosest' o node mais perto
+            return searchMapClosest(this.root.kbucket, nodeId);
+        }
+        else if (this.root.kc == 1)
+        {
+            return null;
+        }
+        //TODO CASO O curr.kc == 1 ou seja não tem elementos
+        else
+        {
+            boolean direction = (((myNodeId[0] >> 7) & 1) == 1) == (((nodeId[0] >> 7) & 1) == 1);
+
+            // Caso contrario continua percorrendo a arvore e chamando a função recursiva
+            if (direction)
             {
-                return null;
+                return findClosestNodeRec(this.root.right, this.root, nodeId, 0,6,'d');
+
             }
-            //TODO CASO O curr.kc == 1 ou seja não tem elementos
             else
             {
-                boolean direction = (((myNodeId[0] >> 7) & 1) == 1) == (((nodeId[0] >> 7) & 1) == 1);
-
-                // Caso contrario continua percorrendo a arvore e chamando a função recursiva
-                if (direction)
-                {
-                    return findClosestNodeRec(this.root.right, this.root, nodeId, 0,6,'d');
-
-                }
-                else
-                {
-                    return findClosestNodeRec(this.root.left, this.root, nodeId, 0,6,'e');
-                }
-            }// Chama a função recursiva para resolver o problema
+                return findClosestNodeRec(this.root.left, this.root, nodeId, 0,6,'e');
+            }
+        }// Chama a função recursiva para resolver o problema
     }
 
     //TODO Testar
@@ -436,7 +439,7 @@ public class KademliaRoutingTable
                 System.out.print("Key = " + new BigInteger(entry.getKey(), 2) +
                     ", Value = " + entry.getValue()+ ", ");
             */
-                System.out.println("Direction " + dir+ "And depth " + depth+ " Kbucket with size "+ (node.kc-1));
+            System.out.println("Direction " + dir+ "And depth " + depth+ " Kbucket with size "+ (node.kc-1));
 
             //System.out.println("}");
             //System.out.println("");
@@ -482,33 +485,19 @@ public class KademliaRoutingTable
 
         // Convert array of bits to bytes
         Kademlia kd = new Kademlia();
-        KademliaRoutingTable  krt = new KademliaRoutingTable(kd.generateNodeId(), kd.getKdProtocol(), 20 );
+        KademliaRoutingTable krt = new KademliaRoutingTable(kd.generateNodeId(), kd.getKdProtocol(), 20 );;
         //System.out.println(krt.findClosestKbucket(krt.root,krt.root, kd.generateNodeId(),0,7,'r'));
-        byte teste = (byte)0b11110000;
 
-        System.out.println(teste);
-        String nodeId ="";
-        for (int j = 7 ; j >= 0; j--)
-        {
-            boolean bit = ((teste>> j) & 1) == 1;
-            // Print the bit value
-            if (bit)
-            {
-                nodeId = nodeId+"1";
-            }
-            else
-            {
-                nodeId = nodeId +"0";
-            }
-        }
-        System.out.println(nodeId);
-        /*
-        for (int i  = 0 ; i < 50; i++)
+
+        for (int i  = 0 ; i < 20000; i++)
         {
             krt.insert(new KademliaNode("localhost",kd.generateNodeId(),5000));
         }
-        */
-        //krt.insert(new KademliaNode("localhost",kd.generateNodeId(),5000));
+
+        System.out.println("My node = " + krt.printId(krt.myNodeId));
+        KademliaNode node = new KademliaNode("localhost",kd.generateNodeId(),5000);
+        System.out.println("Other Node = " + krt.printId(node.nodeId));
+        System.out.println(krt.findClosestKbucket(krt.root,krt.root,node,0,7,'r',""));
 
     }
 }

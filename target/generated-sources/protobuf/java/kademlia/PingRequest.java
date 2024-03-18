@@ -15,7 +15,7 @@ public  final class PingRequest extends
     super(builder);
   }
   private PingRequest() {
-    myNodeId_ = "";
+    myNodeId_ = com.google.protobuf.ByteString.EMPTY;
   }
 
   @java.lang.Override
@@ -44,9 +44,8 @@ public  final class PingRequest extends
             break;
           }
           case 10: {
-            java.lang.String s = input.readStringRequireUtf8();
 
-            myNodeId_ = s;
+            myNodeId_ = input.readBytes();
             break;
           }
         }
@@ -73,37 +72,12 @@ public  final class PingRequest extends
   }
 
   public static final int MYNODEID_FIELD_NUMBER = 1;
-  private volatile java.lang.Object myNodeId_;
+  private com.google.protobuf.ByteString myNodeId_;
   /**
-   * <code>string myNodeId = 1;</code>
+   * <code>bytes myNodeId = 1;</code>
    */
-  public java.lang.String getMyNodeId() {
-    java.lang.Object ref = myNodeId_;
-    if (ref instanceof java.lang.String) {
-      return (java.lang.String) ref;
-    } else {
-      com.google.protobuf.ByteString bs = 
-          (com.google.protobuf.ByteString) ref;
-      java.lang.String s = bs.toStringUtf8();
-      myNodeId_ = s;
-      return s;
-    }
-  }
-  /**
-   * <code>string myNodeId = 1;</code>
-   */
-  public com.google.protobuf.ByteString
-      getMyNodeIdBytes() {
-    java.lang.Object ref = myNodeId_;
-    if (ref instanceof java.lang.String) {
-      com.google.protobuf.ByteString b = 
-          com.google.protobuf.ByteString.copyFromUtf8(
-              (java.lang.String) ref);
-      myNodeId_ = b;
-      return b;
-    } else {
-      return (com.google.protobuf.ByteString) ref;
-    }
+  public com.google.protobuf.ByteString getMyNodeId() {
+    return myNodeId_;
   }
 
   private byte memoizedIsInitialized = -1;
@@ -118,8 +92,8 @@ public  final class PingRequest extends
 
   public void writeTo(com.google.protobuf.CodedOutputStream output)
                       throws java.io.IOException {
-    if (!getMyNodeIdBytes().isEmpty()) {
-      com.google.protobuf.GeneratedMessageV3.writeString(output, 1, myNodeId_);
+    if (!myNodeId_.isEmpty()) {
+      output.writeBytes(1, myNodeId_);
     }
   }
 
@@ -128,8 +102,9 @@ public  final class PingRequest extends
     if (size != -1) return size;
 
     size = 0;
-    if (!getMyNodeIdBytes().isEmpty()) {
-      size += com.google.protobuf.GeneratedMessageV3.computeStringSize(1, myNodeId_);
+    if (!myNodeId_.isEmpty()) {
+      size += com.google.protobuf.CodedOutputStream
+        .computeBytesSize(1, myNodeId_);
     }
     memoizedSize = size;
     return size;
@@ -290,7 +265,7 @@ public  final class PingRequest extends
     }
     public Builder clear() {
       super.clear();
-      myNodeId_ = "";
+      myNodeId_ = com.google.protobuf.ByteString.EMPTY;
 
       return this;
     }
@@ -356,9 +331,8 @@ public  final class PingRequest extends
 
     public Builder mergeFrom(kademlia.PingRequest other) {
       if (other == kademlia.PingRequest.getDefaultInstance()) return this;
-      if (!other.getMyNodeId().isEmpty()) {
-        myNodeId_ = other.myNodeId_;
-        onChanged();
+      if (other.getMyNodeId() != com.google.protobuf.ByteString.EMPTY) {
+        setMyNodeId(other.getMyNodeId());
       }
       onChanged();
       return this;
@@ -386,43 +360,17 @@ public  final class PingRequest extends
       return this;
     }
 
-    private java.lang.Object myNodeId_ = "";
+    private com.google.protobuf.ByteString myNodeId_ = com.google.protobuf.ByteString.EMPTY;
     /**
-     * <code>string myNodeId = 1;</code>
+     * <code>bytes myNodeId = 1;</code>
      */
-    public java.lang.String getMyNodeId() {
-      java.lang.Object ref = myNodeId_;
-      if (!(ref instanceof java.lang.String)) {
-        com.google.protobuf.ByteString bs =
-            (com.google.protobuf.ByteString) ref;
-        java.lang.String s = bs.toStringUtf8();
-        myNodeId_ = s;
-        return s;
-      } else {
-        return (java.lang.String) ref;
-      }
+    public com.google.protobuf.ByteString getMyNodeId() {
+      return myNodeId_;
     }
     /**
-     * <code>string myNodeId = 1;</code>
+     * <code>bytes myNodeId = 1;</code>
      */
-    public com.google.protobuf.ByteString
-        getMyNodeIdBytes() {
-      java.lang.Object ref = myNodeId_;
-      if (ref instanceof String) {
-        com.google.protobuf.ByteString b = 
-            com.google.protobuf.ByteString.copyFromUtf8(
-                (java.lang.String) ref);
-        myNodeId_ = b;
-        return b;
-      } else {
-        return (com.google.protobuf.ByteString) ref;
-      }
-    }
-    /**
-     * <code>string myNodeId = 1;</code>
-     */
-    public Builder setMyNodeId(
-        java.lang.String value) {
+    public Builder setMyNodeId(com.google.protobuf.ByteString value) {
       if (value == null) {
     throw new NullPointerException();
   }
@@ -432,25 +380,11 @@ public  final class PingRequest extends
       return this;
     }
     /**
-     * <code>string myNodeId = 1;</code>
+     * <code>bytes myNodeId = 1;</code>
      */
     public Builder clearMyNodeId() {
       
       myNodeId_ = getDefaultInstance().getMyNodeId();
-      onChanged();
-      return this;
-    }
-    /**
-     * <code>string myNodeId = 1;</code>
-     */
-    public Builder setMyNodeIdBytes(
-        com.google.protobuf.ByteString value) {
-      if (value == null) {
-    throw new NullPointerException();
-  }
-  checkByteStringIsUtf8(value);
-      
-      myNodeId_ = value;
       onChanged();
       return this;
     }

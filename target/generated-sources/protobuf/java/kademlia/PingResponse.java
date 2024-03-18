@@ -15,7 +15,7 @@ public  final class PingResponse extends
     super(builder);
   }
   private PingResponse() {
-    response_ = false;
+    id_ = com.google.protobuf.ByteString.EMPTY;
   }
 
   @java.lang.Override
@@ -43,9 +43,9 @@ public  final class PingResponse extends
             }
             break;
           }
-          case 8: {
+          case 10: {
 
-            response_ = input.readBool();
+            id_ = input.readBytes();
             break;
           }
         }
@@ -71,13 +71,13 @@ public  final class PingResponse extends
             kademlia.PingResponse.class, kademlia.PingResponse.Builder.class);
   }
 
-  public static final int RESPONSE_FIELD_NUMBER = 1;
-  private boolean response_;
+  public static final int ID_FIELD_NUMBER = 1;
+  private com.google.protobuf.ByteString id_;
   /**
-   * <code>bool response = 1;</code>
+   * <code>bytes id = 1;</code>
    */
-  public boolean getResponse() {
-    return response_;
+  public com.google.protobuf.ByteString getId() {
+    return id_;
   }
 
   private byte memoizedIsInitialized = -1;
@@ -92,8 +92,8 @@ public  final class PingResponse extends
 
   public void writeTo(com.google.protobuf.CodedOutputStream output)
                       throws java.io.IOException {
-    if (response_ != false) {
-      output.writeBool(1, response_);
+    if (!id_.isEmpty()) {
+      output.writeBytes(1, id_);
     }
   }
 
@@ -102,9 +102,9 @@ public  final class PingResponse extends
     if (size != -1) return size;
 
     size = 0;
-    if (response_ != false) {
+    if (!id_.isEmpty()) {
       size += com.google.protobuf.CodedOutputStream
-        .computeBoolSize(1, response_);
+        .computeBytesSize(1, id_);
     }
     memoizedSize = size;
     return size;
@@ -122,8 +122,8 @@ public  final class PingResponse extends
     kademlia.PingResponse other = (kademlia.PingResponse) obj;
 
     boolean result = true;
-    result = result && (getResponse()
-        == other.getResponse());
+    result = result && getId()
+        .equals(other.getId());
     return result;
   }
 
@@ -134,9 +134,8 @@ public  final class PingResponse extends
     }
     int hash = 41;
     hash = (19 * hash) + getDescriptor().hashCode();
-    hash = (37 * hash) + RESPONSE_FIELD_NUMBER;
-    hash = (53 * hash) + com.google.protobuf.Internal.hashBoolean(
-        getResponse());
+    hash = (37 * hash) + ID_FIELD_NUMBER;
+    hash = (53 * hash) + getId().hashCode();
     hash = (29 * hash) + unknownFields.hashCode();
     memoizedHashCode = hash;
     return hash;
@@ -266,7 +265,7 @@ public  final class PingResponse extends
     }
     public Builder clear() {
       super.clear();
-      response_ = false;
+      id_ = com.google.protobuf.ByteString.EMPTY;
 
       return this;
     }
@@ -290,7 +289,7 @@ public  final class PingResponse extends
 
     public kademlia.PingResponse buildPartial() {
       kademlia.PingResponse result = new kademlia.PingResponse(this);
-      result.response_ = response_;
+      result.id_ = id_;
       onBuilt();
       return result;
     }
@@ -332,8 +331,8 @@ public  final class PingResponse extends
 
     public Builder mergeFrom(kademlia.PingResponse other) {
       if (other == kademlia.PingResponse.getDefaultInstance()) return this;
-      if (other.getResponse() != false) {
-        setResponse(other.getResponse());
+      if (other.getId() != com.google.protobuf.ByteString.EMPTY) {
+        setId(other.getId());
       }
       onChanged();
       return this;
@@ -361,28 +360,31 @@ public  final class PingResponse extends
       return this;
     }
 
-    private boolean response_ ;
+    private com.google.protobuf.ByteString id_ = com.google.protobuf.ByteString.EMPTY;
     /**
-     * <code>bool response = 1;</code>
+     * <code>bytes id = 1;</code>
      */
-    public boolean getResponse() {
-      return response_;
+    public com.google.protobuf.ByteString getId() {
+      return id_;
     }
     /**
-     * <code>bool response = 1;</code>
+     * <code>bytes id = 1;</code>
      */
-    public Builder setResponse(boolean value) {
-      
-      response_ = value;
+    public Builder setId(com.google.protobuf.ByteString value) {
+      if (value == null) {
+    throw new NullPointerException();
+  }
+  
+      id_ = value;
       onChanged();
       return this;
     }
     /**
-     * <code>bool response = 1;</code>
+     * <code>bytes id = 1;</code>
      */
-    public Builder clearResponse() {
+    public Builder clearId() {
       
-      response_ = false;
+      id_ = getDefaultInstance().getId();
       onChanged();
       return this;
     }
