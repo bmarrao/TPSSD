@@ -35,7 +35,7 @@ public class KademliaImpl extends KademliaGrpc.KademliaImplBase
     public void store(StoreRequest request, StreamObserver<StoreResponse> responseObserver)
     {
         // TODO: define storeKeyValue() function
-        boolean storeRes = storeKeyValue(request.getKey(), request.getVal());
+        boolean storeRes = storeKeyValue(request.getKey().toByteArray(), request.getVal());
 
         // if store successfull -> send true, else false
         StoreResponse response = StoreResponse.newBuilder().setStored(storeRes).build();
@@ -44,7 +44,7 @@ public class KademliaImpl extends KademliaGrpc.KademliaImplBase
         responseObserver.onCompleted();
     }
 
-    public boolean storeKeyValue(String key, String val) {
+    public boolean storeKeyValue(byte[] key, String val) {
         return true;
     }
 

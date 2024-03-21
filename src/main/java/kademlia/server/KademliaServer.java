@@ -2,32 +2,35 @@ package kademlia.server;
 
 import io.grpc.Server;
 import io.grpc.ServerBuilder;
-import io.grpc.stub.StreamObserver;
 import kademlia.KademliaGrpc;
-import kademlia.KademliaRoutingTable;
-import kademlia.PingRequest;
-import kademlia.PingResponse;
+
 
 import java.io.IOException;
 
-public class KademliaServer extends KademliaGrpc.KademliaImplBase
+public class KademliaServer extends KademliaGrpc.KademliaImplBase implements Runnable
 {
+    public Server server;
+    public int port;
 
     public static void main(String[] args) throws IOException, InterruptedException
     {
         KademliaServer ks = new KademliaServer(5003);
     }
 
-    public KademliaServer(int port) throws IOException, InterruptedException {
-        Server server = ServerBuilder.forPort(port)
+    public KademliaServer(int port) {
+        this.port = port;
+    }
+
+    @Override
+    public void run() {
+        // Server is kept alive for the client to communicate.
+        server = ServerBuilder.forPort(port)
                 .addService(new KademliaImpl())
                 .build();
-
-        // Server is kept alive for the client to communicate.
         try
         {
             server.start();
-            //server.awaitTermination();
+            server.awaitTermination();
         }
         catch (Exception e)
         {

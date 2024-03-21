@@ -1,14 +1,16 @@
 package kademlia;
 
-import com.google.protobuf.ByteString;
 import kademlia.server.KademliaServer;
-import kademlia.client.KademliaClient;
 
-import java.io.IOException;
-import java.nio.charset.StandardCharsets;
+import java.io.*;
+import java.nio.file.Files;
+import java.nio.file.Paths;
 import java.security.SecureRandom;
 import java.security.MessageDigest;
+import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.List;
+import java.util.Random;
 
 public class Kademlia
 {
@@ -26,32 +28,64 @@ public class Kademlia
     public static void main(String[] args) throws IOException, InterruptedException
     {
         ipAddress = args[0];
-
         port = Integer.parseInt(args[1]);
-
         nodeId = generateNodeId();
 
-        new KademliaServer(port);
+        KademliaServer server = new KademliaServer(port);
+        Thread serverThread = new Thread(server);
+        serverThread.start();
 
-        protocol = new KademliaProtocol(nodeId, ipAddress, port);
 
         int k = 20;
-        rt = new KademliaRoutingTable(nodeId, protocol, k);
+        //rt = new KademliaRoutingTable(nodeId, protocol, k);
 
+        String bootstrapFilePath = args[2];
 
-        /*
-        if (args[2] != null)
+        // args[2] pode ser um ficheiro .txt que contem info dos bootstrap nodes na rede
+        if (Boolean.parseBoolean(args[3])) // its a bootstrap node
         {
-            rt = new KademliaRoutingTableBootStrap(this.nodeId)
+            // add ip and port to bootstrap file
+            addIpPortBSFile(ipAddress, port, bootstrapFilePath);
+
+            // initialize routing table
+            // rt = new KademliaRoutingTableBootStrap(nodeId);
         }
         else
         {
-            rt = new KademliaRoutingTableNormal(this.nodeId);
+            // initialize routing table
+            // rt = new KademliaRoutingTableNormal(nodeId);
+
+            // read info of available bootstrap nodes and randomly select one
+            List<String> bootstrapNodesInfo = getBootstrapNodesInfo(bootstrapFilePath);
+            String selectedBootstrap = selectRandomBootstrapNode(bootstrapNodesInfo);
+
+            String[] bootstrapIpPort = selectedBootstrap.split(" ");
+            String ipBootstrap = bootstrapIpPort[0];
+            int portBootstrap = Integer.parseInt(bootstrapIpPort[1]);
+
+            // send find node operation to selected bootstrap node
+            protocol = new KademliaProtocol(nodeId, ipBootstrap, portBootstrap);
+            KademliaFindOpResult res = protocol.findNodeOp(nodeId, ipAddress, port, nodeId);
+
+            // add received ids of closest nodes to routing table
+            // o metodo addNodes deve verificar se os ids contidos já estao na routing table
+            // o metodo retorna boolean (com true se foram adicionados novos nós à rt)
+            // rt.addNodes(res.getNodesList());
+
+            // send find node to the closest nodes
+            // repeat process if new closest nodes are received
+            boolean foundNewClosestNodes = true;
+            while (foundNewClosestNodes)
+            {
+                foundNewClosestNodes = false;
+                for (Node n : res.getNodesList()) {
+                    protocol = new KademliaProtocol(nodeId, n.getIp(), n.getPort());
+                    KademliaFindOpResult closestNodes = protocol.findNodeOp(nodeId, ipAddress, port, nodeId);
+                    // if (rt.addNodes(closestNodes.getNodesList())) foundNewClosestNodes = true;
+                }
+            }
         }
 
-
-
-        */
         System.out.println("Generated nodeId: " + Arrays.toString(nodeId));
 
         //callOps(protocol, nodeId, ipAddress, port);
@@ -81,6 +115,33 @@ public class Kademlia
         return protocol;
     }
 
+    public static void addIpPortBSFile(String ipAddress, int port, String bootstrapFilePath) {
+        try {
+            BufferedWriter writer = new BufferedWriter(new FileWriter(bootstrapFilePath, true));
+            writer.write(ipAddress + " " + port + "\n");
+            writer.close();
+        }
+        catch(IOException e) {
+            e.printStackTrace();
+        }
+    }
+
+    private static List<String> getBootstrapNodesInfo(String filepath) {
+        List<String> ipPortPairs = new ArrayList<>();
+        try {
+            ipPortPairs = Files.readAllLines(Paths.get(filepath));
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return ipPortPairs;
+    }
+
+
+    private static String selectRandomBootstrapNode(List<String> bootstrapNodesInfo) {
+        Random random = new Random();
+        int randomIndex = random.nextInt(bootstrapNodesInfo.size());
+        return bootstrapNodesInfo.get(randomIndex);
+    }
 
     /*
     public static void callOps(KademliaProtocol protocol, byte []nodeId, String ip, int port)
