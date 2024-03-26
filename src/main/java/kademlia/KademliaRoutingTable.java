@@ -49,7 +49,7 @@ class TreeNode
 public class KademliaRoutingTable
 {
 
-    private Lock lock = new ReentrantLock();
+    public Lock lock = new ReentrantLock();
     public KademliaProtocol protocol;
     // Raiz da arvore
     TreeNode root;
@@ -72,7 +72,7 @@ public class KademliaRoutingTable
     //  Função que insere um no na arvore
     public void insert(KademliaNode node)
     {
-        
+
     }
 
     // Função recursiva
@@ -80,7 +80,7 @@ public class KademliaRoutingTable
     // TOdo testar
     // Adiciona os nodes que estão na variavel kbucket para os novos buckets criados de acordo com a distancia
     // em relação ao id do Node ao qual pertence a routing table
-    private void addToBuckets(TreeNode left, TreeNode right, ArrayList<KademliaNode> kbucket,KademliaNode node, int i ,int j)
+    public void addToBuckets(TreeNode left, TreeNode right, ArrayList<KademliaNode> kbucket,KademliaNode node, int i ,int j)
     {
         // Conta quantos nos estão indo na direção a direita
         int count_right = 0;
@@ -149,7 +149,7 @@ public class KademliaRoutingTable
     // TOdo testar
     // Função que testa se o no visto pela ultima vez online ainda esta online e neste caso descarta a variavel 'node' caso contrario
     //Remove o no que foi visto pela ultima vez online e adiciona a variavel 'node' a o kbucket
-    private void testLeastRecentlySeen(SortedArrayList<KademliaNode> kbucket, KademliaNode node)
+    public boolean testLeastRecentlySeen(SortedArrayList<KademliaNode> kbucket, KademliaNode node)
     {
         int tamanho = kbucket.size();
         // Função que ira retornar o node ultimo visto no kbucket
@@ -162,10 +162,12 @@ public class KademliaRoutingTable
         {
             kbucket.remove(tamanho-1);
             kbucket.add(node);
+            return true;
         }
         else
         {
             testPing.setTime();
+            return false;
         }
     }
 

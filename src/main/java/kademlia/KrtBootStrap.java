@@ -2,18 +2,20 @@ package kademlia;
 
 import java.util.ArrayList;
 
-public class KrtNormal extends KademliaRoutingTable 
+public class KrtBootStrap extends KademliaRoutingTable 
 {
-    public KrtNormal (byte[] nodeId, KademliaProtocol protocol, int k)
+    public ArrayList<KademliaNode>allNodesList; 
+    public KrtBootStrap (byte[] nodeId, KademliaProtocol protocol, int k)
     {
         super(nodeId, protocol, k);
-
+        this.allNodesList = new ArrayList<KademliaNode>();
     }
 
     @Override
     public void insert(KademliaNode node)
     {
         lock.lock();
+        this.allNodesList.add(node);
         TreeNode curr = root;
         System.out.println("My node = " + this.printId(this.myNodeId));
         System.out.println("Other Node = " + this.printId(node.nodeId));
@@ -64,6 +66,19 @@ public class KrtNormal extends KademliaRoutingTable
                     {
                         // Caso ele não venha da direção que está mais perto do proprio id e o bucket esta cheio ele tenta inserir no kbucket q ja existe
                         boolean adicionou=  testLeastRecentlySeen(curr.kbucket, node);
+                        if(!adicionou)
+                        {
+                            if (j == 0)
+                            {
+                                addToBuckets(curr.left, curr.right, curr.kbucket, node,i+1,7);
+
+                            }
+                            else
+                            {
+                                addToBuckets(curr.left, curr.right, curr.kbucket, node,i,j-1);
+                            }
+                        }
+
                     }
                 }
                 else
@@ -108,6 +123,5 @@ public class KrtNormal extends KademliaRoutingTable
             }
         }
     }
-
     
 }

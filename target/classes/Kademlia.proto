@@ -24,7 +24,7 @@ message Node
 message StoreRequest
 {
   bytes id = 1;
-  string key = 2;
+  bytes key = 2;
   string val = 3;
   string ip = 4;
   uint32 port = 5;
@@ -41,7 +41,7 @@ message FindNodeRequest
   bytes id = 1;
   string ip = 2;
   uint32 port = 3;
-  string key = 4;
+  bytes key = 4;
 }
 
 // Interativo ou recursivo
@@ -56,7 +56,7 @@ message FindValueRequest
   bytes id = 1;
   string ip = 2;
   uint32 port = 3;
-  string key = 4;
+  bytes key = 4;
 }
 
 message FindValueResponse
@@ -68,9 +68,6 @@ message FindValueResponse
 }
 service Kademlia
 {
-
-  //TODO Adicionar metodos pro Bootstrap node - Cristina
-  //rpc iniateBootstrap()
   // Unary
   rpc ping(PingRequest) returns (PingResponse);
 
