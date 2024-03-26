@@ -184,18 +184,18 @@ public class KademliaRoutingTable
 
     // TODO testar
     // Função para achar o node mais perto da variavel 'nodeId'
-    private KademliaNode findClosestNode(byte[] nodeId)
+    private ArrayList<KademliaNode> findClosestNode(byte[] nodeId, int j)
     {
-        KademliaNode nodo;
+        ArrayList<KademliaNode> nodos;
         lock.lock();
         // Testa se tem um kbucket
         if (this.root.kc >= 2) {
             // Neste caso pesquisa pela função 'searchMapClosest' o node mais perto
-            nodo = searchMapClosest(this.root.kbucket, nodeId);
+            nodos = searchMapClosest(this.root.kbucket, nodeId);
         }
         else if (this.root.kc == 1)
         {
-            nodo = null;
+            nodos = null;
         }
         else
         {
@@ -204,29 +204,33 @@ public class KademliaRoutingTable
             // Caso contrario continua percorrendo a arvore e chamando a função recursiva
             if (direction)
             {
-                nodo =findClosestNodeRec(this.root.right, this.root, nodeId, 0,6,'d');
+                nodos =findClosestNodeRec(this.root.right, this.root, nodeId, 0,6,'d');
 
             }
             else
             {
-                nodo = findClosestNodeRec(this.root.left, this.root, nodeId, 0,6,'e');
+                nodos = findClosestNodeRec(this.root.left, this.root, nodeId, 0,6,'e');
             }
         }// Chama a função recursiva para resolver o problema
         lock.unlock();
-        return nodo;
+        return nodos;
     }
 
     //TODO Testar
-    private KademliaNode findClosestNodeRec(TreeNode curr, TreeNode parent, byte[] nodeId, int i, int j,char d)
+    private ArrayList<KademliaNode> findClosestNodeRec(TreeNode curr, TreeNode parent, byte[] nodeId, int i, int j,char d, int a)
     {
-        if (i < 20)
         {
             // Testa se tem um kbucket
             if (curr.kc >= 2)
             {
                 System.out.println("Procurando num Map");
                 // Neste caso pesquisa pela função 'searchMapClosest' o node mais perto
-                return searchMapClosest(curr.kbucket, nodeId);
+                ArrayList<KademliaNode> nodes = searchMapClosest(curr.kbucket, nodeId);
+                if (nodes.size() +1 == a)
+                {
+                    return nodos ;
+                }
+
             }
             else if (curr.kc == 1)
             {
