@@ -74,16 +74,38 @@ public class Kademlia
 
             // send find node to the closest nodes
             // repeat process if new closest nodes are received
+            //TODO perguntar sobre quando parar find Node
             boolean foundNewClosestNodes = true;
-            while (foundNewClosestNodes)
+            /*
+            while (res.size() == 0)
             {
                 foundNewClosestNodes = false;
-                for (Node n : res.getNodesList()) {
+                ArrayList<Node> newRes;
+                for (Node n : res.getNodesList()) 
+                {
                     protocol = new KademliaProtocol(nodeId, n.getIp(), n.getPort());
                     KademliaFindOpResult closestNodes = protocol.findNodeOp(nodeId, ipAddress, port, nodeId);
-                    // if (rt.addNodes(closestNodes.getNodesList())) foundNewClosestNodes = true;
+                     for (Node n : res.getNodesList()){
+                         if (!insert(n))
+                         {
+                            newRes.add(n);
+                         }
                 }
+                res = newRes;
             }
+            */
+             for (Node n : res.getNodesList()) 
+                {
+                    protocol = new KademliaProtocol(nodeId, n.getIp(), n.getPort());
+                    KademliaFindOpResult closestNodes = protocol.findNodeOp(nodeId, ipAddress, port, nodeId);
+                     for (Node n : res.getNodesList())
+                     {
+                         if (!insert(n))
+                         {
+                            //Nothing for now
+                         }
+                    }
+                }
         }
 
         System.out.println("Generated nodeId: " + Arrays.toString(nodeId));
