@@ -34,7 +34,7 @@ public class Kademlia
         KademliaServer server = new KademliaServer(port);
         Thread serverThread = new Thread(server);
         serverThread.start();
-
+        KademliaProtocol kp = new KademliaProtocol(nodeId);
 
         int k = 20;
         //rt = new KademliaRoutingTable(nodeId, protocol, k);
@@ -48,12 +48,12 @@ public class Kademlia
             addIpPortBSFile(ipAddress, port, bootstrapFilePath);
 
             // initialize routing table
-            // rt = new KademliaRoutingTableBootStrap(nodeId);
+            rt = new KrtBootStrap(nodeId,kp,k);
         }
         else
         {
             // initialize routing table
-            // rt = new KademliaRoutingTableNormal(nodeId);
+            rt = new KrtNormal(nodeId,kp,k);
 
             // read info of available bootstrap nodes and randomly select one
             List<String> bootstrapNodesInfo = getBootstrapNodesInfo(bootstrapFilePath);
@@ -64,8 +64,7 @@ public class Kademlia
             int portBootstrap = Integer.parseInt(bootstrapIpPort[1]);
 
             // send find node operation to selected bootstrap node
-            protocol = new KademliaProtocol(nodeId, ipBootstrap, portBootstrap);
-            KademliaFindOpResult res = protocol.findNodeOp(nodeId, ipAddress, port, nodeId);
+            KademliaFindOpResult res = protocol.findNodeOp(nodeId, ipAddress, port, nodeId,ipBootstrap,portBootstrap);
 
             // add received ids of closest nodes to routing table
             // o metodo addNodes deve verificar se os ids contidos já estao na routing table
@@ -94,15 +93,15 @@ public class Kademlia
                 res = newRes;
             }
             */
-             for (Node n : res.getNodesList()) 
+             for (KademliaNode n : res.getNodesList())
                 {
-                    protocol = new KademliaProtocol(nodeId, n.getIp(), n.getPort());
-                    KademliaFindOpResult closestNodes = protocol.findNodeOp(nodeId, ipAddress, port, nodeId);
-                     for (Node n : res.getNodesList())
+                    KademliaFindOpResult closestNodes = protocol.findNodeOp(nodeId, ipAddress, port, nodeId,n.ipAdress, n.port);
+                     for (KademliaNode j : res.getNodesList())
                      {
-                         if (!insert(n))
+                         if (rt.insert(j))
                          {
-                            //Nothing for now
+                            //Nothing for now                    protocol = new KademliaProtocol(nodeId, n.ipAdress, n.port);
+
                          }
                     }
                 }

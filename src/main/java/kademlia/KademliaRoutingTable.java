@@ -70,11 +70,22 @@ public class KademliaRoutingTable
 
     //  Função que insere um no na arvore
     //  Função que insere um no na arvore
-    public void insert(KademliaNode node)
+    public boolean insert(KademliaNode node)
     {
-
+        return false;
     }
 
+    public boolean hasObject(SortedArrayList<KademliaNode> kbucket,KademliaNode node)
+    {
+        for (KademliaNode n : kbucket)
+        {
+            if (n.nodeId.equals(node.nodeId))
+            {
+                return true;
+            }
+        }
+        return false;
+    }
     // Função recursiva
 
     // TOdo testar
@@ -401,13 +412,13 @@ public class KademliaRoutingTable
         Kademlia kd = new Kademlia();
         KademliaRoutingTable krt = new KademliaRoutingTable(kd.generateNodeId(), kd.getKdProtocol(), 20 );;
         //System.out.println(krt.findClosestKbucket(krt.root,krt.root, kd.generateNodeId(),0,7,'r'));
+        /*
 
         for (int i  = 0 ; i < 20000; i++)
         {
             krt.insert(new KademliaNode("localhost",kd.generateNodeId(),5000));
         }
         krt.printTree();
-        /*
         byte p1[] = kd.generateNodeId();
         byte p2[] = kd.generateNodeId();
 

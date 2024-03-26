@@ -48,7 +48,7 @@ message FindNodeRequest
 message FindNodeResponse
 {
   bytes id = 1;
-  repeated Node nodes = 2;
+  repeated KademliaNode nodes = 2;
 }
 
 message FindValueRequest
