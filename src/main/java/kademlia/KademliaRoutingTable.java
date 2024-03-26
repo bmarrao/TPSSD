@@ -186,6 +186,7 @@ public class KademliaRoutingTable
     // Função para achar o node mais perto da variavel 'nodeId'
     private ArrayList<KademliaNode> findClosestNode(byte[] nodeId, int j)
     {
+        /*
         ArrayList<KademliaNode> nodos;
         lock.lock();
         // Testa se tem um kbucket
@@ -214,11 +215,16 @@ public class KademliaRoutingTable
         }// Chama a função recursiva para resolver o problema
         lock.unlock();
         return nodos;
+
+         */
+        return null;
     }
 
     //TODO Testar
     private ArrayList<KademliaNode> findClosestNodeRec(TreeNode curr, TreeNode parent, byte[] nodeId, int i, int j,char d, int a)
     {
+        /*
+        if (i < 20)
         {
             // Testa se tem um kbucket
             if (curr.kc >= 2)
@@ -279,6 +285,8 @@ public class KademliaRoutingTable
                 }
             }
         }
+        
+         */
         return null;
     }
 

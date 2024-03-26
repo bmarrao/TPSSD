@@ -92,19 +92,20 @@ public class Kademlia
                 }
                 res = newRes;
             }
-            */
-             for (KademliaNode n : res.getNodesList())
+             for (Node n : res.getNodesList())
                 {
                     KademliaFindOpResult closestNodes = protocol.findNodeOp(nodeId, ipAddress, port, nodeId,n.ipAdress, n.port);
-                     for (KademliaNode j : res.getNodesList())
+                     for (Node j : res.getNodesList())
                      {
-                         if (rt.insert(j))
+                         if (rt.insert(new KademliaNode(j.get)))
                          {
                             //Nothing for now                    protocol = new KademliaProtocol(nodeId, n.ipAdress, n.port);
 
                          }
                     }
                 }
+                            */
+
         }
 
         System.out.println("Generated nodeId: " + Arrays.toString(nodeId));

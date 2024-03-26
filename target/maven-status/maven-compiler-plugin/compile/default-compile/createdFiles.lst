@@ -6,15 +6,16 @@ kademlia/FindValueResponse$1.class
 kademlia/KademliaGrpc$KademliaStub.class
 kademlia/StoreResponseOrBuilder.class
 kademlia/server/KademliaServer.class
+kademlia/KrtBootStrap.class
 kademlia/KademliaOuterClass.class
 kademlia/SortedArrayList.class
 kademlia/KademliaRoutingTable.class
 kademlia/Node$1.class
 kademlia/StoreResponse$Builder.class
 kademlia/FindNodeRequest$1.class
+kademlia/KrtNormal.class
 kademlia/Kademlia.class
 kademlia/StoreRequestOrBuilder.class
-kademlia/KademliaRoutingTable$Tuple.class
 kademlia/FindValueRequest$Builder.class
 kademlia/KademliaStore.class
 kademlia/PingResponse$Builder.class
