@@ -234,26 +234,44 @@ public class KademliaRoutingTable
                     getNodesDown(curr.right,a,nodeId, nodes);
                 }
             }
-
         }
+    }
 
+    private void getNodesUp(TreeNode curr,int a,byte[] nodeId ,ArrayList<KademliaNode> nodes)
+    {
+        if (curr != null)
+        {
+            if (curr.kc >= 1)
+            {
+                ArrayList<KademliaNode> nodos = searchMapClosest(curr.kbucket, nodeId,a-nodes.size());
+                nodes.addAll(nodos);
+            }
+            else
+            {
+                ArrayList<KademliaNode> nodos = searchMapClosest(curr.left.kbucket, nodeId,a-nodes.size());
+                nodes.addAll(nodos);
+                if (nodes.size() +1 < a)
+                {
+                    getNodesDown(curr.right,a,nodeId, nodes);
+                }
+            }
+        }
     }
     //TODO Testar
     private ArrayList<KademliaNode> findClosestNodeRec(TreeNode curr, TreeNode parent, byte[] nodeId, int i, int j,char d, int a)
     {
+        ArrayList<KademliaNode> nodes = null;
         if (i < 20)
         {
             // Testa se tem um kbucket
             if (curr.kc >= 1)
             {
                 System.out.println("Procurando num Map");
-                ArrayList<KademliaNode> nodes = searchMapClosest(curr.kbucket, nodeId,a);
+                nodes = searchMapClosest(curr.kbucket, nodeId,a);
                 if (nodes.size() +1 < a)
                 {
                     getNodesDown(parent.right,a,nodeId , nodes);
                 }
-                return nodes;
-
 
             }
             else
@@ -265,12 +283,12 @@ public class KademliaRoutingTable
                 {
                     if (j == 0)
                     {
-                        return findClosestNodeRec(curr.right,curr, nodeId, i+1,7,'d',a);
+                        nodes = findClosestNodeRec(curr.right,curr, nodeId, i+1,7,'d',a);
 
                     }
                     else
                     {
-                        return findClosestNodeRec(curr.right,curr,nodeId, i,j-1,'d',a);
+                        nodes = findClosestNodeRec(curr.right,curr,nodeId, i,j-1,'d',a);
 
 
                     }
@@ -280,19 +298,34 @@ public class KademliaRoutingTable
                 {
                     if (j == 0)
                     {
-                        return findClosestNodeRec(curr.left,curr, nodeId, i+1,7,'e',a);
+                        nodes = findClosestNodeRec(curr.left,curr, nodeId, i+1,7,'e',a);
 
                     }
                     else
                     {
-                        return findClosestNodeRec(curr.left,curr,nodeId, i,j-1,'e',a);
+                        nodes = findClosestNodeRec(curr.left,curr,nodeId, i,j-1,'e',a);
 
 
                     }
                 }
             }
         }
-        return null;
+        if (nodes.size() +1 < a)
+        {
+            ArrayList<KademliaNode> nodos ;
+            if (d == 'e')
+            {
+                nodos = searchMapClosest(parent.right.kbucket, nodeId,a-nodes.size());
+            }
+            else
+            {
+                nodos = searchMapClosest(parent.left.kbucket, nodeId,a-nodes.size());
+
+            }
+            nodes.addAll(nodos);
+
+        }
+        return nodes;
     }
 
 
