@@ -184,154 +184,19 @@ public class KademliaRoutingTable
 
     // TODO testar
     // Função para achar o node mais perto da variavel 'nodeId'
-    private ArrayList<KademliaNode> findClosestNode(byte[] nodeId, int j, int a)
+
+
+    public ArrayList<KademliaNode> findClosestNode(byte[] nodeId, int j, int a)
     {
-        ArrayList<KademliaNode> nodos;
-        lock.lock();
-        // Testa se tem um kbucket
-        if (this.root.kc >= 2) {
-            // Neste caso pesquisa pela função 'searchMapClosest' o node mais perto
-            nodos = searchMapClosest(this.root.kbucket, nodeId, a);
-        }
-        else if (this.root.kc == 1)
-        {
-            nodos = null;
-        }
-        else
-        {
-            boolean direction = (((myNodeId[0] >> 7) & 1) == 1) == (((nodeId[0] >> 7) & 1) == 1);
-
-            // Caso contrario continua percorrendo a arvore e chamando a função recursiva
-            if (direction)
-            {
-                nodos =findClosestNodeRec(this.root.right, this.root, nodeId, 0,6,'d',a);
-
-            }
-            else
-            {
-                nodos = findClosestNodeRec(this.root.left, this.root, nodeId, 0,6,'e',a);
-            }
-        }// Chama a função recursiva para resolver o problema
-        lock.unlock();
-        return nodos;
+        return null;
     }
 
-    private void getNodesDown(TreeNode curr,int a,byte[] nodeId ,ArrayList<KademliaNode> nodes)
-    {
-        if (curr != null)
-        {
-            if (curr.kc >= 1)
-            {
-                ArrayList<KademliaNode> nodos = searchMapClosest(curr.kbucket, nodeId,a-nodes.size());
-                nodes.addAll(nodos);
-            }
-            else
-            {
-                ArrayList<KademliaNode> nodos = searchMapClosest(curr.left.kbucket, nodeId,a-nodes.size());
-                nodes.addAll(nodos);
-                if (nodes.size() +1 < a)
-                {
-                    getNodesDown(curr.right,a,nodeId, nodes);
-                }
-            }
-        }
-    }
 
-    private void getNodesUp(TreeNode curr,int a,byte[] nodeId ,ArrayList<KademliaNode> nodes)
-    {
-        if (curr != null)
-        {
-            if (curr.kc >= 1)
-            {
-                ArrayList<KademliaNode> nodos = searchMapClosest(curr.kbucket, nodeId,a-nodes.size());
-                nodes.addAll(nodos);
-            }
-            else
-            {
-                ArrayList<KademliaNode> nodos = searchMapClosest(curr.left.kbucket, nodeId,a-nodes.size());
-                nodes.addAll(nodos);
-                if (nodes.size() +1 < a)
-                {
-                    getNodesDown(curr.right,a,nodeId, nodes);
-                }
-            }
-        }
-    }
-    //TODO Testar
-    private ArrayList<KademliaNode> findClosestNodeRec(TreeNode curr, TreeNode parent, byte[] nodeId, int i, int j,char d, int a)
-    {
-        ArrayList<KademliaNode> nodes = null;
-        if (i < 20)
-        {
-            // Testa se tem um kbucket
-            if (curr.kc >= 1)
-            {
-                System.out.println("Procurando num Map");
-                nodes = searchMapClosest(curr.kbucket, nodeId,a);
-                if (nodes.size() +1 < a)
-                {
-                    getNodesDown(parent.right,a,nodeId , nodes);
-                }
-
-            }
-            else
-            {
-                boolean direction = (((myNodeId[i] >> j ) & 1) == 1) == (((nodeId[i] >> j) & 1) == 1);
-
-                // Caso contrario continua percorrendo a arvore e chamando a função recursiva
-                if (direction)
-                {
-                    if (j == 0)
-                    {
-                        nodes = findClosestNodeRec(curr.right,curr, nodeId, i+1,7,'d',a);
-
-                    }
-                    else
-                    {
-                        nodes = findClosestNodeRec(curr.right,curr,nodeId, i,j-1,'d',a);
-
-
-                    }
-
-                }
-                else
-                {
-                    if (j == 0)
-                    {
-                        nodes = findClosestNodeRec(curr.left,curr, nodeId, i+1,7,'e',a);
-
-                    }
-                    else
-                    {
-                        nodes = findClosestNodeRec(curr.left,curr,nodeId, i,j-1,'e',a);
-
-
-                    }
-                }
-            }
-        }
-        if (nodes.size() +1 < a)
-        {
-            ArrayList<KademliaNode> nodos ;
-            if (d == 'e')
-            {
-                nodos = searchMapClosest(parent.right.kbucket, nodeId,a-nodes.size());
-            }
-            else
-            {
-                nodos = searchMapClosest(parent.left.kbucket, nodeId,a-nodes.size());
-
-            }
-            nodes.addAll(nodos);
-
-        }
-        return nodes;
-    }
 
 
     // TODO testar
     // Função que pesquisa o map pelo node mais perto da variavel 'nodeId'
-    private ArrayList<KademliaNode> searchMapClosest(ArrayList<KademliaNode> kbucket,byte[] nodeId, int a)
+    public ArrayList<KademliaNode> searchMapClosest(ArrayList<KademliaNode> kbucket,byte[] nodeId, int a)
     {
         ArrayList<Tuple> sortDist = new ArrayList<Tuple>();
         ArrayList<KademliaNode> result  = new ArrayList<KademliaNode>();
@@ -471,30 +336,6 @@ public class KademliaRoutingTable
             }
         }
         return nodeId;
-    }
-    public static void main(String[] args)
-    {
-
-        // Convert array of bits to bytes
-        Kademlia kd = new Kademlia();
-        KademliaRoutingTable krt = new KademliaRoutingTable(kd.generateNodeId(), kd.getKdProtocol(), 20 );;
-        //System.out.println(krt.findClosestKbucket(krt.root,krt.root, kd.generateNodeId(),0,7,'r'));
-        /*
-
-        for (int i  = 0 ; i < 20000; i++)
-        {
-            krt.insert(new KademliaNode("localhost",kd.generateNodeId(),5000));
-        }
-        krt.printTree();
-        byte p1[] = kd.generateNodeId();
-        byte p2[] = kd.generateNodeId();
-
-        System.out.println(krt.printId(p1));
-        System.out.println(krt.printId(p2));
-        krt.compareId(p1,p2);
-
-
-         */
     }
 }
 

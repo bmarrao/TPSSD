@@ -108,5 +108,127 @@ public class KrtNormal extends KademliaRoutingTable
         return false;
     }
 
-    
+    @Override
+    public ArrayList<KademliaNode> findClosestNode(byte[] nodeId, int j, int a)
+    {
+        ArrayList<KademliaNode> nodos;
+        lock.lock();
+        // Testa se tem um kbucket
+        if (this.root.kc >= 2) {
+            // Neste caso pesquisa pela função 'searchMapClosest' o node mais perto
+            nodos = searchMapClosest(this.root.kbucket, nodeId, a);
+        }
+        else if (this.root.kc == 1)
+        {
+            nodos = null;
+        }
+        else
+        {
+            boolean direction = (((myNodeId[0] >> 7) & 1) == 1) == (((nodeId[0] >> 7) & 1) == 1);
+
+            // Caso contrario continua percorrendo a arvore e chamando a função recursiva
+            if (direction)
+            {
+                nodos =findClosestNodeRec(this.root.right, this.root, nodeId, 0,6,'d',a);
+
+            }
+            else
+            {
+                nodos = findClosestNodeRec(this.root.left, this.root, nodeId, 0,6,'e',a);
+            }
+        }// Chama a função recursiva para resolver o problema
+        lock.unlock();
+        return nodos;
+    }
+
+    private ArrayList<KademliaNode> findClosestNodeRec(TreeNode curr, TreeNode parent, byte[] nodeId, int i, int j,char d, int a)
+    {
+        ArrayList<KademliaNode> nodes = null;
+        if (i < 20)
+        {
+            // Testa se tem um kbucket
+            if (curr.kc >= 1)
+            {
+                System.out.println("Procurando num Map");
+                nodes = searchMapClosest(curr.kbucket, nodeId,a);
+                if (nodes.size() +1 < a)
+                {
+                    getNodesDown(parent.right,a,nodeId , nodes);
+                }
+
+            }
+            else
+            {
+                boolean direction = (((myNodeId[i] >> j ) & 1) == 1) == (((nodeId[i] >> j) & 1) == 1);
+
+                // Caso contrario continua percorrendo a arvore e chamando a função recursiva
+                if (direction)
+                {
+                    if (j == 0)
+                    {
+                        nodes = findClosestNodeRec(curr.right,curr, nodeId, i+1,7,'d',a);
+
+                    }
+                    else
+                    {
+                        nodes = findClosestNodeRec(curr.right,curr,nodeId, i,j-1,'d',a);
+
+
+                    }
+
+                }
+                else
+                {
+                    if (j == 0)
+                    {
+                        nodes = findClosestNodeRec(curr.left,curr, nodeId, i+1,7,'e',a);
+
+                    }
+                    else
+                    {
+                        nodes = findClosestNodeRec(curr.left,curr,nodeId, i,j-1,'e',a);
+
+
+                    }
+                }
+            }
+        }
+        if (nodes.size() +1 < a)
+        {
+            ArrayList<KademliaNode> nodos ;
+            if (d == 'e')
+            {
+                nodos = searchMapClosest(parent.right.kbucket, nodeId,a-nodes.size());
+            }
+            else
+            {
+                nodos = searchMapClosest(parent.left.kbucket, nodeId,a-nodes.size());
+
+            }
+            nodes.addAll(nodos);
+
+        }
+        return nodes;
+    }
+
+    private void getNodesDown(TreeNode curr,int a,byte[] nodeId ,ArrayList<KademliaNode> nodes)
+    {
+        if (curr != null)
+        {
+            if (curr.kc >= 1)
+            {
+                ArrayList<KademliaNode> nodos = searchMapClosest(curr.kbucket, nodeId,a-nodes.size());
+                nodes.addAll(nodos);
+            }
+            else
+            {
+                ArrayList<KademliaNode> nodos = searchMapClosest(curr.left.kbucket, nodeId,a-nodes.size());
+                nodes.addAll(nodos);
+                if (nodes.size() +1 < a)
+                {
+                    getNodesDown(curr.right,a,nodeId, nodes);
+                }
+            }
+        }
+    }
 }
