@@ -109,7 +109,7 @@ public class KrtNormal extends KademliaRoutingTable
     }
 
     @Override
-    public ArrayList<KademliaNode> findClosestNode(byte[] nodeId, int j, int a)
+    public ArrayList<KademliaNode> findClosestNode(byte[] nodeId,int a)
     {
         ArrayList<KademliaNode> nodos;
         lock.lock();
@@ -151,6 +151,7 @@ public class KrtNormal extends KademliaRoutingTable
             {
                 System.out.println("Procurando num Map");
                 nodes = searchMapClosest(curr.kbucket, nodeId,a);
+                System.out.println(nodes.size());
                 if (nodes.size() +1 < a)
                 {
                     getNodesDown(parent.right,a,nodeId , nodes);

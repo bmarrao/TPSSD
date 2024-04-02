@@ -186,7 +186,7 @@ public class KademliaRoutingTable
     // Função para achar o node mais perto da variavel 'nodeId'
 
 
-    public ArrayList<KademliaNode> findClosestNode(byte[] nodeId, int j, int a)
+    public ArrayList<KademliaNode> findClosestNode(byte[] nodeId, int a)
     {
         return null;
     }
@@ -215,7 +215,14 @@ public class KademliaRoutingTable
             sortDist.add(new Tuple(bnode, newDistance));
             Collections.sort(sortDist);
         }
-        for (int j = 0; j < kbucket.size() || j < a; j++ )
+        System.out.println("a : " + a);
+        int tamanho = sortDist.size();
+        if (tamanho > a)
+        {
+            tamanho = a;
+        }
+
+        for (int j = 0;  j < tamanho ; j++ )
         {
             result.add(sortDist.get(j).kd);
         }
@@ -239,10 +246,10 @@ public class KademliaRoutingTable
     }
     // TODO testar se isso funciona direito
     // Função que calcula a distancia de um no
-    private BigInteger calculateDistance (byte[] node1, byte[] node2)
+    public BigInteger calculateDistance (byte[] node1, byte[] node2)
     {
-        BigInteger distance = new BigInteger("0");
-        for (int i = 0; i < 20; i++)
+        BigInteger distance = BigInteger.ZERO;
+        for (int i = 0; i < node1.length; i++)
         {
             for (int j = 7 ; j >= 0 ; j--)
             {
@@ -253,7 +260,7 @@ public class KademliaRoutingTable
                 if (bit1 != bit2)
                 {
                     //TODO Ver se é assim mesmo
-                    distance = distance.add(BigInteger.valueOf((long) Math.pow(2, 160 - (i * (j)))));
+                    distance = distance.add(BigInteger.valueOf((long) Math.pow(2,(((node1.length-i-1)*8)+j))));
                 }
             }
         }
