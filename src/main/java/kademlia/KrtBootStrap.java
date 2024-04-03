@@ -1,27 +1,22 @@
 package kademlia;
-
+import com.google.protobuf.ByteString;
 import java.util.ArrayList;
 
 public class KrtBootStrap extends KademliaRoutingTable 
 {
-    public ArrayList<KademliaNode>allNodesList; 
     public KrtBootStrap (byte[] nodeId, KademliaProtocol protocol, int k)
     {
         super(nodeId, protocol, k);
-        this.allNodesList = new ArrayList<KademliaNode>();
     }
 
     @Override
-    public boolean insert(KademliaNode node)
+    public boolean insert(Node node)
     {
+        KademliaNode kn = new KademliaNode(node.getIp(),node.getId().toByteArray(),node.getPort());
         lock.lock();
-        this.allNodesList.add(node);
         TreeNode curr = root;
-        System.out.println("My node = " + this.printId(this.myNodeId));
-        System.out.println("Other Node = " + this.printId(node.nodeId));
-        System.out.print("path = ");
         // Função recursiva que ira percorrer a arvore
-        boolean ret = insertRec(node, curr,0, 7, 'd');
+        boolean ret = insertRec(kn, curr,0, 7, 'd');
         lock.unlock();
         return ret;
     }
@@ -111,7 +106,7 @@ public class KrtBootStrap extends KademliaRoutingTable
     }
 
     @Override
-    public ArrayList<KademliaNode> findClosestNode(byte[] nodeId,int a)
+    public ArrayList<Node> findClosestNode(byte[] nodeId,int a)
     {
         ArrayList<KademliaNode> nodos;
         lock.lock();
@@ -140,7 +135,16 @@ public class KrtBootStrap extends KademliaRoutingTable
             }
         }// Chama a função recursiva para resolver o problema
         lock.unlock();
-        return nodos;
+        ArrayList<Node> ret = new ArrayList<Node>();
+        for (KademliaNode kn : nodos )
+        {
+            Node.Builder nd = Node.newBuilder();
+            nd.setIp(kn.ipAdress);
+            nd.setPort(kn.port);
+            nd.setId(ByteString.copyFrom(kn.nodeId));
+            ret.add(nd.build());
+        }
+        return ret;
     }
 
     private ArrayList<KademliaNode> findClosestNodeRec(TreeNode curr, TreeNode parent, byte[] nodeId, int i, int j,char d, int a)

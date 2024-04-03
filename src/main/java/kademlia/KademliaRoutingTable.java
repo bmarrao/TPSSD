@@ -70,7 +70,7 @@ public class KademliaRoutingTable
 
     //  Função que insere um no na arvore
     //  Função que insere um no na arvore
-    public boolean insert(KademliaNode node)
+    public boolean insert(Node node)
     {
         return false;
     }
@@ -186,7 +186,7 @@ public class KademliaRoutingTable
     // Função para achar o node mais perto da variavel 'nodeId'
 
 
-    public ArrayList<KademliaNode> findClosestNode(byte[] nodeId, int a)
+    public ArrayList<Node> findClosestNode(byte[] nodeId, int a)
     {
         return null;
     }
@@ -297,56 +297,6 @@ public class KademliaRoutingTable
             printTreeRec(dir+" r",node.right, depth + 1);
         }
 
-    }
-
-    public void compareId(byte [] nodeId, byte [] nodeId2)
-    {
-        String nodeString = "";
-        for (int j = 0 ; j < 20; j++)
-        {
-            byte b = nodeId[j];
-            byte c = nodeId2[j];
-            for (int i = 7; i >= 0; i--) { // Start from the most significant bit (bit 7)
-                // Extract the i-th bit using bitwise AND operation
-                boolean bit1 = ((b >> i) & 1) == 1;
-                boolean bit2 = ((c >> i) & 1) == 1;
-
-                // Print the bit value
-                if (bit1 == bit2)
-                {
-                    nodeString = nodeString+"d";
-                }
-                else
-                {
-                    nodeString = nodeString +"e";
-                }
-            }
-        }
-
-        System.out.println(nodeString);
-    }
-
-    public String printId(byte [] id)
-    {
-        String nodeId="";
-        for (int j = 0 ; j < 20; j++)
-        {
-            byte b = id[j];
-            for (int i = 7; i >= 0; i--) { // Start from the most significant bit (bit 7)
-                // Extract the i-th bit using bitwise AND operation
-                boolean bit = ((b >> i) & 1) == 1;
-                // Print the bit value
-                if (bit)
-                {
-                    nodeId = nodeId+"1";
-                }
-                else
-                {
-                    nodeId = nodeId +"0";
-                }
-            }
-        }
-        return nodeId;
     }
 }
 
