@@ -18,8 +18,8 @@ public class Kademlia
     public static String ipAddress;
 
     public static int port;
-    public boolean bootstrapNode;
-    public static KademliaRoutingTable rt ;
+    public static boolean bootstrapNode;
+    public static KademliaRoutingTable rt;
     public static KademliaProtocol protocol;
 
     // TODO Public e private Key - Quando for implementar blockchain
@@ -38,30 +38,32 @@ public class Kademlia
 
         int k = 20;
         //rt = new KademliaRoutingTable(nodeId, protocol, k);
-
+        // TODO uncomment this
         String bootstrapFilePath = args[2];
-
-        // args[2] pode ser um ficheiro .txt que contem info dos bootstrap nodes na rede
-        if (Boolean.parseBoolean(args[3])) // its a bootstrap node
+        List<String> bootstrapNodesInfo = getBootstrapNodesInfo(bootstrapFilePath);
+        String selectedBootstrap = selectRandomBootstrapNode(bootstrapNodesInfo);
+        String[] bootstrapIpPort = selectedBootstrap.split(" ");
+        String ipBootstrap = bootstrapIpPort[0];
+        int portBootstrap = Integer.parseInt(bootstrapIpPort[1]);
+        if (args[3]== null) // its a bootstrap node
         {
+            bootstrapNode = true;
             // add ip and port to bootstrap file
             addIpPortBSFile(ipAddress, port, bootstrapFilePath);
 
             // initialize routing table
             rt = new KrtBootStrap(nodeId,kp,k);
+            KademliaFindOpResult res = protocol.findNodeOp(nodeId, ipAddress, port, nodeId,ipBootstrap,portBootstrap);
+
         }
         else
         {
+            bootstrapNode = false;
             // initialize routing table
             rt = new KrtNormal(nodeId,kp,k);
 
             // read info of available bootstrap nodes and randomly select one
-            List<String> bootstrapNodesInfo = getBootstrapNodesInfo(bootstrapFilePath);
-            String selectedBootstrap = selectRandomBootstrapNode(bootstrapNodesInfo);
 
-            String[] bootstrapIpPort = selectedBootstrap.split(" ");
-            String ipBootstrap = bootstrapIpPort[0];
-            int portBootstrap = Integer.parseInt(bootstrapIpPort[1]);
 
             // send find node operation to selected bootstrap node
             KademliaFindOpResult res = protocol.findNodeOp(nodeId, ipAddress, port, nodeId,ipBootstrap,portBootstrap);
@@ -74,13 +76,16 @@ public class Kademlia
             // send find node to the closest nodes
             // repeat process if new closest nodes are received
             //TODO perguntar sobre quando parar find Node
-            boolean foundNewClosestNodes = true;
+
+        }
+
+        boolean foundNewClosestNodes = true;
             /*
             while (res.size() == 0)
             {
                 foundNewClosestNodes = false;
                 ArrayList<Node> newRes;
-                for (Node n : res.getNodesList()) 
+                for (Node n : res.getNodesList())
                 {
                     protocol = new KademliaProtocol(nodeId, n.getIp(), n.getPort());
                     KademliaFindOpResult closestNodes = protocol.findNodeOp(nodeId, ipAddress, port, nodeId);
@@ -106,9 +111,7 @@ public class Kademlia
                 }
                             */
 
-        }
 
-        System.out.println("Generated nodeId: " + Arrays.toString(nodeId));
 
         //callOps(protocol, nodeId, ipAddress, port);
     }

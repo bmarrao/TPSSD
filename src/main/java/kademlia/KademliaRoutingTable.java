@@ -70,7 +70,7 @@ public class KademliaRoutingTable
 
     //  Função que insere um no na arvore
     //  Função que insere um no na arvore
-    public boolean insert(KademliaNode node)
+    public boolean insert(Node node)
     {
         return false;
     }
@@ -331,29 +331,40 @@ public class KademliaRoutingTable
 
     // TODO testar
     // Função que pesquisa o map pelo node mais perto da variavel 'nodeId'
-    private ArrayList<KademliaNode> searchMapClosest(ArrayList<KademliaNode> kbucket,byte[] nodeId, int a)
+    public ArrayList<KademliaNode> searchMapClosest(ArrayList<KademliaNode> kbucket,byte[] nodeId, int a)
     {
-        ArrayList<Tuple> sortDist = new ArrayList<Tuple>();
         ArrayList<KademliaNode> result  = new ArrayList<KademliaNode>();
         // Iniciamos a distancia por 1
         // Iniciamos uma variavel para guardar o no mais perto para retorrmos
         // Percorremos a lista procurando a distancia mais perto
-        KademliaNode node = kbucket.get(0);
-        BigInteger distance = calculateDistance(nodeId, node.nodeId);
-        for (int i = 1 ; i <kbucket.size();i++)
+        if (kbucket.size() != 0)
         {
-            KademliaNode bnode = kbucket.get(i);
-            // Calcula a distancia relativamente ao no 'bnode'
-            // Caso seja menor guardamos como o node mais perto e a menor distancia
-            BigInteger newDistance = calculateDistance(nodeId, bnode.nodeId);
-            // Caso seja menor guardamos como o node mais perto e a menor distancia
-            sortDist.add(new Tuple(bnode, newDistance));
-            Collections.sort(sortDist);
+            ArrayList<Tuple> sortDist = new ArrayList<Tuple>();
+            KademliaNode node = kbucket.get(0);
+            BigInteger distance = calculateDistance(nodeId, node.nodeId);
+            for (int i = 1 ; i <kbucket.size();i++)
+            {
+                KademliaNode bnode = kbucket.get(i);
+                // Calcula a distancia relativamente ao no 'bnode'
+                // Caso seja menor guardamos como o node mais perto e a menor distancia
+                BigInteger newDistance = calculateDistance(nodeId, bnode.nodeId);
+                // Caso seja menor guardamos como o node mais perto e a menor distancia
+                sortDist.add(new Tuple(bnode, newDistance));
+                Collections.sort(sortDist);
+            }
+            System.out.println("a : " + a);
+            int tamanho = sortDist.size();
+            if (tamanho > a)
+            {
+                tamanho = a;
+            }
+
+            for (int j = 0;  j < tamanho ; j++ )
+            {
+                result.add(sortDist.get(j).kd);
+            }
         }
-        for (int j = 0; j < kbucket.size() || j < a; j++ )
-        {
-            result.add(sortDist.get(j).kd);
-        }
+
         return result;
     }
 
@@ -374,10 +385,10 @@ public class KademliaRoutingTable
     }
     // TODO testar se isso funciona direito
     // Função que calcula a distancia de um no
-    private BigInteger calculateDistance (byte[] node1, byte[] node2)
+    public BigInteger calculateDistance (byte[] node1, byte[] node2)
     {
-        BigInteger distance = new BigInteger("0");
-        for (int i = 0; i < 20; i++)
+        BigInteger distance = BigInteger.ZERO;
+        for (int i = 0; i < node1.length; i++)
         {
             for (int j = 7 ; j >= 0 ; j--)
             {
@@ -388,7 +399,7 @@ public class KademliaRoutingTable
                 if (bit1 != bit2)
                 {
                     //TODO Ver se é assim mesmo
-                    distance = distance.add(BigInteger.valueOf((long) Math.pow(2, 160 - (i * (j)))));
+                    distance = distance.add(BigInteger.valueOf((long) Math.pow(2,(((node1.length-i-1)*8)+j))));
                 }
             }
         }
@@ -422,34 +433,6 @@ public class KademliaRoutingTable
         }
 
     }
-
-    public void compareId(byte [] nodeId, byte [] nodeId2)
-    {
-        String nodeString = "";
-        for (int j = 0 ; j < 20; j++)
-        {
-            byte b = nodeId[j];
-            byte c = nodeId2[j];
-            for (int i = 7; i >= 0; i--) { // Start from the most significant bit (bit 7)
-                // Extract the i-th bit using bitwise AND operation
-                boolean bit1 = ((b >> i) & 1) == 1;
-                boolean bit2 = ((c >> i) & 1) == 1;
-
-                // Print the bit value
-                if (bit1 == bit2)
-                {
-                    nodeString = nodeString+"d";
-                }
-                else
-                {
-                    nodeString = nodeString +"e";
-                }
-            }
-        }
-
-        System.out.println(nodeString);
-    }
-
     public String printId(byte [] id)
     {
         String nodeId="";
@@ -471,30 +454,6 @@ public class KademliaRoutingTable
             }
         }
         return nodeId;
-    }
-    public static void main(String[] args)
-    {
-
-        // Convert array of bits to bytes
-        Kademlia kd = new Kademlia();
-        KademliaRoutingTable krt = new KademliaRoutingTable(kd.generateNodeId(), kd.getKdProtocol(), 20 );;
-        //System.out.println(krt.findClosestKbucket(krt.root,krt.root, kd.generateNodeId(),0,7,'r'));
-        /*
-
-        for (int i  = 0 ; i < 20000; i++)
-        {
-            krt.insert(new KademliaNode("localhost",kd.generateNodeId(),5000));
-        }
-        krt.printTree();
-        byte p1[] = kd.generateNodeId();
-        byte p2[] = kd.generateNodeId();
-
-        System.out.println(krt.printId(p1));
-        System.out.println(krt.printId(p2));
-        krt.compareId(p1,p2);
-
-
-         */
     }
 }
 
