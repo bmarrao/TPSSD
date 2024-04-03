@@ -6,7 +6,7 @@ package kademlia;
 
 message PingRequest 
 {
-  bytes myNodeId = 1;
+  Node node = 1;
 }
 
 message PingResponse 
@@ -23,11 +23,9 @@ message Node
 
 message StoreRequest
 {
-  bytes id = 1;
-  bytes key = 2;
-  string val = 3;
-  string ip = 4;
-  uint32 port = 5;
+  Node node = 1;
+  string key = 2;
+  string value = 3;
 }
 
 message StoreResponse
@@ -38,10 +36,9 @@ message StoreResponse
 
 message FindNodeRequest
 {
-  bytes id = 1;
-  string ip = 2;
-  uint32 port = 3;
+  Node node = 1;
   bytes key = 4;
+  uint32 k = 5;
 }
 
 // Interativo ou recursivo
@@ -53,19 +50,16 @@ message FindNodeResponse
 
 message FindValueRequest
 {
-  bytes id = 1;
-  string ip = 2;
-  uint32 port = 3;
-  bytes key = 4;
+  Node node = 1;
+  string key = 2;
 }
 
 message FindValueResponse
 {
   bytes id = 1;
-  //Não vai ser string provavelme3nte
-  string val = 2;
-  repeated Node nodes = 3;
+  string value = 2;
 }
+
 service Kademlia
 {
   // Unary

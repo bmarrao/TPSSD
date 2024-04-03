@@ -184,7 +184,7 @@ public class KademliaRoutingTable
 
     // TODO testar
     // Função para achar o node mais perto da variavel 'nodeId'
-    private ArrayList<KademliaNode> findClosestNode(byte[] nodeId, int j, int a)
+    public ArrayList<KademliaNode> findClosestNode(byte[] nodeId, int j, int a)
     {
         ArrayList<KademliaNode> nodos;
         lock.lock();

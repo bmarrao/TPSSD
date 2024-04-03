@@ -4,6 +4,8 @@ import com.google.protobuf.ByteString;
 import io.grpc.ManagedChannel;
 import io.grpc.ManagedChannelBuilder;
 
+import java.util.ArrayList;
+
 
 public class KademliaProtocol
 {
@@ -18,26 +20,36 @@ public class KademliaProtocol
     {
         ManagedChannel channel = ManagedChannelBuilder.forAddress(receiverIp, receiverPort).usePlaintext().build();
 
+        Node node = Node.newBuilder()
+            .setId(ByteString.copyFrom(nodeId))
+            .setIp("127.0.0.1")
+            .setPort(8080)
+            .build();
+
         KademliaGrpc.KademliaBlockingStub stub = KademliaGrpc.newBlockingStub(channel);
-        PingRequest request = PingRequest.newBuilder().setMyNodeId(ByteString.copyFrom(nodeId)).build();
+        PingRequest request = PingRequest.newBuilder().setNode(node).build();
 
         PingResponse response = stub.ping(request);
 
         return response.getId().toByteArray();
     }
 
-    public boolean storeOp(byte[] nodeId, byte[] key, String val, String ip, int port,String receiverIp, int receiverPort)
+    public boolean storeOp(byte[] nodeId, String key, String val, String ip, int port,String receiverIp, int receiverPort)
     {
         ManagedChannel channel = ManagedChannelBuilder.forAddress(receiverIp, receiverPort).usePlaintext().build();
 
         KademliaGrpc.KademliaBlockingStub stub = KademliaGrpc.newBlockingStub(channel);
 
-        StoreRequest request = StoreRequest.newBuilder()
+        Node node = Node.newBuilder()
                 .setId(ByteString.copyFrom(nodeId))
-                .setKey(ByteString.copyFrom(key))
-                .setVal(val)
-                .setIp(ip)
-                .setPort(port).build();
+                .setIp("127.0.0.1")
+                .setPort(8080)
+                .build();
+
+        StoreRequest request = StoreRequest.newBuilder()
+                .setNode(node)
+                .setKey(key)
+                .setValue(val).build();
 
         StoreResponse response = stub.store(request);
 
@@ -50,10 +62,14 @@ public class KademliaProtocol
 
         KademliaGrpc.KademliaBlockingStub stub = KademliaGrpc.newBlockingStub(channel);
 
-        FindNodeRequest request = FindNodeRequest.newBuilder()
+        Node node = Node.newBuilder()
                 .setId(ByteString.copyFrom(nodeId))
-                .setIp(ip)
-                .setPort(port)
+                .setIp("127.0.0.1")
+                .setPort(8080)
+                .build();
+
+        FindNodeRequest request = FindNodeRequest.newBuilder()
+                .setNode(node)
                 .setKey(ByteString.copyFrom(key)).build();
 
         FindNodeResponse response = stub.findNode(request);
@@ -61,20 +77,27 @@ public class KademliaProtocol
         return new KademliaFindOpResult(response.getId().toByteArray(), "", response.getNodesList());
     }
 
-    public KademliaFindOpResult findValueOp(byte[] nodeId, String ip, int port, byte[] key,String receiverIp, int receiverPort)
+    public KademliaFindOpResult findValueOp(byte[] nodeId, String ip, int port, String key,String receiverIp, int receiverPort)
     {
         ManagedChannel channel = ManagedChannelBuilder.forAddress(receiverIp, receiverPort).usePlaintext().build();
 
         KademliaGrpc.KademliaBlockingStub stub = KademliaGrpc.newBlockingStub(channel);
 
-        FindValueRequest request = FindValueRequest.newBuilder()
+        Node node = Node.newBuilder()
                 .setId(ByteString.copyFrom(nodeId))
-                .setIp(ip)
-                .setPort(port)
-                .setKey(ByteString.copyFrom(key)).build();
+                .setIp("127.0.0.1")
+                .setPort(8080)
+                .build();
+
+        FindValueRequest request = FindValueRequest.newBuilder()
+                .setNode(node)
+                .setKey(key).build();
 
         FindValueResponse response = stub.findValue(request);
 
-        return new KademliaFindOpResult(response.getId().toByteArray(), response.getVal(), response.getNodesList());
+        //TODO É necessário estes nodes?
+        ArrayList<Node> nodes = new ArrayList<>();
+
+        return new KademliaFindOpResult(response.getId().toByteArray(), response.getValue(), nodes);
     }
 }

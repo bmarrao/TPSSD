@@ -6,6 +6,8 @@ import io.grpc.ManagedChannelBuilder;
 
 import kademlia.*;
 
+import java.util.ArrayList;
+
 public class KademliaClient
 {
     public byte[] nodeId;
@@ -22,9 +24,16 @@ public class KademliaClient
         stub = KademliaGrpc.newBlockingStub(channel);
     }
 
-    public byte[] pingOp(byte[] nodeId)
+    public byte[] pingOp(byte[] nodeId, String ip, int port)
     {
-        PingRequest request = PingRequest.newBuilder().setMyNodeId(ByteString.copyFrom(nodeId)).build();
+
+        Node node = Node.newBuilder()
+                .setId(ByteString.copyFrom(nodeId))
+                .setIp(ip)
+                .setPort(port)
+                .build();
+
+        PingRequest request = PingRequest.newBuilder().setNode(node).build();
 
         PingResponse response = stub.ping(request);
 
@@ -33,12 +42,17 @@ public class KademliaClient
 
     public boolean storeOp(byte[] nodeId, byte[] key, String val, String ip, int port)
     {
-        StoreRequest request = StoreRequest.newBuilder()
+
+        Node node = Node.newBuilder()
                 .setId(ByteString.copyFrom(nodeId))
-                .setKey(ByteString.copyFrom(key))
-                .setVal(val)
                 .setIp(ip)
-                .setPort(port).build();
+                .setPort(port)
+                .build();
+
+        StoreRequest request = StoreRequest.newBuilder()
+                .setNode(node)
+                .setKey(key.toString())
+                .setValue(val).build();
 
         StoreResponse response = stub.store(request);
 
@@ -47,10 +61,14 @@ public class KademliaClient
 
     public KademliaFindOpResult findNodeOp(byte[] nodeId, String ip, int port, byte[] key)
     {
-        FindNodeRequest request = FindNodeRequest.newBuilder()
+        Node node = Node.newBuilder()
                 .setId(ByteString.copyFrom(nodeId))
                 .setIp(ip)
                 .setPort(port)
+                .build();
+
+        FindNodeRequest request = FindNodeRequest.newBuilder()
+                .setNode(node)
                 .setKey(ByteString.copyFrom(key)).build();
 
         FindNodeResponse response = stub.findNode(request);
@@ -60,14 +78,22 @@ public class KademliaClient
 
     public KademliaFindOpResult findValueOp(byte[] nodeId, String ip, int port, byte[] key)
     {
-        FindValueRequest request = FindValueRequest.newBuilder()
+
+        Node node = Node.newBuilder()
                 .setId(ByteString.copyFrom(nodeId))
                 .setIp(ip)
                 .setPort(port)
-                .setKey(ByteString.copyFrom(key)).build();
+                .build();
+
+        FindValueRequest request = FindValueRequest.newBuilder()
+                .setNode(node)
+                .setKey(key.toString()).build();
 
         FindValueResponse response = stub.findValue(request);
 
-        return new KademliaFindOpResult(response.getId().toByteArray(), response.getVal(), response.getNodesList());
+        //TODO É necessário estes nodes?
+        ArrayList<Node> nodes = new ArrayList<>();
+
+        return new KademliaFindOpResult(response.getId().toByteArray(), response.getValue(), nodes);
     }
 }
