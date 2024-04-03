@@ -54,9 +54,9 @@ public class KrtBootStrap extends KademliaRoutingTable
                             } else {
                                 addToBuckets(curr.left, curr.right, curr.kbucket, node, i, j - 1);
                             }
-                            curr.kbucket = null;
 
                         }
+                        curr.kbucket = null;
                         return true;
                     }
                     else

@@ -298,5 +298,27 @@ public class KademliaRoutingTable
         }
 
     }
+    public String printId(byte [] id)
+    {
+        String nodeId="";
+        for (int j = 0 ; j < 20; j++)
+        {
+            byte b = id[j];
+            for (int i = 7; i >= 0; i--) { // Start from the most significant bit (bit 7)
+                // Extract the i-th bit using bitwise AND operation
+                boolean bit = ((b >> i) & 1) == 1;
+                // Print the bit value
+                if (bit)
+                {
+                    nodeId = nodeId+"1";
+                }
+                else
+                {
+                    nodeId = nodeId +"0";
+                }
+            }
+        }
+        return nodeId;
+    }
 }
 
