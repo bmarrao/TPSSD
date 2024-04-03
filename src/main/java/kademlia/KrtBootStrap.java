@@ -171,14 +171,32 @@ public class KrtBootStrap extends KademliaRoutingTable
             else
             {
                 nodes = testDirection(direction,curr,nodeId,i,j,d,a );
-                // Caso contrario continua percorrendo a arvore e chamando a função recursiva
-                if (nodes.size() +1 < a)
+                if(nodes != null )
                 {
-                    ArrayList<KademliaNode> nodos ;
-                    nodos = testDirection(!direction,parent,nodeId,i,j,d,a );
-                    nodes.addAll(nodos);
+                    if (nodes.size() +1 < a)
+                    {
+                        ArrayList<KademliaNode> nodos ;
+                        nodos = testDirection(!direction,parent,nodeId,i,j,d,a );
+                        if (nodos != null)
+                        {
+                            nodes.addAll(nodos);
+                        }
+
+                    }
+                }
+                else
+                {
+                        ArrayList<KademliaNode> nodos ;
+                        nodos = testDirection(!direction,parent,nodeId,i,j,d,a );
+                        if (nodos != null)
+                        {
+                            nodes.addAll(nodos);
+                        }
+
 
                 }
+                // Caso contrario continua percorrendo a arvore e chamando a função recursiva
+
             }
         }
         return nodes;

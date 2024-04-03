@@ -198,34 +198,38 @@ public class KademliaRoutingTable
     // Função que pesquisa o map pelo node mais perto da variavel 'nodeId'
     public ArrayList<KademliaNode> searchMapClosest(ArrayList<KademliaNode> kbucket,byte[] nodeId, int a)
     {
-        ArrayList<Tuple> sortDist = new ArrayList<Tuple>();
         ArrayList<KademliaNode> result  = new ArrayList<KademliaNode>();
         // Iniciamos a distancia por 1
         // Iniciamos uma variavel para guardar o no mais perto para retorrmos
         // Percorremos a lista procurando a distancia mais perto
-        KademliaNode node = kbucket.get(0);
-        BigInteger distance = calculateDistance(nodeId, node.nodeId);
-        for (int i = 1 ; i <kbucket.size();i++)
+        if (kbucket.size() != 0)
         {
-            KademliaNode bnode = kbucket.get(i);
-            // Calcula a distancia relativamente ao no 'bnode'
-            // Caso seja menor guardamos como o node mais perto e a menor distancia
-            BigInteger newDistance = calculateDistance(nodeId, bnode.nodeId);
-            // Caso seja menor guardamos como o node mais perto e a menor distancia
-            sortDist.add(new Tuple(bnode, newDistance));
-            Collections.sort(sortDist);
-        }
-        System.out.println("a : " + a);
-        int tamanho = sortDist.size();
-        if (tamanho > a)
-        {
-            tamanho = a;
+            ArrayList<Tuple> sortDist = new ArrayList<Tuple>();
+            KademliaNode node = kbucket.get(0);
+            BigInteger distance = calculateDistance(nodeId, node.nodeId);
+            for (int i = 1 ; i <kbucket.size();i++)
+            {
+                KademliaNode bnode = kbucket.get(i);
+                // Calcula a distancia relativamente ao no 'bnode'
+                // Caso seja menor guardamos como o node mais perto e a menor distancia
+                BigInteger newDistance = calculateDistance(nodeId, bnode.nodeId);
+                // Caso seja menor guardamos como o node mais perto e a menor distancia
+                sortDist.add(new Tuple(bnode, newDistance));
+                Collections.sort(sortDist);
+            }
+            System.out.println("a : " + a);
+            int tamanho = sortDist.size();
+            if (tamanho > a)
+            {
+                tamanho = a;
+            }
+
+            for (int j = 0;  j < tamanho ; j++ )
+            {
+                result.add(sortDist.get(j).kd);
+            }
         }
 
-        for (int j = 0;  j < tamanho ; j++ )
-        {
-            result.add(sortDist.get(j).kd);
-        }
         return result;
     }
 
