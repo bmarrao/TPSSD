@@ -48,15 +48,17 @@ public class KademliaTeste
             rtBootStrap.insert(ins);
 
         }
+        System.out.println("");
         rtNormal.printTree();
 
         nodeId = kd.generateNodeId();
 
-        ArrayList<Node> arr = rtNormal.findClosestNode(nodeId, 50);
+        ArrayList<Node> arr = rtNormal.findClosestNode(nodeId, 200);
         System.out.println(arr.size());
 
 
-        arr = rtBootStrap.findClosestNode(nodeId, 50);
+        rtBootStrap.printTree();
+        arr = rtBootStrap.findClosestNode(nodeId, 200);
         System.out.println(arr.size());
 
         // 

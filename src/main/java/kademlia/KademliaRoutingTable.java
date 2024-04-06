@@ -1,4 +1,6 @@
 package kademlia;
+import com.google.protobuf.ByteString;
+
 import java.math.BigInteger;
 import java.time.LocalDateTime;
 import java.util.*;
@@ -157,6 +159,107 @@ public class KademliaRoutingTable
         }
     }
 
+    public ArrayList<Node> findClosestNode(byte[] nodeId,int a)
+    {
+        ArrayList<KademliaNode> nodos;
+        lock.lock();
+        // Testa se tem um kbucket
+        if (this.root.kc >= 2) {
+            // Neste caso pesquisa pela função 'searchMapClosest' o node mais perto
+            nodos = searchMapClosest(this.root.kbucket, nodeId, a);
+            System.out.println("Adding at root" + nodos.size());
+        }
+        else if (this.root.kc == 1)
+        {
+            nodos = new ArrayList<KademliaNode>();
+        }
+        else
+        {
+            boolean direction = (((myNodeId[0] >> 7) & 1) == 1) == (((nodeId[0] >> 7) & 1) == 1);
+            nodos = testDirection(direction,this.root,nodeId,0,7,a,"");
+            if (nodos.size() +1 < a)
+            {
+                ArrayList<KademliaNode> nodes ;
+                nodes = testDirection(!direction,this.root,nodeId,0,7,a-nodos.size(),"");
+                nodos.addAll(nodes);
+            }
+        }// Chama a função recursiva para resolver o problema
+        lock.unlock();
+        ArrayList<Node> ret = new ArrayList<Node>();
+        for (KademliaNode kn : nodos )
+        {
+            Node.Builder nd = Node.newBuilder();
+            nd.setIp(kn.ipAdress);
+            nd.setPort(kn.port);
+            nd.setId(ByteString.copyFrom(kn.nodeId));
+            ret.add(nd.build());
+        }
+        return ret;
+    }
+
+    private ArrayList<KademliaNode> findClosestNodeRec(TreeNode curr, byte[] nodeId, int i, int j,int a, String path)
+    {
+        ArrayList<KademliaNode> nodes = new ArrayList<KademliaNode>();
+        if (curr != null)
+        {
+            // Testa se tem um kbucket
+            if (curr.kc >= 1)
+            {
+                ArrayList<KademliaNode> nodos = searchMapClosest(curr.kbucket, nodeId,a);
+                System.out.println("Adding in " + path + " " + nodos.size());
+                return nodos;
+
+            }
+            else
+            {
+                boolean direction = (((myNodeId[i] >> j ) & 1) == 1) == (((nodeId[i] >> j) & 1) == 1);
+                nodes = testDirection(direction,curr,nodeId,i,j,a ,path);
+
+                if (nodes.size() +1 < a)
+                {
+                    ArrayList<KademliaNode> nodos ;
+                    nodos = testDirection(!direction,curr,nodeId,i,j,a-nodes.size(),path);
+                    nodes.addAll(nodos);
+                }
+
+            }
+        }
+        return nodes;
+    }
+
+    private ArrayList<KademliaNode> testDirection (boolean direction, TreeNode curr, byte[] nodeId, int i, int j, int a, String path)
+    {
+        if (direction)
+        {
+            if (j == 0)
+            {
+                return findClosestNodeRec(curr.right, nodeId, i+1,7,a,path+" r");
+
+            }
+            else
+            {
+                return findClosestNodeRec(curr.right,nodeId, i,j-1,a,path+" r");
+
+
+            }
+
+        }
+        else
+        {
+            if (j == 0)
+            {
+                return findClosestNodeRec(curr.left,nodeId, i+1,7,a,path+" l");
+
+            }
+            else
+            {
+                return  findClosestNodeRec(curr.left,nodeId, i,j-1,a,path+" l");
+
+
+            }
+        }
+    }
+
     // TOdo testar
     // Função que testa se o no visto pela ultima vez online ainda esta online e neste caso descarta a variavel 'node' caso contrario
     //Remove o no que foi visto pela ultima vez online e adiciona a variavel 'node' a o kbucket
@@ -182,12 +285,6 @@ public class KademliaRoutingTable
         }
     }
 
-    // TODO testar
-    // Função para achar o node mais perto da variavel 'nodeId'
-    public ArrayList<Node> findClosestNode(byte[] nodeId, int a)
-    {
-        return null;
-    }
     // Função que pesquisa o map pelo node mais perto da variavel 'nodeId'
     public ArrayList<KademliaNode> searchMapClosest(ArrayList<KademliaNode> kbucket,byte[] nodeId, int a)
     {
