@@ -76,7 +76,7 @@ public class KademliaImpl extends KademliaGrpc.KademliaImplBase
         // Get the closest node to the target ID from the routing table
         //TODO : Retirar o j??
         //TODO : replace KademliaNode to Node
-        ArrayList<KademliaNode> closestNodes = rt.findClosestNode(nodeID, 0, k_nodes );
+        ArrayList<Node> closestNodes = rt.findClosestNode(nodeID, k_nodes );
 
         //TODO : AddAllNodes
         FindNodeResponse response = FindNodeResponse.newBuilder()

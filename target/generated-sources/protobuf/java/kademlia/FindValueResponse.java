@@ -16,8 +16,7 @@ public  final class FindValueResponse extends
   }
   private FindValueResponse() {
     id_ = com.google.protobuf.ByteString.EMPTY;
-    val_ = "";
-    nodes_ = java.util.Collections.emptyList();
+    value_ = "";
   }
 
   @java.lang.Override
@@ -53,16 +52,7 @@ public  final class FindValueResponse extends
           case 18: {
             java.lang.String s = input.readStringRequireUtf8();
 
-            val_ = s;
-            break;
-          }
-          case 26: {
-            if (!((mutable_bitField0_ & 0x00000004) == 0x00000004)) {
-              nodes_ = new java.util.ArrayList<kademlia.Node>();
-              mutable_bitField0_ |= 0x00000004;
-            }
-            nodes_.add(
-                input.readMessage(kademlia.Node.parser(), extensionRegistry));
+            value_ = s;
             break;
           }
         }
@@ -73,9 +63,6 @@ public  final class FindValueResponse extends
       throw new com.google.protobuf.InvalidProtocolBufferException(
           e).setUnfinishedMessage(this);
     } finally {
-      if (((mutable_bitField0_ & 0x00000004) == 0x00000004)) {
-        nodes_ = java.util.Collections.unmodifiableList(nodes_);
-      }
       makeExtensionsImmutable();
     }
   }
@@ -91,7 +78,6 @@ public  final class FindValueResponse extends
             kademlia.FindValueResponse.class, kademlia.FindValueResponse.Builder.class);
   }
 
-  private int bitField0_;
   public static final int ID_FIELD_NUMBER = 1;
   private com.google.protobuf.ByteString id_;
   /**
@@ -101,81 +87,38 @@ public  final class FindValueResponse extends
     return id_;
   }
 
-  public static final int VAL_FIELD_NUMBER = 2;
-  private volatile java.lang.Object val_;
+  public static final int VALUE_FIELD_NUMBER = 2;
+  private volatile java.lang.Object value_;
   /**
-   * <pre>
-   *Não vai ser string provavelme3nte
-   * </pre>
-   *
-   * <code>string val = 2;</code>
+   * <code>string value = 2;</code>
    */
-  public java.lang.String getVal() {
-    java.lang.Object ref = val_;
+  public java.lang.String getValue() {
+    java.lang.Object ref = value_;
     if (ref instanceof java.lang.String) {
       return (java.lang.String) ref;
     } else {
       com.google.protobuf.ByteString bs = 
           (com.google.protobuf.ByteString) ref;
       java.lang.String s = bs.toStringUtf8();
-      val_ = s;
+      value_ = s;
       return s;
     }
   }
   /**
-   * <pre>
-   *Não vai ser string provavelme3nte
-   * </pre>
-   *
-   * <code>string val = 2;</code>
+   * <code>string value = 2;</code>
    */
   public com.google.protobuf.ByteString
-      getValBytes() {
-    java.lang.Object ref = val_;
+      getValueBytes() {
+    java.lang.Object ref = value_;
     if (ref instanceof java.lang.String) {
       com.google.protobuf.ByteString b = 
           com.google.protobuf.ByteString.copyFromUtf8(
               (java.lang.String) ref);
-      val_ = b;
+      value_ = b;
       return b;
     } else {
       return (com.google.protobuf.ByteString) ref;
     }
-  }
-
-  public static final int NODES_FIELD_NUMBER = 3;
-  private java.util.List<kademlia.Node> nodes_;
-  /**
-   * <code>repeated .kademlia.Node nodes = 3;</code>
-   */
-  public java.util.List<kademlia.Node> getNodesList() {
-    return nodes_;
-  }
-  /**
-   * <code>repeated .kademlia.Node nodes = 3;</code>
-   */
-  public java.util.List<? extends kademlia.NodeOrBuilder> 
-      getNodesOrBuilderList() {
-    return nodes_;
-  }
-  /**
-   * <code>repeated .kademlia.Node nodes = 3;</code>
-   */
-  public int getNodesCount() {
-    return nodes_.size();
-  }
-  /**
-   * <code>repeated .kademlia.Node nodes = 3;</code>
-   */
-  public kademlia.Node getNodes(int index) {
-    return nodes_.get(index);
-  }
-  /**
-   * <code>repeated .kademlia.Node nodes = 3;</code>
-   */
-  public kademlia.NodeOrBuilder getNodesOrBuilder(
-      int index) {
-    return nodes_.get(index);
   }
 
   private byte memoizedIsInitialized = -1;
@@ -193,11 +136,8 @@ public  final class FindValueResponse extends
     if (!id_.isEmpty()) {
       output.writeBytes(1, id_);
     }
-    if (!getValBytes().isEmpty()) {
-      com.google.protobuf.GeneratedMessageV3.writeString(output, 2, val_);
-    }
-    for (int i = 0; i < nodes_.size(); i++) {
-      output.writeMessage(3, nodes_.get(i));
+    if (!getValueBytes().isEmpty()) {
+      com.google.protobuf.GeneratedMessageV3.writeString(output, 2, value_);
     }
   }
 
@@ -210,12 +150,8 @@ public  final class FindValueResponse extends
       size += com.google.protobuf.CodedOutputStream
         .computeBytesSize(1, id_);
     }
-    if (!getValBytes().isEmpty()) {
-      size += com.google.protobuf.GeneratedMessageV3.computeStringSize(2, val_);
-    }
-    for (int i = 0; i < nodes_.size(); i++) {
-      size += com.google.protobuf.CodedOutputStream
-        .computeMessageSize(3, nodes_.get(i));
+    if (!getValueBytes().isEmpty()) {
+      size += com.google.protobuf.GeneratedMessageV3.computeStringSize(2, value_);
     }
     memoizedSize = size;
     return size;
@@ -235,10 +171,8 @@ public  final class FindValueResponse extends
     boolean result = true;
     result = result && getId()
         .equals(other.getId());
-    result = result && getVal()
-        .equals(other.getVal());
-    result = result && getNodesList()
-        .equals(other.getNodesList());
+    result = result && getValue()
+        .equals(other.getValue());
     return result;
   }
 
@@ -251,12 +185,8 @@ public  final class FindValueResponse extends
     hash = (19 * hash) + getDescriptor().hashCode();
     hash = (37 * hash) + ID_FIELD_NUMBER;
     hash = (53 * hash) + getId().hashCode();
-    hash = (37 * hash) + VAL_FIELD_NUMBER;
-    hash = (53 * hash) + getVal().hashCode();
-    if (getNodesCount() > 0) {
-      hash = (37 * hash) + NODES_FIELD_NUMBER;
-      hash = (53 * hash) + getNodesList().hashCode();
-    }
+    hash = (37 * hash) + VALUE_FIELD_NUMBER;
+    hash = (53 * hash) + getValue().hashCode();
     hash = (29 * hash) + unknownFields.hashCode();
     memoizedHashCode = hash;
     return hash;
@@ -382,21 +312,14 @@ public  final class FindValueResponse extends
     private void maybeForceBuilderInitialization() {
       if (com.google.protobuf.GeneratedMessageV3
               .alwaysUseFieldBuilders) {
-        getNodesFieldBuilder();
       }
     }
     public Builder clear() {
       super.clear();
       id_ = com.google.protobuf.ByteString.EMPTY;
 
-      val_ = "";
+      value_ = "";
 
-      if (nodesBuilder_ == null) {
-        nodes_ = java.util.Collections.emptyList();
-        bitField0_ = (bitField0_ & ~0x00000004);
-      } else {
-        nodesBuilder_.clear();
-      }
       return this;
     }
 
@@ -419,20 +342,8 @@ public  final class FindValueResponse extends
 
     public kademlia.FindValueResponse buildPartial() {
       kademlia.FindValueResponse result = new kademlia.FindValueResponse(this);
-      int from_bitField0_ = bitField0_;
-      int to_bitField0_ = 0;
       result.id_ = id_;
-      result.val_ = val_;
-      if (nodesBuilder_ == null) {
-        if (((bitField0_ & 0x00000004) == 0x00000004)) {
-          nodes_ = java.util.Collections.unmodifiableList(nodes_);
-          bitField0_ = (bitField0_ & ~0x00000004);
-        }
-        result.nodes_ = nodes_;
-      } else {
-        result.nodes_ = nodesBuilder_.build();
-      }
-      result.bitField0_ = to_bitField0_;
+      result.value_ = value_;
       onBuilt();
       return result;
     }
@@ -477,35 +388,9 @@ public  final class FindValueResponse extends
       if (other.getId() != com.google.protobuf.ByteString.EMPTY) {
         setId(other.getId());
       }
-      if (!other.getVal().isEmpty()) {
-        val_ = other.val_;
+      if (!other.getValue().isEmpty()) {
+        value_ = other.value_;
         onChanged();
-      }
-      if (nodesBuilder_ == null) {
-        if (!other.nodes_.isEmpty()) {
-          if (nodes_.isEmpty()) {
-            nodes_ = other.nodes_;
-            bitField0_ = (bitField0_ & ~0x00000004);
-          } else {
-            ensureNodesIsMutable();
-            nodes_.addAll(other.nodes_);
-          }
-          onChanged();
-        }
-      } else {
-        if (!other.nodes_.isEmpty()) {
-          if (nodesBuilder_.isEmpty()) {
-            nodesBuilder_.dispose();
-            nodesBuilder_ = null;
-            nodes_ = other.nodes_;
-            bitField0_ = (bitField0_ & ~0x00000004);
-            nodesBuilder_ = 
-              com.google.protobuf.GeneratedMessageV3.alwaysUseFieldBuilders ?
-                 getNodesFieldBuilder() : null;
-          } else {
-            nodesBuilder_.addAllMessages(other.nodes_);
-          }
-        }
       }
       onChanged();
       return this;
@@ -532,7 +417,6 @@ public  final class FindValueResponse extends
       }
       return this;
     }
-    private int bitField0_;
 
     private com.google.protobuf.ByteString id_ = com.google.protobuf.ByteString.EMPTY;
     /**
@@ -563,333 +447,73 @@ public  final class FindValueResponse extends
       return this;
     }
 
-    private java.lang.Object val_ = "";
+    private java.lang.Object value_ = "";
     /**
-     * <pre>
-     *Não vai ser string provavelme3nte
-     * </pre>
-     *
-     * <code>string val = 2;</code>
+     * <code>string value = 2;</code>
      */
-    public java.lang.String getVal() {
-      java.lang.Object ref = val_;
+    public java.lang.String getValue() {
+      java.lang.Object ref = value_;
       if (!(ref instanceof java.lang.String)) {
         com.google.protobuf.ByteString bs =
             (com.google.protobuf.ByteString) ref;
         java.lang.String s = bs.toStringUtf8();
-        val_ = s;
+        value_ = s;
         return s;
       } else {
         return (java.lang.String) ref;
       }
     }
     /**
-     * <pre>
-     *Não vai ser string provavelme3nte
-     * </pre>
-     *
-     * <code>string val = 2;</code>
+     * <code>string value = 2;</code>
      */
     public com.google.protobuf.ByteString
-        getValBytes() {
-      java.lang.Object ref = val_;
+        getValueBytes() {
+      java.lang.Object ref = value_;
       if (ref instanceof String) {
         com.google.protobuf.ByteString b = 
             com.google.protobuf.ByteString.copyFromUtf8(
                 (java.lang.String) ref);
-        val_ = b;
+        value_ = b;
         return b;
       } else {
         return (com.google.protobuf.ByteString) ref;
       }
     }
     /**
-     * <pre>
-     *Não vai ser string provavelme3nte
-     * </pre>
-     *
-     * <code>string val = 2;</code>
+     * <code>string value = 2;</code>
      */
-    public Builder setVal(
+    public Builder setValue(
         java.lang.String value) {
       if (value == null) {
     throw new NullPointerException();
   }
   
-      val_ = value;
+      value_ = value;
       onChanged();
       return this;
     }
     /**
-     * <pre>
-     *Não vai ser string provavelme3nte
-     * </pre>
-     *
-     * <code>string val = 2;</code>
+     * <code>string value = 2;</code>
      */
-    public Builder clearVal() {
+    public Builder clearValue() {
       
-      val_ = getDefaultInstance().getVal();
+      value_ = getDefaultInstance().getValue();
       onChanged();
       return this;
     }
     /**
-     * <pre>
-     *Não vai ser string provavelme3nte
-     * </pre>
-     *
-     * <code>string val = 2;</code>
+     * <code>string value = 2;</code>
      */
-    public Builder setValBytes(
+    public Builder setValueBytes(
         com.google.protobuf.ByteString value) {
       if (value == null) {
     throw new NullPointerException();
   }
   checkByteStringIsUtf8(value);
       
-      val_ = value;
+      value_ = value;
       onChanged();
       return this;
-    }
-
-    private java.util.List<kademlia.Node> nodes_ =
-      java.util.Collections.emptyList();
-    private void ensureNodesIsMutable() {
-      if (!((bitField0_ & 0x00000004) == 0x00000004)) {
-        nodes_ = new java.util.ArrayList<kademlia.Node>(nodes_);
-        bitField0_ |= 0x00000004;
-       }
-    }
-
-    private com.google.protobuf.RepeatedFieldBuilderV3<
-        kademlia.Node, kademlia.Node.Builder, kademlia.NodeOrBuilder> nodesBuilder_;
-
-    /**
-     * <code>repeated .kademlia.Node nodes = 3;</code>
-     */
-    public java.util.List<kademlia.Node> getNodesList() {
-      if (nodesBuilder_ == null) {
-        return java.util.Collections.unmodifiableList(nodes_);
-      } else {
-        return nodesBuilder_.getMessageList();
-      }
-    }
-    /**
-     * <code>repeated .kademlia.Node nodes = 3;</code>
-     */
-    public int getNodesCount() {
-      if (nodesBuilder_ == null) {
-        return nodes_.size();
-      } else {
-        return nodesBuilder_.getCount();
-      }
-    }
-    /**
-     * <code>repeated .kademlia.Node nodes = 3;</code>
-     */
-    public kademlia.Node getNodes(int index) {
-      if (nodesBuilder_ == null) {
-        return nodes_.get(index);
-      } else {
-        return nodesBuilder_.getMessage(index);
-      }
-    }
-    /**
-     * <code>repeated .kademlia.Node nodes = 3;</code>
-     */
-    public Builder setNodes(
-        int index, kademlia.Node value) {
-      if (nodesBuilder_ == null) {
-        if (value == null) {
-          throw new NullPointerException();
-        }
-        ensureNodesIsMutable();
-        nodes_.set(index, value);
-        onChanged();
-      } else {
-        nodesBuilder_.setMessage(index, value);
-      }
-      return this;
-    }
-    /**
-     * <code>repeated .kademlia.Node nodes = 3;</code>
-     */
-    public Builder setNodes(
-        int index, kademlia.Node.Builder builderForValue) {
-      if (nodesBuilder_ == null) {
-        ensureNodesIsMutable();
-        nodes_.set(index, builderForValue.build());
-        onChanged();
-      } else {
-        nodesBuilder_.setMessage(index, builderForValue.build());
-      }
-      return this;
-    }
-    /**
-     * <code>repeated .kademlia.Node nodes = 3;</code>
-     */
-    public Builder addNodes(kademlia.Node value) {
-      if (nodesBuilder_ == null) {
-        if (value == null) {
-          throw new NullPointerException();
-        }
-        ensureNodesIsMutable();
-        nodes_.add(value);
-        onChanged();
-      } else {
-        nodesBuilder_.addMessage(value);
-      }
-      return this;
-    }
-    /**
-     * <code>repeated .kademlia.Node nodes = 3;</code>
-     */
-    public Builder addNodes(
-        int index, kademlia.Node value) {
-      if (nodesBuilder_ == null) {
-        if (value == null) {
-          throw new NullPointerException();
-        }
-        ensureNodesIsMutable();
-        nodes_.add(index, value);
-        onChanged();
-      } else {
-        nodesBuilder_.addMessage(index, value);
-      }
-      return this;
-    }
-    /**
-     * <code>repeated .kademlia.Node nodes = 3;</code>
-     */
-    public Builder addNodes(
-        kademlia.Node.Builder builderForValue) {
-      if (nodesBuilder_ == null) {
-        ensureNodesIsMutable();
-        nodes_.add(builderForValue.build());
-        onChanged();
-      } else {
-        nodesBuilder_.addMessage(builderForValue.build());
-      }
-      return this;
-    }
-    /**
-     * <code>repeated .kademlia.Node nodes = 3;</code>
-     */
-    public Builder addNodes(
-        int index, kademlia.Node.Builder builderForValue) {
-      if (nodesBuilder_ == null) {
-        ensureNodesIsMutable();
-        nodes_.add(index, builderForValue.build());
-        onChanged();
-      } else {
-        nodesBuilder_.addMessage(index, builderForValue.build());
-      }
-      return this;
-    }
-    /**
-     * <code>repeated .kademlia.Node nodes = 3;</code>
-     */
-    public Builder addAllNodes(
-        java.lang.Iterable<? extends kademlia.Node> values) {
-      if (nodesBuilder_ == null) {
-        ensureNodesIsMutable();
-        com.google.protobuf.AbstractMessageLite.Builder.addAll(
-            values, nodes_);
-        onChanged();
-      } else {
-        nodesBuilder_.addAllMessages(values);
-      }
-      return this;
-    }
-    /**
-     * <code>repeated .kademlia.Node nodes = 3;</code>
-     */
-    public Builder clearNodes() {
-      if (nodesBuilder_ == null) {
-        nodes_ = java.util.Collections.emptyList();
-        bitField0_ = (bitField0_ & ~0x00000004);
-        onChanged();
-      } else {
-        nodesBuilder_.clear();
-      }
-      return this;
-    }
-    /**
-     * <code>repeated .kademlia.Node nodes = 3;</code>
-     */
-    public Builder removeNodes(int index) {
-      if (nodesBuilder_ == null) {
-        ensureNodesIsMutable();
-        nodes_.remove(index);
-        onChanged();
-      } else {
-        nodesBuilder_.remove(index);
-      }
-      return this;
-    }
-    /**
-     * <code>repeated .kademlia.Node nodes = 3;</code>
-     */
-    public kademlia.Node.Builder getNodesBuilder(
-        int index) {
-      return getNodesFieldBuilder().getBuilder(index);
-    }
-    /**
-     * <code>repeated .kademlia.Node nodes = 3;</code>
-     */
-    public kademlia.NodeOrBuilder getNodesOrBuilder(
-        int index) {
-      if (nodesBuilder_ == null) {
-        return nodes_.get(index);  } else {
-        return nodesBuilder_.getMessageOrBuilder(index);
-      }
-    }
-    /**
-     * <code>repeated .kademlia.Node nodes = 3;</code>
-     */
-    public java.util.List<? extends kademlia.NodeOrBuilder> 
-         getNodesOrBuilderList() {
-      if (nodesBuilder_ != null) {
-        return nodesBuilder_.getMessageOrBuilderList();
-      } else {
-        return java.util.Collections.unmodifiableList(nodes_);
-      }
-    }
-    /**
-     * <code>repeated .kademlia.Node nodes = 3;</code>
-     */
-    public kademlia.Node.Builder addNodesBuilder() {
-      return getNodesFieldBuilder().addBuilder(
-          kademlia.Node.getDefaultInstance());
-    }
-    /**
-     * <code>repeated .kademlia.Node nodes = 3;</code>
-     */
-    public kademlia.Node.Builder addNodesBuilder(
-        int index) {
-      return getNodesFieldBuilder().addBuilder(
-          index, kademlia.Node.getDefaultInstance());
-    }
-    /**
-     * <code>repeated .kademlia.Node nodes = 3;</code>
-     */
-    public java.util.List<kademlia.Node.Builder> 
-         getNodesBuilderList() {
-      return getNodesFieldBuilder().getBuilderList();
-    }
-    private com.google.protobuf.RepeatedFieldBuilderV3<
-        kademlia.Node, kademlia.Node.Builder, kademlia.NodeOrBuilder> 
-        getNodesFieldBuilder() {
-      if (nodesBuilder_ == null) {
-        nodesBuilder_ = new com.google.protobuf.RepeatedFieldBuilderV3<
-            kademlia.Node, kademlia.Node.Builder, kademlia.NodeOrBuilder>(
-                nodes_,
-                ((bitField0_ & 0x00000004) == 0x00000004),
-                getParentForChildren(),
-                isClean());
-        nodes_ = null;
-      }
-      return nodesBuilder_;
     }
     public final Builder setUnknownFields(
         final com.google.protobuf.UnknownFieldSet unknownFields) {

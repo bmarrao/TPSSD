@@ -8,37 +8,35 @@ public interface StoreRequestOrBuilder extends
     com.google.protobuf.MessageOrBuilder {
 
   /**
-   * <code>bytes id = 1;</code>
+   * <code>.kademlia.Node node = 1;</code>
    */
-  com.google.protobuf.ByteString getId();
+  boolean hasNode();
+  /**
+   * <code>.kademlia.Node node = 1;</code>
+   */
+  kademlia.Node getNode();
+  /**
+   * <code>.kademlia.Node node = 1;</code>
+   */
+  kademlia.NodeOrBuilder getNodeOrBuilder();
 
   /**
-   * <code>bytes key = 2;</code>
+   * <code>string key = 2;</code>
    */
-  com.google.protobuf.ByteString getKey();
-
+  java.lang.String getKey();
   /**
-   * <code>string val = 3;</code>
-   */
-  java.lang.String getVal();
-  /**
-   * <code>string val = 3;</code>
+   * <code>string key = 2;</code>
    */
   com.google.protobuf.ByteString
-      getValBytes();
+      getKeyBytes();
 
   /**
-   * <code>string ip = 4;</code>
+   * <code>string value = 3;</code>
    */
-  java.lang.String getIp();
+  java.lang.String getValue();
   /**
-   * <code>string ip = 4;</code>
+   * <code>string value = 3;</code>
    */
   com.google.protobuf.ByteString
-      getIpBytes();
-
-  /**
-   * <code>uint32 port = 5;</code>
-   */
-  int getPort();
+      getValueBytes();
 }

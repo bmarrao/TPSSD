@@ -24,6 +24,7 @@ kademlia/PingResponseOrBuilder.class
 kademlia/FindNodeResponseOrBuilder.class
 kademlia/server/KademliaImpl.class
 kademlia/PingRequestOrBuilder.class
+kademlia/KademliaTeste.class
 kademlia/KademliaGrpc$MethodHandlers.class
 kademlia/StoreResponse.class
 kademlia/Node$Builder.class

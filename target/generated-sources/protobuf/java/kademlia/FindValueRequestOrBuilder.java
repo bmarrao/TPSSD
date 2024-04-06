@@ -8,27 +8,25 @@ public interface FindValueRequestOrBuilder extends
     com.google.protobuf.MessageOrBuilder {
 
   /**
-   * <code>bytes id = 1;</code>
+   * <code>.kademlia.Node node = 1;</code>
    */
-  com.google.protobuf.ByteString getId();
+  boolean hasNode();
+  /**
+   * <code>.kademlia.Node node = 1;</code>
+   */
+  kademlia.Node getNode();
+  /**
+   * <code>.kademlia.Node node = 1;</code>
+   */
+  kademlia.NodeOrBuilder getNodeOrBuilder();
 
   /**
-   * <code>string ip = 2;</code>
+   * <code>string key = 2;</code>
    */
-  java.lang.String getIp();
+  java.lang.String getKey();
   /**
-   * <code>string ip = 2;</code>
+   * <code>string key = 2;</code>
    */
   com.google.protobuf.ByteString
-      getIpBytes();
-
-  /**
-   * <code>uint32 port = 3;</code>
-   */
-  int getPort();
-
-  /**
-   * <code>bytes key = 4;</code>
-   */
-  com.google.protobuf.ByteString getKey();
+      getKeyBytes();
 }

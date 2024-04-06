@@ -8,27 +8,25 @@ public interface FindNodeRequestOrBuilder extends
     com.google.protobuf.MessageOrBuilder {
 
   /**
-   * <code>bytes id = 1;</code>
+   * <code>.kademlia.Node node = 1;</code>
    */
-  com.google.protobuf.ByteString getId();
-
+  boolean hasNode();
   /**
-   * <code>string ip = 2;</code>
+   * <code>.kademlia.Node node = 1;</code>
    */
-  java.lang.String getIp();
+  kademlia.Node getNode();
   /**
-   * <code>string ip = 2;</code>
+   * <code>.kademlia.Node node = 1;</code>
    */
-  com.google.protobuf.ByteString
-      getIpBytes();
-
-  /**
-   * <code>uint32 port = 3;</code>
-   */
-  int getPort();
+  kademlia.NodeOrBuilder getNodeOrBuilder();
 
   /**
    * <code>bytes key = 4;</code>
    */
   com.google.protobuf.ByteString getKey();
+
+  /**
+   * <code>uint32 k = 5;</code>
+   */
+  int getK();
 }

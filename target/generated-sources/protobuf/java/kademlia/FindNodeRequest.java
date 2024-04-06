@@ -15,10 +15,8 @@ public  final class FindNodeRequest extends
     super(builder);
   }
   private FindNodeRequest() {
-    id_ = com.google.protobuf.ByteString.EMPTY;
-    ip_ = "";
-    port_ = 0;
     key_ = com.google.protobuf.ByteString.EMPTY;
+    k_ = 0;
   }
 
   @java.lang.Override
@@ -47,24 +45,26 @@ public  final class FindNodeRequest extends
             break;
           }
           case 10: {
+            kademlia.Node.Builder subBuilder = null;
+            if (node_ != null) {
+              subBuilder = node_.toBuilder();
+            }
+            node_ = input.readMessage(kademlia.Node.parser(), extensionRegistry);
+            if (subBuilder != null) {
+              subBuilder.mergeFrom(node_);
+              node_ = subBuilder.buildPartial();
+            }
 
-            id_ = input.readBytes();
-            break;
-          }
-          case 18: {
-            java.lang.String s = input.readStringRequireUtf8();
-
-            ip_ = s;
-            break;
-          }
-          case 24: {
-
-            port_ = input.readUInt32();
             break;
           }
           case 34: {
 
             key_ = input.readBytes();
+            break;
+          }
+          case 40: {
+
+            k_ = input.readUInt32();
             break;
           }
         }
@@ -90,56 +90,25 @@ public  final class FindNodeRequest extends
             kademlia.FindNodeRequest.class, kademlia.FindNodeRequest.Builder.class);
   }
 
-  public static final int ID_FIELD_NUMBER = 1;
-  private com.google.protobuf.ByteString id_;
+  public static final int NODE_FIELD_NUMBER = 1;
+  private kademlia.Node node_;
   /**
-   * <code>bytes id = 1;</code>
+   * <code>.kademlia.Node node = 1;</code>
    */
-  public com.google.protobuf.ByteString getId() {
-    return id_;
-  }
-
-  public static final int IP_FIELD_NUMBER = 2;
-  private volatile java.lang.Object ip_;
-  /**
-   * <code>string ip = 2;</code>
-   */
-  public java.lang.String getIp() {
-    java.lang.Object ref = ip_;
-    if (ref instanceof java.lang.String) {
-      return (java.lang.String) ref;
-    } else {
-      com.google.protobuf.ByteString bs = 
-          (com.google.protobuf.ByteString) ref;
-      java.lang.String s = bs.toStringUtf8();
-      ip_ = s;
-      return s;
-    }
+  public boolean hasNode() {
+    return node_ != null;
   }
   /**
-   * <code>string ip = 2;</code>
+   * <code>.kademlia.Node node = 1;</code>
    */
-  public com.google.protobuf.ByteString
-      getIpBytes() {
-    java.lang.Object ref = ip_;
-    if (ref instanceof java.lang.String) {
-      com.google.protobuf.ByteString b = 
-          com.google.protobuf.ByteString.copyFromUtf8(
-              (java.lang.String) ref);
-      ip_ = b;
-      return b;
-    } else {
-      return (com.google.protobuf.ByteString) ref;
-    }
+  public kademlia.Node getNode() {
+    return node_ == null ? kademlia.Node.getDefaultInstance() : node_;
   }
-
-  public static final int PORT_FIELD_NUMBER = 3;
-  private int port_;
   /**
-   * <code>uint32 port = 3;</code>
+   * <code>.kademlia.Node node = 1;</code>
    */
-  public int getPort() {
-    return port_;
+  public kademlia.NodeOrBuilder getNodeOrBuilder() {
+    return getNode();
   }
 
   public static final int KEY_FIELD_NUMBER = 4;
@@ -149,6 +118,15 @@ public  final class FindNodeRequest extends
    */
   public com.google.protobuf.ByteString getKey() {
     return key_;
+  }
+
+  public static final int K_FIELD_NUMBER = 5;
+  private int k_;
+  /**
+   * <code>uint32 k = 5;</code>
+   */
+  public int getK() {
+    return k_;
   }
 
   private byte memoizedIsInitialized = -1;
@@ -163,17 +141,14 @@ public  final class FindNodeRequest extends
 
   public void writeTo(com.google.protobuf.CodedOutputStream output)
                       throws java.io.IOException {
-    if (!id_.isEmpty()) {
-      output.writeBytes(1, id_);
-    }
-    if (!getIpBytes().isEmpty()) {
-      com.google.protobuf.GeneratedMessageV3.writeString(output, 2, ip_);
-    }
-    if (port_ != 0) {
-      output.writeUInt32(3, port_);
+    if (node_ != null) {
+      output.writeMessage(1, getNode());
     }
     if (!key_.isEmpty()) {
       output.writeBytes(4, key_);
+    }
+    if (k_ != 0) {
+      output.writeUInt32(5, k_);
     }
   }
 
@@ -182,20 +157,17 @@ public  final class FindNodeRequest extends
     if (size != -1) return size;
 
     size = 0;
-    if (!id_.isEmpty()) {
+    if (node_ != null) {
       size += com.google.protobuf.CodedOutputStream
-        .computeBytesSize(1, id_);
-    }
-    if (!getIpBytes().isEmpty()) {
-      size += com.google.protobuf.GeneratedMessageV3.computeStringSize(2, ip_);
-    }
-    if (port_ != 0) {
-      size += com.google.protobuf.CodedOutputStream
-        .computeUInt32Size(3, port_);
+        .computeMessageSize(1, getNode());
     }
     if (!key_.isEmpty()) {
       size += com.google.protobuf.CodedOutputStream
         .computeBytesSize(4, key_);
+    }
+    if (k_ != 0) {
+      size += com.google.protobuf.CodedOutputStream
+        .computeUInt32Size(5, k_);
     }
     memoizedSize = size;
     return size;
@@ -213,14 +185,15 @@ public  final class FindNodeRequest extends
     kademlia.FindNodeRequest other = (kademlia.FindNodeRequest) obj;
 
     boolean result = true;
-    result = result && getId()
-        .equals(other.getId());
-    result = result && getIp()
-        .equals(other.getIp());
-    result = result && (getPort()
-        == other.getPort());
+    result = result && (hasNode() == other.hasNode());
+    if (hasNode()) {
+      result = result && getNode()
+          .equals(other.getNode());
+    }
     result = result && getKey()
         .equals(other.getKey());
+    result = result && (getK()
+        == other.getK());
     return result;
   }
 
@@ -231,14 +204,14 @@ public  final class FindNodeRequest extends
     }
     int hash = 41;
     hash = (19 * hash) + getDescriptor().hashCode();
-    hash = (37 * hash) + ID_FIELD_NUMBER;
-    hash = (53 * hash) + getId().hashCode();
-    hash = (37 * hash) + IP_FIELD_NUMBER;
-    hash = (53 * hash) + getIp().hashCode();
-    hash = (37 * hash) + PORT_FIELD_NUMBER;
-    hash = (53 * hash) + getPort();
+    if (hasNode()) {
+      hash = (37 * hash) + NODE_FIELD_NUMBER;
+      hash = (53 * hash) + getNode().hashCode();
+    }
     hash = (37 * hash) + KEY_FIELD_NUMBER;
     hash = (53 * hash) + getKey().hashCode();
+    hash = (37 * hash) + K_FIELD_NUMBER;
+    hash = (53 * hash) + getK();
     hash = (29 * hash) + unknownFields.hashCode();
     memoizedHashCode = hash;
     return hash;
@@ -368,13 +341,15 @@ public  final class FindNodeRequest extends
     }
     public Builder clear() {
       super.clear();
-      id_ = com.google.protobuf.ByteString.EMPTY;
-
-      ip_ = "";
-
-      port_ = 0;
-
+      if (nodeBuilder_ == null) {
+        node_ = null;
+      } else {
+        node_ = null;
+        nodeBuilder_ = null;
+      }
       key_ = com.google.protobuf.ByteString.EMPTY;
+
+      k_ = 0;
 
       return this;
     }
@@ -398,10 +373,13 @@ public  final class FindNodeRequest extends
 
     public kademlia.FindNodeRequest buildPartial() {
       kademlia.FindNodeRequest result = new kademlia.FindNodeRequest(this);
-      result.id_ = id_;
-      result.ip_ = ip_;
-      result.port_ = port_;
+      if (nodeBuilder_ == null) {
+        result.node_ = node_;
+      } else {
+        result.node_ = nodeBuilder_.build();
+      }
       result.key_ = key_;
+      result.k_ = k_;
       onBuilt();
       return result;
     }
@@ -443,18 +421,14 @@ public  final class FindNodeRequest extends
 
     public Builder mergeFrom(kademlia.FindNodeRequest other) {
       if (other == kademlia.FindNodeRequest.getDefaultInstance()) return this;
-      if (other.getId() != com.google.protobuf.ByteString.EMPTY) {
-        setId(other.getId());
-      }
-      if (!other.getIp().isEmpty()) {
-        ip_ = other.ip_;
-        onChanged();
-      }
-      if (other.getPort() != 0) {
-        setPort(other.getPort());
+      if (other.hasNode()) {
+        mergeNode(other.getNode());
       }
       if (other.getKey() != com.google.protobuf.ByteString.EMPTY) {
         setKey(other.getKey());
+      }
+      if (other.getK() != 0) {
+        setK(other.getK());
       }
       onChanged();
       return this;
@@ -482,128 +456,121 @@ public  final class FindNodeRequest extends
       return this;
     }
 
-    private com.google.protobuf.ByteString id_ = com.google.protobuf.ByteString.EMPTY;
+    private kademlia.Node node_ = null;
+    private com.google.protobuf.SingleFieldBuilderV3<
+        kademlia.Node, kademlia.Node.Builder, kademlia.NodeOrBuilder> nodeBuilder_;
     /**
-     * <code>bytes id = 1;</code>
+     * <code>.kademlia.Node node = 1;</code>
      */
-    public com.google.protobuf.ByteString getId() {
-      return id_;
+    public boolean hasNode() {
+      return nodeBuilder_ != null || node_ != null;
     }
     /**
-     * <code>bytes id = 1;</code>
+     * <code>.kademlia.Node node = 1;</code>
      */
-    public Builder setId(com.google.protobuf.ByteString value) {
-      if (value == null) {
-    throw new NullPointerException();
-  }
-  
-      id_ = value;
-      onChanged();
-      return this;
-    }
-    /**
-     * <code>bytes id = 1;</code>
-     */
-    public Builder clearId() {
-      
-      id_ = getDefaultInstance().getId();
-      onChanged();
-      return this;
-    }
-
-    private java.lang.Object ip_ = "";
-    /**
-     * <code>string ip = 2;</code>
-     */
-    public java.lang.String getIp() {
-      java.lang.Object ref = ip_;
-      if (!(ref instanceof java.lang.String)) {
-        com.google.protobuf.ByteString bs =
-            (com.google.protobuf.ByteString) ref;
-        java.lang.String s = bs.toStringUtf8();
-        ip_ = s;
-        return s;
+    public kademlia.Node getNode() {
+      if (nodeBuilder_ == null) {
+        return node_ == null ? kademlia.Node.getDefaultInstance() : node_;
       } else {
-        return (java.lang.String) ref;
+        return nodeBuilder_.getMessage();
       }
     }
     /**
-     * <code>string ip = 2;</code>
+     * <code>.kademlia.Node node = 1;</code>
      */
-    public com.google.protobuf.ByteString
-        getIpBytes() {
-      java.lang.Object ref = ip_;
-      if (ref instanceof String) {
-        com.google.protobuf.ByteString b = 
-            com.google.protobuf.ByteString.copyFromUtf8(
-                (java.lang.String) ref);
-        ip_ = b;
-        return b;
+    public Builder setNode(kademlia.Node value) {
+      if (nodeBuilder_ == null) {
+        if (value == null) {
+          throw new NullPointerException();
+        }
+        node_ = value;
+        onChanged();
       } else {
-        return (com.google.protobuf.ByteString) ref;
+        nodeBuilder_.setMessage(value);
+      }
+
+      return this;
+    }
+    /**
+     * <code>.kademlia.Node node = 1;</code>
+     */
+    public Builder setNode(
+        kademlia.Node.Builder builderForValue) {
+      if (nodeBuilder_ == null) {
+        node_ = builderForValue.build();
+        onChanged();
+      } else {
+        nodeBuilder_.setMessage(builderForValue.build());
+      }
+
+      return this;
+    }
+    /**
+     * <code>.kademlia.Node node = 1;</code>
+     */
+    public Builder mergeNode(kademlia.Node value) {
+      if (nodeBuilder_ == null) {
+        if (node_ != null) {
+          node_ =
+            kademlia.Node.newBuilder(node_).mergeFrom(value).buildPartial();
+        } else {
+          node_ = value;
+        }
+        onChanged();
+      } else {
+        nodeBuilder_.mergeFrom(value);
+      }
+
+      return this;
+    }
+    /**
+     * <code>.kademlia.Node node = 1;</code>
+     */
+    public Builder clearNode() {
+      if (nodeBuilder_ == null) {
+        node_ = null;
+        onChanged();
+      } else {
+        node_ = null;
+        nodeBuilder_ = null;
+      }
+
+      return this;
+    }
+    /**
+     * <code>.kademlia.Node node = 1;</code>
+     */
+    public kademlia.Node.Builder getNodeBuilder() {
+      
+      onChanged();
+      return getNodeFieldBuilder().getBuilder();
+    }
+    /**
+     * <code>.kademlia.Node node = 1;</code>
+     */
+    public kademlia.NodeOrBuilder getNodeOrBuilder() {
+      if (nodeBuilder_ != null) {
+        return nodeBuilder_.getMessageOrBuilder();
+      } else {
+        return node_ == null ?
+            kademlia.Node.getDefaultInstance() : node_;
       }
     }
     /**
-     * <code>string ip = 2;</code>
+     * <code>.kademlia.Node node = 1;</code>
      */
-    public Builder setIp(
-        java.lang.String value) {
-      if (value == null) {
-    throw new NullPointerException();
-  }
-  
-      ip_ = value;
-      onChanged();
-      return this;
-    }
-    /**
-     * <code>string ip = 2;</code>
-     */
-    public Builder clearIp() {
-      
-      ip_ = getDefaultInstance().getIp();
-      onChanged();
-      return this;
-    }
-    /**
-     * <code>string ip = 2;</code>
-     */
-    public Builder setIpBytes(
-        com.google.protobuf.ByteString value) {
-      if (value == null) {
-    throw new NullPointerException();
-  }
-  checkByteStringIsUtf8(value);
-      
-      ip_ = value;
-      onChanged();
-      return this;
-    }
-
-    private int port_ ;
-    /**
-     * <code>uint32 port = 3;</code>
-     */
-    public int getPort() {
-      return port_;
-    }
-    /**
-     * <code>uint32 port = 3;</code>
-     */
-    public Builder setPort(int value) {
-      
-      port_ = value;
-      onChanged();
-      return this;
-    }
-    /**
-     * <code>uint32 port = 3;</code>
-     */
-    public Builder clearPort() {
-      
-      port_ = 0;
-      onChanged();
-      return this;
+    private com.google.protobuf.SingleFieldBuilderV3<
+        kademlia.Node, kademlia.Node.Builder, kademlia.NodeOrBuilder> 
+        getNodeFieldBuilder() {
+      if (nodeBuilder_ == null) {
+        nodeBuilder_ = new com.google.protobuf.SingleFieldBuilderV3<
+            kademlia.Node, kademlia.Node.Builder, kademlia.NodeOrBuilder>(
+                getNode(),
+                getParentForChildren(),
+                isClean());
+        node_ = null;
+      }
+      return nodeBuilder_;
     }
 
     private com.google.protobuf.ByteString key_ = com.google.protobuf.ByteString.EMPTY;
@@ -631,6 +598,32 @@ public  final class FindNodeRequest extends
     public Builder clearKey() {
       
       key_ = getDefaultInstance().getKey();
+      onChanged();
+      return this;
+    }
+
+    private int k_ ;
+    /**
+     * <code>uint32 k = 5;</code>
+     */
+    public int getK() {
+      return k_;
+    }
+    /**
+     * <code>uint32 k = 5;</code>
+     */
+    public Builder setK(int value) {
+      
+      k_ = value;
+      onChanged();
+      return this;
+    }
+    /**
+     * <code>uint32 k = 5;</code>
+     */
+    public Builder clearK() {
+      
+      k_ = 0;
       onChanged();
       return this;
     }

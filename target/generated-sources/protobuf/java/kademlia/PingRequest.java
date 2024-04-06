@@ -15,7 +15,6 @@ public  final class PingRequest extends
     super(builder);
   }
   private PingRequest() {
-    myNodeId_ = com.google.protobuf.ByteString.EMPTY;
   }
 
   @java.lang.Override
@@ -44,8 +43,16 @@ public  final class PingRequest extends
             break;
           }
           case 10: {
+            kademlia.Node.Builder subBuilder = null;
+            if (node_ != null) {
+              subBuilder = node_.toBuilder();
+            }
+            node_ = input.readMessage(kademlia.Node.parser(), extensionRegistry);
+            if (subBuilder != null) {
+              subBuilder.mergeFrom(node_);
+              node_ = subBuilder.buildPartial();
+            }
 
-            myNodeId_ = input.readBytes();
             break;
           }
         }
@@ -71,13 +78,25 @@ public  final class PingRequest extends
             kademlia.PingRequest.class, kademlia.PingRequest.Builder.class);
   }
 
-  public static final int MYNODEID_FIELD_NUMBER = 1;
-  private com.google.protobuf.ByteString myNodeId_;
+  public static final int NODE_FIELD_NUMBER = 1;
+  private kademlia.Node node_;
   /**
-   * <code>bytes myNodeId = 1;</code>
+   * <code>.kademlia.Node node = 1;</code>
    */
-  public com.google.protobuf.ByteString getMyNodeId() {
-    return myNodeId_;
+  public boolean hasNode() {
+    return node_ != null;
+  }
+  /**
+   * <code>.kademlia.Node node = 1;</code>
+   */
+  public kademlia.Node getNode() {
+    return node_ == null ? kademlia.Node.getDefaultInstance() : node_;
+  }
+  /**
+   * <code>.kademlia.Node node = 1;</code>
+   */
+  public kademlia.NodeOrBuilder getNodeOrBuilder() {
+    return getNode();
   }
 
   private byte memoizedIsInitialized = -1;
@@ -92,8 +111,8 @@ public  final class PingRequest extends
 
   public void writeTo(com.google.protobuf.CodedOutputStream output)
                       throws java.io.IOException {
-    if (!myNodeId_.isEmpty()) {
-      output.writeBytes(1, myNodeId_);
+    if (node_ != null) {
+      output.writeMessage(1, getNode());
     }
   }
 
@@ -102,9 +121,9 @@ public  final class PingRequest extends
     if (size != -1) return size;
 
     size = 0;
-    if (!myNodeId_.isEmpty()) {
+    if (node_ != null) {
       size += com.google.protobuf.CodedOutputStream
-        .computeBytesSize(1, myNodeId_);
+        .computeMessageSize(1, getNode());
     }
     memoizedSize = size;
     return size;
@@ -122,8 +141,11 @@ public  final class PingRequest extends
     kademlia.PingRequest other = (kademlia.PingRequest) obj;
 
     boolean result = true;
-    result = result && getMyNodeId()
-        .equals(other.getMyNodeId());
+    result = result && (hasNode() == other.hasNode());
+    if (hasNode()) {
+      result = result && getNode()
+          .equals(other.getNode());
+    }
     return result;
   }
 
@@ -134,8 +156,10 @@ public  final class PingRequest extends
     }
     int hash = 41;
     hash = (19 * hash) + getDescriptor().hashCode();
-    hash = (37 * hash) + MYNODEID_FIELD_NUMBER;
-    hash = (53 * hash) + getMyNodeId().hashCode();
+    if (hasNode()) {
+      hash = (37 * hash) + NODE_FIELD_NUMBER;
+      hash = (53 * hash) + getNode().hashCode();
+    }
     hash = (29 * hash) + unknownFields.hashCode();
     memoizedHashCode = hash;
     return hash;
@@ -265,8 +289,12 @@ public  final class PingRequest extends
     }
     public Builder clear() {
       super.clear();
-      myNodeId_ = com.google.protobuf.ByteString.EMPTY;
-
+      if (nodeBuilder_ == null) {
+        node_ = null;
+      } else {
+        node_ = null;
+        nodeBuilder_ = null;
+      }
       return this;
     }
 
@@ -289,7 +317,11 @@ public  final class PingRequest extends
 
     public kademlia.PingRequest buildPartial() {
       kademlia.PingRequest result = new kademlia.PingRequest(this);
-      result.myNodeId_ = myNodeId_;
+      if (nodeBuilder_ == null) {
+        result.node_ = node_;
+      } else {
+        result.node_ = nodeBuilder_.build();
+      }
       onBuilt();
       return result;
     }
@@ -331,8 +363,8 @@ public  final class PingRequest extends
 
     public Builder mergeFrom(kademlia.PingRequest other) {
       if (other == kademlia.PingRequest.getDefaultInstance()) return this;
-      if (other.getMyNodeId() != com.google.protobuf.ByteString.EMPTY) {
-        setMyNodeId(other.getMyNodeId());
+      if (other.hasNode()) {
+        mergeNode(other.getNode());
       }
       onChanged();
       return this;
@@ -360,33 +392,121 @@ public  final class PingRequest extends
       return this;
     }
 
-    private com.google.protobuf.ByteString myNodeId_ = com.google.protobuf.ByteString.EMPTY;
+    private kademlia.Node node_ = null;
+    private com.google.protobuf.SingleFieldBuilderV3<
+        kademlia.Node, kademlia.Node.Builder, kademlia.NodeOrBuilder> nodeBuilder_;
     /**
-     * <code>bytes myNodeId = 1;</code>
+     * <code>.kademlia.Node node = 1;</code>
      */
-    public com.google.protobuf.ByteString getMyNodeId() {
-      return myNodeId_;
+    public boolean hasNode() {
+      return nodeBuilder_ != null || node_ != null;
     }
     /**
-     * <code>bytes myNodeId = 1;</code>
+     * <code>.kademlia.Node node = 1;</code>
      */
-    public Builder setMyNodeId(com.google.protobuf.ByteString value) {
-      if (value == null) {
-    throw new NullPointerException();
-  }
-  
-      myNodeId_ = value;
-      onChanged();
+    public kademlia.Node getNode() {
+      if (nodeBuilder_ == null) {
+        return node_ == null ? kademlia.Node.getDefaultInstance() : node_;
+      } else {
+        return nodeBuilder_.getMessage();
+      }
+    }
+    /**
+     * <code>.kademlia.Node node = 1;</code>
+     */
+    public Builder setNode(kademlia.Node value) {
+      if (nodeBuilder_ == null) {
+        if (value == null) {
+          throw new NullPointerException();
+        }
+        node_ = value;
+        onChanged();
+      } else {
+        nodeBuilder_.setMessage(value);
+      }
+
       return this;
     }
     /**
-     * <code>bytes myNodeId = 1;</code>
+     * <code>.kademlia.Node node = 1;</code>
      */
-    public Builder clearMyNodeId() {
+    public Builder setNode(
+        kademlia.Node.Builder builderForValue) {
+      if (nodeBuilder_ == null) {
+        node_ = builderForValue.build();
+        onChanged();
+      } else {
+        nodeBuilder_.setMessage(builderForValue.build());
+      }
+
+      return this;
+    }
+    /**
+     * <code>.kademlia.Node node = 1;</code>
+     */
+    public Builder mergeNode(kademlia.Node value) {
+      if (nodeBuilder_ == null) {
+        if (node_ != null) {
+          node_ =
+            kademlia.Node.newBuilder(node_).mergeFrom(value).buildPartial();
+        } else {
+          node_ = value;
+        }
+        onChanged();
+      } else {
+        nodeBuilder_.mergeFrom(value);
+      }
+
+      return this;
+    }
+    /**
+     * <code>.kademlia.Node node = 1;</code>
+     */
+    public Builder clearNode() {
+      if (nodeBuilder_ == null) {
+        node_ = null;
+        onChanged();
+      } else {
+        node_ = null;
+        nodeBuilder_ = null;
+      }
+
+      return this;
+    }
+    /**
+     * <code>.kademlia.Node node = 1;</code>
+     */
+    public kademlia.Node.Builder getNodeBuilder() {
       
-      myNodeId_ = getDefaultInstance().getMyNodeId();
       onChanged();
-      return this;
+      return getNodeFieldBuilder().getBuilder();
+    }
+    /**
+     * <code>.kademlia.Node node = 1;</code>
+     */
+    public kademlia.NodeOrBuilder getNodeOrBuilder() {
+      if (nodeBuilder_ != null) {
+        return nodeBuilder_.getMessageOrBuilder();
+      } else {
+        return node_ == null ?
+            kademlia.Node.getDefaultInstance() : node_;
+      }
+    }
+    /**
+     * <code>.kademlia.Node node = 1;</code>
+     */
+    private com.google.protobuf.SingleFieldBuilderV3<
+        kademlia.Node, kademlia.Node.Builder, kademlia.NodeOrBuilder> 
+        getNodeFieldBuilder() {
+      if (nodeBuilder_ == null) {
+        nodeBuilder_ = new com.google.protobuf.SingleFieldBuilderV3<
+            kademlia.Node, kademlia.Node.Builder, kademlia.NodeOrBuilder>(
+                getNode(),
+                getParentForChildren(),
+                isClean());
+        node_ = null;
+      }
+      return nodeBuilder_;
     }
     public final Builder setUnknownFields(
         final com.google.protobuf.UnknownFieldSet unknownFields) {

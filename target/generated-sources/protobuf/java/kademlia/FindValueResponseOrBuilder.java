@@ -13,44 +13,12 @@ public interface FindValueResponseOrBuilder extends
   com.google.protobuf.ByteString getId();
 
   /**
-   * <pre>
-   *Não vai ser string provavelme3nte
-   * </pre>
-   *
-   * <code>string val = 2;</code>
+   * <code>string value = 2;</code>
    */
-  java.lang.String getVal();
+  java.lang.String getValue();
   /**
-   * <pre>
-   *Não vai ser string provavelme3nte
-   * </pre>
-   *
-   * <code>string val = 2;</code>
+   * <code>string value = 2;</code>
    */
   com.google.protobuf.ByteString
-      getValBytes();
-
-  /**
-   * <code>repeated .kademlia.Node nodes = 3;</code>
-   */
-  java.util.List<kademlia.Node> 
-      getNodesList();
-  /**
-   * <code>repeated .kademlia.Node nodes = 3;</code>
-   */
-  kademlia.Node getNodes(int index);
-  /**
-   * <code>repeated .kademlia.Node nodes = 3;</code>
-   */
-  int getNodesCount();
-  /**
-   * <code>repeated .kademlia.Node nodes = 3;</code>
-   */
-  java.util.List<? extends kademlia.NodeOrBuilder> 
-      getNodesOrBuilderList();
-  /**
-   * <code>repeated .kademlia.Node nodes = 3;</code>
-   */
-  kademlia.NodeOrBuilder getNodesOrBuilder(
-      int index);
+      getValueBytes();
 }

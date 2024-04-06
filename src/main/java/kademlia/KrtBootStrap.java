@@ -33,9 +33,11 @@ public class KrtBootStrap extends KademliaRoutingTable
                 {
                     return false;
                 }
-                else {
+                else
+                {
                     // Testa se o node curr esta na capacidade maxima
-                    if (curr.kbucket.size() >= this.k) {
+                    if (curr.kbucket.size() >= this.k)
+                    {
                         // Testa se ele vem da direção que tem uma distancia mais perto do no
                         curr.kc = 0;
                         // Criamos um no novo a esquerda e a direita cada um deles com um kbucket
@@ -70,9 +72,7 @@ public class KrtBootStrap extends KademliaRoutingTable
             }
             else
             {
-
                 boolean direction = (((this.myNodeId[i]>> j ) & 1) == 1) == (((node.nodeId[i] >> j) & 1) == 1);
-
                 // Testa se o no
                 if (direction)
                 {
@@ -149,62 +149,31 @@ public class KrtBootStrap extends KademliaRoutingTable
 
     private ArrayList<KademliaNode> findClosestNodeRec(TreeNode curr, TreeNode parent, byte[] nodeId, int i, int j,char d, int a)
     {
-        ArrayList<KademliaNode> nodes = null;
-        if (i < 20)
+        ArrayList<KademliaNode> nodes = new ArrayList<KademliaNode>();
+        if (curr != null)
         {
-            boolean direction = (((myNodeId[i] >> j ) & 1) == 1) == (((nodeId[i] >> j) & 1) == 1);
             // Testa se tem um kbucket
             if (curr.kc >= 1)
             {
-                nodes = searchMapClosest(curr.kbucket, nodeId,a);
-                if (nodes.size() +1 < a)
-                {
-                    if (d=='d')
-                    {
-                        ArrayList<KademliaNode> nodos = searchMapClosest(parent.left.kbucket, nodeId,a-nodes.size());
-                        nodes.addAll(nodos);
-                    }
-                    else
-                    {
-                        ArrayList<KademliaNode> nodos = searchMapClosest(parent.right.kbucket, nodeId,a-nodes.size());
-                        nodes.addAll(nodos);
-                    }
-                }
-
+                return searchMapClosest(curr.kbucket, nodeId,a);
             }
             else
             {
+                boolean direction = (((myNodeId[i] >> j ) & 1) == 1) == (((nodeId[i] >> j) & 1) == 1);
                 nodes = testDirection(direction,curr,nodeId,i,j,d,a );
-                if(nodes != null )
+
+                if (nodes.size() +1 < a)
                 {
-                    if (nodes.size() +1 < a)
-                    {
-                        ArrayList<KademliaNode> nodos ;
-                        nodos = testDirection(!direction,parent,nodeId,i,j,d,a );
-                        if (nodos != null)
-                        {
-                            nodes.addAll(nodos);
-                        }
-
-                    }
+                    ArrayList<KademliaNode> nodos ;
+                    nodos = testDirection(!direction,curr,nodeId,i,j,d,a-nodes.size());
+                    nodes.addAll(nodos);
                 }
-                else
-                {
-                        ArrayList<KademliaNode> nodos ;
-                        nodos = testDirection(!direction,parent,nodeId,i,j,d,a );
-                        if (nodos != null)
-                        {
-                            nodes.addAll(nodos);
-                        }
-
-
-                }
-                // Caso contrario continua percorrendo a arvore e chamando a função recursiva
 
             }
         }
         return nodes;
     }
+
 
     private ArrayList<KademliaNode> testDirection (boolean direction, TreeNode curr, byte[] nodeId, int i, int j,char d, int a)
     {

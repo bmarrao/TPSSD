@@ -49,22 +49,15 @@ public class KademliaTeste
 
         }
         rtNormal.printTree();
-        System.out.println("PRINT BOOTSTRAP");
-        rtBootStrap.printTree();
-        nodeId = kd.generateNodeId();
-        ArrayList<Node> arr = rtNormal.findClosestNode(nodeId, 50);
-        for(Node node : arr)
-        {
-            System.out.println(rtNormal.printId(nodeId));
-            System.out.println(rtNormal.calculateDistance(nodeId, node.getId().toByteArray()));
-        }
-        arr = rtBootStrap.findClosestNode(nodeId, 50);
-        for(Node node : arr)
-        {
-            System.out.println(rtNormal.printId(nodeId));
-            System.out.println(rtNormal.calculateDistance(nodeId, node.getId().toByteArray()));
-        }
 
+        nodeId = kd.generateNodeId();
+
+        ArrayList<Node> arr = rtNormal.findClosestNode(nodeId, 50);
+        System.out.println(arr.size());
+
+
+        arr = rtBootStrap.findClosestNode(nodeId, 50);
+        System.out.println(arr.size());
 
         // 
     }

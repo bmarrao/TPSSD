@@ -8,7 +8,15 @@ public interface PingRequestOrBuilder extends
     com.google.protobuf.MessageOrBuilder {
 
   /**
-   * <code>bytes myNodeId = 1;</code>
+   * <code>.kademlia.Node node = 1;</code>
    */
-  com.google.protobuf.ByteString getMyNodeId();
+  boolean hasNode();
+  /**
+   * <code>.kademlia.Node node = 1;</code>
+   */
+  kademlia.Node getNode();
+  /**
+   * <code>.kademlia.Node node = 1;</code>
+   */
+  kademlia.NodeOrBuilder getNodeOrBuilder();
 }
