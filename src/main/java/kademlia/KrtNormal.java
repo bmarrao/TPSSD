@@ -123,18 +123,17 @@ public class KrtNormal extends KademliaRoutingTable
         }
         else
         {
-            findClosestNodeRec(this.root)
             boolean direction = (((myNodeId[0] >> 7) & 1) == 1) == (((nodeId[0] >> 7) & 1) == 1);
 
-            nodos = testDirection(direction,curr,nodeId,0,7,)
 
-            private ArrayList<KademliaNode> testDirection (boolean direction, TreeNode curr, byte[] nodeId, int i, int j,char d, int a)
+            nodos = testDirection(direction,this.root,nodeId,0,7,a);
+
 
             if (nodos.size() +1 < a)
             {
-                ArrayList<KademliaNode> nodos ;
-                nodos = testDirection(!direction,this.root.ri,nodeId,i,j,d,a-nodos.size());
-                nodes.addAll(nodos);
+                ArrayList<KademliaNode> nodes ;
+                nodes = testDirection(!direction,this.root,nodeId,0,7,a-nodos.size());
+                nodos.addAll(nodes);
             }
         }// Chama a função recursiva para resolver o problema
         lock.unlock();
@@ -150,7 +149,7 @@ public class KrtNormal extends KademliaRoutingTable
         return ret;
     }
 
-    private ArrayList<KademliaNode> findClosestNodeRec(TreeNode curr, byte[] nodeId, int i, int j,char d, int a)
+    private ArrayList<KademliaNode> findClosestNodeRec(TreeNode curr, byte[] nodeId, int i, int j,int a)
     {
         ArrayList<KademliaNode> nodes = new ArrayList<KademliaNode>();
         if (curr != null)
@@ -163,12 +162,12 @@ public class KrtNormal extends KademliaRoutingTable
             else
             {
                 boolean direction = (((myNodeId[i] >> j ) & 1) == 1) == (((nodeId[i] >> j) & 1) == 1);
-                nodes = testDirection(direction,curr,nodeId,i,j,d,a );
+                nodes = testDirection(direction,curr,nodeId,i,j,a );
 
                 if (nodes.size() +1 < a)
                 {
                     ArrayList<KademliaNode> nodos ;
-                    nodos = testDirection(!direction,curr,nodeId,i,j,d,a-nodes.size());
+                    nodos = testDirection(!direction,curr,nodeId,i,j,a-nodes.size());
                     nodes.addAll(nodos);
                 }
 
@@ -177,18 +176,18 @@ public class KrtNormal extends KademliaRoutingTable
         return nodes;
     }
 
-    private ArrayList<KademliaNode> testDirection (boolean direction, TreeNode curr, byte[] nodeId, int i, int j,char d, int a)
+    private ArrayList<KademliaNode> testDirection (boolean direction, TreeNode curr, byte[] nodeId, int i, int j, int a)
     {
         if (direction)
         {
             if (j == 0)
             {
-                return findClosestNodeRec(curr.right, nodeId, i+1,7,'d',a);
+                return findClosestNodeRec(curr.right, nodeId, i+1,7,a);
 
             }
             else
             {
-                return findClosestNodeRec(curr.right,nodeId, i,j-1,'d',a);
+                return findClosestNodeRec(curr.right,nodeId, i,j-1,a);
 
 
             }
@@ -198,12 +197,12 @@ public class KrtNormal extends KademliaRoutingTable
         {
             if (j == 0)
             {
-                return findClosestNodeRec(curr.left,nodeId, i+1,7,'e',a);
+                return findClosestNodeRec(curr.left,nodeId, i+1,7,a);
 
             }
             else
             {
-                return  findClosestNodeRec(curr.left,nodeId, i,j-1,'e',a);
+                return  findClosestNodeRec(curr.left,nodeId, i,j-1,a);
 
 
             }
