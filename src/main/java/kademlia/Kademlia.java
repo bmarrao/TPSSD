@@ -25,21 +25,35 @@ public class Kademlia
     // TODO Public e private Key - Quando for implementar blockchain
     // TODO Inicialização do no kademlia , contacto com boostrap node - Cristina
     // TODO Criar bootstrap node - Breno
-    public static void main(String[] args) throws IOException, InterruptedException
-    {
-        ipAddress = args[0];
-        port = Integer.parseInt(args[1]);
-        nodeId = generateNodeId();
 
+    public Kademlia(String ipAdress, int port, boolean bootstrap, int k, String bootstrapFilePath)
+    {
         KademliaServer server = new KademliaServer(port);
         Thread serverThread = new Thread(server);
         serverThread.start();
-        KademliaProtocol kp = new KademliaProtocol(nodeId);
+        protocol = new KademliaProtocol(nodeId,ipAdress,port);
 
-        int k = 20;
-        //rt = new KademliaRoutingTable(nodeId, protocol, k);
-        // TODO uncomment this
-        String bootstrapFilePath = args[2];
+        if (bootstrap)
+        {
+            rt = new KrtBootStrap(nodeId,protocol,k);
+            initiateBootStrap(bootstrapFilePath);
+
+        }
+        else
+        {
+            rt = new KrtNormal(nodeId, protocol,k);
+            initiateNormal();
+        }
+    }
+
+    public void initiateNormal()
+    {
+
+    }
+
+    public void initiateBootStrap(String bootstrapFilePath)
+    {
+        /*
         List<String> bootstrapNodesInfo = getBootstrapNodesInfo(bootstrapFilePath);
         String selectedBootstrap = selectRandomBootstrapNode(bootstrapNodesInfo);
         String[] bootstrapIpPort = selectedBootstrap.split(" ");
@@ -79,6 +93,8 @@ public class Kademlia
 
         }
 
+         */
+
         boolean foundNewClosestNodes = true;
             /*
             while (res.size() == 0)
@@ -112,8 +128,6 @@ public class Kademlia
                             */
 
 
-
-        //callOps(protocol, nodeId, ipAddress, port);
     }
 
 

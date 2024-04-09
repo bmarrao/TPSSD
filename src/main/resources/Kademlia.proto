@@ -11,7 +11,7 @@ message PingRequest
 
 message PingResponse 
 {
-  bytes id = 1;
+  bool online  = 1;
 }
 
 message Node

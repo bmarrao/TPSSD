@@ -1,3 +1,4 @@
+Auction/Customer.class
 kademlia/KademliaGrpc$KademliaDescriptorSupplier.class
 kademlia/KademliaNode.class
 kademlia/KademliaGrpc$1.class
@@ -8,6 +9,7 @@ kademlia/StoreResponseOrBuilder.class
 kademlia/server/KademliaServer.class
 kademlia/KrtBootStrap.class
 kademlia/KademliaOuterClass.class
+Auction/Auction.class
 kademlia/SortedArrayList.class
 kademlia/KademliaRoutingTable.class
 kademlia/Node$1.class
@@ -19,16 +21,19 @@ kademlia/StoreRequestOrBuilder.class
 kademlia/KademliaRoutingTable$Tuple.class
 kademlia/FindValueRequest$Builder.class
 kademlia/KademliaStore.class
+Auction/Offer.class
 kademlia/PingResponse$Builder.class
 kademlia/PingResponseOrBuilder.class
 kademlia/FindNodeResponseOrBuilder.class
 kademlia/server/KademliaImpl.class
 kademlia/PingRequestOrBuilder.class
 kademlia/KademliaTeste.class
+Auction/Provider.class
 kademlia/KademliaGrpc$MethodHandlers.class
 kademlia/StoreResponse.class
 kademlia/Node$Builder.class
 kademlia/StoreResponse$1.class
+Auction/BrokerService.class
 kademlia/NodeOrBuilder.class
 kademlia/KademliaGrpc$KademliaFutureStub.class
 kademlia/PingResponse.class
@@ -45,10 +50,12 @@ kademlia/Node.class
 kademlia/KademliaGrpc.class
 kademlia/KademliaGrpc$KademliaBlockingStub.class
 kademlia/FindNodeResponse$1.class
+Auction/LowestSellComparator.class
+Auction/Broker.class
 kademlia/StoreRequest$Builder.class
 kademlia/FindNodeRequest$Builder.class
 kademlia/FindNodeRequestOrBuilder.class
-kademlia/client/KademliaClient.class
+Auction/HighestBuyComparator.class
 kademlia/TreeNode.class
 kademlia/FindValueResponseOrBuilder.class
 kademlia/PingRequest.class

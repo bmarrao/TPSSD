@@ -15,21 +15,22 @@ public class KademliaTeste
     public static void main(String[] args)
     {
          byte[] nodeId;
-         String ipAddress;
+         // TODO define ipadress and port
+         String ipAddress = "";
+        int port = 5000;
 
-        int port;
         KademliaRoutingTable rtNormal ;
         KademliaRoutingTable rtBootStrap ;
-        Kademlia kd = new Kademlia();
+
+        Kademlia kd = new Kademlia(ipAddress,port, false, 20, "BootstrapNodes");
         port = 5003;
         nodeId = kd.generateNodeId();
-        KademliaProtocol protocol = new KademliaProtocol(nodeId);
+        KademliaProtocol protocol = new KademliaProtocol(nodeId,ipAddress, port);
         System.out.println();
 
         KademliaServer server = new KademliaServer(port);
         Thread serverThread = new Thread(server);
         serverThread.start();
-        KademliaProtocol kp = new KademliaProtocol(nodeId);
 
         rtNormal = new KrtNormal(nodeId, protocol, 20);
 

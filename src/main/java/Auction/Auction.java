@@ -1,4 +1,7 @@
 package Auction;
 
-public class Auction {
+import kademlia.Kademlia;
+
+public class Auction
+{
 }

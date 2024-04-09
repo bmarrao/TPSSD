@@ -28,7 +28,7 @@ public class KademliaImpl extends KademliaGrpc.KademliaImplBase
 
         PingResponse pingResponse = PingResponse
                 .newBuilder()
-                .setId(request.getNode().getId())
+                .setOnline(true)
                 .build();
 
         // Send the response to the client.

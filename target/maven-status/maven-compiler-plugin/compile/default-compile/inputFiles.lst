@@ -10,9 +10,12 @@
 /home/brenin/TPSSD/TPSSD/src/main/java/kademlia/server/KademliaImpl.java
 /home/brenin/TPSSD/TPSSD/target/generated-sources/protobuf/java/kademlia/FindNodeRequest.java
 /home/brenin/TPSSD/TPSSD/src/main/java/kademlia/KademliaRoutingTable.java
+/home/brenin/TPSSD/TPSSD/src/main/java/Auction/Provider.java
 /home/brenin/TPSSD/TPSSD/src/main/java/kademlia/KrtBootStrap.java
+/home/brenin/TPSSD/TPSSD/src/main/java/Auction/Auction.java
 /home/brenin/TPSSD/TPSSD/src/main/java/kademlia/KademliaTeste.java
 /home/brenin/TPSSD/TPSSD/target/generated-sources/protobuf/java/kademlia/FindNodeResponse.java
+/home/brenin/TPSSD/TPSSD/src/main/java/Auction/Broker.java
 /home/brenin/TPSSD/TPSSD/target/generated-sources/protobuf/java/kademlia/FindValueResponseOrBuilder.java
 /home/brenin/TPSSD/TPSSD/target/generated-sources/protobuf/java/kademlia/NodeOrBuilder.java
 /home/brenin/TPSSD/TPSSD/target/generated-sources/protobuf/java/kademlia/Node.java
@@ -28,5 +31,5 @@
 /home/brenin/TPSSD/TPSSD/target/generated-sources/protobuf/java/kademlia/KademliaOuterClass.java
 /home/brenin/TPSSD/TPSSD/target/generated-sources/protobuf/java/kademlia/PingResponse.java
 /home/brenin/TPSSD/TPSSD/src/main/java/kademlia/KrtNormal.java
-/home/brenin/TPSSD/TPSSD/src/main/java/kademlia/client/KademliaClient.java
 /home/brenin/TPSSD/TPSSD/target/generated-sources/protobuf/java/kademlia/StoreRequest.java
+/home/brenin/TPSSD/TPSSD/src/main/java/Auction/Customer.java

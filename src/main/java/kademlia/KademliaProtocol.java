@@ -10,20 +10,24 @@ import java.util.ArrayList;
 public class KademliaProtocol
 {
     public byte [] nodeId;
-
-    public KademliaProtocol(byte[] nodeId)
+    public String ipAdress;
+    public int port;
+    public KademliaProtocol(byte[] nodeId, String ipAdress, int port )
     {
         this.nodeId = nodeId;
+        this.ipAdress = ipAdress;
+        this.port = port;
     }
 
-    public byte[] pingOp(byte[] nodeId, String receiverIp, int receiverPort)
+    public boolean pingOp(byte[] nodeId, String receiverIp, int receiverPort)
     {
         ManagedChannel channel = ManagedChannelBuilder.forAddress(receiverIp, receiverPort).usePlaintext().build();
 
+        // TODO O ip aqui , não está errado ?
         Node node = Node.newBuilder()
             .setId(ByteString.copyFrom(nodeId))
-            .setIp("127.0.0.1")
-            .setPort(8080)
+            .setIp(ipAdress)
+            .setPort(port)
             .build();
 
         KademliaGrpc.KademliaBlockingStub stub = KademliaGrpc.newBlockingStub(channel);
@@ -31,7 +35,7 @@ public class KademliaProtocol
 
         PingResponse response = stub.ping(request);
 
-        return response.getId().toByteArray();
+        return response.getOnline();
     }
 
     public boolean storeOp(byte[] nodeId, String key, String val, String ip, int port,String receiverIp, int receiverPort)
@@ -42,8 +46,8 @@ public class KademliaProtocol
 
         Node node = Node.newBuilder()
                 .setId(ByteString.copyFrom(nodeId))
-                .setIp("127.0.0.1")
-                .setPort(8080)
+                .setIp(ipAdress)
+                .setPort(port)
                 .build();
 
         StoreRequest request = StoreRequest.newBuilder()
@@ -64,8 +68,8 @@ public class KademliaProtocol
 
         Node node = Node.newBuilder()
                 .setId(ByteString.copyFrom(nodeId))
-                .setIp("127.0.0.1")
-                .setPort(8080)
+                .setIp(ipAdress)
+                .setPort(port)
                 .build();
 
         FindNodeRequest request = FindNodeRequest.newBuilder()
@@ -85,8 +89,8 @@ public class KademliaProtocol
 
         Node node = Node.newBuilder()
                 .setId(ByteString.copyFrom(nodeId))
-                .setIp("127.0.0.1")
-                .setPort(8080)
+                .setIp(ipAdress)
+                .setPort(port)
                 .build();
 
         FindValueRequest request = FindValueRequest.newBuilder()

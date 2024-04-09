@@ -79,15 +79,34 @@ public class KademliaRoutingTable
 
     public boolean hasObject(SortedArrayList<KademliaNode> kbucket,KademliaNode node)
     {
+        byte[] id1 = node.nodeId;
+        byte[] id2;
+        boolean isEqual;
         for (KademliaNode n : kbucket)
         {
-            if (n.nodeId.equals(node.nodeId))
-            {
-                return true;
-            }
+
+                id2 = n.nodeId;
+                isEqual = true;
+                // Iterate through each byte and compare them
+                for (int i = 0; i < id1.length; i++)
+                {
+                    if (id1[i] != id2[i])
+                    {
+                        isEqual = false;
+                    }
+                }
+
+                if (isEqual)
+                {
+                    n.setTime();
+                    return true;
+
+                }
+                // If all bytes are the same, return true
         }
         return false;
     }
+
     // Função recursiva
 
     // TOdo testar
@@ -268,9 +287,8 @@ public class KademliaRoutingTable
         int tamanho = kbucket.size();
         // Função que ira retornar o node ultimo visto no kbucket
         KademliaNode testPing = kbucket.get(tamanho-1);
-        //boolean notActive =  this.protocol.ping(testPing,this.myNodeId)
+        boolean notActive =  this.protocol.pingOp(testPing.nodeId,testPing.ipAdress,testPing.port);
         //TODO Ajeitar isso quando o protocol.ping tiver funcionando
-        boolean notActive = true;
         // Ping least recently active node
         if (!notActive)
         {

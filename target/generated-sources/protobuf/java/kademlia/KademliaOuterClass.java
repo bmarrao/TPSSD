@@ -69,25 +69,25 @@ public final class KademliaOuterClass {
   static {
     java.lang.String[] descriptorData = {
       "\n\016Kademlia.proto\022\010kademlia\"+\n\013PingReques" +
-      "t\022\034\n\004node\030\001 \001(\0132\016.kademlia.Node\"\032\n\014PingR" +
-      "esponse\022\n\n\002id\030\001 \001(\014\",\n\004Node\022\n\n\002id\030\001 \001(\014\022" +
-      "\n\n\002ip\030\002 \001(\t\022\014\n\004port\030\003 \001(\r\"H\n\014StoreReques" +
-      "t\022\034\n\004node\030\001 \001(\0132\016.kademlia.Node\022\013\n\003key\030\002" +
-      " \001(\t\022\r\n\005value\030\003 \001(\t\"+\n\rStoreResponse\022\n\n\002" +
-      "id\030\001 \001(\014\022\016\n\006stored\030\002 \001(\010\"G\n\017FindNodeRequ" +
-      "est\022\034\n\004node\030\001 \001(\0132\016.kademlia.Node\022\013\n\003key" +
-      "\030\004 \001(\014\022\t\n\001k\030\005 \001(\r\"=\n\020FindNodeResponse\022\n\n" +
-      "\002id\030\001 \001(\014\022\035\n\005nodes\030\002 \003(\0132\016.kademlia.Node",
-      "\"=\n\020FindValueRequest\022\034\n\004node\030\001 \001(\0132\016.kad" +
-      "emlia.Node\022\013\n\003key\030\002 \001(\t\".\n\021FindValueResp" +
-      "onse\022\n\n\002id\030\001 \001(\014\022\r\n\005value\030\002 \001(\t2\204\002\n\010Kade" +
-      "mlia\0225\n\004ping\022\025.kademlia.PingRequest\032\026.ka" +
-      "demlia.PingResponse\0228\n\005store\022\026.kademlia." +
-      "StoreRequest\032\027.kademlia.StoreResponse\022A\n" +
-      "\010findNode\022\031.kademlia.FindNodeRequest\032\032.k" +
-      "ademlia.FindNodeResponse\022D\n\tfindValue\022\032." +
-      "kademlia.FindValueRequest\032\033.kademlia.Fin" +
-      "dValueResponseB\002P\001b\006proto3"
+      "t\022\034\n\004node\030\001 \001(\0132\016.kademlia.Node\"\036\n\014PingR" +
+      "esponse\022\016\n\006online\030\001 \001(\010\",\n\004Node\022\n\n\002id\030\001 " +
+      "\001(\014\022\n\n\002ip\030\002 \001(\t\022\014\n\004port\030\003 \001(\r\"H\n\014StoreRe" +
+      "quest\022\034\n\004node\030\001 \001(\0132\016.kademlia.Node\022\013\n\003k" +
+      "ey\030\002 \001(\t\022\r\n\005value\030\003 \001(\t\"+\n\rStoreResponse" +
+      "\022\n\n\002id\030\001 \001(\014\022\016\n\006stored\030\002 \001(\010\"G\n\017FindNode" +
+      "Request\022\034\n\004node\030\001 \001(\0132\016.kademlia.Node\022\013\n" +
+      "\003key\030\004 \001(\014\022\t\n\001k\030\005 \001(\r\"=\n\020FindNodeRespons" +
+      "e\022\n\n\002id\030\001 \001(\014\022\035\n\005nodes\030\002 \003(\0132\016.kademlia.",
+      "Node\"=\n\020FindValueRequest\022\034\n\004node\030\001 \001(\0132\016" +
+      ".kademlia.Node\022\013\n\003key\030\002 \001(\t\".\n\021FindValue" +
+      "Response\022\n\n\002id\030\001 \001(\014\022\r\n\005value\030\002 \001(\t2\204\002\n\010" +
+      "Kademlia\0225\n\004ping\022\025.kademlia.PingRequest\032" +
+      "\026.kademlia.PingResponse\0228\n\005store\022\026.kadem" +
+      "lia.StoreRequest\032\027.kademlia.StoreRespons" +
+      "e\022A\n\010findNode\022\031.kademlia.FindNodeRequest" +
+      "\032\032.kademlia.FindNodeResponse\022D\n\tfindValu" +
+      "e\022\032.kademlia.FindValueRequest\032\033.kademlia" +
+      ".FindValueResponseB\002P\001b\006proto3"
     };
     com.google.protobuf.Descriptors.FileDescriptor.InternalDescriptorAssigner assigner =
         new com.google.protobuf.Descriptors.FileDescriptor.    InternalDescriptorAssigner() {
@@ -112,7 +112,7 @@ public final class KademliaOuterClass {
     internal_static_kademlia_PingResponse_fieldAccessorTable = new
       com.google.protobuf.GeneratedMessageV3.FieldAccessorTable(
         internal_static_kademlia_PingResponse_descriptor,
-        new java.lang.String[] { "Id", });
+        new java.lang.String[] { "Online", });
     internal_static_kademlia_Node_descriptor =
       getDescriptor().getMessageTypes().get(2);
     internal_static_kademlia_Node_fieldAccessorTable = new

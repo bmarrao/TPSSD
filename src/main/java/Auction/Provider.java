@@ -1,2 +1,4 @@
-package Auction;public class Provider {
+package Auction;
+
+public class Provider {
 }

@@ -15,7 +15,7 @@ public  final class PingResponse extends
     super(builder);
   }
   private PingResponse() {
-    id_ = com.google.protobuf.ByteString.EMPTY;
+    online_ = false;
   }
 
   @java.lang.Override
@@ -43,9 +43,9 @@ public  final class PingResponse extends
             }
             break;
           }
-          case 10: {
+          case 8: {
 
-            id_ = input.readBytes();
+            online_ = input.readBool();
             break;
           }
         }
@@ -71,13 +71,13 @@ public  final class PingResponse extends
             kademlia.PingResponse.class, kademlia.PingResponse.Builder.class);
   }
 
-  public static final int ID_FIELD_NUMBER = 1;
-  private com.google.protobuf.ByteString id_;
+  public static final int ONLINE_FIELD_NUMBER = 1;
+  private boolean online_;
   /**
-   * <code>bytes id = 1;</code>
+   * <code>bool online = 1;</code>
    */
-  public com.google.protobuf.ByteString getId() {
-    return id_;
+  public boolean getOnline() {
+    return online_;
   }
 
   private byte memoizedIsInitialized = -1;
@@ -92,8 +92,8 @@ public  final class PingResponse extends
 
   public void writeTo(com.google.protobuf.CodedOutputStream output)
                       throws java.io.IOException {
-    if (!id_.isEmpty()) {
-      output.writeBytes(1, id_);
+    if (online_ != false) {
+      output.writeBool(1, online_);
     }
   }
 
@@ -102,9 +102,9 @@ public  final class PingResponse extends
     if (size != -1) return size;
 
     size = 0;
-    if (!id_.isEmpty()) {
+    if (online_ != false) {
       size += com.google.protobuf.CodedOutputStream
-        .computeBytesSize(1, id_);
+        .computeBoolSize(1, online_);
     }
     memoizedSize = size;
     return size;
@@ -122,8 +122,8 @@ public  final class PingResponse extends
     kademlia.PingResponse other = (kademlia.PingResponse) obj;
 
     boolean result = true;
-    result = result && getId()
-        .equals(other.getId());
+    result = result && (getOnline()
+        == other.getOnline());
     return result;
   }
 
@@ -134,8 +134,9 @@ public  final class PingResponse extends
     }
     int hash = 41;
     hash = (19 * hash) + getDescriptor().hashCode();
-    hash = (37 * hash) + ID_FIELD_NUMBER;
-    hash = (53 * hash) + getId().hashCode();
+    hash = (37 * hash) + ONLINE_FIELD_NUMBER;
+    hash = (53 * hash) + com.google.protobuf.Internal.hashBoolean(
+        getOnline());
     hash = (29 * hash) + unknownFields.hashCode();
     memoizedHashCode = hash;
     return hash;
@@ -265,7 +266,7 @@ public  final class PingResponse extends
     }
     public Builder clear() {
       super.clear();
-      id_ = com.google.protobuf.ByteString.EMPTY;
+      online_ = false;
 
       return this;
     }
@@ -289,7 +290,7 @@ public  final class PingResponse extends
 
     public kademlia.PingResponse buildPartial() {
       kademlia.PingResponse result = new kademlia.PingResponse(this);
-      result.id_ = id_;
+      result.online_ = online_;
       onBuilt();
       return result;
     }
@@ -331,8 +332,8 @@ public  final class PingResponse extends
 
     public Builder mergeFrom(kademlia.PingResponse other) {
       if (other == kademlia.PingResponse.getDefaultInstance()) return this;
-      if (other.getId() != com.google.protobuf.ByteString.EMPTY) {
-        setId(other.getId());
+      if (other.getOnline() != false) {
+        setOnline(other.getOnline());
       }
       onChanged();
       return this;
@@ -360,31 +361,28 @@ public  final class PingResponse extends
       return this;
     }
 
-    private com.google.protobuf.ByteString id_ = com.google.protobuf.ByteString.EMPTY;
+    private boolean online_ ;
     /**
-     * <code>bytes id = 1;</code>
+     * <code>bool online = 1;</code>
      */
-    public com.google.protobuf.ByteString getId() {
-      return id_;
+    public boolean getOnline() {
+      return online_;
     }
     /**
-     * <code>bytes id = 1;</code>
+     * <code>bool online = 1;</code>
      */
-    public Builder setId(com.google.protobuf.ByteString value) {
-      if (value == null) {
-    throw new NullPointerException();
-  }
-  
-      id_ = value;
+    public Builder setOnline(boolean value) {
+      
+      online_ = value;
       onChanged();
       return this;
     }
     /**
-     * <code>bytes id = 1;</code>
+     * <code>bool online = 1;</code>
      */
-    public Builder clearId() {
+    public Builder clearOnline() {
       
-      id_ = getDefaultInstance().getId();
+      online_ = false;
       onChanged();
       return this;
     }
