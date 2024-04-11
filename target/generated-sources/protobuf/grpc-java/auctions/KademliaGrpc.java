@@ -28,52 +28,28 @@ public final class KademliaGrpc {
 
   // Static method descriptors that strictly reflect the proto.
   @io.grpc.ExperimentalApi("https://github.com/grpc/grpc-java/issues/1901")
-  public static final io.grpc.MethodDescriptor<auctions.PingRequest,
-      auctions.PingResponse> METHOD_PING =
-      io.grpc.MethodDescriptor.<auctions.PingRequest, auctions.PingResponse>newBuilder()
+  public static final io.grpc.MethodDescriptor<auctions.NotifyRequest,
+      com.google.protobuf.Empty> METHOD_NOTIFY =
+      io.grpc.MethodDescriptor.<auctions.NotifyRequest, com.google.protobuf.Empty>newBuilder()
           .setType(io.grpc.MethodDescriptor.MethodType.UNARY)
           .setFullMethodName(generateFullMethodName(
-              "auctions.Kademlia", "ping"))
+              "auctions.Kademlia", "notify"))
           .setRequestMarshaller(io.grpc.protobuf.ProtoUtils.marshaller(
-              auctions.PingRequest.getDefaultInstance()))
+              auctions.NotifyRequest.getDefaultInstance()))
           .setResponseMarshaller(io.grpc.protobuf.ProtoUtils.marshaller(
-              auctions.PingResponse.getDefaultInstance()))
+              com.google.protobuf.Empty.getDefaultInstance()))
           .build();
   @io.grpc.ExperimentalApi("https://github.com/grpc/grpc-java/issues/1901")
-  public static final io.grpc.MethodDescriptor<auctions.StoreRequest,
-      auctions.StoreResponse> METHOD_STORE =
-      io.grpc.MethodDescriptor.<auctions.StoreRequest, auctions.StoreResponse>newBuilder()
+  public static final io.grpc.MethodDescriptor<auctions.getPriceRequest,
+      auctions.getPriceResponse> METHOD_GET_PRICE =
+      io.grpc.MethodDescriptor.<auctions.getPriceRequest, auctions.getPriceResponse>newBuilder()
           .setType(io.grpc.MethodDescriptor.MethodType.UNARY)
           .setFullMethodName(generateFullMethodName(
-              "auctions.Kademlia", "store"))
+              "auctions.Kademlia", "getPrice"))
           .setRequestMarshaller(io.grpc.protobuf.ProtoUtils.marshaller(
-              auctions.StoreRequest.getDefaultInstance()))
+              auctions.getPriceRequest.getDefaultInstance()))
           .setResponseMarshaller(io.grpc.protobuf.ProtoUtils.marshaller(
-              auctions.StoreResponse.getDefaultInstance()))
-          .build();
-  @io.grpc.ExperimentalApi("https://github.com/grpc/grpc-java/issues/1901")
-  public static final io.grpc.MethodDescriptor<auctions.FindNodeRequest,
-      auctions.FindNodeResponse> METHOD_FIND_NODE =
-      io.grpc.MethodDescriptor.<auctions.FindNodeRequest, auctions.FindNodeResponse>newBuilder()
-          .setType(io.grpc.MethodDescriptor.MethodType.UNARY)
-          .setFullMethodName(generateFullMethodName(
-              "auctions.Kademlia", "findNode"))
-          .setRequestMarshaller(io.grpc.protobuf.ProtoUtils.marshaller(
-              auctions.FindNodeRequest.getDefaultInstance()))
-          .setResponseMarshaller(io.grpc.protobuf.ProtoUtils.marshaller(
-              auctions.FindNodeResponse.getDefaultInstance()))
-          .build();
-  @io.grpc.ExperimentalApi("https://github.com/grpc/grpc-java/issues/1901")
-  public static final io.grpc.MethodDescriptor<auctions.FindValueRequest,
-      auctions.FindValueResponse> METHOD_FIND_VALUE =
-      io.grpc.MethodDescriptor.<auctions.FindValueRequest, auctions.FindValueResponse>newBuilder()
-          .setType(io.grpc.MethodDescriptor.MethodType.UNARY)
-          .setFullMethodName(generateFullMethodName(
-              "auctions.Kademlia", "findValue"))
-          .setRequestMarshaller(io.grpc.protobuf.ProtoUtils.marshaller(
-              auctions.FindValueRequest.getDefaultInstance()))
-          .setResponseMarshaller(io.grpc.protobuf.ProtoUtils.marshaller(
-              auctions.FindValueResponse.getDefaultInstance()))
+              auctions.getPriceResponse.getDefaultInstance()))
           .build();
 
   /**
@@ -108,71 +84,34 @@ public final class KademliaGrpc {
      * Unary
      * </pre>
      */
-    public void ping(auctions.PingRequest request,
-        io.grpc.stub.StreamObserver<auctions.PingResponse> responseObserver) {
-      asyncUnimplementedUnaryCall(METHOD_PING, responseObserver);
+    public void notify(auctions.NotifyRequest request,
+        io.grpc.stub.StreamObserver<com.google.protobuf.Empty> responseObserver) {
+      asyncUnimplementedUnaryCall(METHOD_NOTIFY, responseObserver);
     }
 
     /**
-     * <pre>
-     * store a [key, value] pair for later retrieval
-     * </pre>
      */
-    public void store(auctions.StoreRequest request,
-        io.grpc.stub.StreamObserver<auctions.StoreResponse> responseObserver) {
-      asyncUnimplementedUnaryCall(METHOD_STORE, responseObserver);
-    }
-
-    /**
-     * <pre>
-     * 160-bit key as an argument, returns (IP address, UDP port, Node ID) for each k closest nodes to target id
-     * </pre>
-     */
-    public void findNode(auctions.FindNodeRequest request,
-        io.grpc.stub.StreamObserver<auctions.FindNodeResponse> responseObserver) {
-      asyncUnimplementedUnaryCall(METHOD_FIND_NODE, responseObserver);
-    }
-
-    /**
-     * <pre>
-     * similar to findNode + if RPC recipient received a STORE for the given key then it returns the stored value
-     * </pre>
-     */
-    public void findValue(auctions.FindValueRequest request,
-        io.grpc.stub.StreamObserver<auctions.FindValueResponse> responseObserver) {
-      asyncUnimplementedUnaryCall(METHOD_FIND_VALUE, responseObserver);
+    public void getPrice(auctions.getPriceRequest request,
+        io.grpc.stub.StreamObserver<auctions.getPriceResponse> responseObserver) {
+      asyncUnimplementedUnaryCall(METHOD_GET_PRICE, responseObserver);
     }
 
     @java.lang.Override public final io.grpc.ServerServiceDefinition bindService() {
       return io.grpc.ServerServiceDefinition.builder(getServiceDescriptor())
           .addMethod(
-            METHOD_PING,
+            METHOD_NOTIFY,
             asyncUnaryCall(
               new MethodHandlers<
-                auctions.PingRequest,
-                auctions.PingResponse>(
-                  this, METHODID_PING)))
+                auctions.NotifyRequest,
+                com.google.protobuf.Empty>(
+                  this, METHODID_NOTIFY)))
           .addMethod(
-            METHOD_STORE,
+            METHOD_GET_PRICE,
             asyncUnaryCall(
               new MethodHandlers<
-                auctions.StoreRequest,
-                auctions.StoreResponse>(
-                  this, METHODID_STORE)))
-          .addMethod(
-            METHOD_FIND_NODE,
-            asyncUnaryCall(
-              new MethodHandlers<
-                auctions.FindNodeRequest,
-                auctions.FindNodeResponse>(
-                  this, METHODID_FIND_NODE)))
-          .addMethod(
-            METHOD_FIND_VALUE,
-            asyncUnaryCall(
-              new MethodHandlers<
-                auctions.FindValueRequest,
-                auctions.FindValueResponse>(
-                  this, METHODID_FIND_VALUE)))
+                auctions.getPriceRequest,
+                auctions.getPriceResponse>(
+                  this, METHODID_GET_PRICE)))
           .build();
     }
   }
@@ -200,43 +139,18 @@ public final class KademliaGrpc {
      * Unary
      * </pre>
      */
-    public void ping(auctions.PingRequest request,
-        io.grpc.stub.StreamObserver<auctions.PingResponse> responseObserver) {
+    public void notify(auctions.NotifyRequest request,
+        io.grpc.stub.StreamObserver<com.google.protobuf.Empty> responseObserver) {
       asyncUnaryCall(
-          getChannel().newCall(METHOD_PING, getCallOptions()), request, responseObserver);
+          getChannel().newCall(METHOD_NOTIFY, getCallOptions()), request, responseObserver);
     }
 
     /**
-     * <pre>
-     * store a [key, value] pair for later retrieval
-     * </pre>
      */
-    public void store(auctions.StoreRequest request,
-        io.grpc.stub.StreamObserver<auctions.StoreResponse> responseObserver) {
+    public void getPrice(auctions.getPriceRequest request,
+        io.grpc.stub.StreamObserver<auctions.getPriceResponse> responseObserver) {
       asyncUnaryCall(
-          getChannel().newCall(METHOD_STORE, getCallOptions()), request, responseObserver);
-    }
-
-    /**
-     * <pre>
-     * 160-bit key as an argument, returns (IP address, UDP port, Node ID) for each k closest nodes to target id
-     * </pre>
-     */
-    public void findNode(auctions.FindNodeRequest request,
-        io.grpc.stub.StreamObserver<auctions.FindNodeResponse> responseObserver) {
-      asyncUnaryCall(
-          getChannel().newCall(METHOD_FIND_NODE, getCallOptions()), request, responseObserver);
-    }
-
-    /**
-     * <pre>
-     * similar to findNode + if RPC recipient received a STORE for the given key then it returns the stored value
-     * </pre>
-     */
-    public void findValue(auctions.FindValueRequest request,
-        io.grpc.stub.StreamObserver<auctions.FindValueResponse> responseObserver) {
-      asyncUnaryCall(
-          getChannel().newCall(METHOD_FIND_VALUE, getCallOptions()), request, responseObserver);
+          getChannel().newCall(METHOD_GET_PRICE, getCallOptions()), request, responseObserver);
     }
   }
 
@@ -263,39 +177,16 @@ public final class KademliaGrpc {
      * Unary
      * </pre>
      */
-    public auctions.PingResponse ping(auctions.PingRequest request) {
+    public com.google.protobuf.Empty notify(auctions.NotifyRequest request) {
       return blockingUnaryCall(
-          getChannel(), METHOD_PING, getCallOptions(), request);
+          getChannel(), METHOD_NOTIFY, getCallOptions(), request);
     }
 
     /**
-     * <pre>
-     * store a [key, value] pair for later retrieval
-     * </pre>
      */
-    public auctions.StoreResponse store(auctions.StoreRequest request) {
+    public auctions.getPriceResponse getPrice(auctions.getPriceRequest request) {
       return blockingUnaryCall(
-          getChannel(), METHOD_STORE, getCallOptions(), request);
-    }
-
-    /**
-     * <pre>
-     * 160-bit key as an argument, returns (IP address, UDP port, Node ID) for each k closest nodes to target id
-     * </pre>
-     */
-    public auctions.FindNodeResponse findNode(auctions.FindNodeRequest request) {
-      return blockingUnaryCall(
-          getChannel(), METHOD_FIND_NODE, getCallOptions(), request);
-    }
-
-    /**
-     * <pre>
-     * similar to findNode + if RPC recipient received a STORE for the given key then it returns the stored value
-     * </pre>
-     */
-    public auctions.FindValueResponse findValue(auctions.FindValueRequest request) {
-      return blockingUnaryCall(
-          getChannel(), METHOD_FIND_VALUE, getCallOptions(), request);
+          getChannel(), METHOD_GET_PRICE, getCallOptions(), request);
     }
   }
 
@@ -322,50 +213,23 @@ public final class KademliaGrpc {
      * Unary
      * </pre>
      */
-    public com.google.common.util.concurrent.ListenableFuture<auctions.PingResponse> ping(
-        auctions.PingRequest request) {
+    public com.google.common.util.concurrent.ListenableFuture<com.google.protobuf.Empty> notify(
+        auctions.NotifyRequest request) {
       return futureUnaryCall(
-          getChannel().newCall(METHOD_PING, getCallOptions()), request);
+          getChannel().newCall(METHOD_NOTIFY, getCallOptions()), request);
     }
 
     /**
-     * <pre>
-     * store a [key, value] pair for later retrieval
-     * </pre>
      */
-    public com.google.common.util.concurrent.ListenableFuture<auctions.StoreResponse> store(
-        auctions.StoreRequest request) {
+    public com.google.common.util.concurrent.ListenableFuture<auctions.getPriceResponse> getPrice(
+        auctions.getPriceRequest request) {
       return futureUnaryCall(
-          getChannel().newCall(METHOD_STORE, getCallOptions()), request);
-    }
-
-    /**
-     * <pre>
-     * 160-bit key as an argument, returns (IP address, UDP port, Node ID) for each k closest nodes to target id
-     * </pre>
-     */
-    public com.google.common.util.concurrent.ListenableFuture<auctions.FindNodeResponse> findNode(
-        auctions.FindNodeRequest request) {
-      return futureUnaryCall(
-          getChannel().newCall(METHOD_FIND_NODE, getCallOptions()), request);
-    }
-
-    /**
-     * <pre>
-     * similar to findNode + if RPC recipient received a STORE for the given key then it returns the stored value
-     * </pre>
-     */
-    public com.google.common.util.concurrent.ListenableFuture<auctions.FindValueResponse> findValue(
-        auctions.FindValueRequest request) {
-      return futureUnaryCall(
-          getChannel().newCall(METHOD_FIND_VALUE, getCallOptions()), request);
+          getChannel().newCall(METHOD_GET_PRICE, getCallOptions()), request);
     }
   }
 
-  private static final int METHODID_PING = 0;
-  private static final int METHODID_STORE = 1;
-  private static final int METHODID_FIND_NODE = 2;
-  private static final int METHODID_FIND_VALUE = 3;
+  private static final int METHODID_NOTIFY = 0;
+  private static final int METHODID_GET_PRICE = 1;
 
   private static final class MethodHandlers<Req, Resp> implements
       io.grpc.stub.ServerCalls.UnaryMethod<Req, Resp>,
@@ -384,21 +248,13 @@ public final class KademliaGrpc {
     @java.lang.SuppressWarnings("unchecked")
     public void invoke(Req request, io.grpc.stub.StreamObserver<Resp> responseObserver) {
       switch (methodId) {
-        case METHODID_PING:
-          serviceImpl.ping((auctions.PingRequest) request,
-              (io.grpc.stub.StreamObserver<auctions.PingResponse>) responseObserver);
+        case METHODID_NOTIFY:
+          serviceImpl.notify((auctions.NotifyRequest) request,
+              (io.grpc.stub.StreamObserver<com.google.protobuf.Empty>) responseObserver);
           break;
-        case METHODID_STORE:
-          serviceImpl.store((auctions.StoreRequest) request,
-              (io.grpc.stub.StreamObserver<auctions.StoreResponse>) responseObserver);
-          break;
-        case METHODID_FIND_NODE:
-          serviceImpl.findNode((auctions.FindNodeRequest) request,
-              (io.grpc.stub.StreamObserver<auctions.FindNodeResponse>) responseObserver);
-          break;
-        case METHODID_FIND_VALUE:
-          serviceImpl.findValue((auctions.FindValueRequest) request,
-              (io.grpc.stub.StreamObserver<auctions.FindValueResponse>) responseObserver);
+        case METHODID_GET_PRICE:
+          serviceImpl.getPrice((auctions.getPriceRequest) request,
+              (io.grpc.stub.StreamObserver<auctions.getPriceResponse>) responseObserver);
           break;
         default:
           throw new AssertionError();
@@ -433,10 +289,8 @@ public final class KademliaGrpc {
         if (result == null) {
           serviceDescriptor = result = io.grpc.ServiceDescriptor.newBuilder(SERVICE_NAME)
               .setSchemaDescriptor(new KademliaDescriptorSupplier())
-              .addMethod(METHOD_PING)
-              .addMethod(METHOD_STORE)
-              .addMethod(METHOD_FIND_NODE)
-              .addMethod(METHOD_FIND_VALUE)
+              .addMethod(METHOD_NOTIFY)
+              .addMethod(METHOD_GET_PRICE)
               .build();
         }
       }

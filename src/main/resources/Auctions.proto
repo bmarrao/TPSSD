@@ -1,84 +1,36 @@
 syntax = "proto3";
 
-option java_multiple_files =  true;
+option java_multiple_files = true;
 
 package auctions;
 
-message PingRequest
+import "google/protobuf/empty.proto";
+
+message NotifyRequest
 {
-  Node node = 1;
+  bytes serviceId = 1;
+  Node node = 2;
+  float price = 3;
 }
 
-message PingResponse
+message getPriceRequest
 {
-  bool online  = 1;
+  bytes serviceId = 1;
 }
 
-message Node
+message getPriceResponse
 {
+  float price = 1;
+}
+message Node {
   bytes id = 1;
   string ip = 2;
   uint32 port = 3;
 }
 
-message StoreRequest
-{
-  Node node = 1;
-  string key = 2;
-  string value = 3;
-}
-
-message StoreResponse
-{
-  bytes id = 1;
-  bool stored = 2;
-}
-
-message FindNodeRequest
-{
-  Node node = 1;
-  bytes key = 4;
-  uint32 k = 5;
-}
-
-// Interativo ou recursivo
-message FindNodeResponse
-{
-  bytes id = 1;
-  repeated Node nodes = 2;
-}
-
-message FindValueRequest
-{
-  Node node = 1;
-  string key = 2;
-}
-
-message FindValueResponse
-{
-  bytes id = 1;
-  string value = 2;
-}
-
-service Kademlia
-{
+service Kademlia {
   // Unary
-  rpc ping(PingRequest) returns (PingResponse);
+  rpc notify(NotifyRequest) returns (google.protobuf.Empty);
 
-  // store a [key, value] pair for later retrieval
-  rpc store(StoreRequest) returns (StoreResponse);
-
-  // 160-bit key as an argument, returns (IP address, UDP port, Node ID) for each k closest nodes to target id
-  rpc findNode(FindNodeRequest) returns (FindNodeResponse);
-
-  // similar to findNode + if RPC recipient received a STORE for the given key then it returns the stored value
-  rpc findValue(FindValueRequest) returns (FindValueResponse);
-
-
+  rpc getPrice(getPriceRequest) returns (getPriceResponse);
 }
-
-
-
-
-
-

@@ -1,109 +1,36 @@
 package auctions;
 
-import kademlia.Node;
+import io.grpc.Server;
+import io.grpc.ServerBuilder;
+import kademlia.KademliaGrpc;
 
-import java.util.*;
 
-public class Auction
+import java.io.IOException;
+
+public class Auction extends auctions.KademliaGrpc.KademliaImplBase implements Runnable
 {
+    public Server server;
+    public int port;
 
-    ArrayList<BrokerService> services;
 
-    public float getPrice(byte[] serviceId)
-    {
-        BrokerService bs = this.getService(serviceId);
-        if (bs != null)
-        {
-            return bs.getPrice();
-        }
-        return -1;
+    public Auction(int port) {
+        this.port = port;
     }
 
-    public boolean sendOffer(Offer of,byte[] serviceId)
-    {
-        BrokerService bs = this.getService(serviceId);
-        if (bs != null)
+    @Override
+    public void run() {
+        // Server is kept alive for the client to communicate.
+        server = ServerBuilder.forPort(port)
+                .addService(new RunAuctions())
+                .build();
+        try
         {
-            return bs.sendOffer(of);
+            server.start();
+            server.awaitTermination();
         }
-        return false;
-
-
-    }
-
-    private BrokerService getService(byte[] serviceId)
-    {
-        for(BrokerService bs : this.services)
+        catch (Exception e)
         {
-            if (compareId(bs.serviceId,serviceId))
-            {
-                return bs;
-            }
+            e.printStackTrace();
         }
-        return null;
     }
-
-    private boolean compareId(byte[] id1, byte[] id2)
-    {
-
-        // Iterate through each byte and compare them
-        for (int i = 0; i < id1.length; i++) {
-            if (id1[i] != id2[i]) {
-                return false; // If any byte differs, return false
-            }
-        }
-
-        // If all bytes are the same, return true
-        return true;
-    }
-}
-
-class BrokerService
-{
-    byte[] serviceId ;
-    kademlia.Node[] brokerSet;
-    Offer highestOffer;
-
-    public float getPrice()
-    {
-        if (highestOffer != null)
-        {
-            return highestOffer.price;
-        }
-        return -1;
-    }
-
-    public boolean sendOffer(Offer of)
-    {
-        boolean result = false;
-        if (highestOffer == null)
-        {
-            highestOffer = of;
-            result = true;
-        }
-        else
-        {
-            if (highestOffer.price < of.price)
-            {
-                highestOffer = of;
-                result = true;
-            }
-        }
-        if (result)
-        {
-            this.notifySubscribed();
-        }
-        return result;
-    }
-    public void notifySubscribed()
-    {
-
-    }
-
-}
-
-class Offer
-{
-    Node nd ;
-    float price;
 }

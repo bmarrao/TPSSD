@@ -15,50 +15,25 @@ public final class Auctions {
         (com.google.protobuf.ExtensionRegistryLite) registry);
   }
   static final com.google.protobuf.Descriptors.Descriptor
-    internal_static_auctions_PingRequest_descriptor;
+    internal_static_auctions_NotifyRequest_descriptor;
   static final 
     com.google.protobuf.GeneratedMessageV3.FieldAccessorTable
-      internal_static_auctions_PingRequest_fieldAccessorTable;
+      internal_static_auctions_NotifyRequest_fieldAccessorTable;
   static final com.google.protobuf.Descriptors.Descriptor
-    internal_static_auctions_PingResponse_descriptor;
+    internal_static_auctions_getPriceRequest_descriptor;
   static final 
     com.google.protobuf.GeneratedMessageV3.FieldAccessorTable
-      internal_static_auctions_PingResponse_fieldAccessorTable;
+      internal_static_auctions_getPriceRequest_fieldAccessorTable;
+  static final com.google.protobuf.Descriptors.Descriptor
+    internal_static_auctions_getPriceResponse_descriptor;
+  static final 
+    com.google.protobuf.GeneratedMessageV3.FieldAccessorTable
+      internal_static_auctions_getPriceResponse_fieldAccessorTable;
   static final com.google.protobuf.Descriptors.Descriptor
     internal_static_auctions_Node_descriptor;
   static final 
     com.google.protobuf.GeneratedMessageV3.FieldAccessorTable
       internal_static_auctions_Node_fieldAccessorTable;
-  static final com.google.protobuf.Descriptors.Descriptor
-    internal_static_auctions_StoreRequest_descriptor;
-  static final 
-    com.google.protobuf.GeneratedMessageV3.FieldAccessorTable
-      internal_static_auctions_StoreRequest_fieldAccessorTable;
-  static final com.google.protobuf.Descriptors.Descriptor
-    internal_static_auctions_StoreResponse_descriptor;
-  static final 
-    com.google.protobuf.GeneratedMessageV3.FieldAccessorTable
-      internal_static_auctions_StoreResponse_fieldAccessorTable;
-  static final com.google.protobuf.Descriptors.Descriptor
-    internal_static_auctions_FindNodeRequest_descriptor;
-  static final 
-    com.google.protobuf.GeneratedMessageV3.FieldAccessorTable
-      internal_static_auctions_FindNodeRequest_fieldAccessorTable;
-  static final com.google.protobuf.Descriptors.Descriptor
-    internal_static_auctions_FindNodeResponse_descriptor;
-  static final 
-    com.google.protobuf.GeneratedMessageV3.FieldAccessorTable
-      internal_static_auctions_FindNodeResponse_fieldAccessorTable;
-  static final com.google.protobuf.Descriptors.Descriptor
-    internal_static_auctions_FindValueRequest_descriptor;
-  static final 
-    com.google.protobuf.GeneratedMessageV3.FieldAccessorTable
-      internal_static_auctions_FindValueRequest_fieldAccessorTable;
-  static final com.google.protobuf.Descriptors.Descriptor
-    internal_static_auctions_FindValueResponse_descriptor;
-  static final 
-    com.google.protobuf.GeneratedMessageV3.FieldAccessorTable
-      internal_static_auctions_FindValueResponse_fieldAccessorTable;
 
   public static com.google.protobuf.Descriptors.FileDescriptor
       getDescriptor() {
@@ -68,26 +43,17 @@ public final class Auctions {
       descriptor;
   static {
     java.lang.String[] descriptorData = {
-      "\n\016Auctions.proto\022\010auctions\"+\n\013PingReques" +
-      "t\022\034\n\004node\030\001 \001(\0132\016.auctions.Node\"\036\n\014PingR" +
-      "esponse\022\016\n\006online\030\001 \001(\010\",\n\004Node\022\n\n\002id\030\001 " +
-      "\001(\014\022\n\n\002ip\030\002 \001(\t\022\014\n\004port\030\003 \001(\r\"H\n\014StoreRe" +
-      "quest\022\034\n\004node\030\001 \001(\0132\016.auctions.Node\022\013\n\003k" +
-      "ey\030\002 \001(\t\022\r\n\005value\030\003 \001(\t\"+\n\rStoreResponse" +
-      "\022\n\n\002id\030\001 \001(\014\022\016\n\006stored\030\002 \001(\010\"G\n\017FindNode" +
-      "Request\022\034\n\004node\030\001 \001(\0132\016.auctions.Node\022\013\n" +
-      "\003key\030\004 \001(\014\022\t\n\001k\030\005 \001(\r\"=\n\020FindNodeRespons" +
-      "e\022\n\n\002id\030\001 \001(\014\022\035\n\005nodes\030\002 \003(\0132\016.auctions.",
-      "Node\"=\n\020FindValueRequest\022\034\n\004node\030\001 \001(\0132\016" +
-      ".auctions.Node\022\013\n\003key\030\002 \001(\t\".\n\021FindValue" +
-      "Response\022\n\n\002id\030\001 \001(\014\022\r\n\005value\030\002 \001(\t2\204\002\n\010" +
-      "Kademlia\0225\n\004ping\022\025.auctions.PingRequest\032" +
-      "\026.auctions.PingResponse\0228\n\005store\022\026.aucti" +
-      "ons.StoreRequest\032\027.auctions.StoreRespons" +
-      "e\022A\n\010findNode\022\031.auctions.FindNodeRequest" +
-      "\032\032.auctions.FindNodeResponse\022D\n\tfindValu" +
-      "e\022\032.auctions.FindValueRequest\032\033.auctions" +
-      ".FindValueResponseB\002P\001b\006proto3"
+      "\n\016Auctions.proto\022\010auctions\032\033google/proto" +
+      "buf/empty.proto\"O\n\rNotifyRequest\022\021\n\tserv" +
+      "iceId\030\001 \001(\014\022\034\n\004node\030\002 \001(\0132\016.auctions.Nod" +
+      "e\022\r\n\005price\030\003 \001(\002\"$\n\017getPriceRequest\022\021\n\ts" +
+      "erviceId\030\001 \001(\014\"!\n\020getPriceResponse\022\r\n\005pr" +
+      "ice\030\001 \001(\002\",\n\004Node\022\n\n\002id\030\001 \001(\014\022\n\n\002ip\030\002 \001(" +
+      "\t\022\014\n\004port\030\003 \001(\r2\210\001\n\010Kademlia\0229\n\006notify\022\027" +
+      ".auctions.NotifyRequest\032\026.google.protobu" +
+      "f.Empty\022A\n\010getPrice\022\031.auctions.getPriceR" +
+      "equest\032\032.auctions.getPriceResponseB\002P\001b\006",
+      "proto3"
     };
     com.google.protobuf.Descriptors.FileDescriptor.InternalDescriptorAssigner assigner =
         new com.google.protobuf.Descriptors.FileDescriptor.    InternalDescriptorAssigner() {
@@ -100,61 +66,33 @@ public final class Auctions {
     com.google.protobuf.Descriptors.FileDescriptor
       .internalBuildGeneratedFileFrom(descriptorData,
         new com.google.protobuf.Descriptors.FileDescriptor[] {
+          com.google.protobuf.EmptyProto.getDescriptor(),
         }, assigner);
-    internal_static_auctions_PingRequest_descriptor =
+    internal_static_auctions_NotifyRequest_descriptor =
       getDescriptor().getMessageTypes().get(0);
-    internal_static_auctions_PingRequest_fieldAccessorTable = new
+    internal_static_auctions_NotifyRequest_fieldAccessorTable = new
       com.google.protobuf.GeneratedMessageV3.FieldAccessorTable(
-        internal_static_auctions_PingRequest_descriptor,
-        new java.lang.String[] { "Node", });
-    internal_static_auctions_PingResponse_descriptor =
+        internal_static_auctions_NotifyRequest_descriptor,
+        new java.lang.String[] { "ServiceId", "Node", "Price", });
+    internal_static_auctions_getPriceRequest_descriptor =
       getDescriptor().getMessageTypes().get(1);
-    internal_static_auctions_PingResponse_fieldAccessorTable = new
+    internal_static_auctions_getPriceRequest_fieldAccessorTable = new
       com.google.protobuf.GeneratedMessageV3.FieldAccessorTable(
-        internal_static_auctions_PingResponse_descriptor,
-        new java.lang.String[] { "Online", });
-    internal_static_auctions_Node_descriptor =
+        internal_static_auctions_getPriceRequest_descriptor,
+        new java.lang.String[] { "ServiceId", });
+    internal_static_auctions_getPriceResponse_descriptor =
       getDescriptor().getMessageTypes().get(2);
+    internal_static_auctions_getPriceResponse_fieldAccessorTable = new
+      com.google.protobuf.GeneratedMessageV3.FieldAccessorTable(
+        internal_static_auctions_getPriceResponse_descriptor,
+        new java.lang.String[] { "Price", });
+    internal_static_auctions_Node_descriptor =
+      getDescriptor().getMessageTypes().get(3);
     internal_static_auctions_Node_fieldAccessorTable = new
       com.google.protobuf.GeneratedMessageV3.FieldAccessorTable(
         internal_static_auctions_Node_descriptor,
         new java.lang.String[] { "Id", "Ip", "Port", });
-    internal_static_auctions_StoreRequest_descriptor =
-      getDescriptor().getMessageTypes().get(3);
-    internal_static_auctions_StoreRequest_fieldAccessorTable = new
-      com.google.protobuf.GeneratedMessageV3.FieldAccessorTable(
-        internal_static_auctions_StoreRequest_descriptor,
-        new java.lang.String[] { "Node", "Key", "Value", });
-    internal_static_auctions_StoreResponse_descriptor =
-      getDescriptor().getMessageTypes().get(4);
-    internal_static_auctions_StoreResponse_fieldAccessorTable = new
-      com.google.protobuf.GeneratedMessageV3.FieldAccessorTable(
-        internal_static_auctions_StoreResponse_descriptor,
-        new java.lang.String[] { "Id", "Stored", });
-    internal_static_auctions_FindNodeRequest_descriptor =
-      getDescriptor().getMessageTypes().get(5);
-    internal_static_auctions_FindNodeRequest_fieldAccessorTable = new
-      com.google.protobuf.GeneratedMessageV3.FieldAccessorTable(
-        internal_static_auctions_FindNodeRequest_descriptor,
-        new java.lang.String[] { "Node", "Key", "K", });
-    internal_static_auctions_FindNodeResponse_descriptor =
-      getDescriptor().getMessageTypes().get(6);
-    internal_static_auctions_FindNodeResponse_fieldAccessorTable = new
-      com.google.protobuf.GeneratedMessageV3.FieldAccessorTable(
-        internal_static_auctions_FindNodeResponse_descriptor,
-        new java.lang.String[] { "Id", "Nodes", });
-    internal_static_auctions_FindValueRequest_descriptor =
-      getDescriptor().getMessageTypes().get(7);
-    internal_static_auctions_FindValueRequest_fieldAccessorTable = new
-      com.google.protobuf.GeneratedMessageV3.FieldAccessorTable(
-        internal_static_auctions_FindValueRequest_descriptor,
-        new java.lang.String[] { "Node", "Key", });
-    internal_static_auctions_FindValueResponse_descriptor =
-      getDescriptor().getMessageTypes().get(8);
-    internal_static_auctions_FindValueResponse_fieldAccessorTable = new
-      com.google.protobuf.GeneratedMessageV3.FieldAccessorTable(
-        internal_static_auctions_FindValueResponse_descriptor,
-        new java.lang.String[] { "Id", "Value", });
+    com.google.protobuf.EmptyProto.getDescriptor();
   }
 
   // @@protoc_insertion_point(outer_class_scope)

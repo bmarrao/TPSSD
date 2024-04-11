@@ -36,7 +36,6 @@ public class KademliaImpl extends KademliaGrpc.KademliaImplBase
 
         // Notifies the customer that the call is completed.
         responseObserver.onCompleted();
-        System.out.println(request.getNode().getId());
     }
 
 
