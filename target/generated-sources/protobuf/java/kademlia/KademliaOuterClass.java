@@ -89,6 +89,26 @@ public final class KademliaOuterClass {
   static final 
     com.google.protobuf.GeneratedMessageV3.FieldAccessorTable
       internal_static_kademlia_sendPriceResponse_fieldAccessorTable;
+  static final com.google.protobuf.Descriptors.Descriptor
+    internal_static_kademlia_initiateServiceRequest_descriptor;
+  static final 
+    com.google.protobuf.GeneratedMessageV3.FieldAccessorTable
+      internal_static_kademlia_initiateServiceRequest_fieldAccessorTable;
+  static final com.google.protobuf.Descriptors.Descriptor
+    internal_static_kademlia_initiateServiceResponse_descriptor;
+  static final 
+    com.google.protobuf.GeneratedMessageV3.FieldAccessorTable
+      internal_static_kademlia_initiateServiceResponse_fieldAccessorTable;
+  static final com.google.protobuf.Descriptors.Descriptor
+    internal_static_kademlia_subscribeRequest_descriptor;
+  static final 
+    com.google.protobuf.GeneratedMessageV3.FieldAccessorTable
+      internal_static_kademlia_subscribeRequest_fieldAccessorTable;
+  static final com.google.protobuf.Descriptors.Descriptor
+    internal_static_kademlia_subscribeResposne_descriptor;
+  static final 
+    com.google.protobuf.GeneratedMessageV3.FieldAccessorTable
+      internal_static_kademlia_subscribeResposne_fieldAccessorTable;
 
   public static com.google.protobuf.Descriptors.FileDescriptor
       getDescriptor() {
@@ -116,22 +136,32 @@ public final class KademliaOuterClass {
       "\n\rNotifyRequest\022\021\n\tserviceId\030\001 \001(\014\022\034\n\004no" +
       "de\030\002 \001(\0132\016.kademlia.Node\022\r\n\005price\030\003 \001(\002\"" +
       "$\n\017getPriceRequest\022\021\n\tserviceId\030\001 \001(\014\"!\n" +
-      "\020getPriceResponse\022\r\n\005price\030\001 \001(\002\"R\n\020send" +
-      "PriceRequest\022\021\n\tserviceId\030\001 \001(\014\022\034\n\004node\030",
-      "\002 \001(\0132\016.kademlia.Node\022\r\n\005price\030\003 \001(\002\"#\n\021" +
-      "sendPriceResponse\022\016\n\006result\030\001 \001(\0102\310\003\n\010Ka" +
-      "demlia\0225\n\004ping\022\025.kademlia.PingRequest\032\026." +
-      "kademlia.PingResponse\0228\n\005store\022\026.kademli" +
-      "a.StoreRequest\032\027.kademlia.StoreResponse\022" +
-      "A\n\010findNode\022\031.kademlia.FindNodeRequest\032\032" +
-      ".kademlia.FindNodeResponse\022D\n\tfindValue\022" +
-      "\032.kademlia.FindValueRequest\032\033.kademlia.F" +
-      "indValueResponse\0229\n\006notify\022\027.kademlia.No" +
-      "tifyRequest\032\026.google.protobuf.Empty\022A\n\010g",
-      "etPrice\022\031.kademlia.getPriceRequest\032\032.kad" +
-      "emlia.getPriceResponse\022D\n\tsendPrice\022\032.ka" +
-      "demlia.sendPriceRequest\032\033.kademlia.sendP" +
-      "riceResponseB\002P\001b\006proto3"
+      "\020getPriceResponse\022\r\n\005price\030\001 \001(\002\"E\n\020send" +
+      "PriceRequest\022\021\n\tserviceId\030\001 \001(\014\022\036\n\005offer",
+      "\030\002 \001(\0132\017.kademlia.Offer\"#\n\021sendPriceResp" +
+      "onse\022\016\n\006result\030\001 \001(\010\"g\n\026initiateServiceR" +
+      "equest\022\r\n\005owner\030\001 \001(\014\022\021\n\tserviceId\030\002 \001(\014" +
+      "\022\035\n\005nodes\030\003 \003(\0132\016.kademlia.Node\022\014\n\004time\030" +
+      "\004 \001(\r\"+\n\027initiateServiceResponse\022\020\n\010resp" +
+      "onse\030\001 \001(\010\"C\n\020subscribeRequest\022\034\n\004node\030\001" +
+      " \001(\0132\016.kademlia.Node\022\021\n\tserviceId\030\002 \001(\014\"" +
+      "%\n\021subscribeResposne\022\020\n\010response\030\001 \001(\0102\346" +
+      "\004\n\010Kademlia\0225\n\004ping\022\025.kademlia.PingReque" +
+      "st\032\026.kademlia.PingResponse\0228\n\005store\022\026.ka",
+      "demlia.StoreRequest\032\027.kademlia.StoreResp" +
+      "onse\022A\n\010findNode\022\031.kademlia.FindNodeRequ" +
+      "est\032\032.kademlia.FindNodeResponse\022D\n\tfindV" +
+      "alue\022\032.kademlia.FindValueRequest\032\033.kadem" +
+      "lia.FindValueResponse\0229\n\006notify\022\027.kademl" +
+      "ia.NotifyRequest\032\026.google.protobuf.Empty" +
+      "\022A\n\010getPrice\022\031.kademlia.getPriceRequest\032" +
+      "\032.kademlia.getPriceResponse\022D\n\tsendPrice" +
+      "\022\032.kademlia.sendPriceRequest\032\033.kademlia." +
+      "sendPriceResponse\022V\n\017initiateService\022 .k",
+      "ademlia.initiateServiceRequest\032!.kademli" +
+      "a.initiateServiceResponse\022D\n\tsubscribe\022\032" +
+      ".kademlia.subscribeRequest\032\033.kademlia.su" +
+      "bscribeResposneB\002P\001b\006proto3"
     };
     com.google.protobuf.Descriptors.FileDescriptor.InternalDescriptorAssigner assigner =
         new com.google.protobuf.Descriptors.FileDescriptor.    InternalDescriptorAssigner() {
@@ -229,13 +259,37 @@ public final class KademliaOuterClass {
     internal_static_kademlia_sendPriceRequest_fieldAccessorTable = new
       com.google.protobuf.GeneratedMessageV3.FieldAccessorTable(
         internal_static_kademlia_sendPriceRequest_descriptor,
-        new java.lang.String[] { "ServiceId", "Node", "Price", });
+        new java.lang.String[] { "ServiceId", "Offer", });
     internal_static_kademlia_sendPriceResponse_descriptor =
       getDescriptor().getMessageTypes().get(14);
     internal_static_kademlia_sendPriceResponse_fieldAccessorTable = new
       com.google.protobuf.GeneratedMessageV3.FieldAccessorTable(
         internal_static_kademlia_sendPriceResponse_descriptor,
         new java.lang.String[] { "Result", });
+    internal_static_kademlia_initiateServiceRequest_descriptor =
+      getDescriptor().getMessageTypes().get(15);
+    internal_static_kademlia_initiateServiceRequest_fieldAccessorTable = new
+      com.google.protobuf.GeneratedMessageV3.FieldAccessorTable(
+        internal_static_kademlia_initiateServiceRequest_descriptor,
+        new java.lang.String[] { "Owner", "ServiceId", "Nodes", "Time", });
+    internal_static_kademlia_initiateServiceResponse_descriptor =
+      getDescriptor().getMessageTypes().get(16);
+    internal_static_kademlia_initiateServiceResponse_fieldAccessorTable = new
+      com.google.protobuf.GeneratedMessageV3.FieldAccessorTable(
+        internal_static_kademlia_initiateServiceResponse_descriptor,
+        new java.lang.String[] { "Response", });
+    internal_static_kademlia_subscribeRequest_descriptor =
+      getDescriptor().getMessageTypes().get(17);
+    internal_static_kademlia_subscribeRequest_fieldAccessorTable = new
+      com.google.protobuf.GeneratedMessageV3.FieldAccessorTable(
+        internal_static_kademlia_subscribeRequest_descriptor,
+        new java.lang.String[] { "Node", "ServiceId", });
+    internal_static_kademlia_subscribeResposne_descriptor =
+      getDescriptor().getMessageTypes().get(18);
+    internal_static_kademlia_subscribeResposne_fieldAccessorTable = new
+      com.google.protobuf.GeneratedMessageV3.FieldAccessorTable(
+        internal_static_kademlia_subscribeResposne_descriptor,
+        new java.lang.String[] { "Response", });
     com.google.protobuf.EmptyProto.getDescriptor();
   }
 

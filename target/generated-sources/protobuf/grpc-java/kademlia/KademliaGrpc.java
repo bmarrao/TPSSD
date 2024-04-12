@@ -111,6 +111,30 @@ public final class KademliaGrpc {
           .setResponseMarshaller(io.grpc.protobuf.ProtoUtils.marshaller(
               kademlia.sendPriceResponse.getDefaultInstance()))
           .build();
+  @io.grpc.ExperimentalApi("https://github.com/grpc/grpc-java/issues/1901")
+  public static final io.grpc.MethodDescriptor<kademlia.initiateServiceRequest,
+      kademlia.initiateServiceResponse> METHOD_INITIATE_SERVICE =
+      io.grpc.MethodDescriptor.<kademlia.initiateServiceRequest, kademlia.initiateServiceResponse>newBuilder()
+          .setType(io.grpc.MethodDescriptor.MethodType.UNARY)
+          .setFullMethodName(generateFullMethodName(
+              "kademlia.Kademlia", "initiateService"))
+          .setRequestMarshaller(io.grpc.protobuf.ProtoUtils.marshaller(
+              kademlia.initiateServiceRequest.getDefaultInstance()))
+          .setResponseMarshaller(io.grpc.protobuf.ProtoUtils.marshaller(
+              kademlia.initiateServiceResponse.getDefaultInstance()))
+          .build();
+  @io.grpc.ExperimentalApi("https://github.com/grpc/grpc-java/issues/1901")
+  public static final io.grpc.MethodDescriptor<kademlia.subscribeRequest,
+      kademlia.subscribeResposne> METHOD_SUBSCRIBE =
+      io.grpc.MethodDescriptor.<kademlia.subscribeRequest, kademlia.subscribeResposne>newBuilder()
+          .setType(io.grpc.MethodDescriptor.MethodType.UNARY)
+          .setFullMethodName(generateFullMethodName(
+              "kademlia.Kademlia", "subscribe"))
+          .setRequestMarshaller(io.grpc.protobuf.ProtoUtils.marshaller(
+              kademlia.subscribeRequest.getDefaultInstance()))
+          .setResponseMarshaller(io.grpc.protobuf.ProtoUtils.marshaller(
+              kademlia.subscribeResposne.getDefaultInstance()))
+          .build();
 
   /**
    * Creates a new async stub that supports all call types for the service
@@ -200,6 +224,20 @@ public final class KademliaGrpc {
       asyncUnimplementedUnaryCall(METHOD_SEND_PRICE, responseObserver);
     }
 
+    /**
+     */
+    public void initiateService(kademlia.initiateServiceRequest request,
+        io.grpc.stub.StreamObserver<kademlia.initiateServiceResponse> responseObserver) {
+      asyncUnimplementedUnaryCall(METHOD_INITIATE_SERVICE, responseObserver);
+    }
+
+    /**
+     */
+    public void subscribe(kademlia.subscribeRequest request,
+        io.grpc.stub.StreamObserver<kademlia.subscribeResposne> responseObserver) {
+      asyncUnimplementedUnaryCall(METHOD_SUBSCRIBE, responseObserver);
+    }
+
     @java.lang.Override public final io.grpc.ServerServiceDefinition bindService() {
       return io.grpc.ServerServiceDefinition.builder(getServiceDescriptor())
           .addMethod(
@@ -251,6 +289,20 @@ public final class KademliaGrpc {
                 kademlia.sendPriceRequest,
                 kademlia.sendPriceResponse>(
                   this, METHODID_SEND_PRICE)))
+          .addMethod(
+            METHOD_INITIATE_SERVICE,
+            asyncUnaryCall(
+              new MethodHandlers<
+                kademlia.initiateServiceRequest,
+                kademlia.initiateServiceResponse>(
+                  this, METHODID_INITIATE_SERVICE)))
+          .addMethod(
+            METHOD_SUBSCRIBE,
+            asyncUnaryCall(
+              new MethodHandlers<
+                kademlia.subscribeRequest,
+                kademlia.subscribeResposne>(
+                  this, METHODID_SUBSCRIBE)))
           .build();
     }
   }
@@ -340,6 +392,22 @@ public final class KademliaGrpc {
       asyncUnaryCall(
           getChannel().newCall(METHOD_SEND_PRICE, getCallOptions()), request, responseObserver);
     }
+
+    /**
+     */
+    public void initiateService(kademlia.initiateServiceRequest request,
+        io.grpc.stub.StreamObserver<kademlia.initiateServiceResponse> responseObserver) {
+      asyncUnaryCall(
+          getChannel().newCall(METHOD_INITIATE_SERVICE, getCallOptions()), request, responseObserver);
+    }
+
+    /**
+     */
+    public void subscribe(kademlia.subscribeRequest request,
+        io.grpc.stub.StreamObserver<kademlia.subscribeResposne> responseObserver) {
+      asyncUnaryCall(
+          getChannel().newCall(METHOD_SUBSCRIBE, getCallOptions()), request, responseObserver);
+    }
   }
 
   /**
@@ -419,6 +487,20 @@ public final class KademliaGrpc {
     public kademlia.sendPriceResponse sendPrice(kademlia.sendPriceRequest request) {
       return blockingUnaryCall(
           getChannel(), METHOD_SEND_PRICE, getCallOptions(), request);
+    }
+
+    /**
+     */
+    public kademlia.initiateServiceResponse initiateService(kademlia.initiateServiceRequest request) {
+      return blockingUnaryCall(
+          getChannel(), METHOD_INITIATE_SERVICE, getCallOptions(), request);
+    }
+
+    /**
+     */
+    public kademlia.subscribeResposne subscribe(kademlia.subscribeRequest request) {
+      return blockingUnaryCall(
+          getChannel(), METHOD_SUBSCRIBE, getCallOptions(), request);
     }
   }
 
@@ -507,6 +589,22 @@ public final class KademliaGrpc {
       return futureUnaryCall(
           getChannel().newCall(METHOD_SEND_PRICE, getCallOptions()), request);
     }
+
+    /**
+     */
+    public com.google.common.util.concurrent.ListenableFuture<kademlia.initiateServiceResponse> initiateService(
+        kademlia.initiateServiceRequest request) {
+      return futureUnaryCall(
+          getChannel().newCall(METHOD_INITIATE_SERVICE, getCallOptions()), request);
+    }
+
+    /**
+     */
+    public com.google.common.util.concurrent.ListenableFuture<kademlia.subscribeResposne> subscribe(
+        kademlia.subscribeRequest request) {
+      return futureUnaryCall(
+          getChannel().newCall(METHOD_SUBSCRIBE, getCallOptions()), request);
+    }
   }
 
   private static final int METHODID_PING = 0;
@@ -516,6 +614,8 @@ public final class KademliaGrpc {
   private static final int METHODID_NOTIFY = 4;
   private static final int METHODID_GET_PRICE = 5;
   private static final int METHODID_SEND_PRICE = 6;
+  private static final int METHODID_INITIATE_SERVICE = 7;
+  private static final int METHODID_SUBSCRIBE = 8;
 
   private static final class MethodHandlers<Req, Resp> implements
       io.grpc.stub.ServerCalls.UnaryMethod<Req, Resp>,
@@ -562,6 +662,14 @@ public final class KademliaGrpc {
           serviceImpl.sendPrice((kademlia.sendPriceRequest) request,
               (io.grpc.stub.StreamObserver<kademlia.sendPriceResponse>) responseObserver);
           break;
+        case METHODID_INITIATE_SERVICE:
+          serviceImpl.initiateService((kademlia.initiateServiceRequest) request,
+              (io.grpc.stub.StreamObserver<kademlia.initiateServiceResponse>) responseObserver);
+          break;
+        case METHODID_SUBSCRIBE:
+          serviceImpl.subscribe((kademlia.subscribeRequest) request,
+              (io.grpc.stub.StreamObserver<kademlia.subscribeResposne>) responseObserver);
+          break;
         default:
           throw new AssertionError();
       }
@@ -602,6 +710,8 @@ public final class KademliaGrpc {
               .addMethod(METHOD_NOTIFY)
               .addMethod(METHOD_GET_PRICE)
               .addMethod(METHOD_SEND_PRICE)
+              .addMethod(METHOD_INITIATE_SERVICE)
+              .addMethod(METHOD_SUBSCRIBE)
               .build();
         }
       }

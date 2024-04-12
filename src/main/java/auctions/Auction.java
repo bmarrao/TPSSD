@@ -6,6 +6,7 @@ import io.grpc.stub.StreamObserver;
 import kademlia.KademliaGrpc;
 import kademlia.KademliaProtocol;
 
+import kademlia.Node;
 import kademlia.Offer;
 
 import java.io.IOException;
@@ -48,14 +49,32 @@ public class Auction
         return false;
     }
 
-    /*
-    public void initiateService(Offer of,byte[] serviceId)
-    {
 
+    public void initiateService(byte[] owner, byte[] serviceId, int time, ArrayList<Node> brokerSet)
+    {
+        l.lock();
+        services.add(new BrokerService(serviceId,owner,time,brokerSet));
+        l.unlock();
     }
 
+    public boolean subscribe(Node node, byte[] serviceId)
+    {
+        BrokerService bs = this.getService(serviceId);
+        if (bs != null)
+        {
+            bs.l.lock();
+            l.unlock();
+            bs.subscribed.add(node);
+            bs.l.unlock();
+            return true;
+        }
+        else
+        {
+            l.unlock();
+        }
+        return false;
+    }
 
-     */
     private BrokerService getService(byte[] serviceId)
     {
         for(BrokerService bs : this.services)

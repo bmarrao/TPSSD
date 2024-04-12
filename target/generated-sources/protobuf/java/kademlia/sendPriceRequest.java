@@ -16,7 +16,6 @@ public  final class sendPriceRequest extends
   }
   private sendPriceRequest() {
     serviceId_ = com.google.protobuf.ByteString.EMPTY;
-    price_ = 0F;
   }
 
   @java.lang.Override
@@ -50,21 +49,16 @@ public  final class sendPriceRequest extends
             break;
           }
           case 18: {
-            kademlia.Node.Builder subBuilder = null;
-            if (node_ != null) {
-              subBuilder = node_.toBuilder();
+            kademlia.Offer.Builder subBuilder = null;
+            if (offer_ != null) {
+              subBuilder = offer_.toBuilder();
             }
-            node_ = input.readMessage(kademlia.Node.parser(), extensionRegistry);
+            offer_ = input.readMessage(kademlia.Offer.parser(), extensionRegistry);
             if (subBuilder != null) {
-              subBuilder.mergeFrom(node_);
-              node_ = subBuilder.buildPartial();
+              subBuilder.mergeFrom(offer_);
+              offer_ = subBuilder.buildPartial();
             }
 
-            break;
-          }
-          case 29: {
-
-            price_ = input.readFloat();
             break;
           }
         }
@@ -99,34 +93,25 @@ public  final class sendPriceRequest extends
     return serviceId_;
   }
 
-  public static final int NODE_FIELD_NUMBER = 2;
-  private kademlia.Node node_;
+  public static final int OFFER_FIELD_NUMBER = 2;
+  private kademlia.Offer offer_;
   /**
-   * <code>.kademlia.Node node = 2;</code>
+   * <code>.kademlia.Offer offer = 2;</code>
    */
-  public boolean hasNode() {
-    return node_ != null;
+  public boolean hasOffer() {
+    return offer_ != null;
   }
   /**
-   * <code>.kademlia.Node node = 2;</code>
+   * <code>.kademlia.Offer offer = 2;</code>
    */
-  public kademlia.Node getNode() {
-    return node_ == null ? kademlia.Node.getDefaultInstance() : node_;
+  public kademlia.Offer getOffer() {
+    return offer_ == null ? kademlia.Offer.getDefaultInstance() : offer_;
   }
   /**
-   * <code>.kademlia.Node node = 2;</code>
+   * <code>.kademlia.Offer offer = 2;</code>
    */
-  public kademlia.NodeOrBuilder getNodeOrBuilder() {
-    return getNode();
-  }
-
-  public static final int PRICE_FIELD_NUMBER = 3;
-  private float price_;
-  /**
-   * <code>float price = 3;</code>
-   */
-  public float getPrice() {
-    return price_;
+  public kademlia.OfferOrBuilder getOfferOrBuilder() {
+    return getOffer();
   }
 
   private byte memoizedIsInitialized = -1;
@@ -144,11 +129,8 @@ public  final class sendPriceRequest extends
     if (!serviceId_.isEmpty()) {
       output.writeBytes(1, serviceId_);
     }
-    if (node_ != null) {
-      output.writeMessage(2, getNode());
-    }
-    if (price_ != 0F) {
-      output.writeFloat(3, price_);
+    if (offer_ != null) {
+      output.writeMessage(2, getOffer());
     }
   }
 
@@ -161,13 +143,9 @@ public  final class sendPriceRequest extends
       size += com.google.protobuf.CodedOutputStream
         .computeBytesSize(1, serviceId_);
     }
-    if (node_ != null) {
+    if (offer_ != null) {
       size += com.google.protobuf.CodedOutputStream
-        .computeMessageSize(2, getNode());
-    }
-    if (price_ != 0F) {
-      size += com.google.protobuf.CodedOutputStream
-        .computeFloatSize(3, price_);
+        .computeMessageSize(2, getOffer());
     }
     memoizedSize = size;
     return size;
@@ -187,15 +165,11 @@ public  final class sendPriceRequest extends
     boolean result = true;
     result = result && getServiceId()
         .equals(other.getServiceId());
-    result = result && (hasNode() == other.hasNode());
-    if (hasNode()) {
-      result = result && getNode()
-          .equals(other.getNode());
+    result = result && (hasOffer() == other.hasOffer());
+    if (hasOffer()) {
+      result = result && getOffer()
+          .equals(other.getOffer());
     }
-    result = result && (
-        java.lang.Float.floatToIntBits(getPrice())
-        == java.lang.Float.floatToIntBits(
-            other.getPrice()));
     return result;
   }
 
@@ -208,13 +182,10 @@ public  final class sendPriceRequest extends
     hash = (19 * hash) + getDescriptor().hashCode();
     hash = (37 * hash) + SERVICEID_FIELD_NUMBER;
     hash = (53 * hash) + getServiceId().hashCode();
-    if (hasNode()) {
-      hash = (37 * hash) + NODE_FIELD_NUMBER;
-      hash = (53 * hash) + getNode().hashCode();
+    if (hasOffer()) {
+      hash = (37 * hash) + OFFER_FIELD_NUMBER;
+      hash = (53 * hash) + getOffer().hashCode();
     }
-    hash = (37 * hash) + PRICE_FIELD_NUMBER;
-    hash = (53 * hash) + java.lang.Float.floatToIntBits(
-        getPrice());
     hash = (29 * hash) + unknownFields.hashCode();
     memoizedHashCode = hash;
     return hash;
@@ -346,14 +317,12 @@ public  final class sendPriceRequest extends
       super.clear();
       serviceId_ = com.google.protobuf.ByteString.EMPTY;
 
-      if (nodeBuilder_ == null) {
-        node_ = null;
+      if (offerBuilder_ == null) {
+        offer_ = null;
       } else {
-        node_ = null;
-        nodeBuilder_ = null;
+        offer_ = null;
+        offerBuilder_ = null;
       }
-      price_ = 0F;
-
       return this;
     }
 
@@ -377,12 +346,11 @@ public  final class sendPriceRequest extends
     public kademlia.sendPriceRequest buildPartial() {
       kademlia.sendPriceRequest result = new kademlia.sendPriceRequest(this);
       result.serviceId_ = serviceId_;
-      if (nodeBuilder_ == null) {
-        result.node_ = node_;
+      if (offerBuilder_ == null) {
+        result.offer_ = offer_;
       } else {
-        result.node_ = nodeBuilder_.build();
+        result.offer_ = offerBuilder_.build();
       }
-      result.price_ = price_;
       onBuilt();
       return result;
     }
@@ -427,11 +395,8 @@ public  final class sendPriceRequest extends
       if (other.getServiceId() != com.google.protobuf.ByteString.EMPTY) {
         setServiceId(other.getServiceId());
       }
-      if (other.hasNode()) {
-        mergeNode(other.getNode());
-      }
-      if (other.getPrice() != 0F) {
-        setPrice(other.getPrice());
+      if (other.hasOffer()) {
+        mergeOffer(other.getOffer());
       }
       onChanged();
       return this;
@@ -488,147 +453,121 @@ public  final class sendPriceRequest extends
       return this;
     }
 
-    private kademlia.Node node_ = null;
+    private kademlia.Offer offer_ = null;
     private com.google.protobuf.SingleFieldBuilderV3<
-        kademlia.Node, kademlia.Node.Builder, kademlia.NodeOrBuilder> nodeBuilder_;
+        kademlia.Offer, kademlia.Offer.Builder, kademlia.OfferOrBuilder> offerBuilder_;
     /**
-     * <code>.kademlia.Node node = 2;</code>
+     * <code>.kademlia.Offer offer = 2;</code>
      */
-    public boolean hasNode() {
-      return nodeBuilder_ != null || node_ != null;
+    public boolean hasOffer() {
+      return offerBuilder_ != null || offer_ != null;
     }
     /**
-     * <code>.kademlia.Node node = 2;</code>
+     * <code>.kademlia.Offer offer = 2;</code>
      */
-    public kademlia.Node getNode() {
-      if (nodeBuilder_ == null) {
-        return node_ == null ? kademlia.Node.getDefaultInstance() : node_;
+    public kademlia.Offer getOffer() {
+      if (offerBuilder_ == null) {
+        return offer_ == null ? kademlia.Offer.getDefaultInstance() : offer_;
       } else {
-        return nodeBuilder_.getMessage();
+        return offerBuilder_.getMessage();
       }
     }
     /**
-     * <code>.kademlia.Node node = 2;</code>
+     * <code>.kademlia.Offer offer = 2;</code>
      */
-    public Builder setNode(kademlia.Node value) {
-      if (nodeBuilder_ == null) {
+    public Builder setOffer(kademlia.Offer value) {
+      if (offerBuilder_ == null) {
         if (value == null) {
           throw new NullPointerException();
         }
-        node_ = value;
+        offer_ = value;
         onChanged();
       } else {
-        nodeBuilder_.setMessage(value);
+        offerBuilder_.setMessage(value);
       }
 
       return this;
     }
     /**
-     * <code>.kademlia.Node node = 2;</code>
+     * <code>.kademlia.Offer offer = 2;</code>
      */
-    public Builder setNode(
-        kademlia.Node.Builder builderForValue) {
-      if (nodeBuilder_ == null) {
-        node_ = builderForValue.build();
+    public Builder setOffer(
+        kademlia.Offer.Builder builderForValue) {
+      if (offerBuilder_ == null) {
+        offer_ = builderForValue.build();
         onChanged();
       } else {
-        nodeBuilder_.setMessage(builderForValue.build());
+        offerBuilder_.setMessage(builderForValue.build());
       }
 
       return this;
     }
     /**
-     * <code>.kademlia.Node node = 2;</code>
+     * <code>.kademlia.Offer offer = 2;</code>
      */
-    public Builder mergeNode(kademlia.Node value) {
-      if (nodeBuilder_ == null) {
-        if (node_ != null) {
-          node_ =
-            kademlia.Node.newBuilder(node_).mergeFrom(value).buildPartial();
+    public Builder mergeOffer(kademlia.Offer value) {
+      if (offerBuilder_ == null) {
+        if (offer_ != null) {
+          offer_ =
+            kademlia.Offer.newBuilder(offer_).mergeFrom(value).buildPartial();
         } else {
-          node_ = value;
+          offer_ = value;
         }
         onChanged();
       } else {
-        nodeBuilder_.mergeFrom(value);
+        offerBuilder_.mergeFrom(value);
       }
 
       return this;
     }
     /**
-     * <code>.kademlia.Node node = 2;</code>
+     * <code>.kademlia.Offer offer = 2;</code>
      */
-    public Builder clearNode() {
-      if (nodeBuilder_ == null) {
-        node_ = null;
+    public Builder clearOffer() {
+      if (offerBuilder_ == null) {
+        offer_ = null;
         onChanged();
       } else {
-        node_ = null;
-        nodeBuilder_ = null;
+        offer_ = null;
+        offerBuilder_ = null;
       }
 
       return this;
     }
     /**
-     * <code>.kademlia.Node node = 2;</code>
+     * <code>.kademlia.Offer offer = 2;</code>
      */
-    public kademlia.Node.Builder getNodeBuilder() {
+    public kademlia.Offer.Builder getOfferBuilder() {
       
       onChanged();
-      return getNodeFieldBuilder().getBuilder();
+      return getOfferFieldBuilder().getBuilder();
     }
     /**
-     * <code>.kademlia.Node node = 2;</code>
+     * <code>.kademlia.Offer offer = 2;</code>
      */
-    public kademlia.NodeOrBuilder getNodeOrBuilder() {
-      if (nodeBuilder_ != null) {
-        return nodeBuilder_.getMessageOrBuilder();
+    public kademlia.OfferOrBuilder getOfferOrBuilder() {
+      if (offerBuilder_ != null) {
+        return offerBuilder_.getMessageOrBuilder();
       } else {
-        return node_ == null ?
-            kademlia.Node.getDefaultInstance() : node_;
+        return offer_ == null ?
+            kademlia.Offer.getDefaultInstance() : offer_;
       }
     }
     /**
-     * <code>.kademlia.Node node = 2;</code>
+     * <code>.kademlia.Offer offer = 2;</code>
      */
     private com.google.protobuf.SingleFieldBuilderV3<
-        kademlia.Node, kademlia.Node.Builder, kademlia.NodeOrBuilder> 
-        getNodeFieldBuilder() {
-      if (nodeBuilder_ == null) {
-        nodeBuilder_ = new com.google.protobuf.SingleFieldBuilderV3<
-            kademlia.Node, kademlia.Node.Builder, kademlia.NodeOrBuilder>(
-                getNode(),
+        kademlia.Offer, kademlia.Offer.Builder, kademlia.OfferOrBuilder> 
+        getOfferFieldBuilder() {
+      if (offerBuilder_ == null) {
+        offerBuilder_ = new com.google.protobuf.SingleFieldBuilderV3<
+            kademlia.Offer, kademlia.Offer.Builder, kademlia.OfferOrBuilder>(
+                getOffer(),
                 getParentForChildren(),
                 isClean());
-        node_ = null;
+        offer_ = null;
       }
-      return nodeBuilder_;
-    }
-
-    private float price_ ;
-    /**
-     * <code>float price = 3;</code>
-     */
-    public float getPrice() {
-      return price_;
-    }
-    /**
-     * <code>float price = 3;</code>
-     */
-    public Builder setPrice(float value) {
-      
-      price_ = value;
-      onChanged();
-      return this;
-    }
-    /**
-     * <code>float price = 3;</code>
-     */
-    public Builder clearPrice() {
-      
-      price_ = 0F;
-      onChanged();
-      return this;
+      return offerBuilder_;
     }
     public final Builder setUnknownFields(
         final com.google.protobuf.UnknownFieldSet unknownFields) {

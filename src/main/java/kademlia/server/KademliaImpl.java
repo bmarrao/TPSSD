@@ -136,31 +136,46 @@ public class KademliaImpl extends KademliaGrpc.KademliaImplBase
         // Notifies the customer that the call is completed.
         responseObserver.onCompleted();
     }
-    /*
+
     @Override
     public void sendPrice(sendPriceRequest request, StreamObserver<sendPriceResponse> responseObserver)
     {
-        boolean res = auc.receiveOffer()
-        l.lock();
-        BrokerService bs = this.getService(serviceId);
-        if (bs != null)
-        {
-            bs.l.lock();
-            l.unlock();
-            if (bs.receiveOffer(of))
-            {
-                kp.notifySubscribed(bs.subscribed,bs.highestOffer,bs.serviceId);
-                return true;
-            }
-            bs.l.unlock();
-        }
-        else
-        {
-            l.unlock();
-        }
-        return false;
+        boolean res = auc.receiveOffer(request.getOffer(), request.getServiceId().toByteArray());
+
+        sendPriceResponse response = sendPriceResponse
+                .newBuilder()
+                .setResult(res)
+                .build();
+
+        // Send the response to the client.
+        responseObserver.onNext(response);
+
+        // Notifies the customer that the call is completed.
+        responseObserver.onCompleted();
     }
 
 
-     */
+    @Override
+    public void initiateService(initiateServiceRequest request, StreamObserver<initiateServiceResponse> responseObserver)
+    {
+        auc.initiateService(request.getOwner().toByteArray()
+                                        , request.getServiceId().toByteArray()
+                                        , request.getTime()
+                                        , new ArrayList<>(request.getNodesList()));
+
+        initiateServiceResponse response = initiateServiceResponse
+                .newBuilder()
+                .setResponse(true)
+                .build();
+
+        // Send the response to the client.
+        responseObserver.onNext(response);
+
+        // Notifies the customer that the call is completed.
+        responseObserver.onCompleted();
+    }
+
+
+
+
 }

@@ -13,20 +13,15 @@ public interface sendPriceRequestOrBuilder extends
   com.google.protobuf.ByteString getServiceId();
 
   /**
-   * <code>.kademlia.Node node = 2;</code>
+   * <code>.kademlia.Offer offer = 2;</code>
    */
-  boolean hasNode();
+  boolean hasOffer();
   /**
-   * <code>.kademlia.Node node = 2;</code>
+   * <code>.kademlia.Offer offer = 2;</code>
    */
-  kademlia.Node getNode();
+  kademlia.Offer getOffer();
   /**
-   * <code>.kademlia.Node node = 2;</code>
+   * <code>.kademlia.Offer offer = 2;</code>
    */
-  kademlia.NodeOrBuilder getNodeOrBuilder();
-
-  /**
-   * <code>float price = 3;</code>
-   */
-  float getPrice();
+  kademlia.OfferOrBuilder getOfferOrBuilder();
 }

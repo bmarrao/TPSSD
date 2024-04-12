@@ -20,17 +20,19 @@ public class BrokerService
 
 
     byte[] serviceId ;
-
+    byte[] owner;
     ArrayList<Node>brokerSet;
     Offer highestOffer;
     ArrayList <Node> subscribed;
-
-    BrokerService(byte[] serviceId)
+    int time;
+    BrokerService(byte[] serviceId, byte[] owner, int time, ArrayList<Node> brokerSet)
     {
         this.serviceId = serviceId;
-        brokerSet = new ArrayList<>();
+        brokerSet = brokerSet;
         subscribed = new ArrayList<>();
         highestOffer = null;
+        this.owner = owner;
+        time = time;
     }
     public float getPrice()
     {

@@ -87,13 +87,36 @@ message getPriceResponse
 message sendPriceRequest
 {
   bytes serviceId = 1;
-  Node node = 2;
-  float price = 3 ;
+  Offer offer = 2;
 }
 
 message sendPriceResponse
 {
   bool result = 1;
+}
+
+message initiateServiceRequest
+{
+  bytes owner = 1;
+  bytes serviceId = 2;
+  repeated Node nodes = 3;
+  uint32 time = 4;
+}
+
+message initiateServiceResponse
+{
+  bool response = 1;
+}
+
+message subscribeRequest
+{
+  Node node = 1;
+  bytes serviceId = 2;
+}
+
+message subscribeResposne
+{
+  bool response = 1;
 }
 service Kademlia
 {
@@ -115,6 +138,9 @@ service Kademlia
 
   rpc sendPrice(sendPriceRequest) returns (sendPriceResponse);
 
+  rpc initiateService(initiateServiceRequest) returns (initiateServiceResponse);
+
+  rpc subscribe(subscribeRequest) returns (subscribeResposne);
 
 
 }
