@@ -6,8 +6,7 @@ import kademlia.server.KademliaServer;
 import java.io.*;
 import java.nio.file.Files;
 import java.nio.file.Paths;
-import java.security.SecureRandom;
-import java.security.MessageDigest;
+import java.security.*;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -133,6 +132,112 @@ public class Kademlia
 
 
     }
+
+    public static void main(String[] args) throws NoSuchAlgorithmException {
+        byte[] nodeId = sKadGenerateNodeId(8, 8);
+        System.out.println("S/Kademlia nodeId: " + Arrays.toString(nodeId));
+    }
+
+    public static boolean checkZeroCount(byte[] puzzle, int numOfLeadingZeros) {
+        int leadingZeros = 0;
+
+        for (byte b : puzzle) {
+            if (b == 0)
+            {
+                leadingZeros += 8; // If the byte is zero, add 8 to leadingZeros since byte contains 8 bits
+            }
+            else
+            { // for example byte = 00001234
+                // Count leading zeros in the byte using bit manipulation
+                int byteLeadingZeros = Integer.numberOfLeadingZeros(b & 0xFF) - 24;
+                leadingZeros += byteLeadingZeros;
+                break; // Stop counting leading zeros once a non-zero byte is encountered
+            }
+        }
+        System.out.println("Leading zeros count: " + leadingZeros);
+
+        if (leadingZeros >= numOfLeadingZeros)
+        {
+            return true;
+        }
+        return false;
+    }
+
+
+    public static byte[] sKadGenerateNodeId(int leadingZerosStatic, int leadingZerosDynamic) throws NoSuchAlgorithmException {
+        /* static crypto puzzle - against eclipe attacks
+             1) generate pair (Spub, Spriv)
+             2) P = H(H(Spub))
+             3) if preceeding x zero bits => NodeId = H(Spub) generated
+             4) otherwise generate pair (Spub, Spriv) again and go back to 1)
+        */
+        byte[] sKadNodeId = new byte[32];
+        boolean generatedId = false;
+
+        while (!generatedId)
+        {
+            KeyPairGenerator keyPairGenerator = KeyPairGenerator.getInstance("RSA");
+            SecureRandom secureRandom = new SecureRandom();
+            keyPairGenerator.initialize(2048, secureRandom);
+
+            // Generate key pair and get public key
+            KeyPair keyPair = keyPairGenerator.generateKeyPair();
+            java.security.PublicKey publicKey = keyPair.getPublic();
+            System.out.println("Generated public and private key pair");
+
+            // Hash public key twice
+            MessageDigest md = MessageDigest.getInstance("SHA-256");
+            sKadNodeId = md.digest(publicKey.getEncoded());
+            byte[] staticPuzzle = md.digest(sKadNodeId);
+            System.out.println("Static puzzle is: " + Arrays.toString(staticPuzzle));
+
+            if (checkZeroCount(staticPuzzle, leadingZerosStatic))
+            {
+                System.out.println("Static puzzle solved!");
+                generatedId = true;
+            }
+        }
+
+
+        /* dynamic crypto puzzle - against sybil attacks
+            1) NodeId = H(Spub)
+            2) choose random X
+            3) P = H(NodeId XOR X)
+            4) if preceeding y zero bits => puzzle solved
+            5) otherwise choose random X and go back to 2)
+        */
+        boolean solvedDynamic = false;
+        while (!solvedDynamic)
+        {
+            // Generate random byte X
+            Random random = new Random();
+            byte randomX = (byte) random.nextInt(256);
+
+            System.out.println("Generated random X: " + randomX);
+
+            byte[] xorOp = new byte[sKadNodeId.length];
+
+            // calculate NodeId XOR randomX
+            for (int i = 0; i < sKadNodeId.length; i++)
+            {
+                xorOp[i] = (byte) (sKadNodeId[i] ^ randomX);
+            }
+            System.out.println("Calculated XOR: " + Arrays.toString(xorOp));
+
+            // H(NodeId XOR randomX)
+            MessageDigest md = MessageDigest.getInstance("SHA-256");
+            byte[] dynamicPuzzle = md.digest(xorOp);
+            System.out.println("Hashed XOR value");
+
+            if (checkZeroCount(dynamicPuzzle, leadingZerosDynamic))
+            {
+                System.out.println("Dynamic puzzle solved!");
+                solvedDynamic = true;
+            }
+        }
+        return sKadNodeId;
+    }
+
 
 
     // node id is 160-bit and is based on SHA-1
