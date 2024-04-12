@@ -1,5 +1,6 @@
 package kademlia;
 
+import auctions.Auction;
 import kademlia.server.KademliaServer;
 
 import java.io.*;
@@ -22,16 +23,19 @@ public class Kademlia
     public static KademliaRoutingTable rt;
     public static KademliaProtocol protocol;
 
+//    Auction a ;
+
+  //  BlockChain b;
     // TODO Public e private Key - Quando for implementar blockchain
     // TODO Inicialização do no kademlia , contacto com boostrap node - Cristina
     // TODO Criar bootstrap node - Breno
 
     public Kademlia(String ipAdress, int port, boolean bootstrap, int k, String bootstrapFilePath)
     {
-        KademliaServer server = new KademliaServer(port);
+        protocol = new KademliaProtocol(nodeId,ipAdress,port);
+        KademliaServer server = new KademliaServer(port, new Auction(protocol));
         Thread serverThread = new Thread(server);
         serverThread.start();
-        protocol = new KademliaProtocol(nodeId,ipAdress,port);
 
         if (bootstrap)
         {

@@ -1,10 +1,11 @@
 package kademlia.server;
+import auctions.Auction;
+
 import io.grpc.stub.StreamObserver;
 import kademlia.*;
 
-import java.lang.reflect.Array;
 import java.util.ArrayList;
-import java.util.List;
+
 // TODO Hugo Implementar metodos dessa classe
 //  TODO parte do bootstrap - Cristina
 public class KademliaImpl extends KademliaGrpc.KademliaImplBase
@@ -14,6 +15,11 @@ public class KademliaImpl extends KademliaGrpc.KademliaImplBase
 
     private static int k_nodes = 3;
 
+    private Auction auc;
+    KademliaImpl(Auction auc)
+    {
+        this.auc = auc;;
+    }
     @Override
     public void ping(PingRequest request, StreamObserver<PingResponse> responseObserver)
     {
@@ -39,6 +45,7 @@ public class KademliaImpl extends KademliaGrpc.KademliaImplBase
     }
 
 
+
     @Override
     public void store(StoreRequest request, StreamObserver<StoreResponse> responseObserver)
     {
@@ -52,6 +59,10 @@ public class KademliaImpl extends KademliaGrpc.KademliaImplBase
         // Retrieve the key and value from the request
         String key = request.getKey();
         String value = request.getValue();
+
+        // blockchain bc
+        // bid a b
+
 
         dataStore.store(key,value);
 
@@ -108,4 +119,48 @@ public class KademliaImpl extends KademliaGrpc.KademliaImplBase
         responseObserver.onNext(response);
         responseObserver.onCompleted();
     }
+    @Override
+    public void getPrice(getPriceRequest request, StreamObserver<getPriceResponse> responseObserver)
+    {
+
+        float price = auc.getPrice(request.getServiceId().toByteArray());
+
+        getPriceResponse response = getPriceResponse
+                .newBuilder()
+                .setPrice(price)
+                .build();
+
+        // Send the response to the client.
+        responseObserver.onNext(response);
+
+        // Notifies the customer that the call is completed.
+        responseObserver.onCompleted();
+    }
+    /*
+    @Override
+    public void sendPrice(sendPriceRequest request, StreamObserver<sendPriceResponse> responseObserver)
+    {
+        boolean res = auc.receiveOffer()
+        l.lock();
+        BrokerService bs = this.getService(serviceId);
+        if (bs != null)
+        {
+            bs.l.lock();
+            l.unlock();
+            if (bs.receiveOffer(of))
+            {
+                kp.notifySubscribed(bs.subscribed,bs.highestOffer,bs.serviceId);
+                return true;
+            }
+            bs.l.unlock();
+        }
+        else
+        {
+            l.unlock();
+        }
+        return false;
+    }
+
+
+     */
 }

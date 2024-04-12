@@ -3,7 +3,7 @@ package kademlia;
 import com.google.protobuf.ByteString;
 import io.grpc.ManagedChannel;
 import io.grpc.ManagedChannelBuilder;
-
+import kademlia.Offer;
 import java.util.ArrayList;
 
 
@@ -37,6 +37,7 @@ public class KademliaProtocol
 
         return response.getOnline();
     }
+
 
     public boolean storeOp(byte[] nodeId, String key, String val, String ip, int port,String receiverIp, int receiverPort)
     {
@@ -103,5 +104,24 @@ public class KademliaProtocol
         ArrayList<Node> nodes = new ArrayList<>();
 
         return new KademliaFindOpResult(response.getId().toByteArray(), response.getValue(), nodes);
+    }
+
+    public void notifySubscribed(ArrayList<Node> subscribed, Offer highestOffer, byte[] serviceId)
+    {
+        ManagedChannel channel;
+        for (Node n: subscribed)
+        {
+            channel = ManagedChannelBuilder.forAddress(n.getIp(), n.getPort()).usePlaintext().build();
+
+            KademliaGrpc.KademliaStub stub = KademliaGrpc.newStub(channel);
+
+
+            NotifyRequest request = NotifyRequest.newBuilder()
+                    .setNode(n).setPrice(highestOffer.getPrice()).
+                    setServiceId(ByteString.copyFrom(serviceId)).build();
+
+            // TODO FINISH THIS
+
+        }
     }
 }

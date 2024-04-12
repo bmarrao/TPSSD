@@ -1,5 +1,6 @@
 package kademlia.server;
 
+import auctions.Auction;
 import io.grpc.Server;
 import io.grpc.ServerBuilder;
 import kademlia.KademliaGrpc;
@@ -11,21 +12,18 @@ public class KademliaServer extends KademliaGrpc.KademliaImplBase implements Run
 {
     public Server server;
     public int port;
-
-    public static void main(String[] args) throws IOException, InterruptedException
+    Auction auc;
+    public KademliaServer(int port, Auction auc)
     {
-        KademliaServer ks = new KademliaServer(5003);
-    }
-
-    public KademliaServer(int port) {
         this.port = port;
+        this.auc = auc;
     }
 
     @Override
     public void run() {
         // Server is kept alive for the client to communicate.
         server = ServerBuilder.forPort(port)
-                .addService(new KademliaImpl())
+                .addService(new KademliaImpl(auc))
                 .build();
         try
         {

@@ -1,5 +1,6 @@
 package kademlia;
 
+import auctions.Auction;
 import com.google.protobuf.ByteString;
 import kademlia.server.KademliaServer;
 import org.checkerframework.checker.units.qual.K;
@@ -28,7 +29,7 @@ public class KademliaTeste
         KademliaProtocol protocol = new KademliaProtocol(nodeId,ipAddress, port);
         System.out.println();
 
-        KademliaServer server = new KademliaServer(port);
+        KademliaServer server = new KademliaServer(port, new Auction(protocol));
         Thread serverThread = new Thread(server);
         serverThread.start();
 
@@ -62,6 +63,7 @@ public class KademliaTeste
         arr = rtBootStrap.findClosestNode(nodeId, 200);
         System.out.println(arr.size());
 
-        // 
+
+        //
     }
 }

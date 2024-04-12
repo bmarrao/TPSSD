@@ -1,5 +1,7 @@
 syntax = "proto3";
 
+import "google/protobuf/empty.proto";
+
 option java_multiple_files =  true;
 
 package kademlia;
@@ -21,6 +23,11 @@ message Node
   uint32 port = 3;
 }
 
+message Offer
+{
+  Node node = 1;
+  float price = 2;
+}
 message StoreRequest
 {
   Node node = 1;
@@ -60,6 +67,34 @@ message FindValueResponse
   string value = 2;
 }
 
+message NotifyRequest
+{
+  bytes serviceId = 1;
+  Node node = 2;
+  float price = 3;
+}
+
+message getPriceRequest
+{
+  bytes serviceId = 1;
+}
+
+message getPriceResponse
+{
+  float price = 1;
+}
+
+message sendPriceRequest
+{
+  bytes serviceId = 1;
+  Node node = 2;
+  float price = 3 ;
+}
+
+message sendPriceResponse
+{
+  bool result = 1;
+}
 service Kademlia
 {
   // Unary
@@ -73,6 +108,13 @@ service Kademlia
 
   // similar to findNode + if RPC recipient received a STORE for the given key then it returns the stored value
   rpc findValue(FindValueRequest) returns (FindValueResponse);
+
+  rpc notify(NotifyRequest) returns (google.protobuf.Empty);
+
+  rpc getPrice(getPriceRequest) returns (getPriceResponse);
+
+  rpc sendPrice(sendPriceRequest) returns (sendPriceResponse);
+
 
 
 }
