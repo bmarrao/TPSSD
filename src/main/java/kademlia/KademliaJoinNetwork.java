@@ -46,6 +46,7 @@ public class KademliaJoinNetwork implements Runnable {
         }
 
 
+
         /*
         boolean foundNewClosestNodes = true;
         while (res.size() == 0)

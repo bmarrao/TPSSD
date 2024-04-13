@@ -59,6 +59,7 @@ public class Auction
 
     public boolean subscribe(Node node, byte[] serviceId)
     {
+        l.lock();
         BrokerService bs = this.getService(serviceId);
         if (bs != null)
         {

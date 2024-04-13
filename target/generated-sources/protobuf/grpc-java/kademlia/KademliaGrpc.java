@@ -125,15 +125,15 @@ public final class KademliaGrpc {
           .build();
   @io.grpc.ExperimentalApi("https://github.com/grpc/grpc-java/issues/1901")
   public static final io.grpc.MethodDescriptor<kademlia.subscribeRequest,
-      kademlia.subscribeResposne> METHOD_SUBSCRIBE =
-      io.grpc.MethodDescriptor.<kademlia.subscribeRequest, kademlia.subscribeResposne>newBuilder()
+      kademlia.subscribeResponse> METHOD_SUBSCRIBE =
+      io.grpc.MethodDescriptor.<kademlia.subscribeRequest, kademlia.subscribeResponse>newBuilder()
           .setType(io.grpc.MethodDescriptor.MethodType.UNARY)
           .setFullMethodName(generateFullMethodName(
               "kademlia.Kademlia", "subscribe"))
           .setRequestMarshaller(io.grpc.protobuf.ProtoUtils.marshaller(
               kademlia.subscribeRequest.getDefaultInstance()))
           .setResponseMarshaller(io.grpc.protobuf.ProtoUtils.marshaller(
-              kademlia.subscribeResposne.getDefaultInstance()))
+              kademlia.subscribeResponse.getDefaultInstance()))
           .build();
 
   /**
@@ -234,7 +234,7 @@ public final class KademliaGrpc {
     /**
      */
     public void subscribe(kademlia.subscribeRequest request,
-        io.grpc.stub.StreamObserver<kademlia.subscribeResposne> responseObserver) {
+        io.grpc.stub.StreamObserver<kademlia.subscribeResponse> responseObserver) {
       asyncUnimplementedUnaryCall(METHOD_SUBSCRIBE, responseObserver);
     }
 
@@ -301,7 +301,7 @@ public final class KademliaGrpc {
             asyncUnaryCall(
               new MethodHandlers<
                 kademlia.subscribeRequest,
-                kademlia.subscribeResposne>(
+                kademlia.subscribeResponse>(
                   this, METHODID_SUBSCRIBE)))
           .build();
     }
@@ -404,7 +404,7 @@ public final class KademliaGrpc {
     /**
      */
     public void subscribe(kademlia.subscribeRequest request,
-        io.grpc.stub.StreamObserver<kademlia.subscribeResposne> responseObserver) {
+        io.grpc.stub.StreamObserver<kademlia.subscribeResponse> responseObserver) {
       asyncUnaryCall(
           getChannel().newCall(METHOD_SUBSCRIBE, getCallOptions()), request, responseObserver);
     }
@@ -498,7 +498,7 @@ public final class KademliaGrpc {
 
     /**
      */
-    public kademlia.subscribeResposne subscribe(kademlia.subscribeRequest request) {
+    public kademlia.subscribeResponse subscribe(kademlia.subscribeRequest request) {
       return blockingUnaryCall(
           getChannel(), METHOD_SUBSCRIBE, getCallOptions(), request);
     }
@@ -600,7 +600,7 @@ public final class KademliaGrpc {
 
     /**
      */
-    public com.google.common.util.concurrent.ListenableFuture<kademlia.subscribeResposne> subscribe(
+    public com.google.common.util.concurrent.ListenableFuture<kademlia.subscribeResponse> subscribe(
         kademlia.subscribeRequest request) {
       return futureUnaryCall(
           getChannel().newCall(METHOD_SUBSCRIBE, getCallOptions()), request);
@@ -668,7 +668,7 @@ public final class KademliaGrpc {
           break;
         case METHODID_SUBSCRIBE:
           serviceImpl.subscribe((kademlia.subscribeRequest) request,
-              (io.grpc.stub.StreamObserver<kademlia.subscribeResposne>) responseObserver);
+              (io.grpc.stub.StreamObserver<kademlia.subscribeResponse>) responseObserver);
           break;
         default:
           throw new AssertionError();

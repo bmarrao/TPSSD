@@ -5,6 +5,7 @@
 /home/brenin/TPSSD/TPSSD/target/generated-sources/protobuf/java/kademlia/FindNodeResponseOrBuilder.java
 /home/brenin/TPSSD/TPSSD/target/generated-sources/protobuf/java/kademlia/Offer.java
 /home/brenin/TPSSD/TPSSD/target/generated-sources/protobuf/java/kademlia/getPriceRequest.java
+/home/brenin/TPSSD/TPSSD/target/generated-sources/protobuf/java/kademlia/subscribeResponse.java
 /home/brenin/TPSSD/TPSSD/target/generated-sources/protobuf/java/kademlia/FindNodeResponse.java
 /home/brenin/TPSSD/TPSSD/target/generated-sources/protobuf/java/kademlia/OfferOrBuilder.java
 /home/brenin/TPSSD/TPSSD/target/generated-sources/protobuf/java/kademlia/FindValueResponseOrBuilder.java
@@ -20,12 +21,14 @@
 /home/brenin/TPSSD/TPSSD/target/generated-sources/protobuf/java/kademlia/getPriceResponseOrBuilder.java
 /home/brenin/TPSSD/TPSSD/target/generated-sources/protobuf/java/kademlia/KademliaOuterClass.java
 /home/brenin/TPSSD/TPSSD/target/generated-sources/protobuf/java/kademlia/sendPriceResponse.java
+/home/brenin/TPSSD/TPSSD/src/main/java/kademlia/KademliaJoinNetwork.java
 /home/brenin/TPSSD/TPSSD/target/generated-sources/protobuf/java/kademlia/sendPriceRequest.java
 /home/brenin/TPSSD/TPSSD/target/generated-sources/protobuf/java/kademlia/PingRequest.java
 /home/brenin/TPSSD/TPSSD/src/main/java/kademlia/KademliaStore.java
 /home/brenin/TPSSD/TPSSD/target/generated-sources/protobuf/java/kademlia/StoreRequestOrBuilder.java
 /home/brenin/TPSSD/TPSSD/target/generated-sources/protobuf/java/kademlia/FindValueRequestOrBuilder.java
 /home/brenin/TPSSD/TPSSD/target/generated-sources/protobuf/java/kademlia/initiateServiceResponseOrBuilder.java
+/home/brenin/TPSSD/TPSSD/target/generated-sources/protobuf/java/kademlia/subscribeResponseOrBuilder.java
 /home/brenin/TPSSD/TPSSD/src/main/java/kademlia/KademliaProtocol.java
 /home/brenin/TPSSD/TPSSD/target/generated-sources/protobuf/java/kademlia/subscribeRequestOrBuilder.java
 /home/brenin/TPSSD/TPSSD/src/main/java/kademlia/server/KademliaServer.java
@@ -37,12 +40,10 @@
 /home/brenin/TPSSD/TPSSD/src/main/java/kademlia/KrtBootStrap.java
 /home/brenin/TPSSD/TPSSD/src/main/java/kademlia/KademliaTeste.java
 /home/brenin/TPSSD/TPSSD/target/generated-sources/protobuf/java/kademlia/getPriceResponse.java
-/home/brenin/TPSSD/TPSSD/target/generated-sources/protobuf/java/kademlia/subscribeResposne.java
 /home/brenin/TPSSD/TPSSD/target/generated-sources/protobuf/java/kademlia/initiateServiceResponse.java
 /home/brenin/TPSSD/TPSSD/target/generated-sources/protobuf/java/kademlia/NodeOrBuilder.java
 /home/brenin/TPSSD/TPSSD/target/generated-sources/protobuf/java/kademlia/Node.java
 /home/brenin/TPSSD/TPSSD/target/generated-sources/protobuf/grpc-java/kademlia/KademliaGrpc.java
-/home/brenin/TPSSD/TPSSD/target/generated-sources/protobuf/java/kademlia/subscribeResposneOrBuilder.java
 /home/brenin/TPSSD/TPSSD/target/generated-sources/protobuf/java/kademlia/initiateServiceRequest.java
 /home/brenin/TPSSD/TPSSD/target/generated-sources/protobuf/java/kademlia/sendPriceResponseOrBuilder.java
 /home/brenin/TPSSD/TPSSD/target/generated-sources/protobuf/java/kademlia/PingRequestOrBuilder.java

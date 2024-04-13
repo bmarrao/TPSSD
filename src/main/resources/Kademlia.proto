@@ -114,7 +114,7 @@ message subscribeRequest
   bytes serviceId = 2;
 }
 
-message subscribeResposne
+message subscribeResponse
 {
   bool response = 1;
 }
@@ -140,7 +140,7 @@ service Kademlia
 
   rpc initiateService(initiateServiceRequest) returns (initiateServiceResponse);
 
-  rpc subscribe(subscribeRequest) returns (subscribeResposne);
+  rpc subscribe(subscribeRequest) returns (subscribeResponse);
 
 
 }

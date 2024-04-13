@@ -176,6 +176,26 @@ public class KademliaImpl extends KademliaGrpc.KademliaImplBase
     }
 
 
+    @Override
+    public void subscribe(subscribeRequest request, StreamObserver<subscribeResponse> responseObserver)
+    {
+
+        boolean res = auc.subscribe(request.getNode(),request.getServiceId().toByteArray());
+
+        subscribeResponse response = subscribeResponse
+                .newBuilder()
+                .setResponse(res)
+                .build();
+
+        // Send the response to the client.
+        responseObserver.onNext(response);
+
+        // Notifies the customer that the call is completed.
+        responseObserver.onCompleted();
+    }
+
+
+
 
 
 }

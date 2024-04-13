@@ -105,10 +105,10 @@ public final class KademliaOuterClass {
     com.google.protobuf.GeneratedMessageV3.FieldAccessorTable
       internal_static_kademlia_subscribeRequest_fieldAccessorTable;
   static final com.google.protobuf.Descriptors.Descriptor
-    internal_static_kademlia_subscribeResposne_descriptor;
+    internal_static_kademlia_subscribeResponse_descriptor;
   static final 
     com.google.protobuf.GeneratedMessageV3.FieldAccessorTable
-      internal_static_kademlia_subscribeResposne_fieldAccessorTable;
+      internal_static_kademlia_subscribeResponse_fieldAccessorTable;
 
   public static com.google.protobuf.Descriptors.FileDescriptor
       getDescriptor() {
@@ -145,7 +145,7 @@ public final class KademliaOuterClass {
       "\004 \001(\r\"+\n\027initiateServiceResponse\022\020\n\010resp" +
       "onse\030\001 \001(\010\"C\n\020subscribeRequest\022\034\n\004node\030\001" +
       " \001(\0132\016.kademlia.Node\022\021\n\tserviceId\030\002 \001(\014\"" +
-      "%\n\021subscribeResposne\022\020\n\010response\030\001 \001(\0102\346" +
+      "%\n\021subscribeResponse\022\020\n\010response\030\001 \001(\0102\346" +
       "\004\n\010Kademlia\0225\n\004ping\022\025.kademlia.PingReque" +
       "st\032\026.kademlia.PingResponse\0228\n\005store\022\026.ka",
       "demlia.StoreRequest\032\027.kademlia.StoreResp" +
@@ -161,7 +161,7 @@ public final class KademliaOuterClass {
       "ademlia.initiateServiceRequest\032!.kademli" +
       "a.initiateServiceResponse\022D\n\tsubscribe\022\032" +
       ".kademlia.subscribeRequest\032\033.kademlia.su" +
-      "bscribeResposneB\002P\001b\006proto3"
+      "bscribeResponseB\002P\001b\006proto3"
     };
     com.google.protobuf.Descriptors.FileDescriptor.InternalDescriptorAssigner assigner =
         new com.google.protobuf.Descriptors.FileDescriptor.    InternalDescriptorAssigner() {
@@ -284,11 +284,11 @@ public final class KademliaOuterClass {
       com.google.protobuf.GeneratedMessageV3.FieldAccessorTable(
         internal_static_kademlia_subscribeRequest_descriptor,
         new java.lang.String[] { "Node", "ServiceId", });
-    internal_static_kademlia_subscribeResposne_descriptor =
+    internal_static_kademlia_subscribeResponse_descriptor =
       getDescriptor().getMessageTypes().get(18);
-    internal_static_kademlia_subscribeResposne_fieldAccessorTable = new
+    internal_static_kademlia_subscribeResponse_fieldAccessorTable = new
       com.google.protobuf.GeneratedMessageV3.FieldAccessorTable(
-        internal_static_kademlia_subscribeResposne_descriptor,
+        internal_static_kademlia_subscribeResponse_descriptor,
         new java.lang.String[] { "Response", });
     com.google.protobuf.EmptyProto.getDescriptor();
   }
