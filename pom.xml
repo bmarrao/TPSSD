@@ -74,10 +74,12 @@
                 <artifactId>protobuf-maven-plugin</artifactId>
                 <version>0.6.1</version>
                 <configuration>
+                    <!--suppress UnresolvedMavenProperty -->
                     <protocArtifact>
                         com.google.protobuf:protoc:3.3.0:exe:${os.detected.classifier}
                     </protocArtifact>
                     <pluginId>grpc-java</pluginId>
+                    <!--suppress UnresolvedMavenProperty -->
                     <pluginArtifact>
                         io.grpc:protoc-gen-grpc-java:1.4.0:exe:${os.detected.classifier}
                     </pluginArtifact>

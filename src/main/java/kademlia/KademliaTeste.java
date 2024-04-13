@@ -23,7 +23,7 @@ public class KademliaTeste
         KademliaRoutingTable rtNormal ;
         KademliaRoutingTable rtBootStrap ;
 
-        Kademlia kd = new Kademlia(ipAddress,port, false, 20, "BootstrapNodes");
+        Kademlia kd = new Kademlia(ipAddress,port, false, 20);
         port = 5003;
         nodeId = kd.generateNodeId();
         KademliaProtocol protocol = new KademliaProtocol(nodeId,ipAddress, port);

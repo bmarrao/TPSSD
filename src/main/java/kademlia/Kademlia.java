@@ -15,12 +15,13 @@ import java.util.Random;
 public class Kademlia
 {
     public static byte[] nodeId;
-    public static String ipAddress;
 
-    public static int port;
-    public static boolean bootstrapNode;
+    // public static String ipAddress;
+    // public static int port;
+
     public static KademliaRoutingTable rt;
     public static KademliaProtocol protocol;
+    public static String bootstrapFilePath = "BootstrapNodes.txt";
 
 //    Auction a ;
 
@@ -29,9 +30,9 @@ public class Kademlia
     // TODO Inicialização do no kademlia , contacto com boostrap node - Cristina
     // TODO Criar bootstrap node - Breno
 
-    public Kademlia(String ipAdress, int port, boolean bootstrap, int k, String bootstrapFilePath)
+    public Kademlia(String ipAddress, int port, boolean bootstrap, int k)
     {
-        protocol = new KademliaProtocol(nodeId,ipAdress,port);
+        protocol = new KademliaProtocol(nodeId,ipAddress,port);
         KademliaServer server = new KademliaServer(port, new Auction(protocol));
         Thread serverThread = new Thread(server);
         serverThread.start();
@@ -39,142 +40,62 @@ public class Kademlia
         if (bootstrap)
         {
             rt = new KrtBootStrap(nodeId,protocol,k);
-            initiateBootStrap(bootstrapFilePath);
-
-        }
-        else
-        {
-            rt = new KrtNormal(nodeId, protocol,k);
-            initiateNormal();
-        }
-    }
-
-    public void initiateNormal()
-    {
-
-    }
-
-    public void initiateBootStrap(String bootstrapFilePath)
-    {
-        /*
-        List<String> bootstrapNodesInfo = getBootstrapNodesInfo(bootstrapFilePath);
-        String selectedBootstrap = selectRandomBootstrapNode(bootstrapNodesInfo);
-        String[] bootstrapIpPort = selectedBootstrap.split(" ");
-        String ipBootstrap = bootstrapIpPort[0];
-        int portBootstrap = Integer.parseInt(bootstrapIpPort[1]);
-        if (args[3]== null) // its a bootstrap node
-        {
-            bootstrapNode = true;
-            // add ip and port to bootstrap file
             addIpPortBSFile(ipAddress, port, bootstrapFilePath);
-
-            // initialize routing table
-            rt = new KrtBootStrap(nodeId,kp,k);
-            KademliaFindOpResult res = protocol.findNodeOp(nodeId, ipAddress, port, nodeId,ipBootstrap,portBootstrap);
-
         }
         else
         {
-            bootstrapNode = false;
-            // initialize routing table
-            rt = new KrtNormal(nodeId,kp,k);
+            rt = new KrtNormal(nodeId, protocol, k);
 
-            // read info of available bootstrap nodes and randomly select one
+            // Randomly select one bootstrap node from BootstrapNodes.txt to contact
+            List<String> bootstrapNodesInfo = getBootstrapNodesInfo(bootstrapFilePath);
+            String selectedBootstrap = selectRandomBootstrapNode(bootstrapNodesInfo);
+            String[] bootstrapIpPort = selectedBootstrap.split(" ");
 
-
-            // send find node operation to selected bootstrap node
-            KademliaFindOpResult res = protocol.findNodeOp(nodeId, ipAddress, port, nodeId,ipBootstrap,portBootstrap);
-
-            // add received ids of closest nodes to routing table
-            // o metodo addNodes deve verificar se os ids contidos já estao na routing table
-            // o metodo retorna boolean (com true se foram adicionados novos nós à rt)
-            // rt.addNodes(res.getNodesList());
-
-            // send find node to the closest nodes
-            // repeat process if new closest nodes are received
-            //TODO perguntar sobre quando parar find Node
-
+            // Start thread for joining network
+            Thread joinNetThread = new Thread(new KademliaJoinNetwork(nodeId, ipAddress, port, bootstrapIpPort[0], Integer.parseInt(bootstrapIpPort[1])));
+            //joinNetThread.start();
         }
-
-         */
-
-        boolean foundNewClosestNodes = true;
-            /*
-            while (res.size() == 0)
-            {
-                foundNewClosestNodes = false;
-                ArrayList<Node> newRes;
-                for (Node n : res.getNodesList())
-                {
-                    protocol = new KademliaProtocol(nodeId, n.getIp(), n.getPort());
-                    KademliaFindOpResult closestNodes = protocol.findNodeOp(nodeId, ipAddress, port, nodeId);
-                     for (Node n : res.getNodesList()){
-                         if (!insert(n))
-                         {
-                            newRes.add(n);
-                         }
-                }
-                res = newRes;
-            }
-             for (Node n : res.getNodesList())
-                {
-                    KademliaFindOpResult closestNodes = protocol.findNodeOp(nodeId, ipAddress, port, nodeId,n.ipAdress, n.port);
-                     for (Node j : res.getNodesList())
-                     {
-                         if (rt.insert(new KademliaNode(j.get)))
-                         {
-                            //Nothing for now                    protocol = new KademliaProtocol(nodeId, n.ipAdress, n.port);
-
-                         }
-                    }
-                }
-                            */
-
-
     }
+
 
     public static void main(String[] args) throws NoSuchAlgorithmException {
-        byte[] nodeId = sKadGenerateNodeId(8, 8);
+        byte[] sKadNodeId = solveStaticPuzzle(8);
+        solveDynamicPuzzle(sKadNodeId, 8);
         System.out.println("S/Kademlia nodeId: " + Arrays.toString(nodeId));
     }
+
 
     public static boolean checkZeroCount(byte[] puzzle, int numOfLeadingZeros) {
         int leadingZeros = 0;
 
         for (byte b : puzzle) {
+            // If byte is zero -> add 8 since byte contains 8 bits
             if (b == 0)
             {
-                leadingZeros += 8; // If the byte is zero, add 8 to leadingZeros since byte contains 8 bits
+                leadingZeros += 8;
             }
             else
-            { // for example byte = 00001234
+            {
                 // Count leading zeros in the byte using bit manipulation
                 int byteLeadingZeros = Integer.numberOfLeadingZeros(b & 0xFF) - 24;
                 leadingZeros += byteLeadingZeros;
-                break; // Stop counting leading zeros once a non-zero byte is encountered
+                break;
             }
         }
         System.out.println("Leading zeros count: " + leadingZeros);
 
-        if (leadingZeros >= numOfLeadingZeros)
-        {
-            return true;
-        }
-        return false;
+        return leadingZeros >= numOfLeadingZeros;
     }
 
 
-    public static byte[] sKadGenerateNodeId(int leadingZerosStatic, int leadingZerosDynamic) throws NoSuchAlgorithmException {
-        /* static crypto puzzle - against eclipe attacks
+    public static byte[] solveStaticPuzzle(int leadingZerosStatic) throws NoSuchAlgorithmException {
+        /* against eclipe attacks
              1) generate pair (Spub, Spriv)
              2) P = H(H(Spub))
              3) if preceeding x zero bits => NodeId = H(Spub) generated
-             4) otherwise generate pair (Spub, Spriv) again and go back to 1)
+             4) otherwise go back to 1)
         */
-        byte[] sKadNodeId = new byte[32];
-        boolean generatedId = false;
-
-        while (!generatedId)
+        while (true)
         {
             KeyPairGenerator keyPairGenerator = KeyPairGenerator.getInstance("RSA");
             SecureRandom secureRandom = new SecureRandom();
@@ -187,27 +108,28 @@ public class Kademlia
 
             // Hash public key twice
             MessageDigest md = MessageDigest.getInstance("SHA-256");
-            sKadNodeId = md.digest(publicKey.getEncoded());
+            byte[] sKadNodeId = md.digest(publicKey.getEncoded());
             byte[] staticPuzzle = md.digest(sKadNodeId);
             System.out.println("Static puzzle is: " + Arrays.toString(staticPuzzle));
 
             if (checkZeroCount(staticPuzzle, leadingZerosStatic))
             {
                 System.out.println("Static puzzle solved!");
-                generatedId = true;
+                return sKadNodeId;
             }
         }
+    }
 
 
-        /* dynamic crypto puzzle - against sybil attacks
+    public static void solveDynamicPuzzle(byte[] sKadNodeId, int leadingZerosDynamic) throws NoSuchAlgorithmException {
+        /* against sybil attacks
             1) NodeId = H(Spub)
             2) choose random X
             3) P = H(NodeId XOR X)
             4) if preceeding y zero bits => puzzle solved
-            5) otherwise choose random X and go back to 2)
+            5) otherwise go back to 2)
         */
-        boolean solvedDynamic = false;
-        while (!solvedDynamic)
+        while (true)
         {
             // Generate random byte X
             Random random = new Random();
@@ -232,12 +154,10 @@ public class Kademlia
             if (checkZeroCount(dynamicPuzzle, leadingZerosDynamic))
             {
                 System.out.println("Dynamic puzzle solved!");
-                solvedDynamic = true;
+                return;
             }
         }
-        return sKadNodeId;
     }
-
 
 
     // node id is 160-bit and is based on SHA-1
@@ -256,11 +176,6 @@ public class Kademlia
             e.printStackTrace();
             return null;
         }
-    }
-
-    public static KademliaProtocol getKdProtocol()
-    {
-        return protocol;
     }
 
     public static void addIpPortBSFile(String ipAddress, int port, String bootstrapFilePath) {
@@ -291,6 +206,8 @@ public class Kademlia
         return bootstrapNodesInfo.get(randomIndex);
     }
 
+
+
     /*
     public static void callOps(KademliaProtocol protocol, byte []nodeId, String ip, int port)
     {
@@ -319,5 +236,4 @@ public class Kademlia
         }
     }
      */
-
 }
