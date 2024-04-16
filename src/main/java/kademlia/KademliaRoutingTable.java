@@ -455,12 +455,13 @@ public class KademliaRoutingTable
 
     }
 
-    public boolean CheckNodeIsInTree(byte[] nodeId, TreeNode node)
+    public boolean CheckNodeIsInTree(byte[] nodeId, TreeNode node,String path)
     {
         if (node.kbucket != null)
         {
             if (hasObject(node.kbucket,new KademliaNode("",nodeId,421)))
             {
+                System.out.println("path " + path);
                 return true;
             }
             return false;
@@ -468,11 +469,11 @@ public class KademliaRoutingTable
         else
         {
 
-            if (CheckNodeIsInTree(nodeId,node.left))
+            if (CheckNodeIsInTree(nodeId,node.left,path + " l"))
             {
                 return true;
             }
-            return CheckNodeIsInTree(nodeId,node.right);
+            return CheckNodeIsInTree(nodeId,node.right,path + " r");
 
         }
 

@@ -36,7 +36,6 @@ public class KademliaTeste
         rtNormal = new KrtNormal(nodeId, protocol, 20, 20);
 
 
-
         rtBootStrap = new KrtBootStrap(nodeId, protocol, 20, 20);
         Map<KademliaNode, BigInteger> mapa = new HashMap<KademliaNode,BigInteger>();
         for (int i  = 0 ; i < 200; i++)
@@ -68,13 +67,16 @@ public class KademliaTeste
             System.out.println(rtBootStrap.printId(n.getId().toByteArray()));
 
         }
-        System.out.println(rtBootStrap.printId(nodeId));
 
         System.out.println(rtNormal.calculateDistance(nodeId,nodeId));
 
-        System.out.println(rtNormal.CheckNodeIsInTree(nodeId,rtNormal.root));
+        System.out.println(rtNormal.CheckNodeIsInTree(nodeId,rtNormal.root,""));
 
-        System.out.println(rtBootStrap.CheckNodeIsInTree(nodeId,rtBootStrap.root));
+        System.out.println(rtNormal.printId(rtBootStrap.myNodeId));
+
+        System.out.println(rtBootStrap.printId(nodeId));
+
+        System.out.println(rtBootStrap.CheckNodeIsInTree(nodeId,rtBootStrap.root,""));
 
         //
     }
