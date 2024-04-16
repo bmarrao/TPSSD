@@ -4,6 +4,7 @@ import auctions.BrokerService;
 import kademlia.KademliaProtocol;
 import kademlia.Node;
 import kademlia.Offer;
+import java.util.concurrent.locks.Condition;
 
 import java.util.*;
 
@@ -26,11 +27,8 @@ public class RunService implements Runnable {
         Offer of = null;
         while (true)
         {
-            try
-            {
-                Thread.sleep(bs.time);
+
                 bs.l.lock();
-                bs.running = false;
 
                 of = bs.highestOffer;
                 while (offers.size() != bs.brokerSet.size())
@@ -45,16 +43,38 @@ public class RunService implements Runnable {
                      */
                 }
 
-                bs.running = true;
                 bs.l.unlock();
 
 
-            }
-            catch (InterruptedException e)
-            {
-                throw new RuntimeException(e);
-            }
+
+
 
         }
     }
+}
+
+class Sleeper implements Runnable
+{
+    BrokerService bs;
+    Sleeper(BrokerService bs)
+    {
+        this.bs = bs;
+
+    }
+
+    @Override
+    public void run()
+    {
+        try
+        {
+            Thread.sleep(bs.time);
+            // condition
+        }
+        catch (InterruptedException e)
+        {
+            throw new RuntimeException(e);
+        }
+
+    }
+
 }

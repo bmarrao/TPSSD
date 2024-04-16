@@ -57,6 +57,7 @@ public class Auction
         l.unlock();
     }
 
+
     public boolean subscribe(Node node, byte[] serviceId)
     {
         l.lock();
@@ -76,7 +77,7 @@ public class Auction
         return false;
     }
 
-    private BrokerService getService(byte[] serviceId)
+    public BrokerService getService(byte[] serviceId)
     {
         for(BrokerService bs : this.services)
         {

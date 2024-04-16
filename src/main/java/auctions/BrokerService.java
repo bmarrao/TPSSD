@@ -9,6 +9,7 @@ import kademlia.KademliaProtocol;
 import kademlia.Node;
 import kademlia.Offer;
 import java.util.ArrayList;
+import java.util.concurrent.locks.Condition;
 import java.util.concurrent.locks.ReentrantLock;
 
 // open auction
@@ -17,8 +18,8 @@ import java.util.concurrent.locks.ReentrantLock;
 public class BrokerService
 {
     public ReentrantLock l = new ReentrantLock();
-
-    boolean running = true;
+    //public Condition condition = lock.newCondition();
+    public boolean sleep = true;
     byte[] serviceId ;
     byte[] owner;
     ArrayList<Node>brokerSet;

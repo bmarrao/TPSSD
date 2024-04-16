@@ -1,6 +1,7 @@
 package kademlia.server;
 import auctions.Auction;
 
+import auctions.BrokerService;
 import io.grpc.stub.StreamObserver;
 import kademlia.*;
 
@@ -194,8 +195,33 @@ public class KademliaImpl extends KademliaGrpc.KademliaImplBase
         responseObserver.onCompleted();
     }
 
+    @Override
+    public void timerOver(timerOverRequest request, StreamObserver<timerOverResponse> responseObserver)
+    {
 
+        BrokerService bs = auc.getService(request.getServiceId().toByteArray());
+        boolean res = false;
+        Offer of = null;
+        if (bs != null)
+        {
+            if (bs.running)
+            {
+                res =
+            }
+        }
 
+        timerOverResponse response = timerOverResponse
+                .newBuilder()
+                .setResponse(res)
+                .setOf(of)
+                .build();
+
+        // Send the response to the client.
+        responseObserver.onNext(response);
+
+        // Notifies the customer that the call is completed.
+        responseObserver.onCompleted();
+    }
 
 
 }
