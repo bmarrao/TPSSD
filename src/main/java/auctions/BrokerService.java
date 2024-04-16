@@ -18,7 +18,7 @@ public class BrokerService
 {
     public ReentrantLock l = new ReentrantLock();
 
-
+    boolean running = true;
     byte[] serviceId ;
     byte[] owner;
     ArrayList<Node>brokerSet;

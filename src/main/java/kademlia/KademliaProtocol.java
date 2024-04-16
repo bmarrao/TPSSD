@@ -125,4 +125,23 @@ public class KademliaProtocol
 
         }
     }
+
+    public Offer timerOver(Node n, byte[] serviceId)
+    {
+        ManagedChannel channel;
+
+        channel = ManagedChannelBuilder.forAddress(n.getIp(), n.getPort()).usePlaintext().build();
+
+        KademliaGrpc.KademliaBlockingStub stub = KademliaGrpc.newBlockingStub(channel);
+
+        timerOverRequest request = timerOverRequest.newBuilder().
+                setServiceId(ByteString.copyFrom(serviceId)).build();
+
+        timerOverResponse  to= stub.timerOver(request);
+
+        return to.getOf();
+        // TODO FINISH THIS
+
+
+    }
 }

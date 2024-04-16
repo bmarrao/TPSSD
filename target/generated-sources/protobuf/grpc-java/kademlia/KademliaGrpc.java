@@ -135,6 +135,18 @@ public final class KademliaGrpc {
           .setResponseMarshaller(io.grpc.protobuf.ProtoUtils.marshaller(
               kademlia.subscribeResponse.getDefaultInstance()))
           .build();
+  @io.grpc.ExperimentalApi("https://github.com/grpc/grpc-java/issues/1901")
+  public static final io.grpc.MethodDescriptor<kademlia.timerOverRequest,
+      kademlia.timerOverResponse> METHOD_TIMER_OVER =
+      io.grpc.MethodDescriptor.<kademlia.timerOverRequest, kademlia.timerOverResponse>newBuilder()
+          .setType(io.grpc.MethodDescriptor.MethodType.UNARY)
+          .setFullMethodName(generateFullMethodName(
+              "kademlia.Kademlia", "timerOver"))
+          .setRequestMarshaller(io.grpc.protobuf.ProtoUtils.marshaller(
+              kademlia.timerOverRequest.getDefaultInstance()))
+          .setResponseMarshaller(io.grpc.protobuf.ProtoUtils.marshaller(
+              kademlia.timerOverResponse.getDefaultInstance()))
+          .build();
 
   /**
    * Creates a new async stub that supports all call types for the service
@@ -238,6 +250,13 @@ public final class KademliaGrpc {
       asyncUnimplementedUnaryCall(METHOD_SUBSCRIBE, responseObserver);
     }
 
+    /**
+     */
+    public void timerOver(kademlia.timerOverRequest request,
+        io.grpc.stub.StreamObserver<kademlia.timerOverResponse> responseObserver) {
+      asyncUnimplementedUnaryCall(METHOD_TIMER_OVER, responseObserver);
+    }
+
     @java.lang.Override public final io.grpc.ServerServiceDefinition bindService() {
       return io.grpc.ServerServiceDefinition.builder(getServiceDescriptor())
           .addMethod(
@@ -303,6 +322,13 @@ public final class KademliaGrpc {
                 kademlia.subscribeRequest,
                 kademlia.subscribeResponse>(
                   this, METHODID_SUBSCRIBE)))
+          .addMethod(
+            METHOD_TIMER_OVER,
+            asyncUnaryCall(
+              new MethodHandlers<
+                kademlia.timerOverRequest,
+                kademlia.timerOverResponse>(
+                  this, METHODID_TIMER_OVER)))
           .build();
     }
   }
@@ -408,6 +434,14 @@ public final class KademliaGrpc {
       asyncUnaryCall(
           getChannel().newCall(METHOD_SUBSCRIBE, getCallOptions()), request, responseObserver);
     }
+
+    /**
+     */
+    public void timerOver(kademlia.timerOverRequest request,
+        io.grpc.stub.StreamObserver<kademlia.timerOverResponse> responseObserver) {
+      asyncUnaryCall(
+          getChannel().newCall(METHOD_TIMER_OVER, getCallOptions()), request, responseObserver);
+    }
   }
 
   /**
@@ -501,6 +535,13 @@ public final class KademliaGrpc {
     public kademlia.subscribeResponse subscribe(kademlia.subscribeRequest request) {
       return blockingUnaryCall(
           getChannel(), METHOD_SUBSCRIBE, getCallOptions(), request);
+    }
+
+    /**
+     */
+    public kademlia.timerOverResponse timerOver(kademlia.timerOverRequest request) {
+      return blockingUnaryCall(
+          getChannel(), METHOD_TIMER_OVER, getCallOptions(), request);
     }
   }
 
@@ -605,6 +646,14 @@ public final class KademliaGrpc {
       return futureUnaryCall(
           getChannel().newCall(METHOD_SUBSCRIBE, getCallOptions()), request);
     }
+
+    /**
+     */
+    public com.google.common.util.concurrent.ListenableFuture<kademlia.timerOverResponse> timerOver(
+        kademlia.timerOverRequest request) {
+      return futureUnaryCall(
+          getChannel().newCall(METHOD_TIMER_OVER, getCallOptions()), request);
+    }
   }
 
   private static final int METHODID_PING = 0;
@@ -616,6 +665,7 @@ public final class KademliaGrpc {
   private static final int METHODID_SEND_PRICE = 6;
   private static final int METHODID_INITIATE_SERVICE = 7;
   private static final int METHODID_SUBSCRIBE = 8;
+  private static final int METHODID_TIMER_OVER = 9;
 
   private static final class MethodHandlers<Req, Resp> implements
       io.grpc.stub.ServerCalls.UnaryMethod<Req, Resp>,
@@ -670,6 +720,10 @@ public final class KademliaGrpc {
           serviceImpl.subscribe((kademlia.subscribeRequest) request,
               (io.grpc.stub.StreamObserver<kademlia.subscribeResponse>) responseObserver);
           break;
+        case METHODID_TIMER_OVER:
+          serviceImpl.timerOver((kademlia.timerOverRequest) request,
+              (io.grpc.stub.StreamObserver<kademlia.timerOverResponse>) responseObserver);
+          break;
         default:
           throw new AssertionError();
       }
@@ -712,6 +766,7 @@ public final class KademliaGrpc {
               .addMethod(METHOD_SEND_PRICE)
               .addMethod(METHOD_INITIATE_SERVICE)
               .addMethod(METHOD_SUBSCRIBE)
+              .addMethod(METHOD_TIMER_OVER)
               .build();
         }
       }

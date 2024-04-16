@@ -1,27 +1,28 @@
 package auctions;
 
 import auctions.BrokerService;
+import kademlia.KademliaProtocol;
 import kademlia.Node;
 import kademlia.Offer;
 
-import java.util.ArrayList;
-import java.util.List;
-
+import java.util.*;
 
 
 public class RunService implements Runnable {
 
     BrokerService bs;
-
-    RunService(BrokerService bs)
+    KademliaProtocol kp;
+    RunService(BrokerService bs, KademliaProtocol kp)
     {
         this.bs = bs;
+        this.kp = kp;
     }
 
     @Override
     public void run()
     {
 
+        Map<Node,Offer> offers  = new HashMap<>();
         Offer of = null;
         while (true)
         {
@@ -29,14 +30,24 @@ public class RunService implements Runnable {
             {
                 Thread.sleep(bs.time);
                 bs.l.lock();
-                if(of.equals(bs.highestOffer))
+                bs.running = false;
+
+                of = bs.highestOffer;
+                while (offers.size() != bs.brokerSet.size())
                 {
-                    of = bs.highestOffer;
-                    for (Node n : bs.brokerSet)
+                    /*
+                    Offer newOf = kp.timerOver();
+                    if (newOf != null)
                     {
 
                     }
+                    
+                     */
                 }
+
+                bs.running = true;
+                bs.l.unlock();
+
 
             }
             catch (InterruptedException e)

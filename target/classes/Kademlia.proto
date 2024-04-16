@@ -118,6 +118,15 @@ message subscribeResponse
 {
   bool response = 1;
 }
+message timerOverRequest
+{
+  bytes serviceId = 1;
+}
+message timerOverResponse
+{
+  bool response = 1;
+  Offer of = 2;
+}
 service Kademlia
 {
   // Unary
@@ -142,7 +151,7 @@ service Kademlia
 
   rpc subscribe(subscribeRequest) returns (subscribeResponse);
 
-
+  rpc timerOver(timerOverRequest) returns (timerOverResponse);
 }
 
 
