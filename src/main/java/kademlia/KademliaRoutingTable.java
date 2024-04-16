@@ -59,8 +59,13 @@ public class KademliaRoutingTable
     byte[] myNodeId;
     // Tamanho dos buckets
     int k;
+    // S/Kademlia sibling list
+    TreeMap<BigInteger, Node> siblingList;
+    // Sibling list size
+    int s;
+
     //Inicialização da classe
-    public KademliaRoutingTable(byte[] nodeId, KademliaProtocol protocol, int k )
+    public KademliaRoutingTable(byte[] nodeId, KademliaProtocol protocol, int k, int s )
     {
         this.root = new TreeNode();
         this.root.createKBucket();
@@ -68,9 +73,52 @@ public class KademliaRoutingTable
         this.myNodeId = nodeId;
         this.k = k;
         this.protocol = protocol;
+        this.siblingList = new TreeMap<>();
+        this.s = s;
     }
 
-    //  Função que insere um no na arvore
+
+
+    // insert node to routing table considering sibling list
+    // TODO: não percebo como se decide se se usa a sibling list ou o método do last recently seen online ???
+    //       se calhar quando as distâncias entre o furthest e o atual forem iguais ???
+    public void slInsertNode(Node n) {
+        // calcula distância do nó n ao mynodeid
+        BigInteger newNodeDistance = calculateDistance(myNodeId, n.getId().toByteArray());
+
+        if (siblingList.size() >= s) {
+            // se essa distância for mais proxima do que a distância do furthest node na sibling list
+            // entao adiciona o nó n à sibling list
+            BigInteger furthestNodeDistance = calculateDistance(myNodeId, siblingList.lastEntry().getValue().getId().toByteArray());
+            int comparisonResult = newNodeDistance.compareTo(furthestNodeDistance);
+
+            if (comparisonResult < 0) {
+                siblingList.remove(siblingList.lastEntry().getKey());
+                siblingList.put(newNodeDistance, n);
+            }
+        }
+        else {
+            siblingList.put(newNodeDistance, n);
+        }
+    }
+
+
+    // o metodo addNodes deve verificar se os ids contidos já estao na routing table
+    // retorna a lista de nós mais próximos que ainda não estavam na rt (para depois os contactar)
+    public ArrayList<Node> addNodes(List<Node> nodesList) {
+        ArrayList<Node> newAddedNodes = new ArrayList<>();
+
+        for (Node n : nodesList) {
+            // if routing table doesn't have n then
+            // if (!hasObject(root.kbucket, n))
+                // add to rt (idk how)
+                // addToBuckets(root.left, root.right, root.kbucket, n, 0, 0);
+                // newAddedNodes.add(n);
+        }
+        return newAddedNodes;
+    }
+
+
     //  Função que insere um no na arvore
     public boolean insert(Node node)
     {

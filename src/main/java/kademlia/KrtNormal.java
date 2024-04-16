@@ -5,9 +5,9 @@ import java.util.ArrayList;
 
 public class KrtNormal extends KademliaRoutingTable 
 {
-    public KrtNormal (byte[] nodeId, KademliaProtocol protocol, int k)
+    public KrtNormal (byte[] nodeId, KademliaProtocol protocol, int k, int s)
     {
-        super(nodeId, protocol, k);
+        super(nodeId, protocol, k, s);
 
     }
 

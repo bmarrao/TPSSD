@@ -23,14 +23,14 @@ public class Kademlia
     public static KademliaProtocol protocol;
     public static String bootstrapFilePath = "BootstrapNodes.txt";
 
-//    Auction a ;
+    // Auction a;
+    // BlockChain b;
 
-  //  BlockChain b;
     // TODO Public e private Key - Quando for implementar blockchain
     // TODO Inicialização do no kademlia , contacto com boostrap node - Cristina
     // TODO Criar bootstrap node - Breno
 
-    public Kademlia(String ipAddress, int port, boolean bootstrap, int k)
+    public Kademlia(String ipAddress, int port, boolean bootstrap, int k, int s)
     {
         protocol = new KademliaProtocol(nodeId,ipAddress,port);
         KademliaServer server = new KademliaServer(port, new Auction(protocol));
@@ -39,12 +39,12 @@ public class Kademlia
 
         if (bootstrap)
         {
-            rt = new KrtBootStrap(nodeId,protocol,k);
+            rt = new KrtBootStrap(nodeId,protocol,k,s);
             addIpPortBSFile(ipAddress, port, bootstrapFilePath);
         }
         else
         {
-            rt = new KrtNormal(nodeId, protocol, k);
+            rt = new KrtNormal(nodeId, protocol, k, s);
 
             // Randomly select one bootstrap node from BootstrapNodes.txt to contact
             List<String> bootstrapNodesInfo = getBootstrapNodesInfo(bootstrapFilePath);
@@ -61,7 +61,7 @@ public class Kademlia
     public static void main(String[] args) throws NoSuchAlgorithmException {
         byte[] sKadNodeId = solveStaticPuzzle(8);
         solveDynamicPuzzle(sKadNodeId, 8);
-        System.out.println("S/Kademlia nodeId: " + Arrays.toString(nodeId));
+        System.out.println("S/Kademlia nodeId: " + Arrays.toString(sKadNodeId));
     }
 
 

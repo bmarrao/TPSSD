@@ -26,20 +26,19 @@ public class KademliaJoinNetwork implements Runnable {
         KademliaProtocol protocol = new KademliaProtocol(this.nodeId, this.ipAddress, this.port);
 
         // send find node operation to selected bootstrap node
-        KademliaFindOpResult closestNodes = protocol.findNodeOp(this.nodeId, this.ipAddress, this.port, this.nodeId, this.bootstrapIp, this.bootstrapPort);
+        KademliaFindOpResult closestNodes = protocol.findNodeOp(this.nodeId, this.nodeId, this.bootstrapIp, this.bootstrapPort);
 
         // add received ids of closest nodes to routing table
         // o metodo addNodes deve verificar se os ids contidos já estao na routing table
         // retorna a lista de nós mais próximos que ainda não estavam na rt (para depois os contactar)
         ArrayList<Node> newAddedNodes = rt.addNodes(closestNodes.getNodesList());
 
-
         while (!newAddedNodes.isEmpty()) {
             List<Node> nodesToIterate = new ArrayList<>(newAddedNodes);
             newAddedNodes.clear();
 
             for (Node n : nodesToIterate) {
-                closestNodes = protocol.findNodeOp(this.nodeId, this.ipAddress, this.port, n.getId().toByteArray(), n.getIp(), n.getPort());
+                closestNodes = protocol.findNodeOp(this.nodeId, n.getId().toByteArray(), n.getIp(), n.getPort());
                 List<Node> newNodes = closestNodes.getNodesList();
                 newAddedNodes.addAll(rt.addNodes(newNodes));
             }

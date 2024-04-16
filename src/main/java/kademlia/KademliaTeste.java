@@ -23,7 +23,7 @@ public class KademliaTeste
         KademliaRoutingTable rtNormal ;
         KademliaRoutingTable rtBootStrap ;
 
-        Kademlia kd = new Kademlia(ipAddress,port, false, 20);
+        Kademlia kd = new Kademlia(ipAddress,port, false, 20, 20);
         port = 5003;
         nodeId = kd.generateNodeId();
         KademliaProtocol protocol = new KademliaProtocol(nodeId,ipAddress, port);
@@ -33,11 +33,11 @@ public class KademliaTeste
         Thread serverThread = new Thread(server);
         serverThread.start();
 
-        rtNormal = new KrtNormal(nodeId, protocol, 20);
+        rtNormal = new KrtNormal(nodeId, protocol, 20, 20);
 
 
 
-        rtBootStrap = new KrtBootStrap(nodeId, protocol, 20);
+        rtBootStrap = new KrtBootStrap(nodeId, protocol, 20, 20);
         Map<KademliaNode, BigInteger> mapa = new HashMap<KademliaNode,BigInteger>();
         for (int i  = 0 ; i < 200; i++)
         {

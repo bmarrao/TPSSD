@@ -4,9 +4,9 @@ import java.util.ArrayList;
 
 public class KrtBootStrap extends KademliaRoutingTable 
 {
-    public KrtBootStrap (byte[] nodeId, KademliaProtocol protocol, int k)
+    public KrtBootStrap (byte[] nodeId, KademliaProtocol protocol, int k, int s)
     {
-        super(nodeId, protocol, k);
+        super(nodeId, protocol, k, s);
     }
 
     @Override

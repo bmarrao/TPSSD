@@ -10,12 +10,13 @@ import java.util.ArrayList;
 public class KademliaProtocol
 {
     public byte [] nodeId;
-    public String ipAdress;
+    public String ipAddress;
     public int port;
-    public KademliaProtocol(byte[] nodeId, String ipAdress, int port )
+
+    public KademliaProtocol(byte[] nodeId, String ipAddress, int port)
     {
         this.nodeId = nodeId;
-        this.ipAdress = ipAdress;
+        this.ipAddress = ipAddress;
         this.port = port;
     }
 
@@ -26,7 +27,7 @@ public class KademliaProtocol
         // TODO O ip aqui , não está errado ?
         Node node = Node.newBuilder()
             .setId(ByteString.copyFrom(nodeId))
-            .setIp(ipAdress)
+            .setIp(ipAddress)
             .setPort(port)
             .build();
 
@@ -39,7 +40,7 @@ public class KademliaProtocol
     }
 
 
-    public boolean storeOp(byte[] nodeId, String key, String val, String ip, int port,String receiverIp, int receiverPort)
+    public boolean storeOp(byte[] nodeId, String key, String val, String receiverIp, int receiverPort)
     {
         ManagedChannel channel = ManagedChannelBuilder.forAddress(receiverIp, receiverPort).usePlaintext().build();
 
@@ -47,7 +48,7 @@ public class KademliaProtocol
 
         Node node = Node.newBuilder()
                 .setId(ByteString.copyFrom(nodeId))
-                .setIp(ipAdress)
+                .setIp(ipAddress)
                 .setPort(port)
                 .build();
 
@@ -61,7 +62,7 @@ public class KademliaProtocol
         return response.getStored();
     }
 
-    public KademliaFindOpResult findNodeOp(byte[] nodeId, String ip, int port, byte[] key,String receiverIp, int receiverPort)
+    public KademliaFindOpResult findNodeOp(byte[] nodeId, byte[] key, String receiverIp, int receiverPort)
     {
         ManagedChannel channel = ManagedChannelBuilder.forAddress(receiverIp, receiverPort).usePlaintext().build();
 
@@ -69,7 +70,7 @@ public class KademliaProtocol
 
         Node node = Node.newBuilder()
                 .setId(ByteString.copyFrom(nodeId))
-                .setIp(ipAdress)
+                .setIp(ipAddress)
                 .setPort(port)
                 .build();
 
@@ -82,7 +83,7 @@ public class KademliaProtocol
         return new KademliaFindOpResult(response.getId().toByteArray(), "", response.getNodesList());
     }
 
-    public KademliaFindOpResult findValueOp(byte[] nodeId, String ip, int port, String key,String receiverIp, int receiverPort)
+    public KademliaFindOpResult findValueOp(byte[] nodeId, String key, String receiverIp, int receiverPort)
     {
         ManagedChannel channel = ManagedChannelBuilder.forAddress(receiverIp, receiverPort).usePlaintext().build();
 
@@ -90,7 +91,7 @@ public class KademliaProtocol
 
         Node node = Node.newBuilder()
                 .setId(ByteString.copyFrom(nodeId))
-                .setIp(ipAdress)
+                .setIp(ipAddress)
                 .setPort(port)
                 .build();
 
