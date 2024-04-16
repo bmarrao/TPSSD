@@ -72,6 +72,9 @@ public class KademliaTeste
 
         System.out.println(rtNormal.calculateDistance(nodeId,nodeId));
 
+        System.out.println(rtNormal.CheckNodeIsInTree(nodeId,rtNormal.root));
+
+        System.out.println(rtBootStrap.CheckNodeIsInTree(nodeId,rtBootStrap.root));
 
         //
     }

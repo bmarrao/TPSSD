@@ -111,7 +111,7 @@ public class KademliaRoutingTable
         for (Node n : nodesList) {
             // if routing table doesn't have n then
             // if (!hasObject(root.kbucket, n))
-                // add to rt (idk how)
+                // add to rt (idk how) -
                 // addToBuckets(root.left, root.right, root.kbucket, n, 0, 0);
                 // newAddedNodes.add(n);
         }
@@ -443,7 +443,7 @@ public class KademliaRoutingTable
 
         if (node.kc >= 1)
         {
-            System.out.println("Direction " + dir+ "And depth " + depth+ " Kbucket with size "+ (node.kc-1));
+            System.out.println("Direction " + dir+ "And depth " + depth+ " Kbucket with size "+ (node.kc));
             printTreeRec(dir+" r",node.right, depth + 1);
         }
         else
@@ -454,6 +454,30 @@ public class KademliaRoutingTable
         }
 
     }
+
+    public boolean CheckNodeIsInTree(byte[] nodeId, TreeNode node)
+    {
+        if (node.kbucket != null)
+        {
+            if (hasObject(node.kbucket,new KademliaNode("",nodeId,421)))
+            {
+                return true;
+            }
+            return false;
+        }
+        else
+        {
+
+            if (CheckNodeIsInTree(nodeId,node.left))
+            {
+                return true;
+            }
+            return CheckNodeIsInTree(nodeId,node.right);
+
+        }
+
+    }
+
     public String printId(byte [] id)
     {
         String nodeId="";
