@@ -61,7 +61,7 @@ public class KademliaTeste
 
 
         rtBootStrap.printTree();
-        arr = rtBootStrap.findClosestNode(nodeId, 20);
+        arr = rtBootStrap.findClosestNode(nodeId, 1);
         System.out.println(rtNormal.printId(rtBootStrap.myNodeId));
         for (Node n : arr)
         {
