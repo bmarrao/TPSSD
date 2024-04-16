@@ -335,7 +335,8 @@ public class KademliaRoutingTable
         int tamanho = kbucket.size();
         // Função que ira retornar o node ultimo visto no kbucket
         KademliaNode testPing = kbucket.get(tamanho-1);
-        boolean notActive =  this.protocol.pingOp(testPing.nodeId,testPing.ipAdress,testPing.port);
+        //boolean notActive =  this.protocol.pingOp(testPing.nodeId,testPing.ipAdress,testPing.port);
+        boolean notActive = true;
         //TODO Ajeitar isso quando o protocol.ping tiver funcionando
         // Ping least recently active node
         if (!notActive)

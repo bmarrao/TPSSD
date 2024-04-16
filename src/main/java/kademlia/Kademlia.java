@@ -30,6 +30,11 @@ public class Kademlia
     // TODO Inicialização do no kademlia , contacto com boostrap node - Cristina
     // TODO Criar bootstrap node - Breno
 
+    public Kademlia()
+    {
+
+    }
+
     public Kademlia(String ipAddress, int port, boolean bootstrap, int k, int s)
     {
         protocol = new KademliaProtocol(nodeId,ipAddress,port);

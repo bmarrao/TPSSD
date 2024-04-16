@@ -23,7 +23,7 @@ public class KademliaTeste
         KademliaRoutingTable rtNormal ;
         KademliaRoutingTable rtBootStrap ;
 
-        Kademlia kd = new Kademlia(ipAddress,port, false, 20, 20);
+        Kademlia kd = new Kademlia();
         port = 5003;
         nodeId = kd.generateNodeId();
         KademliaProtocol protocol = new KademliaProtocol(nodeId,ipAddress, port);
@@ -44,7 +44,8 @@ public class KademliaTeste
             Node.Builder nd = Node.newBuilder();
             nd.setIp("localhost");
             nd.setPort(5000);
-            nd.setId(ByteString.copyFrom(kd.generateNodeId()));
+            nodeId = kd.generateNodeId();
+            nd.setId(ByteString.copyFrom(nodeId));
             Node ins = nd.build();
             rtNormal.insert(ins);
             rtBootStrap.insert(ins);
@@ -53,15 +54,21 @@ public class KademliaTeste
         System.out.println("");
         rtNormal.printTree();
 
-        nodeId = kd.generateNodeId();
-
-        ArrayList<Node> arr = rtNormal.findClosestNode(nodeId, 200);
-        System.out.println(arr.size());
+        ArrayList<Node> arr = rtNormal.findClosestNode(nodeId, 1);
+        System.out.println(rtNormal.printId(rtBootStrap.myNodeId));
+        System.out.println(rtNormal.printId(nodeId));
+        System.out.println(rtNormal.printId(arr.get(0).getId().toByteArray()));
 
 
         rtBootStrap.printTree();
-        arr = rtBootStrap.findClosestNode(nodeId, 200);
-        System.out.println(arr.size());
+        arr = rtBootStrap.findClosestNode(nodeId, 20);
+        System.out.println(rtNormal.printId(rtBootStrap.myNodeId));
+        for (Node n : arr)
+        {
+            System.out.println(rtBootStrap.printId(n.getId().toByteArray()));
+
+        }
+        System.out.println(rtBootStrap.printId(nodeId));
 
 
         //
