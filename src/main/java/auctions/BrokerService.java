@@ -1,15 +1,11 @@
 package auctions;
 
-import com.google.protobuf.ByteString;
-import com.google.protobuf.Empty;
-import io.grpc.ManagedChannel;
-import io.grpc.ManagedChannelBuilder;
-import io.grpc.stub.StreamObserver;
-import kademlia.KademliaProtocol;
+
 import kademlia.Node;
 import kademlia.Offer;
 import java.util.ArrayList;
 import java.util.concurrent.locks.Condition;
+import java.util.concurrent.locks.Lock;
 import java.util.concurrent.locks.ReentrantLock;
 
 // open auction
@@ -18,7 +14,9 @@ import java.util.concurrent.locks.ReentrantLock;
 public class BrokerService
 {
     public ReentrantLock l = new ReentrantLock();
-    //public Condition condition = lock.newCondition();
+    private final Lock lock = new ReentrantLock();
+    public Condition condition = lock.newCondition();
+
     public boolean sleep = true;
     byte[] serviceId ;
     byte[] owner;

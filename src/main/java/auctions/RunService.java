@@ -27,28 +27,65 @@ public class RunService implements Runnable {
         Offer of = null;
         while (true)
         {
-
-                bs.l.lock();
-
-                of = bs.highestOffer;
-                while (offers.size() != bs.brokerSet.size())
+            Sleeper sleeper = new Sleeper(bs);
+            sleeper.run();
+            try
+            {
+                bs.condition.await();
+                if (bs.sleep)
                 {
-                    /*
-                    Offer newOf = kp.timerOver();
-                    if (newOf != null)
+                    Offer newOf= getOfferFromBrokers();
+                    if (newOf.equals(of))
                     {
-
+                        endService();
                     }
-
-                     */
+                    else
+                    {
+                        communicateBiggest(newOf);
+                    }
                 }
+                else
+                {
 
-                bs.l.unlock();
+                }
+            }
+            catch (InterruptedException e)
+            {
+                throw new RuntimeException(e);
+            }
 
+        }
+    }
 
+    private Offer getOfferFromBrokers()
+    {
+        Offer of  = new ;
+        Offer newOffer ;
+        for (Node n : bs.brokerSet)
+        {
+            newOffer = kp.timerOver(n,bs.serviceId);
+            if (newOffer.getPrice() > of.getPrice())
+            {
+                of = newOffer;
+            }
+        }
+        return of;
+    }
 
+    private void endService()
+    {
 
+        for (Node n : bs.brokerSet)
+        {
+            //newOffer = kp.endService(bs.serviceId)
+        }
+    }
 
+    private void communicateBiggest(Offer of)
+    {
+        for (Node n : bs.brokerSet)
+        {
+            //qnewOffer = kp.endService(bs.serviceId)
         }
     }
 }
@@ -68,6 +105,8 @@ class Sleeper implements Runnable
         try
         {
             Thread.sleep(bs.time);
+            bs.condition.signalAll();
+            bs.sleep = true;
             // condition
         }
         catch (InterruptedException e)
