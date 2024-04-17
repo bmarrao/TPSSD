@@ -15,8 +15,8 @@ public class BrokerService
 {
     public ReentrantLock l = new ReentrantLock();
     private final Lock lock = new ReentrantLock();
-    public Condition condition = lock.newCondition();
-
+    public Condition endTimer = lock.newCondition();
+    public Condition waitBiggestOffer = lock.newCondition();
     public boolean sleep = true;
     byte[] serviceId ;
     byte[] owner;

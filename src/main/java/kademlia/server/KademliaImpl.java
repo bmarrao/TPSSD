@@ -199,29 +199,18 @@ public class KademliaImpl extends KademliaGrpc.KademliaImplBase
     public void timerOver(timerOverRequest request, StreamObserver<timerOverResponse> responseObserver)
     {
 
-        BrokerService bs = auc.getService(request.getServiceId().toByteArray());
-        boolean res = false;
-        Offer of = null;
-        if (bs != null)
-        {
-            if (bs.running)
-            {
-                res =
-            }
-        }
-
-        timerOverResponse response = timerOverResponse
-                .newBuilder()
-                .setResponse(res)
-                .setOf(of)
-                .build();
-
-        // Send the response to the client.
-        responseObserver.onNext(response);
-
-        // Notifies the customer that the call is completed.
-        responseObserver.onCompleted();
     }
 
 
+    @Override
+    public void endService(endServiceRequest request, StreamObserver<endServiceResponse> responseObserver)
+    {
+
+    }
+
+    @Override
+    public void communicateBiggest(communicateBiggestRequest request, StreamObserver<communicateBiggestResponse> responseObserver)
+    {
+
+    }
 }

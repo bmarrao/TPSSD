@@ -127,6 +127,28 @@ message timerOverResponse
   bool response = 1;
   Offer of = 2;
 }
+
+message endServiceRequest
+{
+  bytes serviceId = 1;
+}
+
+message endServiceResponse
+{
+  bool response =1;
+}
+message communicateBiggestRequest
+{
+  bytes serviceId = 1;
+  Offer of = 2;
+}
+
+message communicateBiggestResponse
+{
+  bool response = 1;
+}
+
+
 service Kademlia
 {
   // Unary
@@ -152,6 +174,10 @@ service Kademlia
   rpc subscribe(subscribeRequest) returns (subscribeResponse);
 
   rpc timerOver(timerOverRequest) returns (timerOverResponse);
+
+  rpc endService(endServiceRequest) returns (endServiceResponse);
+
+  rpc communicateBiggest(communicateBiggestRequest) returns (communicateBiggestResponse);
 }
 
 

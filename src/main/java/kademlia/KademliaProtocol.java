@@ -140,8 +140,17 @@ public class KademliaProtocol
         timerOverResponse  to= stub.timerOver(request);
 
         return to.getOf();
-        // TODO FINISH THIS
 
+    }
 
+    public boolean endService (Node n, byte[] serviceId)
+    {
+        ManagedChannel channel;
+
+        channel = ManagedChannelBuilder.forAddress(n.getIp(), n.getPort()).usePlaintext().build();
+
+        KademliaGrpc.KademliaBlockingStub stub = KademliaGrpc.newBlockingStub(channel);
+
+        return true;
     }
 }

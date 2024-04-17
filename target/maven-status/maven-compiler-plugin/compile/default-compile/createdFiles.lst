@@ -1,3 +1,4 @@
+kademlia/endServiceRequest$1.class
 kademlia/subscribeRequestOrBuilder.class
 kademlia/subscribeResponseOrBuilder.class
 kademlia/timerOverResponse$1.class
@@ -6,8 +7,10 @@ kademlia/KademliaGrpc$KademliaStub.class
 kademlia/server/KademliaServer.class
 kademlia/KrtBootStrap.class
 kademlia/initiateServiceRequest.class
+kademlia/endServiceResponseOrBuilder.class
 kademlia/NotifyRequest.class
 kademlia/KademliaOuterClass.class
+kademlia/endServiceResponse.class
 kademlia/KademliaJoinNetwork.class
 kademlia/getPriceRequest.class
 kademlia/SortedArrayList.class
@@ -15,20 +18,26 @@ kademlia/NotifyRequestOrBuilder.class
 kademlia/Offer.class
 kademlia/KrtNormal.class
 kademlia/initiateServiceResponse$1.class
+kademlia/endServiceRequestOrBuilder.class
 kademlia/getPriceResponse.class
 kademlia/timerOverRequest.class
 kademlia/StoreRequestOrBuilder.class
 kademlia/FindValueRequest$Builder.class
+kademlia/communicateBiggestResponseOrBuilder.class
 kademlia/KademliaStore.class
 kademlia/PingResponse$Builder.class
+kademlia/endServiceResponse$Builder.class
 kademlia/PingResponseOrBuilder.class
 kademlia/KademliaTeste.class
+kademlia/communicateBiggestResponse.class
 kademlia/KademliaGrpc$MethodHandlers.class
 kademlia/StoreResponse.class
 kademlia/initiateServiceRequest$1.class
 kademlia/Node$Builder.class
+kademlia/communicateBiggestRequest$Builder.class
 kademlia/StoreResponse$1.class
 kademlia/getPriceResponseOrBuilder.class
+kademlia/endServiceResponse$1.class
 kademlia/NodeOrBuilder.class
 kademlia/getPriceRequest$Builder.class
 kademlia/KademliaGrpc$KademliaFutureStub.class
@@ -45,6 +54,7 @@ kademlia/sendPriceResponse$1.class
 kademlia/initiateServiceRequest$Builder.class
 auctions/Auction.class
 kademlia/FindNodeResponse$1.class
+kademlia/communicateBiggestResponse$Builder.class
 kademlia/NotifyRequest$1.class
 kademlia/FindNodeRequestOrBuilder.class
 kademlia/StoreRequest.class
@@ -53,8 +63,10 @@ kademlia/KademliaGrpc$KademliaImplBase.class
 kademlia/PingRequest$Builder.class
 kademlia/PingRequest$1.class
 kademlia/FindValueResponse.class
+kademlia/endServiceRequest.class
 kademlia/KademliaGrpc$KademliaDescriptorSupplier.class
 kademlia/KademliaNode.class
+auctions/Sleeper.class
 kademlia/timerOverResponseOrBuilder.class
 kademlia/KademliaGrpc$1.class
 kademlia/KademliaFindOpResult.class
@@ -69,8 +81,11 @@ kademlia/sendPriceRequest.class
 kademlia/subscribeResponse$1.class
 auctions/RunService.class
 kademlia/timerOverRequestOrBuilder.class
+kademlia/communicateBiggestResponse$1.class
+kademlia/communicateBiggestRequest.class
 kademlia/initiateServiceResponse.class
 kademlia/getPriceRequest$1.class
+kademlia/endServiceRequest$Builder.class
 kademlia/KademliaRoutingTable.class
 kademlia/Node$1.class
 kademlia/StoreResponse$Builder.class
@@ -95,6 +110,7 @@ kademlia/KademliaOuterClass$1.class
 kademlia/FindValueResponse$Builder.class
 kademlia/Node.class
 kademlia/subscribeResponse.class
+kademlia/communicateBiggestRequest$1.class
 kademlia/subscribeRequest$1.class
 kademlia/sendPriceRequest$Builder.class
 kademlia/KademliaGrpc.class
@@ -109,4 +125,5 @@ kademlia/FindValueResponseOrBuilder.class
 kademlia/PingRequest.class
 kademlia/FindValueRequest$1.class
 kademlia/FindNodeResponse$Builder.class
+kademlia/communicateBiggestRequestOrBuilder.class
 kademlia/Offer$1.class

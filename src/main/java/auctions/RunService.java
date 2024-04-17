@@ -25,13 +25,14 @@ public class RunService implements Runnable {
 
         Map<Node,Offer> offers  = new HashMap<>();
         Offer of = null;
+        Sleeper sleeper = new Sleeper(bs);
+
         while (true)
         {
-            Sleeper sleeper = new Sleeper(bs);
-            sleeper.run();
             try
             {
-                bs.condition.await();
+                sleeper.run();
+                bs.endTimer.await();
                 if (bs.sleep)
                 {
                     Offer newOf= getOfferFromBrokers();
@@ -46,6 +47,11 @@ public class RunService implements Runnable {
                 }
                 else
                 {
+                    bs.waitBiggestOffer.wait();
+                    if(of.equals(bs.highestOffer))
+                    {
+                        break;
+                    }
 
                 }
             }
@@ -59,6 +65,7 @@ public class RunService implements Runnable {
 
     private Offer getOfferFromBrokers()
     {
+        /*
         Offer of  = new ;
         Offer newOffer ;
         for (Node n : bs.brokerSet)
@@ -69,7 +76,9 @@ public class RunService implements Runnable {
                 of = newOffer;
             }
         }
-        return of;
+
+         */
+        return null;
     }
 
     private void endService()
