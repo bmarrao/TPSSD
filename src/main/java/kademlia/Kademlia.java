@@ -15,6 +15,7 @@ import java.util.Random;
 public class Kademlia
 {
     public static byte[] nodeId;
+    public static PublicKey generatedPk;
 
     // public static String ipAddress;
     // public static int port;
@@ -37,7 +38,7 @@ public class Kademlia
 
     public Kademlia(String ipAddress, int port, boolean bootstrap, int k, int s)
     {
-        protocol = new KademliaProtocol(nodeId,ipAddress,port);
+        protocol = new KademliaProtocol(nodeId,ipAddress,port,generatedPk);
         KademliaServer server = new KademliaServer(port, new Auction(protocol));
         Thread serverThread = new Thread(server);
         serverThread.start();
@@ -57,7 +58,7 @@ public class Kademlia
             String[] bootstrapIpPort = selectedBootstrap.split(" ");
 
             // Start thread for joining network
-            Thread joinNetThread = new Thread(new KademliaJoinNetwork(nodeId, ipAddress, port, bootstrapIpPort[0], Integer.parseInt(bootstrapIpPort[1])));
+            Thread joinNetThread = new Thread(new KademliaJoinNetwork(nodeId, ipAddress, port, generatedPk, bootstrapIpPort[0], Integer.parseInt(bootstrapIpPort[1])));
             //joinNetThread.start();
         }
     }
@@ -120,6 +121,7 @@ public class Kademlia
             if (checkZeroCount(staticPuzzle, leadingZerosStatic))
             {
                 System.out.println("Static puzzle solved!");
+                generatedPk = publicKey;
                 return sKadNodeId;
             }
         }

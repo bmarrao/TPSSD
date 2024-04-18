@@ -1,5 +1,6 @@
 package kademlia;
 
+import java.security.PublicKey;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -10,20 +11,22 @@ public class KademliaJoinNetwork implements Runnable {
     public byte[] nodeId;
     public String ipAddress;
     public int port;
+    public PublicKey publicKey;
     public String bootstrapIp;
     public int bootstrapPort;
 
-    KademliaJoinNetwork(byte[] nodeId, String ipAddress, int port, String bootstrapIp, int bootstrapPort) {
+    KademliaJoinNetwork(byte[] nodeId, String ipAddress, int port, PublicKey publicKey, String bootstrapIp, int bootstrapPort) {
         this.nodeId = nodeId;
         this.ipAddress = ipAddress;
         this.port = port;
+        this.publicKey = publicKey;
         this.bootstrapIp = bootstrapIp;
         this.bootstrapPort = bootstrapPort;
     }
 
     @Override
     public void run() {
-        KademliaProtocol protocol = new KademliaProtocol(this.nodeId, this.ipAddress, this.port);
+        KademliaProtocol protocol = new KademliaProtocol(this.nodeId, this.ipAddress, this.port, this.publicKey);
 
         // send find node operation to selected bootstrap node
         KademliaFindOpResult closestNodes = protocol.findNodeOp(this.nodeId, this.nodeId, this.bootstrapIp, this.bootstrapPort);

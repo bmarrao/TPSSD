@@ -6,10 +6,8 @@ import kademlia.server.KademliaServer;
 import org.checkerframework.checker.units.qual.K;
 
 import java.math.BigInteger;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.security.PublicKey;
+import java.util.*;
 
 public class KademliaTeste
 {
@@ -19,14 +17,16 @@ public class KademliaTeste
          // TODO define ipadress and port
          String ipAddress = "";
         int port = 5000;
+        PublicKey publicKey = null;
 
         KademliaRoutingTable rtNormal ;
         KademliaRoutingTable rtBootStrap ;
 
-        Kademlia kd = new Kademlia();
+        //Kademlia kd = new Kademlia();
         port = 5003;
-        nodeId = kd.generateNodeId();
-        KademliaProtocol protocol = new KademliaProtocol(nodeId,ipAddress, port);
+        nodeId = Kademlia.generateNodeId();
+        System.out.println("Generated node ID: \n" + Arrays.toString(nodeId) + "\n");
+        KademliaProtocol protocol = new KademliaProtocol(nodeId,ipAddress, port, publicKey);
         System.out.println();
 
         KademliaServer server = new KademliaServer(port, new Auction(protocol));
@@ -43,14 +43,15 @@ public class KademliaTeste
             Node.Builder nd = Node.newBuilder();
             nd.setIp("localhost");
             nd.setPort(5000);
-            nodeId = kd.generateNodeId();
+            nodeId = Kademlia.generateNodeId();
+            assert nodeId != null;
             nd.setId(ByteString.copyFrom(nodeId));
             Node ins = nd.build();
             rtNormal.insert(ins);
             rtBootStrap.insert(ins);
 
         }
-        System.out.println("");
+        System.out.println();
         rtNormal.printTree();
 
         ArrayList<Node> arr = rtNormal.findClosestNode(nodeId, 1);

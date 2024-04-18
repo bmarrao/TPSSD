@@ -4,6 +4,8 @@ import com.google.protobuf.ByteString;
 import io.grpc.ManagedChannel;
 import io.grpc.ManagedChannelBuilder;
 import kademlia.Offer;
+
+import java.security.PublicKey;
 import java.util.ArrayList;
 
 
@@ -12,12 +14,14 @@ public class KademliaProtocol
     public byte [] nodeId;
     public String ipAddress;
     public int port;
+    public PublicKey publicKey;
 
-    public KademliaProtocol(byte[] nodeId, String ipAddress, int port)
+    public KademliaProtocol(byte[] nodeId, String ipAddress, int port, PublicKey publicKey)
     {
         this.nodeId = nodeId;
         this.ipAddress = ipAddress;
         this.port = port;
+        this.publicKey = publicKey;
     }
 
     public boolean pingOp(byte[] nodeId, String receiverIp, int receiverPort)
@@ -29,6 +33,7 @@ public class KademliaProtocol
             .setId(ByteString.copyFrom(nodeId))
             .setIp(ipAddress)
             .setPort(port)
+            .setPublickey(String.valueOf(publicKey))
             .build();
 
         KademliaGrpc.KademliaBlockingStub stub = KademliaGrpc.newBlockingStub(channel);
@@ -50,6 +55,7 @@ public class KademliaProtocol
                 .setId(ByteString.copyFrom(nodeId))
                 .setIp(ipAddress)
                 .setPort(port)
+                .setPublickey(String.valueOf(publicKey))
                 .build();
 
         StoreRequest request = StoreRequest.newBuilder()
@@ -72,6 +78,7 @@ public class KademliaProtocol
                 .setId(ByteString.copyFrom(nodeId))
                 .setIp(ipAddress)
                 .setPort(port)
+                .setPublickey(String.valueOf(publicKey))
                 .build();
 
         FindNodeRequest request = FindNodeRequest.newBuilder()
@@ -93,6 +100,7 @@ public class KademliaProtocol
                 .setId(ByteString.copyFrom(nodeId))
                 .setIp(ipAddress)
                 .setPort(port)
+                .setPublickey(String.valueOf(publicKey))
                 .build();
 
         FindValueRequest request = FindValueRequest.newBuilder()
@@ -101,10 +109,7 @@ public class KademliaProtocol
 
         FindValueResponse response = stub.findValue(request);
 
-        //TODO É necessário estes nodes?
-        ArrayList<Node> nodes = new ArrayList<>();
-
-        return new KademliaFindOpResult(response.getId().toByteArray(), response.getValue(), nodes);
+        return new KademliaFindOpResult(response.getId().toByteArray(), response.getValue(), new ArrayList<>());
     }
 
     public void notifySubscribed(ArrayList<Node> subscribed, Offer highestOffer, byte[] serviceId)
