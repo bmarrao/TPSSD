@@ -34,6 +34,17 @@ public class KademliaJoinNetwork implements Runnable {
         // add received ids of closest nodes to routing table
         // o metodo addNodes deve verificar se os ids contidos já estao na routing table
         // retorna a lista de nós mais próximos que ainda não estavam na rt (para depois os contactar)
+        /*
+        ArrayList<Node> newAddedNodes = new ArrayList<>();
+        for (Node n : closestNodes.getNodesList());
+        {
+            if (rt.insert(n))
+            {
+                newAddedNodes.add(n)
+            }
+        }
+
+        */
         ArrayList<Node> newAddedNodes = rt.addNodes(closestNodes.getNodesList());
 
         while (!newAddedNodes.isEmpty()) {
