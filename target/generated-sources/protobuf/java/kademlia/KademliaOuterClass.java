@@ -151,62 +151,63 @@ public final class KademliaOuterClass {
       "\n\016Kademlia.proto\022\010kademlia\032\033google/proto" +
       "buf/empty.proto\"+\n\013PingRequest\022\034\n\004node\030\001" +
       " \001(\0132\016.kademlia.Node\"\036\n\014PingResponse\022\016\n\006" +
-      "online\030\001 \001(\010\"R\n\004Node\022\n\n\002id\030\001 \001(\014\022\n\n\002ip\030\002" +
-      " \001(\t\022\014\n\004port\030\003 \001(\r\022\021\n\tpublickey\030\004 \001(\t\022\021\n" +
-      "\ttimestamp\030\005 \001(\t\"4\n\005Offer\022\034\n\004node\030\001 \001(\0132" +
-      "\016.kademlia.Node\022\r\n\005price\030\002 \001(\002\"H\n\014StoreR" +
+      "online\030\001 \001(\010\"?\n\004Node\022\n\n\002id\030\001 \001(\014\022\n\n\002ip\030\002" +
+      " \001(\t\022\014\n\004port\030\003 \001(\r\022\021\n\tpublickey\030\004 \001(\t\"4\n" +
+      "\005Offer\022\034\n\004node\030\001 \001(\0132\016.kademlia.Node\022\r\n\005" +
+      "price\030\002 \001(\002\"H\n\014StoreRequest\022\034\n\004node\030\001 \001(" +
+      "\0132\016.kademlia.Node\022\013\n\003key\030\002 \001(\t\022\r\n\005value\030" +
+      "\003 \001(\t\"+\n\rStoreResponse\022\n\n\002id\030\001 \001(\014\022\016\n\006st" +
+      "ored\030\002 \001(\010\"G\n\017FindNodeRequest\022\034\n\004node\030\001 ",
+      "\001(\0132\016.kademlia.Node\022\013\n\003key\030\002 \001(\014\022\t\n\001k\030\003 " +
+      "\001(\r\"=\n\020FindNodeResponse\022\n\n\002id\030\001 \001(\014\022\035\n\005n" +
+      "odes\030\002 \003(\0132\016.kademlia.Node\"=\n\020FindValueR" +
       "equest\022\034\n\004node\030\001 \001(\0132\016.kademlia.Node\022\013\n\003" +
-      "key\030\002 \001(\t\022\r\n\005value\030\003 \001(\t\"+\n\rStoreRespons" +
-      "e\022\n\n\002id\030\001 \001(\014\022\016\n\006stored\030\002 \001(\010\"G\n\017FindNod",
-      "eRequest\022\034\n\004node\030\001 \001(\0132\016.kademlia.Node\022\013" +
-      "\n\003key\030\002 \001(\014\022\t\n\001k\030\003 \001(\r\"=\n\020FindNodeRespon" +
-      "se\022\n\n\002id\030\001 \001(\014\022\035\n\005nodes\030\002 \003(\0132\016.kademlia" +
-      ".Node\"=\n\020FindValueRequest\022\034\n\004node\030\001 \001(\0132" +
-      "\016.kademlia.Node\022\013\n\003key\030\002 \001(\t\".\n\021FindValu" +
-      "eResponse\022\n\n\002id\030\001 \001(\014\022\r\n\005value\030\002 \001(\t\"O\n\r" +
-      "NotifyRequest\022\021\n\tserviceId\030\001 \001(\014\022\034\n\004node" +
-      "\030\002 \001(\0132\016.kademlia.Node\022\r\n\005price\030\003 \001(\002\"$\n" +
-      "\017getPriceRequest\022\021\n\tserviceId\030\001 \001(\014\"!\n\020g" +
-      "etPriceResponse\022\r\n\005price\030\001 \001(\002\"E\n\020sendPr",
-      "iceRequest\022\021\n\tserviceId\030\001 \001(\014\022\036\n\005offer\030\002" +
-      " \001(\0132\017.kademlia.Offer\"#\n\021sendPriceRespon" +
-      "se\022\016\n\006result\030\001 \001(\010\"g\n\026initiateServiceReq" +
-      "uest\022\r\n\005owner\030\001 \001(\014\022\021\n\tserviceId\030\002 \001(\014\022\035" +
-      "\n\005nodes\030\003 \003(\0132\016.kademlia.Node\022\014\n\004time\030\004 " +
-      "\001(\r\"+\n\027initiateServiceResponse\022\020\n\010respon" +
-      "se\030\001 \001(\010\"C\n\020subscribeRequest\022\034\n\004node\030\001 \001" +
-      "(\0132\016.kademlia.Node\022\021\n\tserviceId\030\002 \001(\014\"%\n" +
-      "\021subscribeResponse\022\020\n\010response\030\001 \001(\010\"%\n\020" +
-      "timerOverRequest\022\021\n\tserviceId\030\001 \001(\014\"B\n\021t",
-      "imerOverResponse\022\020\n\010response\030\001 \001(\010\022\033\n\002of" +
-      "\030\002 \001(\0132\017.kademlia.Offer\"&\n\021endServiceReq" +
-      "uest\022\021\n\tserviceId\030\001 \001(\014\"&\n\022endServiceRes" +
-      "ponse\022\020\n\010response\030\001 \001(\010\"K\n\031communicateBi" +
-      "ggestRequest\022\021\n\tserviceId\030\001 \001(\014\022\033\n\002of\030\002 " +
-      "\001(\0132\017.kademlia.Offer\".\n\032communicateBigge" +
-      "stResponse\022\020\n\010response\030\001 \001(\0102\326\006\n\010Kademli" +
-      "a\0225\n\004ping\022\025.kademlia.PingRequest\032\026.kadem" +
-      "lia.PingResponse\0228\n\005store\022\026.kademlia.Sto" +
-      "reRequest\032\027.kademlia.StoreResponse\022A\n\010fi",
-      "ndNode\022\031.kademlia.FindNodeRequest\032\032.kade" +
-      "mlia.FindNodeResponse\022D\n\tfindValue\022\032.kad" +
-      "emlia.FindValueRequest\032\033.kademlia.FindVa" +
-      "lueResponse\0229\n\006notify\022\027.kademlia.NotifyR" +
-      "equest\032\026.google.protobuf.Empty\022A\n\010getPri" +
-      "ce\022\031.kademlia.getPriceRequest\032\032.kademlia" +
-      ".getPriceResponse\022D\n\tsendPrice\022\032.kademli" +
-      "a.sendPriceRequest\032\033.kademlia.sendPriceR" +
-      "esponse\022V\n\017initiateService\022 .kademlia.in" +
-      "itiateServiceRequest\032!.kademlia.initiate",
-      "ServiceResponse\022D\n\tsubscribe\022\032.kademlia." +
-      "subscribeRequest\032\033.kademlia.subscribeRes" +
-      "ponse\022D\n\ttimerOver\022\032.kademlia.timerOverR" +
-      "equest\032\033.kademlia.timerOverResponse\022G\n\ne" +
-      "ndService\022\033.kademlia.endServiceRequest\032\034" +
-      ".kademlia.endServiceResponse\022_\n\022communic" +
-      "ateBiggest\022#.kademlia.communicateBiggest" +
-      "Request\032$.kademlia.communicateBiggestRes" +
-      "ponseB\002P\001b\006proto3"
+      "key\030\002 \001(\t\".\n\021FindValueResponse\022\n\n\002id\030\001 \001" +
+      "(\014\022\r\n\005value\030\002 \001(\t\"O\n\rNotifyRequest\022\021\n\tse" +
+      "rviceId\030\001 \001(\014\022\034\n\004node\030\002 \001(\0132\016.kademlia.N" +
+      "ode\022\r\n\005price\030\003 \001(\002\"$\n\017getPriceRequest\022\021\n" +
+      "\tserviceId\030\001 \001(\014\"!\n\020getPriceResponse\022\r\n\005" +
+      "price\030\001 \001(\002\"E\n\020sendPriceRequest\022\021\n\tservi",
+      "ceId\030\001 \001(\014\022\036\n\005offer\030\002 \001(\0132\017.kademlia.Off" +
+      "er\"#\n\021sendPriceResponse\022\016\n\006result\030\001 \001(\010\"" +
+      "g\n\026initiateServiceRequest\022\r\n\005owner\030\001 \001(\014" +
+      "\022\021\n\tserviceId\030\002 \001(\014\022\035\n\005nodes\030\003 \003(\0132\016.kad" +
+      "emlia.Node\022\014\n\004time\030\004 \001(\r\"+\n\027initiateServ" +
+      "iceResponse\022\020\n\010response\030\001 \001(\010\"C\n\020subscri" +
+      "beRequest\022\034\n\004node\030\001 \001(\0132\016.kademlia.Node\022" +
+      "\021\n\tserviceId\030\002 \001(\014\"%\n\021subscribeResponse\022" +
+      "\020\n\010response\030\001 \001(\010\"C\n\020timerOverRequest\022\034\n" +
+      "\004node\030\001 \001(\0132\016.kademlia.Node\022\021\n\tserviceId",
+      "\030\002 \001(\014\"B\n\021timerOverResponse\022\020\n\010response\030" +
+      "\001 \001(\010\022\033\n\002of\030\002 \001(\0132\017.kademlia.Offer\"D\n\021en" +
+      "dServiceRequest\022\034\n\004node\030\001 \001(\0132\016.kademlia" +
+      ".Node\022\021\n\tserviceId\030\002 \001(\014\"&\n\022endServiceRe" +
+      "sponse\022\020\n\010response\030\001 \001(\010\"K\n\031communicateB" +
+      "iggestRequest\022\021\n\tserviceId\030\001 \001(\014\022\033\n\002of\030\002" +
+      " \001(\0132\017.kademlia.Offer\".\n\032communicateBigg" +
+      "estResponse\022\020\n\010response\030\001 \001(\0102\326\006\n\010Kademl" +
+      "ia\0225\n\004ping\022\025.kademlia.PingRequest\032\026.kade" +
+      "mlia.PingResponse\0228\n\005store\022\026.kademlia.St",
+      "oreRequest\032\027.kademlia.StoreResponse\022A\n\010f" +
+      "indNode\022\031.kademlia.FindNodeRequest\032\032.kad" +
+      "emlia.FindNodeResponse\022D\n\tfindValue\022\032.ka" +
+      "demlia.FindValueRequest\032\033.kademlia.FindV" +
+      "alueResponse\0229\n\006notify\022\027.kademlia.Notify" +
+      "Request\032\026.google.protobuf.Empty\022A\n\010getPr" +
+      "ice\022\031.kademlia.getPriceRequest\032\032.kademli" +
+      "a.getPriceResponse\022D\n\tsendPrice\022\032.kademl" +
+      "ia.sendPriceRequest\032\033.kademlia.sendPrice" +
+      "Response\022V\n\017initiateService\022 .kademlia.i",
+      "nitiateServiceRequest\032!.kademlia.initiat" +
+      "eServiceResponse\022D\n\tsubscribe\022\032.kademlia" +
+      ".subscribeRequest\032\033.kademlia.subscribeRe" +
+      "sponse\022D\n\ttimerOver\022\032.kademlia.timerOver" +
+      "Request\032\033.kademlia.timerOverResponse\022G\n\n" +
+      "endService\022\033.kademlia.endServiceRequest\032" +
+      "\034.kademlia.endServiceResponse\022_\n\022communi" +
+      "cateBiggest\022#.kademlia.communicateBigges" +
+      "tRequest\032$.kademlia.communicateBiggestRe" +
+      "sponseB\002P\001b\006proto3"
     };
     com.google.protobuf.Descriptors.FileDescriptor.InternalDescriptorAssigner assigner =
         new com.google.protobuf.Descriptors.FileDescriptor.    InternalDescriptorAssigner() {
@@ -238,7 +239,7 @@ public final class KademliaOuterClass {
     internal_static_kademlia_Node_fieldAccessorTable = new
       com.google.protobuf.GeneratedMessageV3.FieldAccessorTable(
         internal_static_kademlia_Node_descriptor,
-        new java.lang.String[] { "Id", "Ip", "Port", "Publickey", "Timestamp", });
+        new java.lang.String[] { "Id", "Ip", "Port", "Publickey", });
     internal_static_kademlia_Offer_descriptor =
       getDescriptor().getMessageTypes().get(3);
     internal_static_kademlia_Offer_fieldAccessorTable = new
@@ -340,7 +341,7 @@ public final class KademliaOuterClass {
     internal_static_kademlia_timerOverRequest_fieldAccessorTable = new
       com.google.protobuf.GeneratedMessageV3.FieldAccessorTable(
         internal_static_kademlia_timerOverRequest_descriptor,
-        new java.lang.String[] { "ServiceId", });
+        new java.lang.String[] { "Node", "ServiceId", });
     internal_static_kademlia_timerOverResponse_descriptor =
       getDescriptor().getMessageTypes().get(20);
     internal_static_kademlia_timerOverResponse_fieldAccessorTable = new
@@ -352,7 +353,7 @@ public final class KademliaOuterClass {
     internal_static_kademlia_endServiceRequest_fieldAccessorTable = new
       com.google.protobuf.GeneratedMessageV3.FieldAccessorTable(
         internal_static_kademlia_endServiceRequest_descriptor,
-        new java.lang.String[] { "ServiceId", });
+        new java.lang.String[] { "Node", "ServiceId", });
     internal_static_kademlia_endServiceResponse_descriptor =
       getDescriptor().getMessageTypes().get(22);
     internal_static_kademlia_endServiceResponse_fieldAccessorTable = new

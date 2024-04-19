@@ -36,7 +36,7 @@ public class RunService implements Runnable {
                 bs.endTimer.await();
                 if (bs.sleep)
                 {
-                    Offer newOf= getOfferFromBrokers();
+                    Offer newOf= null; //getOfferFromBrokers();
                     communicateBiggest(newOf);
                     if (newOf.equals(of))
                     {
@@ -62,6 +62,7 @@ public class RunService implements Runnable {
         //kp.endService()
     }
 
+    /*
     private Offer getOfferFromBrokers()
     {
 
@@ -79,6 +80,8 @@ public class RunService implements Runnable {
         return null;
     }
 
+
+     */
     private void endService()
     {
 

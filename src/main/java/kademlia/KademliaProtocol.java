@@ -7,6 +7,7 @@ import kademlia.Offer;
 
 import java.security.PublicKey;
 import java.util.ArrayList;
+import java.util.List;
 
 
 public class KademliaProtocol
@@ -114,6 +115,29 @@ public class KademliaProtocol
     }
 
 
+    public boolean subscribe(byte[] serviceId, Node n )
+    {
+        ManagedChannel channel = ManagedChannelBuilder.forAddress(n.getIp(), n.getPort()).usePlaintext().build();
+
+        Node node = Node.newBuilder()
+                .setId(ByteString.copyFrom(nodeId))
+                .setIp(ipAddress)
+                .setPort(port)
+                .setPublickey(String.valueOf(publicKey))
+                .build();
+
+        KademliaGrpc.KademliaBlockingStub stub = KademliaGrpc.newBlockingStub(channel);
+
+
+        subscribeRequest request = subscribeRequest.newBuilder()
+                .setNode(node)
+                .setServiceId(ByteString.copyFrom(serviceId)).build();
+
+        subscribeResponse response = stub.subscribe(request);
+
+        return response.getResponse();
+
+    }
 
     public void notifySubscribed(ArrayList<Node> subscribed, Offer highestOffer, byte[] serviceId)
     {
@@ -169,6 +193,29 @@ public class KademliaProtocol
         return price ;
     }
 
+    public Offer timerOver(Node n , byte[] serviceId)
+    {
+        ManagedChannel channel = ManagedChannelBuilder.forAddress(n.getIp(), n.getPort()).usePlaintext().build();
+
+
+        KademliaGrpc.KademliaBlockingStub stub = KademliaGrpc.newBlockingStub(channel);
+
+        Node node = Node.newBuilder()
+                .setId(ByteString.copyFrom(nodeId))
+                .setIp(ipAddress)
+                .setPort(port)
+                .setPublickey(String.valueOf(publicKey))
+                .build();
+
+        timerOverRequest request = timerOverRequest.newBuilder()
+                .setNode(node)
+                .setServiceId(ByteString.copyFrom(serviceId)).build();
+
+        timerOverResponse response = stub.timerOver(request);
+
+        return response.getOf();
+    }
+
     public boolean sendPrice(ArrayList<Node> selectedBrokers , float price, byte[] serviceId)
     {
         boolean result = false;
@@ -201,32 +248,65 @@ public class KademliaProtocol
         return result ;
     }
 
-
-    public Offer timerOver(Node n, byte[] serviceId)
+    public boolean initiateService(byte[] owner, byte[] serviceId, ArrayList<Node> brokerlist, int time)
     {
+
+        boolean result = false;
+        Node node = Node.newBuilder()
+                .setId(ByteString.copyFrom(nodeId))
+                .setIp(ipAddress)
+                .setPort(port)
+                .setPublickey(String.valueOf(publicKey))
+                .build();
         ManagedChannel channel;
+        ByteString bs= ByteString.copyFrom(serviceId);
+        List<Node> allNodes = new ArrayList<>(brokerlist);
 
-        channel = ManagedChannelBuilder.forAddress(n.getIp(), n.getPort()).usePlaintext().build();
+        for (Node n: brokerlist)
+        {
+            channel = ManagedChannelBuilder.forAddress(n.getIp(), n.getPort()).usePlaintext().build();
 
-        KademliaGrpc.KademliaBlockingStub stub = KademliaGrpc.newBlockingStub(channel);
+            KademliaGrpc.KademliaBlockingStub stub = KademliaGrpc.newBlockingStub(channel);
 
-        timerOverRequest request = timerOverRequest.newBuilder().
-                setServiceId(ByteString.copyFrom(serviceId)).build();
 
-        timerOverResponse  to= stub.timerOver(request);
+            initiateServiceRequest request = initiateServiceRequest.newBuilder()
+                    .setOwner(ByteString.copyFrom(owner)).setServiceId(bs).setTime(time)
+                    .addAllNodes(allNodes).build();
 
-        return to.getOf();
+            initiateServiceResponse  sr= stub.initiateService(request);
+            // TODO fix this
+            if(sr.getResponse())
+            {
+                result = true;
+            }
 
+        }
+        return result;
     }
+
+
+
 
     public boolean endService (Node n, byte[] serviceId)
     {
-        ManagedChannel channel;
+        ManagedChannel channel = ManagedChannelBuilder.forAddress(n.getIp(), n.getPort()).usePlaintext().build();
 
-        channel = ManagedChannelBuilder.forAddress(n.getIp(), n.getPort()).usePlaintext().build();
 
         KademliaGrpc.KademliaBlockingStub stub = KademliaGrpc.newBlockingStub(channel);
 
-        return true;
+        Node node = Node.newBuilder()
+                .setId(ByteString.copyFrom(nodeId))
+                .setIp(ipAddress)
+                .setPort(port)
+                .setPublickey(String.valueOf(publicKey))
+                .build();
+
+        endServiceRequest request = endServiceRequest.newBuilder()
+                .setNode(node)
+                .setServiceId(ByteString.copyFrom(serviceId)).build();
+
+        endServiceResponse response = stub.endService(request);
+
+        return response.getResponse();
     }
 }

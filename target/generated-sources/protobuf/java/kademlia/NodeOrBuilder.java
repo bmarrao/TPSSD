@@ -36,14 +36,4 @@ public interface NodeOrBuilder extends
    */
   com.google.protobuf.ByteString
       getPublickeyBytes();
-
-  /**
-   * <code>string timestamp = 5;</code>
-   */
-  java.lang.String getTimestamp();
-  /**
-   * <code>string timestamp = 5;</code>
-   */
-  com.google.protobuf.ByteString
-      getTimestampBytes();
 }

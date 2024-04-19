@@ -44,6 +44,19 @@ public  final class endServiceRequest extends
             break;
           }
           case 10: {
+            kademlia.Node.Builder subBuilder = null;
+            if (node_ != null) {
+              subBuilder = node_.toBuilder();
+            }
+            node_ = input.readMessage(kademlia.Node.parser(), extensionRegistry);
+            if (subBuilder != null) {
+              subBuilder.mergeFrom(node_);
+              node_ = subBuilder.buildPartial();
+            }
+
+            break;
+          }
+          case 18: {
 
             serviceId_ = input.readBytes();
             break;
@@ -71,10 +84,31 @@ public  final class endServiceRequest extends
             kademlia.endServiceRequest.class, kademlia.endServiceRequest.Builder.class);
   }
 
-  public static final int SERVICEID_FIELD_NUMBER = 1;
+  public static final int NODE_FIELD_NUMBER = 1;
+  private kademlia.Node node_;
+  /**
+   * <code>.kademlia.Node node = 1;</code>
+   */
+  public boolean hasNode() {
+    return node_ != null;
+  }
+  /**
+   * <code>.kademlia.Node node = 1;</code>
+   */
+  public kademlia.Node getNode() {
+    return node_ == null ? kademlia.Node.getDefaultInstance() : node_;
+  }
+  /**
+   * <code>.kademlia.Node node = 1;</code>
+   */
+  public kademlia.NodeOrBuilder getNodeOrBuilder() {
+    return getNode();
+  }
+
+  public static final int SERVICEID_FIELD_NUMBER = 2;
   private com.google.protobuf.ByteString serviceId_;
   /**
-   * <code>bytes serviceId = 1;</code>
+   * <code>bytes serviceId = 2;</code>
    */
   public com.google.protobuf.ByteString getServiceId() {
     return serviceId_;
@@ -92,8 +126,11 @@ public  final class endServiceRequest extends
 
   public void writeTo(com.google.protobuf.CodedOutputStream output)
                       throws java.io.IOException {
+    if (node_ != null) {
+      output.writeMessage(1, getNode());
+    }
     if (!serviceId_.isEmpty()) {
-      output.writeBytes(1, serviceId_);
+      output.writeBytes(2, serviceId_);
     }
   }
 
@@ -102,9 +139,13 @@ public  final class endServiceRequest extends
     if (size != -1) return size;
 
     size = 0;
+    if (node_ != null) {
+      size += com.google.protobuf.CodedOutputStream
+        .computeMessageSize(1, getNode());
+    }
     if (!serviceId_.isEmpty()) {
       size += com.google.protobuf.CodedOutputStream
-        .computeBytesSize(1, serviceId_);
+        .computeBytesSize(2, serviceId_);
     }
     memoizedSize = size;
     return size;
@@ -122,6 +163,11 @@ public  final class endServiceRequest extends
     kademlia.endServiceRequest other = (kademlia.endServiceRequest) obj;
 
     boolean result = true;
+    result = result && (hasNode() == other.hasNode());
+    if (hasNode()) {
+      result = result && getNode()
+          .equals(other.getNode());
+    }
     result = result && getServiceId()
         .equals(other.getServiceId());
     return result;
@@ -134,6 +180,10 @@ public  final class endServiceRequest extends
     }
     int hash = 41;
     hash = (19 * hash) + getDescriptor().hashCode();
+    if (hasNode()) {
+      hash = (37 * hash) + NODE_FIELD_NUMBER;
+      hash = (53 * hash) + getNode().hashCode();
+    }
     hash = (37 * hash) + SERVICEID_FIELD_NUMBER;
     hash = (53 * hash) + getServiceId().hashCode();
     hash = (29 * hash) + unknownFields.hashCode();
@@ -265,6 +315,12 @@ public  final class endServiceRequest extends
     }
     public Builder clear() {
       super.clear();
+      if (nodeBuilder_ == null) {
+        node_ = null;
+      } else {
+        node_ = null;
+        nodeBuilder_ = null;
+      }
       serviceId_ = com.google.protobuf.ByteString.EMPTY;
 
       return this;
@@ -289,6 +345,11 @@ public  final class endServiceRequest extends
 
     public kademlia.endServiceRequest buildPartial() {
       kademlia.endServiceRequest result = new kademlia.endServiceRequest(this);
+      if (nodeBuilder_ == null) {
+        result.node_ = node_;
+      } else {
+        result.node_ = nodeBuilder_.build();
+      }
       result.serviceId_ = serviceId_;
       onBuilt();
       return result;
@@ -331,6 +392,9 @@ public  final class endServiceRequest extends
 
     public Builder mergeFrom(kademlia.endServiceRequest other) {
       if (other == kademlia.endServiceRequest.getDefaultInstance()) return this;
+      if (other.hasNode()) {
+        mergeNode(other.getNode());
+      }
       if (other.getServiceId() != com.google.protobuf.ByteString.EMPTY) {
         setServiceId(other.getServiceId());
       }
@@ -360,15 +424,132 @@ public  final class endServiceRequest extends
       return this;
     }
 
+    private kademlia.Node node_ = null;
+    private com.google.protobuf.SingleFieldBuilderV3<
+        kademlia.Node, kademlia.Node.Builder, kademlia.NodeOrBuilder> nodeBuilder_;
+    /**
+     * <code>.kademlia.Node node = 1;</code>
+     */
+    public boolean hasNode() {
+      return nodeBuilder_ != null || node_ != null;
+    }
+    /**
+     * <code>.kademlia.Node node = 1;</code>
+     */
+    public kademlia.Node getNode() {
+      if (nodeBuilder_ == null) {
+        return node_ == null ? kademlia.Node.getDefaultInstance() : node_;
+      } else {
+        return nodeBuilder_.getMessage();
+      }
+    }
+    /**
+     * <code>.kademlia.Node node = 1;</code>
+     */
+    public Builder setNode(kademlia.Node value) {
+      if (nodeBuilder_ == null) {
+        if (value == null) {
+          throw new NullPointerException();
+        }
+        node_ = value;
+        onChanged();
+      } else {
+        nodeBuilder_.setMessage(value);
+      }
+
+      return this;
+    }
+    /**
+     * <code>.kademlia.Node node = 1;</code>
+     */
+    public Builder setNode(
+        kademlia.Node.Builder builderForValue) {
+      if (nodeBuilder_ == null) {
+        node_ = builderForValue.build();
+        onChanged();
+      } else {
+        nodeBuilder_.setMessage(builderForValue.build());
+      }
+
+      return this;
+    }
+    /**
+     * <code>.kademlia.Node node = 1;</code>
+     */
+    public Builder mergeNode(kademlia.Node value) {
+      if (nodeBuilder_ == null) {
+        if (node_ != null) {
+          node_ =
+            kademlia.Node.newBuilder(node_).mergeFrom(value).buildPartial();
+        } else {
+          node_ = value;
+        }
+        onChanged();
+      } else {
+        nodeBuilder_.mergeFrom(value);
+      }
+
+      return this;
+    }
+    /**
+     * <code>.kademlia.Node node = 1;</code>
+     */
+    public Builder clearNode() {
+      if (nodeBuilder_ == null) {
+        node_ = null;
+        onChanged();
+      } else {
+        node_ = null;
+        nodeBuilder_ = null;
+      }
+
+      return this;
+    }
+    /**
+     * <code>.kademlia.Node node = 1;</code>
+     */
+    public kademlia.Node.Builder getNodeBuilder() {
+      
+      onChanged();
+      return getNodeFieldBuilder().getBuilder();
+    }
+    /**
+     * <code>.kademlia.Node node = 1;</code>
+     */
+    public kademlia.NodeOrBuilder getNodeOrBuilder() {
+      if (nodeBuilder_ != null) {
+        return nodeBuilder_.getMessageOrBuilder();
+      } else {
+        return node_ == null ?
+            kademlia.Node.getDefaultInstance() : node_;
+      }
+    }
+    /**
+     * <code>.kademlia.Node node = 1;</code>
+     */
+    private com.google.protobuf.SingleFieldBuilderV3<
+        kademlia.Node, kademlia.Node.Builder, kademlia.NodeOrBuilder> 
+        getNodeFieldBuilder() {
+      if (nodeBuilder_ == null) {
+        nodeBuilder_ = new com.google.protobuf.SingleFieldBuilderV3<
+            kademlia.Node, kademlia.Node.Builder, kademlia.NodeOrBuilder>(
+                getNode(),
+                getParentForChildren(),
+                isClean());
+        node_ = null;
+      }
+      return nodeBuilder_;
+    }
+
     private com.google.protobuf.ByteString serviceId_ = com.google.protobuf.ByteString.EMPTY;
     /**
-     * <code>bytes serviceId = 1;</code>
+     * <code>bytes serviceId = 2;</code>
      */
     public com.google.protobuf.ByteString getServiceId() {
       return serviceId_;
     }
     /**
-     * <code>bytes serviceId = 1;</code>
+     * <code>bytes serviceId = 2;</code>
      */
     public Builder setServiceId(com.google.protobuf.ByteString value) {
       if (value == null) {
@@ -380,7 +561,7 @@ public  final class endServiceRequest extends
       return this;
     }
     /**
-     * <code>bytes serviceId = 1;</code>
+     * <code>bytes serviceId = 2;</code>
      */
     public Builder clearServiceId() {
       

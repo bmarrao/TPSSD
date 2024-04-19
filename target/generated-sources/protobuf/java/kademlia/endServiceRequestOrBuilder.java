@@ -8,7 +8,20 @@ public interface endServiceRequestOrBuilder extends
     com.google.protobuf.MessageOrBuilder {
 
   /**
-   * <code>bytes serviceId = 1;</code>
+   * <code>.kademlia.Node node = 1;</code>
+   */
+  boolean hasNode();
+  /**
+   * <code>.kademlia.Node node = 1;</code>
+   */
+  kademlia.Node getNode();
+  /**
+   * <code>.kademlia.Node node = 1;</code>
+   */
+  kademlia.NodeOrBuilder getNodeOrBuilder();
+
+  /**
+   * <code>bytes serviceId = 2;</code>
    */
   com.google.protobuf.ByteString getServiceId();
 }

@@ -19,7 +19,6 @@ public  final class Node extends
     ip_ = "";
     port_ = 0;
     publickey_ = "";
-    timestamp_ = "";
   }
 
   @java.lang.Override
@@ -67,12 +66,6 @@ public  final class Node extends
             java.lang.String s = input.readStringRequireUtf8();
 
             publickey_ = s;
-            break;
-          }
-          case 42: {
-            java.lang.String s = input.readStringRequireUtf8();
-
-            timestamp_ = s;
             break;
           }
         }
@@ -184,40 +177,6 @@ public  final class Node extends
     }
   }
 
-  public static final int TIMESTAMP_FIELD_NUMBER = 5;
-  private volatile java.lang.Object timestamp_;
-  /**
-   * <code>string timestamp = 5;</code>
-   */
-  public java.lang.String getTimestamp() {
-    java.lang.Object ref = timestamp_;
-    if (ref instanceof java.lang.String) {
-      return (java.lang.String) ref;
-    } else {
-      com.google.protobuf.ByteString bs = 
-          (com.google.protobuf.ByteString) ref;
-      java.lang.String s = bs.toStringUtf8();
-      timestamp_ = s;
-      return s;
-    }
-  }
-  /**
-   * <code>string timestamp = 5;</code>
-   */
-  public com.google.protobuf.ByteString
-      getTimestampBytes() {
-    java.lang.Object ref = timestamp_;
-    if (ref instanceof java.lang.String) {
-      com.google.protobuf.ByteString b = 
-          com.google.protobuf.ByteString.copyFromUtf8(
-              (java.lang.String) ref);
-      timestamp_ = b;
-      return b;
-    } else {
-      return (com.google.protobuf.ByteString) ref;
-    }
-  }
-
   private byte memoizedIsInitialized = -1;
   public final boolean isInitialized() {
     byte isInitialized = memoizedIsInitialized;
@@ -242,9 +201,6 @@ public  final class Node extends
     if (!getPublickeyBytes().isEmpty()) {
       com.google.protobuf.GeneratedMessageV3.writeString(output, 4, publickey_);
     }
-    if (!getTimestampBytes().isEmpty()) {
-      com.google.protobuf.GeneratedMessageV3.writeString(output, 5, timestamp_);
-    }
   }
 
   public int getSerializedSize() {
@@ -265,9 +221,6 @@ public  final class Node extends
     }
     if (!getPublickeyBytes().isEmpty()) {
       size += com.google.protobuf.GeneratedMessageV3.computeStringSize(4, publickey_);
-    }
-    if (!getTimestampBytes().isEmpty()) {
-      size += com.google.protobuf.GeneratedMessageV3.computeStringSize(5, timestamp_);
     }
     memoizedSize = size;
     return size;
@@ -293,8 +246,6 @@ public  final class Node extends
         == other.getPort());
     result = result && getPublickey()
         .equals(other.getPublickey());
-    result = result && getTimestamp()
-        .equals(other.getTimestamp());
     return result;
   }
 
@@ -313,8 +264,6 @@ public  final class Node extends
     hash = (53 * hash) + getPort();
     hash = (37 * hash) + PUBLICKEY_FIELD_NUMBER;
     hash = (53 * hash) + getPublickey().hashCode();
-    hash = (37 * hash) + TIMESTAMP_FIELD_NUMBER;
-    hash = (53 * hash) + getTimestamp().hashCode();
     hash = (29 * hash) + unknownFields.hashCode();
     memoizedHashCode = hash;
     return hash;
@@ -452,8 +401,6 @@ public  final class Node extends
 
       publickey_ = "";
 
-      timestamp_ = "";
-
       return this;
     }
 
@@ -480,7 +427,6 @@ public  final class Node extends
       result.ip_ = ip_;
       result.port_ = port_;
       result.publickey_ = publickey_;
-      result.timestamp_ = timestamp_;
       onBuilt();
       return result;
     }
@@ -534,10 +480,6 @@ public  final class Node extends
       }
       if (!other.getPublickey().isEmpty()) {
         publickey_ = other.publickey_;
-        onChanged();
-      }
-      if (!other.getTimestamp().isEmpty()) {
-        timestamp_ = other.timestamp_;
         onChanged();
       }
       onChanged();
@@ -755,75 +697,6 @@ public  final class Node extends
   checkByteStringIsUtf8(value);
       
       publickey_ = value;
-      onChanged();
-      return this;
-    }
-
-    private java.lang.Object timestamp_ = "";
-    /**
-     * <code>string timestamp = 5;</code>
-     */
-    public java.lang.String getTimestamp() {
-      java.lang.Object ref = timestamp_;
-      if (!(ref instanceof java.lang.String)) {
-        com.google.protobuf.ByteString bs =
-            (com.google.protobuf.ByteString) ref;
-        java.lang.String s = bs.toStringUtf8();
-        timestamp_ = s;
-        return s;
-      } else {
-        return (java.lang.String) ref;
-      }
-    }
-    /**
-     * <code>string timestamp = 5;</code>
-     */
-    public com.google.protobuf.ByteString
-        getTimestampBytes() {
-      java.lang.Object ref = timestamp_;
-      if (ref instanceof String) {
-        com.google.protobuf.ByteString b = 
-            com.google.protobuf.ByteString.copyFromUtf8(
-                (java.lang.String) ref);
-        timestamp_ = b;
-        return b;
-      } else {
-        return (com.google.protobuf.ByteString) ref;
-      }
-    }
-    /**
-     * <code>string timestamp = 5;</code>
-     */
-    public Builder setTimestamp(
-        java.lang.String value) {
-      if (value == null) {
-    throw new NullPointerException();
-  }
-  
-      timestamp_ = value;
-      onChanged();
-      return this;
-    }
-    /**
-     * <code>string timestamp = 5;</code>
-     */
-    public Builder clearTimestamp() {
-      
-      timestamp_ = getDefaultInstance().getTimestamp();
-      onChanged();
-      return this;
-    }
-    /**
-     * <code>string timestamp = 5;</code>
-     */
-    public Builder setTimestampBytes(
-        com.google.protobuf.ByteString value) {
-      if (value == null) {
-    throw new NullPointerException();
-  }
-  checkByteStringIsUtf8(value);
-      
-      timestamp_ = value;
       onChanged();
       return this;
     }

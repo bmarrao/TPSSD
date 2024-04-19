@@ -22,7 +22,6 @@ message Node
   string ip = 2;
   uint32 port = 3;
   string publickey = 4;
-  string timestamp = 5;
 }
 
 message Offer
@@ -122,7 +121,8 @@ message subscribeResponse
 }
 message timerOverRequest
 {
-  bytes serviceId = 1;
+  Node node = 1;
+  bytes serviceId = 2;
 }
 message timerOverResponse
 {
@@ -132,7 +132,8 @@ message timerOverResponse
 
 message endServiceRequest
 {
-  bytes serviceId = 1;
+  Node node =1 ;
+  bytes serviceId = 2;
 }
 
 message endServiceResponse
