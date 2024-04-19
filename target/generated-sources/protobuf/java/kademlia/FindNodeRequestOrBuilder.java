@@ -21,12 +21,12 @@ public interface FindNodeRequestOrBuilder extends
   kademlia.NodeOrBuilder getNodeOrBuilder();
 
   /**
-   * <code>bytes key = 4;</code>
+   * <code>bytes key = 2;</code>
    */
   com.google.protobuf.ByteString getKey();
 
   /**
-   * <code>uint32 k = 5;</code>
+   * <code>uint32 k = 3;</code>
    */
   int getK();
 }

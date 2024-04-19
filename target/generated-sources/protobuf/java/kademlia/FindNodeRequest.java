@@ -57,12 +57,12 @@ public  final class FindNodeRequest extends
 
             break;
           }
-          case 34: {
+          case 18: {
 
             key_ = input.readBytes();
             break;
           }
-          case 40: {
+          case 24: {
 
             k_ = input.readUInt32();
             break;
@@ -111,19 +111,19 @@ public  final class FindNodeRequest extends
     return getNode();
   }
 
-  public static final int KEY_FIELD_NUMBER = 4;
+  public static final int KEY_FIELD_NUMBER = 2;
   private com.google.protobuf.ByteString key_;
   /**
-   * <code>bytes key = 4;</code>
+   * <code>bytes key = 2;</code>
    */
   public com.google.protobuf.ByteString getKey() {
     return key_;
   }
 
-  public static final int K_FIELD_NUMBER = 5;
+  public static final int K_FIELD_NUMBER = 3;
   private int k_;
   /**
-   * <code>uint32 k = 5;</code>
+   * <code>uint32 k = 3;</code>
    */
   public int getK() {
     return k_;
@@ -145,10 +145,10 @@ public  final class FindNodeRequest extends
       output.writeMessage(1, getNode());
     }
     if (!key_.isEmpty()) {
-      output.writeBytes(4, key_);
+      output.writeBytes(2, key_);
     }
     if (k_ != 0) {
-      output.writeUInt32(5, k_);
+      output.writeUInt32(3, k_);
     }
   }
 
@@ -163,11 +163,11 @@ public  final class FindNodeRequest extends
     }
     if (!key_.isEmpty()) {
       size += com.google.protobuf.CodedOutputStream
-        .computeBytesSize(4, key_);
+        .computeBytesSize(2, key_);
     }
     if (k_ != 0) {
       size += com.google.protobuf.CodedOutputStream
-        .computeUInt32Size(5, k_);
+        .computeUInt32Size(3, k_);
     }
     memoizedSize = size;
     return size;
@@ -575,13 +575,13 @@ public  final class FindNodeRequest extends
 
     private com.google.protobuf.ByteString key_ = com.google.protobuf.ByteString.EMPTY;
     /**
-     * <code>bytes key = 4;</code>
+     * <code>bytes key = 2;</code>
      */
     public com.google.protobuf.ByteString getKey() {
       return key_;
     }
     /**
-     * <code>bytes key = 4;</code>
+     * <code>bytes key = 2;</code>
      */
     public Builder setKey(com.google.protobuf.ByteString value) {
       if (value == null) {
@@ -593,7 +593,7 @@ public  final class FindNodeRequest extends
       return this;
     }
     /**
-     * <code>bytes key = 4;</code>
+     * <code>bytes key = 2;</code>
      */
     public Builder clearKey() {
       
@@ -604,13 +604,13 @@ public  final class FindNodeRequest extends
 
     private int k_ ;
     /**
-     * <code>uint32 k = 5;</code>
+     * <code>uint32 k = 3;</code>
      */
     public int getK() {
       return k_;
     }
     /**
-     * <code>uint32 k = 5;</code>
+     * <code>uint32 k = 3;</code>
      */
     public Builder setK(int value) {
       
@@ -619,7 +619,7 @@ public  final class FindNodeRequest extends
       return this;
     }
     /**
-     * <code>uint32 k = 5;</code>
+     * <code>uint32 k = 3;</code>
      */
     public Builder clearK() {
       

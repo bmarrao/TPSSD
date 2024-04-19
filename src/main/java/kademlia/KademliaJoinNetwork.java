@@ -45,6 +45,8 @@ public class KademliaJoinNetwork implements Runnable {
         }
 
         */
+
+
         ArrayList<Node> newAddedNodes = rt.addNodes(closestNodes.getNodesList());
 
         while (!newAddedNodes.isEmpty()) {
@@ -57,6 +59,7 @@ public class KademliaJoinNetwork implements Runnable {
                 newAddedNodes.addAll(rt.addNodes(newNodes));
             }
         }
+
 
 
 

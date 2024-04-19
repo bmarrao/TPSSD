@@ -21,6 +21,8 @@ message Node
   bytes id = 1;
   string ip = 2;
   uint32 port = 3;
+  string publickey = 4;
+  string timestamp = 5;
 }
 
 message Offer
@@ -44,8 +46,8 @@ message StoreResponse
 message FindNodeRequest
 {
   Node node = 1;
-  bytes key = 4;
-  uint32 k = 5;
+  bytes key = 2;
+  uint32 k = 3;
 }
 
 // Interativo ou recursivo

@@ -26,4 +26,24 @@ public interface NodeOrBuilder extends
    * <code>uint32 port = 3;</code>
    */
   int getPort();
+
+  /**
+   * <code>string publickey = 4;</code>
+   */
+  java.lang.String getPublickey();
+  /**
+   * <code>string publickey = 4;</code>
+   */
+  com.google.protobuf.ByteString
+      getPublickeyBytes();
+
+  /**
+   * <code>string timestamp = 5;</code>
+   */
+  java.lang.String getTimestamp();
+  /**
+   * <code>string timestamp = 5;</code>
+   */
+  com.google.protobuf.ByteString
+      getTimestampBytes();
 }

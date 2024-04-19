@@ -24,6 +24,7 @@ public class KademliaProtocol
         this.publicKey = publicKey;
     }
 
+
     public boolean pingOp(byte[] nodeId, String receiverIp, int receiverPort)
     {
         ManagedChannel channel = ManagedChannelBuilder.forAddress(receiverIp, receiverPort).usePlaintext().build();
@@ -112,6 +113,8 @@ public class KademliaProtocol
         return new KademliaFindOpResult(response.getId().toByteArray(), response.getValue(), new ArrayList<>());
     }
 
+
+
     public void notifySubscribed(ArrayList<Node> subscribed, Offer highestOffer, byte[] serviceId)
     {
         ManagedChannel channel;
@@ -130,6 +133,32 @@ public class KademliaProtocol
 
         }
     }
+
+    public void sendPrice(ArrayList<Node> selectedBrokers , float price, byte[] serviceId)
+    {
+        Node node = Node.newBuilder()
+                .setId(ByteString.copyFrom(nodeId))
+                .setIp(ipAddress)
+                .setPort(port)
+                .setPublickey(String.valueOf(publicKey))
+                .build();
+        ManagedChannel channel;
+        ByteString bs= ByteString.copyFrom(serviceId);
+        for (Node n: selectedBrokers)
+        {
+            channel = ManagedChannelBuilder.forAddress(n.getIp(), n.getPort()).usePlaintext().build();
+
+            KademliaGrpc.KademliaStub stub = KademliaGrpc.newStub(channel);
+
+            Offer of = Offer.newBuilder().setNode(node).setPrice(price).build();
+
+            sendPriceRequest request = sendPriceRequest.newBuilder().setOffer(of).setServiceId(bs).build();
+
+            // TODO FINISH THIS
+
+        }
+    }
+
 
     public Offer timerOver(Node n, byte[] serviceId)
     {

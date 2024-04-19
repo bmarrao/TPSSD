@@ -1,6 +1,7 @@
 package auctions;
 
 import auctions.BrokerService;
+import com.google.protobuf.ByteString;
 import kademlia.KademliaProtocol;
 import kademlia.Node;
 import kademlia.Offer;
@@ -36,13 +37,10 @@ public class RunService implements Runnable {
                 if (bs.sleep)
                 {
                     Offer newOf= getOfferFromBrokers();
+                    communicateBiggest(newOf);
                     if (newOf.equals(of))
                     {
-                        endService();
-                    }
-                    else
-                    {
-                        communicateBiggest(newOf);
+                        break;
                     }
                 }
                 else
@@ -61,12 +59,13 @@ public class RunService implements Runnable {
             }
 
         }
+        //kp.endService()
     }
 
     private Offer getOfferFromBrokers()
     {
-        /*
-        Offer of  = new ;
+
+        Offer of  = Offer.newBuilder().setNode(null).setPrice(-1).build();
         Offer newOffer ;
         for (Node n : bs.brokerSet)
         {
@@ -77,7 +76,6 @@ public class RunService implements Runnable {
             }
         }
 
-         */
         return null;
     }
 
@@ -114,7 +112,7 @@ class Sleeper implements Runnable
         try
         {
             Thread.sleep(bs.time);
-            bs.condition.signalAll();
+            bs.endTimer.signalAll();
             bs.sleep = true;
             // condition
         }
