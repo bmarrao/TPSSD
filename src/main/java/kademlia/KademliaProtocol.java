@@ -129,13 +129,49 @@ public class KademliaProtocol
                     .setNode(n).setPrice(highestOffer.getPrice()).
                     setServiceId(ByteString.copyFrom(serviceId)).build();
 
+
+
             // TODO FINISH THIS
 
         }
     }
 
-    public void sendPrice(ArrayList<Node> selectedBrokers , float price, byte[] serviceId)
+    public float getPrice(ArrayList<Node> selectedBrokers ,byte[] serviceId)
     {
+        float price = -1;
+        Node node = Node.newBuilder()
+                .setId(ByteString.copyFrom(nodeId))
+                .setIp(ipAddress)
+                .setPort(port)
+                .setPublickey(String.valueOf(publicKey))
+                .build();
+
+        ManagedChannel channel;
+        ByteString bs= ByteString.copyFrom(serviceId);
+        for (Node n: selectedBrokers)
+        {
+            channel = ManagedChannelBuilder.forAddress(n.getIp(), n.getPort()).usePlaintext().build();
+
+            KademliaGrpc.KademliaBlockingStub stub = KademliaGrpc.newBlockingStub(channel);
+
+            Offer of = Offer.newBuilder().setNode(node).setPrice(price).build();
+
+            getPriceRequest request = getPriceRequest.newBuilder().setServiceId(bs).build();
+
+            getPriceResponse  sr= stub.getPrice(request);
+            if(sr.getPrice() > price)
+            {
+                price = sr.getPrice();
+            }
+
+        }
+
+        return price ;
+    }
+
+    public boolean sendPrice(ArrayList<Node> selectedBrokers , float price, byte[] serviceId)
+    {
+        boolean result = false;
         Node node = Node.newBuilder()
                 .setId(ByteString.copyFrom(nodeId))
                 .setIp(ipAddress)
@@ -148,15 +184,21 @@ public class KademliaProtocol
         {
             channel = ManagedChannelBuilder.forAddress(n.getIp(), n.getPort()).usePlaintext().build();
 
-            KademliaGrpc.KademliaStub stub = KademliaGrpc.newStub(channel);
+            KademliaGrpc.KademliaBlockingStub stub = KademliaGrpc.newBlockingStub(channel);
 
             Offer of = Offer.newBuilder().setNode(node).setPrice(price).build();
 
             sendPriceRequest request = sendPriceRequest.newBuilder().setOffer(of).setServiceId(bs).build();
 
-            // TODO FINISH THIS
+            sendPriceResponse  sr= stub.sendPrice(request);
+            if(sr.getResult())
+            {
+                result = true;
+            }
 
         }
+
+        return result ;
     }
 
 
