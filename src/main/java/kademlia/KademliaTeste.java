@@ -29,12 +29,11 @@ public class KademliaTeste
         KademliaProtocol protocol = new KademliaProtocol(nodeId,ipAddress, port, publicKey);
         System.out.println();
 
+        rtNormal = new KrtNormal(nodeId, protocol, 20, 20);
+
         KademliaServer server = new KademliaServer(port, new Auction(protocol));
         Thread serverThread = new Thread(server);
         serverThread.start();
-
-        rtNormal = new KrtNormal(nodeId, protocol, 20, 20);
-
 
         rtBootStrap = new KrtBootStrap(nodeId, protocol, 20, 20);
         Map<KademliaNode, BigInteger> mapa = new HashMap<KademliaNode,BigInteger>();

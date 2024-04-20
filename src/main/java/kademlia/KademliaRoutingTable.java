@@ -102,23 +102,6 @@ public class KademliaRoutingTable
         }
     }
 
-
-    // o metodo addNodes deve verificar se os ids contidos já estao na routing table
-    // retorna a lista de nós mais próximos que ainda não estavam na rt (para depois os contactar)
-    public ArrayList<Node> addNodes(List<Node> nodesList) {
-        ArrayList<Node> newAddedNodes = new ArrayList<>();
-
-        for (Node n : nodesList) {
-            // if routing table doesn't have n then
-            // if (!hasObject(root.kbucket, n))
-                // add to rt (idk how) -
-                // addToBuckets(root.left, root.right, root.kbucket, n, 0, 0);
-                // newAddedNodes.add(n);
-        }
-        return newAddedNodes;
-    }
-
-
     //  Função que insere um no na arvore
     public boolean insert(Node node)
     {

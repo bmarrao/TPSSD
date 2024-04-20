@@ -22,7 +22,7 @@ public class Kademlia
 
     public static KademliaRoutingTable rt;
     public static KademliaProtocol protocol;
-    public static String bootstrapFilePath = "BootstrapNodes.txt";
+    public static String bootstrapFilePath = "src/main/java/kademlia/BootstrapNodes.txt";
 
     // Auction a;
     // BlockChain b;
@@ -39,9 +39,6 @@ public class Kademlia
     public Kademlia(String ipAddress, int port, boolean bootstrap, int k, int s)
     {
         protocol = new KademliaProtocol(nodeId,ipAddress,port,generatedPk);
-        KademliaServer server = new KademliaServer(port, new Auction(protocol));
-        Thread serverThread = new Thread(server);
-        serverThread.start();
 
         if (bootstrap)
         {
@@ -61,6 +58,10 @@ public class Kademlia
             Thread joinNetThread = new Thread(new KademliaJoinNetwork(nodeId, ipAddress, port, generatedPk, bootstrapIpPort[0], Integer.parseInt(bootstrapIpPort[1])));
             //joinNetThread.start();
         }
+
+        KademliaServer server = new KademliaServer(port, new Auction(protocol));
+        Thread serverThread = new Thread(server);
+        serverThread.start();
     }
 
 
@@ -68,6 +69,36 @@ public class Kademlia
         byte[] sKadNodeId = solveStaticPuzzle(8);
         solveDynamicPuzzle(sKadNodeId, 8);
         System.out.println("S/Kademlia nodeId: " + Arrays.toString(sKadNodeId));
+
+        if (args[0].equals("bootstrap"))
+        {
+            protocol = new KademliaProtocol(sKadNodeId,"localhost",8082, generatedPk);
+            rt = new KrtBootStrap(sKadNodeId,protocol,20,20);
+
+            KademliaServer server = new KademliaServer(8082, new Auction(protocol));
+            Thread serverThread = new Thread(server);
+            serverThread.start();
+
+            addIpPortBSFile("localhost", 8082, bootstrapFilePath);
+        }
+        else {
+            protocol = new KademliaProtocol(sKadNodeId,"localhost",Integer.parseInt(args[1]), generatedPk);
+
+            rt = new KrtNormal(sKadNodeId, protocol, 20, 20);
+
+            KademliaServer server = new KademliaServer(Integer.parseInt(args[1]), new Auction(protocol));
+            Thread serverThread = new Thread(server);
+            serverThread.start();
+
+            // Randomly select one bootstrap node from BootstrapNodes.txt to contact
+            List<String> bootstrapNodesInfo = getBootstrapNodesInfo(bootstrapFilePath);
+            String selectedBootstrap = selectRandomBootstrapNode(bootstrapNodesInfo);
+            String[] bootstrapIpPort = selectedBootstrap.split(" ");
+
+            // Start thread for joining network
+            Thread joinNetThread = new Thread(new KademliaJoinNetwork(sKadNodeId, "localhost", Integer.parseInt(args[1]), generatedPk, bootstrapIpPort[0], Integer.parseInt(bootstrapIpPort[1])));
+            joinNetThread.start();
+        }
     }
 
 
