@@ -51,17 +51,16 @@ public class KademliaTeste
             rtBootStrap.insert(ins);
 
         }
+                /*
+
         System.out.println();
         rtNormal.printTree();
 
-        ArrayList<Node> arr = rtNormal.findClosestNode(nodeId, 1);
         System.out.println(rtNormal.printId(rtBootStrap.myNodeId));
         System.out.println(rtNormal.printId(nodeId));
         System.out.println(rtNormal.printId(arr.get(0).getId().toByteArray()));
 
 
-        rtBootStrap.printTree();
-        arr = rtBootStrap.findClosestNode(nodeId, 1);
         System.out.println(rtNormal.printId(rtBootStrap.myNodeId));
         for (Node n : arr)
         {
@@ -69,13 +68,18 @@ public class KademliaTeste
 
         }
 
-        System.out.println(rtNormal.calculateDistance(nodeId,nodeId));
 
-        System.out.println(rtNormal.CheckNodeIsInTree(nodeId,rtNormal.root,""));
+         */
+        System.out.println();
+        ArrayList<Node> arr = rtBootStrap.findClosestNode(nodeId, 1);
+        for (Node n : arr)
+        {
+            System.out.println(rtBootStrap.printId(n.getId().toByteArray()));
 
-        System.out.println(rtNormal.printId(rtBootStrap.myNodeId));
-
+        }
         System.out.println(rtBootStrap.printId(nodeId));
+        System.out.println(rtBootStrap.printId(rtBootStrap.myNodeId));
+
 
         System.out.println(rtBootStrap.CheckNodeIsInTree(nodeId,rtBootStrap.root,""));
 

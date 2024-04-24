@@ -229,6 +229,7 @@ public class KademliaRoutingTable
     public ArrayList<Node> findClosestNode(byte[] nodeId,int a)
     {
         ArrayList<KademliaNode> nodos;
+        String path="";
         lock.lock();
         // Testa se tem um kbucket
         if (this.root.kc >= 2) {
@@ -243,7 +244,7 @@ public class KademliaRoutingTable
         else
         {
             boolean direction = (((myNodeId[0] >> 7) & 1) == 1) == (((nodeId[0] >> 7) & 1) == 1);
-            nodos = testDirection(direction,this.root,nodeId,0,7,a,"");
+            nodos = testDirection(direction,this.root,nodeId,0,7,a,path);
             if (nodos.size() +1 < a)
             {
                 ArrayList<KademliaNode> nodes ;
@@ -273,6 +274,10 @@ public class KademliaRoutingTable
             if (curr.kc >= 1)
             {
                 ArrayList<KademliaNode> nodos = searchMapClosest(curr.kbucket, nodeId,a);
+                if (hasObject(curr.kbucket,new KademliaNode("",nodeId,421)))
+                {
+                    System.out.println("Found object");
+                }
                 System.out.println("Adding in " + path + " " + nodos.size());
                 return nodos;
 
@@ -364,6 +369,8 @@ public class KademliaRoutingTable
             ArrayList<Tuple> sortDist = new ArrayList<Tuple>();
             KademliaNode node = kbucket.get(0);
             BigInteger distance = calculateDistance(nodeId, node.nodeId);
+            System.out.println();
+            sortDist.add(new Tuple(node, distance));
             for (int i = 1 ; i <kbucket.size();i++)
             {
                 KademliaNode bnode = kbucket.get(i);

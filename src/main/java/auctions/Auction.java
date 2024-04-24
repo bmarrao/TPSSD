@@ -110,6 +110,52 @@ public class Auction
 
     }
 
+    public Offer timerOver(byte[] serviceId, Node request)
+    {
+
+        l.lock();
+        BrokerService bs = this.getService(serviceId);
+        l.unlock();
+        if(bs != null)
+        {
+            bs.endTimer.signal();
+            //Tester essa parte
+            if(bs.brokerSet.contains(request))
+            {
+                return bs.highestOffer;
+            }
+        }
+        return null;
+    }
+
+    public boolean endService(byte[] serviceId, Node request)
+    {
+
+        l.lock();
+        BrokerService bs = this.getService(serviceId);
+        boolean ret ;
+        if(bs!= null)
+        {
+            if(bs.brokerSet.contains(request))
+            {
+                services.remove(serviceId);
+                ret = true;
+            }
+            else
+            {
+                ret = false;
+            }
+        }
+        else
+        {
+            ret = false;
+        }
+        l.unlock();
+        return ret ;
+
+
+    }
+
     private boolean compareId(byte[] id1, byte[] id2)
     {
 

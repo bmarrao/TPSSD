@@ -198,19 +198,56 @@ public class KademliaImpl extends KademliaGrpc.KademliaImplBase
     @Override
     public void timerOver(timerOverRequest request, StreamObserver<timerOverResponse> responseObserver)
     {
+        Offer of = auc.timerOver(request.getServiceId().toByteArray(),request.getNode());
 
+        timerOverResponse response = timerOverResponse
+                .newBuilder()
+                .setResponse(true)
+                .setOf(of)
+                .build();
+
+        // Send the response to the client.
+        responseObserver.onNext(response);
+
+        // Notifies the customer that the call is completed.
+        responseObserver.onCompleted();
     }
 
 
     @Override
     public void endService(endServiceRequest request, StreamObserver<endServiceResponse> responseObserver)
     {
+        boolean resp = auc.endService(request.getServiceId().toByteArray(),request.getNode());
 
+        endServiceResponse response = endServiceResponse
+                .newBuilder()
+                .setResponse(resp)
+                .build();
+
+        // Send the response to the client.
+        responseObserver.onNext(response);
+
+        // Notifies the customer that the call is completed.
+        responseObserver.onCompleted();
     }
 
+    /*
     @Override
     public void communicateBiggest(communicateBiggestRequest request, StreamObserver<communicateBiggestResponse> responseObserver)
     {
+        boolean resp = auc.communicateBiggest(request.getServiceId().toByteArray(),request.getOf());
 
+        communicateBiggestResponse response = communicateBiggestResponse
+                .newBuilder()
+                .setResponse(resp)
+                .build();
+
+        // Send the response to the client.
+        responseObserver.onNext(response);
+
+        // Notifies the customer that the call is completed.
+        responseObserver.onCompleted();
     }
+
+     */
 }

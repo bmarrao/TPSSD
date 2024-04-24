@@ -143,7 +143,8 @@ message endServiceResponse
 message communicateBiggestRequest
 {
   bytes serviceId = 1;
-  Offer of = 2;
+  Node node = 2;
+  Offer of = 3;
 }
 
 message communicateBiggestResponse
