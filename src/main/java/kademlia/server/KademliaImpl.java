@@ -6,14 +6,14 @@ import io.grpc.stub.StreamObserver;
 import kademlia.*;
 
 import java.util.ArrayList;
+import java.util.List;
+
+import static kademlia.Kademlia.rt;
 
 // TODO Hugo Implementar metodos dessa classe
 //  TODO parte do bootstrap - Cristina
 public class KademliaImpl extends KademliaGrpc.KademliaImplBase
 {
-
-    public static KademliaRoutingTable rt ;
-
     private static int k_nodes = 3;
 
     private Auction auc;
@@ -77,9 +77,8 @@ public class KademliaImpl extends KademliaGrpc.KademliaImplBase
 
     @Override
     public void findNode(FindNodeRequest request, StreamObserver<FindNodeResponse> responseObserver) {
-
         //TODO insert!
-        //rt.insert(request.getNode());
+        rt.insert(request.getNode());
 
         // Retrieve the target ID from the request
         byte[] nodeID = request.getKey().toByteArray();
@@ -87,11 +86,11 @@ public class KademliaImpl extends KademliaGrpc.KademliaImplBase
         // Get the closest node to the target ID from the routing table
         //TODO : Retirar o j??
         //TODO : replace KademliaNode to Node
-        ArrayList<Node> closestNodes = rt.findClosestNode(nodeID, k_nodes );
+        List<Node> closestNodes = rt.findClosestNode(nodeID, k_nodes );
 
         //TODO : AddAllNodes
         FindNodeResponse response = FindNodeResponse.newBuilder()
-                .setId(request.getKey()).build();
+                .setId(request.getKey()).addAllNodes(closestNodes).build();
 
         responseObserver.onNext(response);
         responseObserver.onCompleted();

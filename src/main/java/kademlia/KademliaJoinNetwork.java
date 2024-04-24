@@ -29,39 +29,37 @@ public class KademliaJoinNetwork implements Runnable {
         KademliaProtocol protocol = new KademliaProtocol(this.nodeId, this.ipAddress, this.port, this.publicKey);
 
         // send find node operation to selected bootstrap node
-        KademliaFindOpResult closestNodes = protocol.findNodeOp(this.nodeId, this.nodeId, this.bootstrapIp, this.bootstrapPort);
+        List<Node> closestNodes = protocol.findNodeOp(this.nodeId, this.nodeId, this.bootstrapIp, this.bootstrapPort).getNodesList();
+
+        System.out.println("Closest nodes are: " + closestNodes);
 
         // add received ids of closest nodes to routing table
-        // o metodo addNodes deve verificar se os ids contidos já estao na routing table
-        // retorna a lista de nós mais próximos que ainda não estavam na rt (para depois os contactar)
-        /*
         ArrayList<Node> newAddedNodes = new ArrayList<>();
-        for (Node n : closestNodes.getNodesList());
+        for (Node n : closestNodes)
         {
             if (rt.insert(n))
             {
-                newAddedNodes.add(n)
+                System.out.println("Got new closest node to contact: " + n.getId());
+                newAddedNodes.add(n);
             }
         }
-
-        */
-
-
-        ArrayList<Node> newAddedNodes = rt.addNodes(closestNodes.getNodesList());
 
         while (!newAddedNodes.isEmpty()) {
             List<Node> nodesToIterate = new ArrayList<>(newAddedNodes);
             newAddedNodes.clear();
 
             for (Node n : nodesToIterate) {
-                closestNodes = protocol.findNodeOp(this.nodeId, n.getId().toByteArray(), n.getIp(), n.getPort());
-                List<Node> newNodes = closestNodes.getNodesList();
-                newAddedNodes.addAll(rt.addNodes(newNodes));
+                closestNodes = protocol.findNodeOp(this.nodeId, n.getId().toByteArray(), n.getIp(), n.getPort()).getNodesList();
+                for (Node m : closestNodes)
+                {
+                    if (rt.insert(m))
+                    {
+                        System.out.println("Got new closest node to contact: " + n.getId());
+                        newAddedNodes.add(m);
+                    }
+                }
             }
         }
-
-
-
 
         /*
         boolean foundNewClosestNodes = true;
