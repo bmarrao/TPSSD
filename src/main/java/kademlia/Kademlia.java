@@ -23,7 +23,6 @@ public class Kademlia
     public static KademliaRoutingTable rt;
     public static KademliaProtocol protocol;
     public static String bootstrapFilePath = "src/main/java/kademlia/BootstrapNodes.txt";
-
     // Auction a;
     // BlockChain b;
 

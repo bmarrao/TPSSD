@@ -30,9 +30,18 @@ public class RunService implements Runnable {
 
         while (true)
         {
-            try
-            {
+
                 sleeper.run();
+                if (bs.highestOffer.equals(of))
+                {
+                    kp.endService(null,bs.serviceId);
+                    break;
+                }
+                else
+                {
+                    of = bs.highestOffer;
+                }
+                /*
                 bs.endTimer.await();
                 if (bs.sleep)
                 {
@@ -52,11 +61,9 @@ public class RunService implements Runnable {
                     }
 
                 }
-            }
-            catch (InterruptedException e)
-            {
-                throw new RuntimeException(e);
-            }
+
+                 */
+
 
         }
         //kp.endService()

@@ -139,27 +139,30 @@ public class KademliaProtocol
 
     }
 
-    public void notifySubscribed(ArrayList<Node> subscribed, Offer highestOffer, byte[] serviceId)
-    {
-        ManagedChannel channel;
-        for (Node n: subscribed)
-        {
-            channel = ManagedChannelBuilder.forAddress(n.getIp(), n.getPort()).usePlaintext().build();
-
-            KademliaGrpc.KademliaStub stub = KademliaGrpc.newStub(channel);
-
+    /*
+    public void notifySubscribed(ArrayList<Node> subscribed, Offer highestOffer, byte[] serviceId) {
+        for (Node n : subscribed) {
+            ManagedChannel channel = ManagedChannelBuilder.forAddress(n.getIp(), n.getPort())
+                    .usePlaintext()
+                    .build();
+            KademliaGrpc.KademliaBlockingStub stub = KademliaGrpc.newBlockingStub(channel);
 
             NotifyRequest request = NotifyRequest.newBuilder()
-                    .setNode(n).setPrice(highestOffer.getPrice()).
-                    setServiceId(ByteString.copyFrom(serviceId)).build();
+                    .setNode(n)
+                    .setPrice(highestOffer.getPrice())
+                    .setServiceId(ByteString.copyFrom(serviceId))
+                    .build();
+
+            Response  sr= stub.getPrice(request);
 
 
-
-            // TODO FINISH THIS
+            // Send the request asynchronously
 
         }
     }
 
+
+     */
     public float getPrice(ArrayList<Node> selectedBrokers ,byte[] serviceId)
     {
         float price = -1;
@@ -289,10 +292,12 @@ public class KademliaProtocol
 
     public boolean endService (Node n, byte[] serviceId)
     {
-        ManagedChannel channel = ManagedChannelBuilder.forAddress(n.getIp(), n.getPort()).usePlaintext().build();
+        //ManagedChannel channel = ManagedChannelBuilder.forAddress(n.getIp(), n.getPort()).usePlaintext().build();
 
+        ManagedChannel channel = ManagedChannelBuilder.forAddress(ipAddress, port).usePlaintext().build();
 
         KademliaGrpc.KademliaBlockingStub stub = KademliaGrpc.newBlockingStub(channel);
+
 
         Node node = Node.newBuilder()
                 .setId(ByteString.copyFrom(nodeId))

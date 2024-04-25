@@ -37,7 +37,7 @@ public class Auction
             l.unlock();
             if (bs.receiveOffer(of))
             {
-                kp.notifySubscribed(bs.subscribed,bs.highestOffer,bs.serviceId);
+                //kp.notifySubscribed(bs.subscribed,bs.highestOffer,bs.serviceId);
                 return true;
             }
             bs.l.unlock();
@@ -152,6 +152,7 @@ public class Auction
         }
         l.unlock();
         return ret ;
+
 
 
     }

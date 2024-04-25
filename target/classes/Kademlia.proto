@@ -75,6 +75,11 @@ message NotifyRequest
   float price = 3;
 }
 
+message NotifyResponse
+{
+  bool response = 1;
+}
+
 message getPriceRequest
 {
   bytes serviceId = 1;
@@ -134,23 +139,14 @@ message endServiceRequest
 {
   Node node =1 ;
   bytes serviceId = 2;
+  Offer of = 3;
 }
 
 message endServiceResponse
 {
   bool response =1;
 }
-message communicateBiggestRequest
-{
-  bytes serviceId = 1;
-  Node node = 2;
-  Offer of = 3;
-}
 
-message communicateBiggestResponse
-{
-  bool response = 1;
-}
 
 
 service Kademlia
@@ -167,7 +163,7 @@ service Kademlia
   // similar to findNode + if RPC recipient received a STORE for the given key then it returns the stored value
   rpc findValue(FindValueRequest) returns (FindValueResponse);
 
-  rpc notify(NotifyRequest) returns (google.protobuf.Empty);
+  rpc notify(NotifyRequest) returns (NotifyResponse);
 
   rpc getPrice(getPriceRequest) returns (getPriceResponse);
 
@@ -181,7 +177,6 @@ service Kademlia
 
   rpc endService(endServiceRequest) returns (endServiceResponse);
 
-  rpc communicateBiggest(communicateBiggestRequest) returns (communicateBiggestResponse);
 }
 
 

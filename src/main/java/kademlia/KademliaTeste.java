@@ -16,7 +16,7 @@ public class KademliaTeste
          byte[] nodeId;
          // TODO define ipadress and port
          String ipAddress = "";
-        int port = 5000;
+        int port;
         PublicKey publicKey = null;
 
         KademliaRoutingTable rtNormal ;
