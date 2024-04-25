@@ -24,4 +24,17 @@ public interface endServiceRequestOrBuilder extends
    * <code>bytes serviceId = 2;</code>
    */
   com.google.protobuf.ByteString getServiceId();
+
+  /**
+   * <code>.kademlia.Offer of = 3;</code>
+   */
+  boolean hasOf();
+  /**
+   * <code>.kademlia.Offer of = 3;</code>
+   */
+  kademlia.Offer getOf();
+  /**
+   * <code>.kademlia.Offer of = 3;</code>
+   */
+  kademlia.OfferOrBuilder getOfOrBuilder();
 }

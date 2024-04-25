@@ -103,7 +103,7 @@ message sendPriceResponse
 
 message initiateServiceRequest
 {
-  bytes owner = 1;
+  Node owner = 1;
   bytes serviceId = 2;
   repeated Node nodes = 3;
   uint32 time = 4;

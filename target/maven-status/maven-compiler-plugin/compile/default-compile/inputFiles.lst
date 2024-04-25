@@ -1,11 +1,12 @@
 /home/brenin/TPSSD/TPSSD/target/generated-sources/protobuf/java/kademlia/subscribeRequest.java
-/home/brenin/TPSSD/TPSSD/target/generated-sources/protobuf/java/kademlia/communicateBiggestResponse.java
 /home/brenin/TPSSD/TPSSD/target/generated-sources/protobuf/java/kademlia/NotifyRequest.java
 /home/brenin/TPSSD/TPSSD/src/main/java/kademlia/KademliaFindOpResult.java
 /home/brenin/TPSSD/TPSSD/target/generated-sources/protobuf/java/kademlia/StoreResponse.java
+/home/brenin/TPSSD/TPSSD/src/main/java/AuctionTest.java
 /home/brenin/TPSSD/TPSSD/target/generated-sources/protobuf/java/kademlia/FindNodeResponseOrBuilder.java
 /home/brenin/TPSSD/TPSSD/target/generated-sources/protobuf/java/kademlia/timerOverResponseOrBuilder.java
 /home/brenin/TPSSD/TPSSD/target/generated-sources/protobuf/java/kademlia/Offer.java
+/home/brenin/TPSSD/TPSSD/target/generated-sources/protobuf/java/kademlia/NotifyResponse.java
 /home/brenin/TPSSD/TPSSD/target/generated-sources/protobuf/java/kademlia/getPriceRequest.java
 /home/brenin/TPSSD/TPSSD/target/generated-sources/protobuf/java/kademlia/subscribeResponse.java
 /home/brenin/TPSSD/TPSSD/target/generated-sources/protobuf/java/kademlia/FindNodeResponse.java
@@ -38,10 +39,8 @@
 /home/brenin/TPSSD/TPSSD/src/main/java/kademlia/server/KademliaServer.java
 /home/brenin/TPSSD/TPSSD/src/main/java/kademlia/server/KademliaImpl.java
 /home/brenin/TPSSD/TPSSD/target/generated-sources/protobuf/java/kademlia/FindNodeRequest.java
-/home/brenin/TPSSD/TPSSD/target/generated-sources/protobuf/java/kademlia/communicateBiggestResponseOrBuilder.java
 /home/brenin/TPSSD/TPSSD/src/main/java/kademlia/KademliaRoutingTable.java
 /home/brenin/TPSSD/TPSSD/src/main/java/auctions/Auction.java
-/home/brenin/TPSSD/TPSSD/target/generated-sources/protobuf/java/kademlia/communicateBiggestRequestOrBuilder.java
 /home/brenin/TPSSD/TPSSD/target/generated-sources/protobuf/java/kademlia/NotifyRequestOrBuilder.java
 /home/brenin/TPSSD/TPSSD/src/main/java/kademlia/KrtBootStrap.java
 /home/brenin/TPSSD/TPSSD/src/main/java/kademlia/KademliaTeste.java
@@ -61,8 +60,8 @@
 /home/brenin/TPSSD/TPSSD/target/generated-sources/protobuf/java/kademlia/PingResponseOrBuilder.java
 /home/brenin/TPSSD/TPSSD/target/generated-sources/protobuf/java/kademlia/StoreResponseOrBuilder.java
 /home/brenin/TPSSD/TPSSD/src/main/java/auctions/Auctions.java
-/home/brenin/TPSSD/TPSSD/target/generated-sources/protobuf/java/kademlia/communicateBiggestRequest.java
 /home/brenin/TPSSD/TPSSD/target/generated-sources/protobuf/java/kademlia/PingResponse.java
 /home/brenin/TPSSD/TPSSD/target/generated-sources/protobuf/java/kademlia/timerOverRequest.java
 /home/brenin/TPSSD/TPSSD/src/main/java/kademlia/KrtNormal.java
 /home/brenin/TPSSD/TPSSD/target/generated-sources/protobuf/java/kademlia/StoreRequest.java
+/home/brenin/TPSSD/TPSSD/target/generated-sources/protobuf/java/kademlia/NotifyResponseOrBuilder.java

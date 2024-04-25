@@ -51,7 +51,7 @@ public class Auction
     }
 
 
-    public void initiateService(byte[] owner, byte[] serviceId, int time, ArrayList<Node> brokerSet)
+    public void initiateService(Node owner, byte[] serviceId, int time, ArrayList<Node> brokerSet)
     {
         l.lock();
         BrokerService bs = new BrokerService(serviceId,owner,time,brokerSet);

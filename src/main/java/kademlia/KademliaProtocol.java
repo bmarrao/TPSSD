@@ -273,7 +273,7 @@ public class KademliaProtocol
 
 
             initiateServiceRequest request = initiateServiceRequest.newBuilder()
-                    .setOwner(ByteString.copyFrom(owner)).setServiceId(bs).setTime(time)
+                    .setOwner(owner).setServiceId(bs).setTime(time)
                     .addAllNodes(allNodes).build();
 
             initiateServiceResponse  sr= stub.initiateService(request);
@@ -286,7 +286,6 @@ public class KademliaProtocol
         }
         return result;
     }
-
 
 
 

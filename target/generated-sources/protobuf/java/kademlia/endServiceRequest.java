@@ -61,6 +61,19 @@ public  final class endServiceRequest extends
             serviceId_ = input.readBytes();
             break;
           }
+          case 26: {
+            kademlia.Offer.Builder subBuilder = null;
+            if (of_ != null) {
+              subBuilder = of_.toBuilder();
+            }
+            of_ = input.readMessage(kademlia.Offer.parser(), extensionRegistry);
+            if (subBuilder != null) {
+              subBuilder.mergeFrom(of_);
+              of_ = subBuilder.buildPartial();
+            }
+
+            break;
+          }
         }
       }
     } catch (com.google.protobuf.InvalidProtocolBufferException e) {
@@ -114,6 +127,27 @@ public  final class endServiceRequest extends
     return serviceId_;
   }
 
+  public static final int OF_FIELD_NUMBER = 3;
+  private kademlia.Offer of_;
+  /**
+   * <code>.kademlia.Offer of = 3;</code>
+   */
+  public boolean hasOf() {
+    return of_ != null;
+  }
+  /**
+   * <code>.kademlia.Offer of = 3;</code>
+   */
+  public kademlia.Offer getOf() {
+    return of_ == null ? kademlia.Offer.getDefaultInstance() : of_;
+  }
+  /**
+   * <code>.kademlia.Offer of = 3;</code>
+   */
+  public kademlia.OfferOrBuilder getOfOrBuilder() {
+    return getOf();
+  }
+
   private byte memoizedIsInitialized = -1;
   public final boolean isInitialized() {
     byte isInitialized = memoizedIsInitialized;
@@ -132,6 +166,9 @@ public  final class endServiceRequest extends
     if (!serviceId_.isEmpty()) {
       output.writeBytes(2, serviceId_);
     }
+    if (of_ != null) {
+      output.writeMessage(3, getOf());
+    }
   }
 
   public int getSerializedSize() {
@@ -146,6 +183,10 @@ public  final class endServiceRequest extends
     if (!serviceId_.isEmpty()) {
       size += com.google.protobuf.CodedOutputStream
         .computeBytesSize(2, serviceId_);
+    }
+    if (of_ != null) {
+      size += com.google.protobuf.CodedOutputStream
+        .computeMessageSize(3, getOf());
     }
     memoizedSize = size;
     return size;
@@ -170,6 +211,11 @@ public  final class endServiceRequest extends
     }
     result = result && getServiceId()
         .equals(other.getServiceId());
+    result = result && (hasOf() == other.hasOf());
+    if (hasOf()) {
+      result = result && getOf()
+          .equals(other.getOf());
+    }
     return result;
   }
 
@@ -186,6 +232,10 @@ public  final class endServiceRequest extends
     }
     hash = (37 * hash) + SERVICEID_FIELD_NUMBER;
     hash = (53 * hash) + getServiceId().hashCode();
+    if (hasOf()) {
+      hash = (37 * hash) + OF_FIELD_NUMBER;
+      hash = (53 * hash) + getOf().hashCode();
+    }
     hash = (29 * hash) + unknownFields.hashCode();
     memoizedHashCode = hash;
     return hash;
@@ -323,6 +373,12 @@ public  final class endServiceRequest extends
       }
       serviceId_ = com.google.protobuf.ByteString.EMPTY;
 
+      if (ofBuilder_ == null) {
+        of_ = null;
+      } else {
+        of_ = null;
+        ofBuilder_ = null;
+      }
       return this;
     }
 
@@ -351,6 +407,11 @@ public  final class endServiceRequest extends
         result.node_ = nodeBuilder_.build();
       }
       result.serviceId_ = serviceId_;
+      if (ofBuilder_ == null) {
+        result.of_ = of_;
+      } else {
+        result.of_ = ofBuilder_.build();
+      }
       onBuilt();
       return result;
     }
@@ -397,6 +458,9 @@ public  final class endServiceRequest extends
       }
       if (other.getServiceId() != com.google.protobuf.ByteString.EMPTY) {
         setServiceId(other.getServiceId());
+      }
+      if (other.hasOf()) {
+        mergeOf(other.getOf());
       }
       onChanged();
       return this;
@@ -568,6 +632,123 @@ public  final class endServiceRequest extends
       serviceId_ = getDefaultInstance().getServiceId();
       onChanged();
       return this;
+    }
+
+    private kademlia.Offer of_ = null;
+    private com.google.protobuf.SingleFieldBuilderV3<
+        kademlia.Offer, kademlia.Offer.Builder, kademlia.OfferOrBuilder> ofBuilder_;
+    /**
+     * <code>.kademlia.Offer of = 3;</code>
+     */
+    public boolean hasOf() {
+      return ofBuilder_ != null || of_ != null;
+    }
+    /**
+     * <code>.kademlia.Offer of = 3;</code>
+     */
+    public kademlia.Offer getOf() {
+      if (ofBuilder_ == null) {
+        return of_ == null ? kademlia.Offer.getDefaultInstance() : of_;
+      } else {
+        return ofBuilder_.getMessage();
+      }
+    }
+    /**
+     * <code>.kademlia.Offer of = 3;</code>
+     */
+    public Builder setOf(kademlia.Offer value) {
+      if (ofBuilder_ == null) {
+        if (value == null) {
+          throw new NullPointerException();
+        }
+        of_ = value;
+        onChanged();
+      } else {
+        ofBuilder_.setMessage(value);
+      }
+
+      return this;
+    }
+    /**
+     * <code>.kademlia.Offer of = 3;</code>
+     */
+    public Builder setOf(
+        kademlia.Offer.Builder builderForValue) {
+      if (ofBuilder_ == null) {
+        of_ = builderForValue.build();
+        onChanged();
+      } else {
+        ofBuilder_.setMessage(builderForValue.build());
+      }
+
+      return this;
+    }
+    /**
+     * <code>.kademlia.Offer of = 3;</code>
+     */
+    public Builder mergeOf(kademlia.Offer value) {
+      if (ofBuilder_ == null) {
+        if (of_ != null) {
+          of_ =
+            kademlia.Offer.newBuilder(of_).mergeFrom(value).buildPartial();
+        } else {
+          of_ = value;
+        }
+        onChanged();
+      } else {
+        ofBuilder_.mergeFrom(value);
+      }
+
+      return this;
+    }
+    /**
+     * <code>.kademlia.Offer of = 3;</code>
+     */
+    public Builder clearOf() {
+      if (ofBuilder_ == null) {
+        of_ = null;
+        onChanged();
+      } else {
+        of_ = null;
+        ofBuilder_ = null;
+      }
+
+      return this;
+    }
+    /**
+     * <code>.kademlia.Offer of = 3;</code>
+     */
+    public kademlia.Offer.Builder getOfBuilder() {
+      
+      onChanged();
+      return getOfFieldBuilder().getBuilder();
+    }
+    /**
+     * <code>.kademlia.Offer of = 3;</code>
+     */
+    public kademlia.OfferOrBuilder getOfOrBuilder() {
+      if (ofBuilder_ != null) {
+        return ofBuilder_.getMessageOrBuilder();
+      } else {
+        return of_ == null ?
+            kademlia.Offer.getDefaultInstance() : of_;
+      }
+    }
+    /**
+     * <code>.kademlia.Offer of = 3;</code>
+     */
+    private com.google.protobuf.SingleFieldBuilderV3<
+        kademlia.Offer, kademlia.Offer.Builder, kademlia.OfferOrBuilder> 
+        getOfFieldBuilder() {
+      if (ofBuilder_ == null) {
+        ofBuilder_ = new com.google.protobuf.SingleFieldBuilderV3<
+            kademlia.Offer, kademlia.Offer.Builder, kademlia.OfferOrBuilder>(
+                getOf(),
+                getParentForChildren(),
+                isClean());
+        of_ = null;
+      }
+      return ofBuilder_;
     }
     public final Builder setUnknownFields(
         final com.google.protobuf.UnknownFieldSet unknownFields) {

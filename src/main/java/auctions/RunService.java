@@ -25,21 +25,25 @@ public class RunService implements Runnable {
     {
 
         Map<Node,Offer> offers  = new HashMap<>();
-        Offer of = null;
+        Offer of = clone(bs.highestOffer);
         Sleeper sleeper = new Sleeper(bs);
 
         while (true)
         {
 
-                sleeper.run();
-                if (bs.highestOffer.equals(of))
-                {
-                    kp.endService(bs.owner,bs.serviceId);
+                //sleeper.run();
+
+            try
+            {
+                System.out.println(bs.time);
+                Thread.sleep(bs.time);
+
+
+                if (bs.highestOffer.getPrice() == of.getPrice()) {
+                    kp.endService(bs.owner, bs.serviceId);
                     break;
-                }
-                else
-                {
-                    of = bs.highestOffer;
+                } else {
+                    of = clone(bs.highestOffer);
                 }
                 /*
                 bs.endTimer.await();
@@ -63,10 +67,21 @@ public class RunService implements Runnable {
                 }
 
                  */
-
-
+            }
+            catch (InterruptedException e)
+            {
+                throw new RuntimeException(e);
+            }
         }
         //kp.endService()
+    }
+
+    Offer clone (Offer o)
+    {
+        Offer.Builder nd = Offer.newBuilder();
+        nd.setPrice(o.getPrice());
+        nd.setNode(o.getNode());
+        return nd.build();
     }
 
     /*

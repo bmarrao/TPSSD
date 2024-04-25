@@ -31,7 +31,7 @@ public class BrokerService
         subscribed = new ArrayList<>();
         highestOffer = null;
         this.owner = owner;
-        time = time;
+        this.time = time;
     }
     public float getPrice()
     {

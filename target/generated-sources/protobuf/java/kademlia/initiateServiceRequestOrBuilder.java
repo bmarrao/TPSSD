@@ -8,9 +8,17 @@ public interface initiateServiceRequestOrBuilder extends
     com.google.protobuf.MessageOrBuilder {
 
   /**
-   * <code>bytes owner = 1;</code>
+   * <code>.kademlia.Node owner = 1;</code>
    */
-  com.google.protobuf.ByteString getOwner();
+  boolean hasOwner();
+  /**
+   * <code>.kademlia.Node owner = 1;</code>
+   */
+  kademlia.Node getOwner();
+  /**
+   * <code>.kademlia.Node owner = 1;</code>
+   */
+  kademlia.NodeOrBuilder getOwnerOrBuilder();
 
   /**
    * <code>bytes serviceId = 2;</code>

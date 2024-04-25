@@ -77,15 +77,15 @@ public final class KademliaGrpc {
           .build();
   @io.grpc.ExperimentalApi("https://github.com/grpc/grpc-java/issues/1901")
   public static final io.grpc.MethodDescriptor<kademlia.NotifyRequest,
-      com.google.protobuf.Empty> METHOD_NOTIFY =
-      io.grpc.MethodDescriptor.<kademlia.NotifyRequest, com.google.protobuf.Empty>newBuilder()
+      kademlia.NotifyResponse> METHOD_NOTIFY =
+      io.grpc.MethodDescriptor.<kademlia.NotifyRequest, kademlia.NotifyResponse>newBuilder()
           .setType(io.grpc.MethodDescriptor.MethodType.UNARY)
           .setFullMethodName(generateFullMethodName(
               "kademlia.Kademlia", "notify"))
           .setRequestMarshaller(io.grpc.protobuf.ProtoUtils.marshaller(
               kademlia.NotifyRequest.getDefaultInstance()))
           .setResponseMarshaller(io.grpc.protobuf.ProtoUtils.marshaller(
-              com.google.protobuf.Empty.getDefaultInstance()))
+              kademlia.NotifyResponse.getDefaultInstance()))
           .build();
   @io.grpc.ExperimentalApi("https://github.com/grpc/grpc-java/issues/1901")
   public static final io.grpc.MethodDescriptor<kademlia.getPriceRequest,
@@ -159,18 +159,6 @@ public final class KademliaGrpc {
           .setResponseMarshaller(io.grpc.protobuf.ProtoUtils.marshaller(
               kademlia.endServiceResponse.getDefaultInstance()))
           .build();
-  @io.grpc.ExperimentalApi("https://github.com/grpc/grpc-java/issues/1901")
-  public static final io.grpc.MethodDescriptor<kademlia.communicateBiggestRequest,
-      kademlia.communicateBiggestResponse> METHOD_COMMUNICATE_BIGGEST =
-      io.grpc.MethodDescriptor.<kademlia.communicateBiggestRequest, kademlia.communicateBiggestResponse>newBuilder()
-          .setType(io.grpc.MethodDescriptor.MethodType.UNARY)
-          .setFullMethodName(generateFullMethodName(
-              "kademlia.Kademlia", "communicateBiggest"))
-          .setRequestMarshaller(io.grpc.protobuf.ProtoUtils.marshaller(
-              kademlia.communicateBiggestRequest.getDefaultInstance()))
-          .setResponseMarshaller(io.grpc.protobuf.ProtoUtils.marshaller(
-              kademlia.communicateBiggestResponse.getDefaultInstance()))
-          .build();
 
   /**
    * Creates a new async stub that supports all call types for the service
@@ -242,7 +230,7 @@ public final class KademliaGrpc {
     /**
      */
     public void notify(kademlia.NotifyRequest request,
-        io.grpc.stub.StreamObserver<com.google.protobuf.Empty> responseObserver) {
+        io.grpc.stub.StreamObserver<kademlia.NotifyResponse> responseObserver) {
       asyncUnimplementedUnaryCall(METHOD_NOTIFY, responseObserver);
     }
 
@@ -288,13 +276,6 @@ public final class KademliaGrpc {
       asyncUnimplementedUnaryCall(METHOD_END_SERVICE, responseObserver);
     }
 
-    /**
-     */
-    public void communicateBiggest(kademlia.communicateBiggestRequest request,
-        io.grpc.stub.StreamObserver<kademlia.communicateBiggestResponse> responseObserver) {
-      asyncUnimplementedUnaryCall(METHOD_COMMUNICATE_BIGGEST, responseObserver);
-    }
-
     @java.lang.Override public final io.grpc.ServerServiceDefinition bindService() {
       return io.grpc.ServerServiceDefinition.builder(getServiceDescriptor())
           .addMethod(
@@ -330,7 +311,7 @@ public final class KademliaGrpc {
             asyncUnaryCall(
               new MethodHandlers<
                 kademlia.NotifyRequest,
-                com.google.protobuf.Empty>(
+                kademlia.NotifyResponse>(
                   this, METHODID_NOTIFY)))
           .addMethod(
             METHOD_GET_PRICE,
@@ -374,13 +355,6 @@ public final class KademliaGrpc {
                 kademlia.endServiceRequest,
                 kademlia.endServiceResponse>(
                   this, METHODID_END_SERVICE)))
-          .addMethod(
-            METHOD_COMMUNICATE_BIGGEST,
-            asyncUnaryCall(
-              new MethodHandlers<
-                kademlia.communicateBiggestRequest,
-                kademlia.communicateBiggestResponse>(
-                  this, METHODID_COMMUNICATE_BIGGEST)))
           .build();
     }
   }
@@ -450,7 +424,7 @@ public final class KademliaGrpc {
     /**
      */
     public void notify(kademlia.NotifyRequest request,
-        io.grpc.stub.StreamObserver<com.google.protobuf.Empty> responseObserver) {
+        io.grpc.stub.StreamObserver<kademlia.NotifyResponse> responseObserver) {
       asyncUnaryCall(
           getChannel().newCall(METHOD_NOTIFY, getCallOptions()), request, responseObserver);
     }
@@ -501,14 +475,6 @@ public final class KademliaGrpc {
         io.grpc.stub.StreamObserver<kademlia.endServiceResponse> responseObserver) {
       asyncUnaryCall(
           getChannel().newCall(METHOD_END_SERVICE, getCallOptions()), request, responseObserver);
-    }
-
-    /**
-     */
-    public void communicateBiggest(kademlia.communicateBiggestRequest request,
-        io.grpc.stub.StreamObserver<kademlia.communicateBiggestResponse> responseObserver) {
-      asyncUnaryCall(
-          getChannel().newCall(METHOD_COMMUNICATE_BIGGEST, getCallOptions()), request, responseObserver);
     }
   }
 
@@ -572,7 +538,7 @@ public final class KademliaGrpc {
 
     /**
      */
-    public com.google.protobuf.Empty notify(kademlia.NotifyRequest request) {
+    public kademlia.NotifyResponse notify(kademlia.NotifyRequest request) {
       return blockingUnaryCall(
           getChannel(), METHOD_NOTIFY, getCallOptions(), request);
     }
@@ -617,13 +583,6 @@ public final class KademliaGrpc {
     public kademlia.endServiceResponse endService(kademlia.endServiceRequest request) {
       return blockingUnaryCall(
           getChannel(), METHOD_END_SERVICE, getCallOptions(), request);
-    }
-
-    /**
-     */
-    public kademlia.communicateBiggestResponse communicateBiggest(kademlia.communicateBiggestRequest request) {
-      return blockingUnaryCall(
-          getChannel(), METHOD_COMMUNICATE_BIGGEST, getCallOptions(), request);
     }
   }
 
@@ -691,7 +650,7 @@ public final class KademliaGrpc {
 
     /**
      */
-    public com.google.common.util.concurrent.ListenableFuture<com.google.protobuf.Empty> notify(
+    public com.google.common.util.concurrent.ListenableFuture<kademlia.NotifyResponse> notify(
         kademlia.NotifyRequest request) {
       return futureUnaryCall(
           getChannel().newCall(METHOD_NOTIFY, getCallOptions()), request);
@@ -744,14 +703,6 @@ public final class KademliaGrpc {
       return futureUnaryCall(
           getChannel().newCall(METHOD_END_SERVICE, getCallOptions()), request);
     }
-
-    /**
-     */
-    public com.google.common.util.concurrent.ListenableFuture<kademlia.communicateBiggestResponse> communicateBiggest(
-        kademlia.communicateBiggestRequest request) {
-      return futureUnaryCall(
-          getChannel().newCall(METHOD_COMMUNICATE_BIGGEST, getCallOptions()), request);
-    }
   }
 
   private static final int METHODID_PING = 0;
@@ -765,7 +716,6 @@ public final class KademliaGrpc {
   private static final int METHODID_SUBSCRIBE = 8;
   private static final int METHODID_TIMER_OVER = 9;
   private static final int METHODID_END_SERVICE = 10;
-  private static final int METHODID_COMMUNICATE_BIGGEST = 11;
 
   private static final class MethodHandlers<Req, Resp> implements
       io.grpc.stub.ServerCalls.UnaryMethod<Req, Resp>,
@@ -802,7 +752,7 @@ public final class KademliaGrpc {
           break;
         case METHODID_NOTIFY:
           serviceImpl.notify((kademlia.NotifyRequest) request,
-              (io.grpc.stub.StreamObserver<com.google.protobuf.Empty>) responseObserver);
+              (io.grpc.stub.StreamObserver<kademlia.NotifyResponse>) responseObserver);
           break;
         case METHODID_GET_PRICE:
           serviceImpl.getPrice((kademlia.getPriceRequest) request,
@@ -827,10 +777,6 @@ public final class KademliaGrpc {
         case METHODID_END_SERVICE:
           serviceImpl.endService((kademlia.endServiceRequest) request,
               (io.grpc.stub.StreamObserver<kademlia.endServiceResponse>) responseObserver);
-          break;
-        case METHODID_COMMUNICATE_BIGGEST:
-          serviceImpl.communicateBiggest((kademlia.communicateBiggestRequest) request,
-              (io.grpc.stub.StreamObserver<kademlia.communicateBiggestResponse>) responseObserver);
           break;
         default:
           throw new AssertionError();
@@ -876,7 +822,6 @@ public final class KademliaGrpc {
               .addMethod(METHOD_SUBSCRIBE)
               .addMethod(METHOD_TIMER_OVER)
               .addMethod(METHOD_END_SERVICE)
-              .addMethod(METHOD_COMMUNICATE_BIGGEST)
               .build();
         }
       }

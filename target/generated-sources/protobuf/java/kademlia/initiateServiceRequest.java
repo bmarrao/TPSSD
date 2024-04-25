@@ -15,7 +15,6 @@ public  final class initiateServiceRequest extends
     super(builder);
   }
   private initiateServiceRequest() {
-    owner_ = com.google.protobuf.ByteString.EMPTY;
     serviceId_ = com.google.protobuf.ByteString.EMPTY;
     nodes_ = java.util.Collections.emptyList();
     time_ = 0;
@@ -47,8 +46,16 @@ public  final class initiateServiceRequest extends
             break;
           }
           case 10: {
+            kademlia.Node.Builder subBuilder = null;
+            if (owner_ != null) {
+              subBuilder = owner_.toBuilder();
+            }
+            owner_ = input.readMessage(kademlia.Node.parser(), extensionRegistry);
+            if (subBuilder != null) {
+              subBuilder.mergeFrom(owner_);
+              owner_ = subBuilder.buildPartial();
+            }
 
-            owner_ = input.readBytes();
             break;
           }
           case 18: {
@@ -98,12 +105,24 @@ public  final class initiateServiceRequest extends
 
   private int bitField0_;
   public static final int OWNER_FIELD_NUMBER = 1;
-  private com.google.protobuf.ByteString owner_;
+  private kademlia.Node owner_;
   /**
-   * <code>bytes owner = 1;</code>
+   * <code>.kademlia.Node owner = 1;</code>
    */
-  public com.google.protobuf.ByteString getOwner() {
-    return owner_;
+  public boolean hasOwner() {
+    return owner_ != null;
+  }
+  /**
+   * <code>.kademlia.Node owner = 1;</code>
+   */
+  public kademlia.Node getOwner() {
+    return owner_ == null ? kademlia.Node.getDefaultInstance() : owner_;
+  }
+  /**
+   * <code>.kademlia.Node owner = 1;</code>
+   */
+  public kademlia.NodeOrBuilder getOwnerOrBuilder() {
+    return getOwner();
   }
 
   public static final int SERVICEID_FIELD_NUMBER = 2;
@@ -171,8 +190,8 @@ public  final class initiateServiceRequest extends
 
   public void writeTo(com.google.protobuf.CodedOutputStream output)
                       throws java.io.IOException {
-    if (!owner_.isEmpty()) {
-      output.writeBytes(1, owner_);
+    if (owner_ != null) {
+      output.writeMessage(1, getOwner());
     }
     if (!serviceId_.isEmpty()) {
       output.writeBytes(2, serviceId_);
@@ -190,9 +209,9 @@ public  final class initiateServiceRequest extends
     if (size != -1) return size;
 
     size = 0;
-    if (!owner_.isEmpty()) {
+    if (owner_ != null) {
       size += com.google.protobuf.CodedOutputStream
-        .computeBytesSize(1, owner_);
+        .computeMessageSize(1, getOwner());
     }
     if (!serviceId_.isEmpty()) {
       size += com.google.protobuf.CodedOutputStream
@@ -222,8 +241,11 @@ public  final class initiateServiceRequest extends
     kademlia.initiateServiceRequest other = (kademlia.initiateServiceRequest) obj;
 
     boolean result = true;
-    result = result && getOwner()
-        .equals(other.getOwner());
+    result = result && (hasOwner() == other.hasOwner());
+    if (hasOwner()) {
+      result = result && getOwner()
+          .equals(other.getOwner());
+    }
     result = result && getServiceId()
         .equals(other.getServiceId());
     result = result && getNodesList()
@@ -240,8 +262,10 @@ public  final class initiateServiceRequest extends
     }
     int hash = 41;
     hash = (19 * hash) + getDescriptor().hashCode();
-    hash = (37 * hash) + OWNER_FIELD_NUMBER;
-    hash = (53 * hash) + getOwner().hashCode();
+    if (hasOwner()) {
+      hash = (37 * hash) + OWNER_FIELD_NUMBER;
+      hash = (53 * hash) + getOwner().hashCode();
+    }
     hash = (37 * hash) + SERVICEID_FIELD_NUMBER;
     hash = (53 * hash) + getServiceId().hashCode();
     if (getNodesCount() > 0) {
@@ -380,8 +404,12 @@ public  final class initiateServiceRequest extends
     }
     public Builder clear() {
       super.clear();
-      owner_ = com.google.protobuf.ByteString.EMPTY;
-
+      if (ownerBuilder_ == null) {
+        owner_ = null;
+      } else {
+        owner_ = null;
+        ownerBuilder_ = null;
+      }
       serviceId_ = com.google.protobuf.ByteString.EMPTY;
 
       if (nodesBuilder_ == null) {
@@ -416,7 +444,11 @@ public  final class initiateServiceRequest extends
       kademlia.initiateServiceRequest result = new kademlia.initiateServiceRequest(this);
       int from_bitField0_ = bitField0_;
       int to_bitField0_ = 0;
-      result.owner_ = owner_;
+      if (ownerBuilder_ == null) {
+        result.owner_ = owner_;
+      } else {
+        result.owner_ = ownerBuilder_.build();
+      }
       result.serviceId_ = serviceId_;
       if (nodesBuilder_ == null) {
         if (((bitField0_ & 0x00000004) == 0x00000004)) {
@@ -470,8 +502,8 @@ public  final class initiateServiceRequest extends
 
     public Builder mergeFrom(kademlia.initiateServiceRequest other) {
       if (other == kademlia.initiateServiceRequest.getDefaultInstance()) return this;
-      if (other.getOwner() != com.google.protobuf.ByteString.EMPTY) {
-        setOwner(other.getOwner());
+      if (other.hasOwner()) {
+        mergeOwner(other.getOwner());
       }
       if (other.getServiceId() != com.google.protobuf.ByteString.EMPTY) {
         setServiceId(other.getServiceId());
@@ -532,33 +564,121 @@ public  final class initiateServiceRequest extends
     }
     private int bitField0_;
 
-    private com.google.protobuf.ByteString owner_ = com.google.protobuf.ByteString.EMPTY;
+    private kademlia.Node owner_ = null;
+    private com.google.protobuf.SingleFieldBuilderV3<
+        kademlia.Node, kademlia.Node.Builder, kademlia.NodeOrBuilder> ownerBuilder_;
     /**
-     * <code>bytes owner = 1;</code>
+     * <code>.kademlia.Node owner = 1;</code>
      */
-    public com.google.protobuf.ByteString getOwner() {
-      return owner_;
+    public boolean hasOwner() {
+      return ownerBuilder_ != null || owner_ != null;
     }
     /**
-     * <code>bytes owner = 1;</code>
+     * <code>.kademlia.Node owner = 1;</code>
      */
-    public Builder setOwner(com.google.protobuf.ByteString value) {
-      if (value == null) {
-    throw new NullPointerException();
-  }
-  
-      owner_ = value;
-      onChanged();
+    public kademlia.Node getOwner() {
+      if (ownerBuilder_ == null) {
+        return owner_ == null ? kademlia.Node.getDefaultInstance() : owner_;
+      } else {
+        return ownerBuilder_.getMessage();
+      }
+    }
+    /**
+     * <code>.kademlia.Node owner = 1;</code>
+     */
+    public Builder setOwner(kademlia.Node value) {
+      if (ownerBuilder_ == null) {
+        if (value == null) {
+          throw new NullPointerException();
+        }
+        owner_ = value;
+        onChanged();
+      } else {
+        ownerBuilder_.setMessage(value);
+      }
+
       return this;
     }
     /**
-     * <code>bytes owner = 1;</code>
+     * <code>.kademlia.Node owner = 1;</code>
+     */
+    public Builder setOwner(
+        kademlia.Node.Builder builderForValue) {
+      if (ownerBuilder_ == null) {
+        owner_ = builderForValue.build();
+        onChanged();
+      } else {
+        ownerBuilder_.setMessage(builderForValue.build());
+      }
+
+      return this;
+    }
+    /**
+     * <code>.kademlia.Node owner = 1;</code>
+     */
+    public Builder mergeOwner(kademlia.Node value) {
+      if (ownerBuilder_ == null) {
+        if (owner_ != null) {
+          owner_ =
+            kademlia.Node.newBuilder(owner_).mergeFrom(value).buildPartial();
+        } else {
+          owner_ = value;
+        }
+        onChanged();
+      } else {
+        ownerBuilder_.mergeFrom(value);
+      }
+
+      return this;
+    }
+    /**
+     * <code>.kademlia.Node owner = 1;</code>
      */
     public Builder clearOwner() {
-      
-      owner_ = getDefaultInstance().getOwner();
-      onChanged();
+      if (ownerBuilder_ == null) {
+        owner_ = null;
+        onChanged();
+      } else {
+        owner_ = null;
+        ownerBuilder_ = null;
+      }
+
       return this;
+    }
+    /**
+     * <code>.kademlia.Node owner = 1;</code>
+     */
+    public kademlia.Node.Builder getOwnerBuilder() {
+      
+      onChanged();
+      return getOwnerFieldBuilder().getBuilder();
+    }
+    /**
+     * <code>.kademlia.Node owner = 1;</code>
+     */
+    public kademlia.NodeOrBuilder getOwnerOrBuilder() {
+      if (ownerBuilder_ != null) {
+        return ownerBuilder_.getMessageOrBuilder();
+      } else {
+        return owner_ == null ?
+            kademlia.Node.getDefaultInstance() : owner_;
+      }
+    }
+    /**
+     * <code>.kademlia.Node owner = 1;</code>
+     */
+    private com.google.protobuf.SingleFieldBuilderV3<
+        kademlia.Node, kademlia.Node.Builder, kademlia.NodeOrBuilder> 
+        getOwnerFieldBuilder() {
+      if (ownerBuilder_ == null) {
+        ownerBuilder_ = new com.google.protobuf.SingleFieldBuilderV3<
+            kademlia.Node, kademlia.Node.Builder, kademlia.NodeOrBuilder>(
+                getOwner(),
+                getParentForChildren(),
+                isClean());
+        owner_ = null;
+      }
+      return ownerBuilder_;
     }
 
     private com.google.protobuf.ByteString serviceId_ = com.google.protobuf.ByteString.EMPTY;

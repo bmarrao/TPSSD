@@ -122,7 +122,7 @@ public class KademliaImpl extends KademliaGrpc.KademliaImplBase
     @Override
     public void getPrice(getPriceRequest request, StreamObserver<getPriceResponse> responseObserver)
     {
-
+        System.out.println("Sending Biggest Price");
         float price = auc.getPrice(request.getServiceId().toByteArray());
 
         getPriceResponse response = getPriceResponse
@@ -140,6 +140,7 @@ public class KademliaImpl extends KademliaGrpc.KademliaImplBase
     @Override
     public void sendPrice(sendPriceRequest request, StreamObserver<sendPriceResponse> responseObserver)
     {
+        System.out.println("Receiving Price");
         boolean res = auc.receiveOffer(request.getOffer(), request.getServiceId().toByteArray());
 
         sendPriceResponse response = sendPriceResponse
@@ -159,8 +160,7 @@ public class KademliaImpl extends KademliaGrpc.KademliaImplBase
     public void initiateService(initiateServiceRequest request, StreamObserver<initiateServiceResponse> responseObserver)
     {
         System.out.println("In initiate Service");
-        auc.initiateService(request.getOwner().toByteArray()
-                                        , request.getServiceId().toByteArray()
+        auc.initiateService(request.getOwner(),request.getServiceId().toByteArray()
                                         , request.getTime()
                                         , new ArrayList<>(request.getNodesList()));
 
@@ -175,6 +175,9 @@ public class KademliaImpl extends KademliaGrpc.KademliaImplBase
         // Notifies the customer that the call is completed.
         responseObserver.onCompleted();
     }
+
+
+
 
 
     @Override
@@ -217,6 +220,7 @@ public class KademliaImpl extends KademliaGrpc.KademliaImplBase
     @Override
     public void endService(endServiceRequest request, StreamObserver<endServiceResponse> responseObserver)
     {
+        System.out.println("End Service");
         boolean resp = auc.endService(request.getServiceId().toByteArray(),request.getNode());
 
         endServiceResponse response = endServiceResponse
