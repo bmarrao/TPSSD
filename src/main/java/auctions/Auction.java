@@ -1,5 +1,6 @@
 package auctions;
 
+import com.google.protobuf.ByteString;
 import io.grpc.Server;
 import io.grpc.ServerBuilder;
 import io.grpc.stub.StreamObserver;
@@ -53,7 +54,13 @@ public class Auction
     public void initiateService(byte[] owner, byte[] serviceId, int time, ArrayList<Node> brokerSet)
     {
         l.lock();
-        services.add(new BrokerService(serviceId,owner,time,brokerSet));
+        BrokerService bs = new BrokerService(serviceId,owner,time,brokerSet);
+        services.add(bs);
+        RunService rs = new RunService(bs,this.kp);
+        Offer.Builder nd = Offer.newBuilder();
+        nd.setPrice(-1);
+        bs.highestOffer = nd.build();
+        rs.run();
         l.unlock();
     }
 

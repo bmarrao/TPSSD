@@ -251,7 +251,7 @@ public class KademliaProtocol
         return result ;
     }
 
-    public boolean initiateService(byte[] owner, byte[] serviceId, ArrayList<Node> brokerlist, int time)
+    public boolean initiateService(Node owner, byte[] serviceId, ArrayList<Node> brokerlist, int time)
     {
 
         boolean result = false;
@@ -292,9 +292,7 @@ public class KademliaProtocol
 
     public boolean endService (Node n, byte[] serviceId)
     {
-        //ManagedChannel channel = ManagedChannelBuilder.forAddress(n.getIp(), n.getPort()).usePlaintext().build();
-
-        ManagedChannel channel = ManagedChannelBuilder.forAddress(ipAddress, port).usePlaintext().build();
+        ManagedChannel channel = ManagedChannelBuilder.forAddress(n.getIp(), n.getPort()).usePlaintext().build();
 
         KademliaGrpc.KademliaBlockingStub stub = KademliaGrpc.newBlockingStub(channel);
 

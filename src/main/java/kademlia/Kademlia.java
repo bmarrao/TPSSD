@@ -35,8 +35,9 @@ public class Kademlia
 
     }
 
-    public Kademlia(String ipAddress, int port, boolean bootstrap, int k, int s)
+    public Kademlia(byte[] nodeId, String ipAddress, int port, boolean bootstrap, int k, int s)
     {
+        this.nodeId = nodeId;
         protocol = new KademliaProtocol(nodeId,ipAddress,port,generatedPk);
 
         if (bootstrap)
@@ -123,8 +124,9 @@ public class Kademlia
         return leadingZeros >= numOfLeadingZeros;
     }
 
-
     public static byte[] solveStaticPuzzle(int leadingZerosStatic) throws NoSuchAlgorithmException {
+
+    //public static byte[] solveStaticPuzzle(int leadingZerosStatic) throws NoSuchAlgorithmException {
         /* against eclipe attacks
              1) generate pair (Spub, Spriv)
              2) P = H(H(Spub))

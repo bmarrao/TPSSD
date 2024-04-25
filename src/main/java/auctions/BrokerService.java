@@ -19,12 +19,12 @@ public class BrokerService
     public Condition waitBiggestOffer = lock.newCondition();
     public boolean sleep = true;
     byte[] serviceId ;
-    byte[] owner;
+    Node owner;
     ArrayList<Node>brokerSet;
     Offer highestOffer;
     ArrayList <Node> subscribed;
     int time;
-    BrokerService(byte[] serviceId, byte[] owner, int time, ArrayList<Node> brokerSet)
+    BrokerService(byte[] serviceId, Node owner, int time, ArrayList<Node> brokerSet)
     {
         this.serviceId = serviceId;
         brokerSet = brokerSet;

@@ -34,7 +34,7 @@ public class RunService implements Runnable {
                 sleeper.run();
                 if (bs.highestOffer.equals(of))
                 {
-                    kp.endService(null,bs.serviceId);
+                    kp.endService(bs.owner,bs.serviceId);
                     break;
                 }
                 else
@@ -122,7 +122,7 @@ class Sleeper implements Runnable
         try
         {
             Thread.sleep(bs.time);
-            bs.endTimer.signalAll();
+            //bs.endTimer.signalAll();
             bs.sleep = true;
             // condition
         }

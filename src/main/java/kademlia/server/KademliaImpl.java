@@ -158,6 +158,7 @@ public class KademliaImpl extends KademliaGrpc.KademliaImplBase
     @Override
     public void initiateService(initiateServiceRequest request, StreamObserver<initiateServiceResponse> responseObserver)
     {
+        System.out.println("In initiate Service");
         auc.initiateService(request.getOwner().toByteArray()
                                         , request.getServiceId().toByteArray()
                                         , request.getTime()
