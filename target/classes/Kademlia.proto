@@ -9,6 +9,8 @@ package kademlia;
 message PingRequest 
 {
   Node node = 1;
+  string publicKey = 2;
+  bytes signature = 3;
 }
 
 message PingResponse 
@@ -21,7 +23,6 @@ message Node
   bytes id = 1;
   string ip = 2;
   uint32 port = 3;
-  string publickey = 4;
 }
 
 message Offer
@@ -34,6 +35,8 @@ message StoreRequest
   Node node = 1;
   string key = 2;
   string value = 3;
+  string publicKey = 4;
+  bytes signature = 5;
 }
 
 message StoreResponse
@@ -47,6 +50,8 @@ message FindNodeRequest
   Node node = 1;
   bytes key = 2;
   uint32 k = 3;
+  string publicKey = 4;
+  bytes signature = 5;
 }
 
 // Interativo ou recursivo
@@ -60,6 +65,8 @@ message FindValueRequest
 {
   Node node = 1;
   string key = 2;
+  string publicKey = 3;
+  bytes signature = 4;
 }
 
 message FindValueResponse

@@ -56,7 +56,8 @@ public class Kademlia
             String[] bootstrapIpPort = selectedBootstrap.split(" ");
 
             // Start thread for joining network
-            Thread joinNetThread = new Thread(new KademliaJoinNetwork(nodeId, ipAddress, port, generatedPk, generatedSk, bootstrapIpPort[0], Integer.parseInt(bootstrapIpPort[1])));
+            //TODO UNCOMMENT
+            //Thread joinNetThread = new Thread(new KademliaJoinNetwork(nodeId, ipAddress, port, generatedPk, generatedSk, bootstrapIpPort[0], Integer.parseInt(bootstrapIpPort[1])));
             //joinNetThread.start();
         }
 
@@ -97,8 +98,12 @@ public class Kademlia
             String[] bootstrapIpPort = selectedBootstrap.split(" ");
 
             // Start thread for joining network
+            //TODO UNCOMMENT
+            /*
             Thread joinNetThread = new Thread(new KademliaJoinNetwork(sKadNodeId, "localhost", Integer.parseInt(args[1]), generatedPk, generatedSk, bootstrapIpPort[0], Integer.parseInt(bootstrapIpPort[1])));
             joinNetThread.start();
+
+             */
         }
     }
 

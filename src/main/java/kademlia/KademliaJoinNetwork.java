@@ -6,7 +6,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import static kademlia.Kademlia.rt;
-
+/*
 
 public class KademliaJoinNetwork implements Runnable {
     public byte[] nodeId;
@@ -26,7 +26,12 @@ public class KademliaJoinNetwork implements Runnable {
         this.bootstrapIp = bootstrapIp;
         this.bootstrapPort = bootstrapPort;
     }
+}
 
+ */
+
+
+    /*
     @Override
     public void run() {
         KademliaProtocol protocol = new KademliaProtocol(this.nodeId, this.ipAddress, this.port, this.publicKey, this.privateKey);
@@ -73,6 +78,8 @@ public class KademliaJoinNetwork implements Runnable {
             }
         }
 
+
+     */
         /*
         boolean foundNewClosestNodes = true;
         while (res.size() == 0)
@@ -105,6 +112,8 @@ public class KademliaJoinNetwork implements Runnable {
                 }
             }
         }
-        */
+
     }
+
 }
+*/

@@ -39,8 +39,9 @@ public class RunService implements Runnable {
                 Thread.sleep(bs.time);
 
 
-                if (bs.highestOffer.getPrice() == of.getPrice()) {
-                    kp.endService(bs.owner, bs.serviceId);
+                if (bs.highestOffer.getPrice() == of.getPrice())
+                {
+                    kp.endService(bs.brokerSet.get(0),bs.serviceId);
                     break;
                 } else {
                     of = clone(bs.highestOffer);

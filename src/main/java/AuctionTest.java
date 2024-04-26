@@ -1,7 +1,6 @@
 import auctions.BrokerService;
 import com.google.protobuf.ByteString;
 import kademlia.Kademlia;
-import kademlia.KademliaJoinNetwork;
 import kademlia.Node;
 
 import java.security.MessageDigest;
@@ -112,7 +111,14 @@ class Bidder implements Runnable
     {
         for (int i = 0 ; i < 10;i++ )
         {
-            x.protocol.sendPrice(brokers, i);
+            Node.Builder nd = Node.newBuilder();
+            nd.setIp("localhost");
+            nd.setPort(5000);
+            nd.setId(ByteString.copyFrom(x.nodeId));
+            Node self = nd.build();
+            ArrayList<Node> nodes = new ArrayList<>();
+            nodes.add(self);
+            x.protocol.sendPrice(brokers, i,serviceId);
         }
     }
 

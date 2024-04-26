@@ -84,18 +84,6 @@ public class Auction
         return false;
     }
 
-    public BrokerService getService(byte[] serviceId)
-    {
-        for(BrokerService bs : this.services)
-        {
-            if (compareId(bs.serviceId,serviceId))
-            {
-                return bs;
-            }
-        }
-        return null;
-    }
-
     public float getPrice(byte[] serviceId)
     {
         l.lock();
@@ -176,7 +164,20 @@ public class Auction
             }
         }
 
+
         // If all bytes are the same, return true
         return true;
     }
+    public BrokerService getService(byte[] serviceId)
+    {
+        for(BrokerService bs : this.services)
+        {
+            if (compareId(bs.serviceId,serviceId))
+            {
+                return bs;
+            }
+        }
+        return null;
+    }
+
 }
