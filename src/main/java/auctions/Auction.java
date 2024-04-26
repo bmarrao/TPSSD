@@ -56,11 +56,11 @@ public class Auction
         l.lock();
         BrokerService bs = new BrokerService(serviceId,owner,time,brokerSet);
         services.add(bs);
-        RunService rs = new RunService(bs,this.kp);
         Offer.Builder nd = Offer.newBuilder();
         nd.setPrice(-1);
         bs.highestOffer = nd.build();
-        rs.run();
+        Thread rsThread = new Thread( new RunService(bs,this.kp));
+        rsThread.start();
         l.unlock();
     }
 
@@ -168,8 +168,10 @@ public class Auction
     {
 
         // Iterate through each byte and compare them
-        for (int i = 0; i < id1.length; i++) {
-            if (id1[i] != id2[i]) {
+        for (int i = 0; i < id1.length; i++)
+        {
+            if (id1[i] != id2[i])
+            {
                 return false; // If any byte differs, return false
             }
         }

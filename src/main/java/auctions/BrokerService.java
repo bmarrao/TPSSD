@@ -27,7 +27,7 @@ public class BrokerService
     BrokerService(byte[] serviceId, Node owner, int time, ArrayList<Node> brokerSet)
     {
         this.serviceId = serviceId;
-        brokerSet = brokerSet;
+        this.brokerSet = brokerSet;
         subscribed = new ArrayList<>();
         highestOffer = null;
         this.owner = owner;
