@@ -5,7 +5,12 @@ import auctions.BrokerService;
 import io.grpc.stub.StreamObserver;
 import kademlia.*;
 
+import java.security.KeyFactory;
+import java.security.PublicKey;
+import java.security.Signature;
+import java.security.spec.X509EncodedKeySpec;
 import java.util.ArrayList;
+import java.util.Base64;
 import java.util.List;
 
 import static kademlia.Kademlia.rt;
@@ -14,16 +19,30 @@ import static kademlia.Kademlia.rt;
 //  TODO parte do bootstrap - Cristina
 public class KademliaImpl extends KademliaGrpc.KademliaImplBase
 {
-    private static int k_nodes = 3;
+    private static final int k_nodes = 3;
 
-    private Auction auc;
+    private final Auction auc;
     KademliaImpl(Auction auc)
     {
-        this.auc = auc;;
+        this.auc = auc;
     }
+
+
+    // Verify signatures from received RPC messages
+    public static boolean verify(byte[] data, byte[] signature, String publicKeyStr) throws Exception {
+        // Convert public key from String to PublicKey
+        byte[] publicKeyBytes = Base64.getDecoder().decode(publicKeyStr);
+        PublicKey publicKey = KeyFactory.getInstance("RSA").generatePublic(new X509EncodedKeySpec(publicKeyBytes));
+
+        Signature sig = Signature.getInstance("SHA256withRSA");
+        sig.initVerify(publicKey);
+        sig.update(data);
+        return sig.verify(signature);
+    }
+
+
     @Override
-    public void ping(PingRequest request, StreamObserver<PingResponse> responseObserver)
-    {
+    public void ping(PingRequest request, StreamObserver<PingResponse> responseObserver) {
 
         //TODO insert!
         //rt.insert(request.getNode());
@@ -33,23 +52,38 @@ public class KademliaImpl extends KademliaGrpc.KademliaImplBase
         // Atualizar o horario da última vez online do sender
         //boolean resultMsg = true;
 
-        PingResponse pingResponse = PingResponse
-                .newBuilder()
-                .setOnline(true)
-                .build();
+        byte[] signature = request.getSignature().toByteArray();
 
-        // Send the response to the client.
-        responseObserver.onNext(pingResponse);
+        // Verify signature
+        boolean signVal = false;
+        try {
+            signVal = verify(request.getNode().toByteArray(), signature, request.getPublicKey());
+        }
+        catch(Exception e) {
+            e.printStackTrace();
+        }
 
-        // Notifies the customer that the call is completed.
-        responseObserver.onCompleted();
+        if (signVal) {
+            PingResponse pingResponse = PingResponse
+                    .newBuilder()
+                    .setOnline(true)
+                    .build();
+
+            // Send the response to the client.
+            responseObserver.onNext(pingResponse);
+
+            // Notifies the customer that the call is completed.
+            responseObserver.onCompleted();
+        }
+        else {
+            System.out.println("Signature is invalid, discarding ping request...");
+        }
     }
 
 
 
     @Override
-    public void store(StoreRequest request, StreamObserver<StoreResponse> responseObserver)
-    {
+    public void store(StoreRequest request, StreamObserver<StoreResponse> responseObserver) {
 
         //TODO insert!
         //rt.insert(request.getNode());
@@ -57,23 +91,37 @@ public class KademliaImpl extends KademliaGrpc.KademliaImplBase
         //Creates a new instance of storage. If already exists, use it.
         KademliaStore dataStore = KademliaStore.getInstance();
 
-        // Retrieve the key and value from the request
+        // Retrieve the key, value and signature from the request
         String key = request.getKey();
         String value = request.getValue();
+        byte[] signature = request.getSignature().toByteArray();
 
+        // Verify signature
+        boolean signVal = false;
+        try {
+            signVal = verify(request.toByteArray(), signature, request.getPublicKey());
+        }
+        catch(Exception e) {
+            e.printStackTrace();
+        }
+
+        if (signVal) {
+            dataStore.store(key,value);
+
+            // if store successfull -> send true, else false
+            //TODO [ When it's false? ]
+            StoreResponse response = StoreResponse.newBuilder().setStored(true).build();
+
+            responseObserver.onNext(response);
+            responseObserver.onCompleted();
+        }
+        else {
+            System.out.println("Signature is invalid, discarding store request...");
+        }
         // blockchain bc
         // bid a b
-
-
-        dataStore.store(key,value);
-
-        // if store successfull -> send true, else false
-        //TODO [ When it's false? ]
-        StoreResponse response = StoreResponse.newBuilder().setStored(true).build();
-
-        responseObserver.onNext(response);
-        responseObserver.onCompleted();
     }
+
 
     @Override
     public void findNode(FindNodeRequest request, StreamObserver<FindNodeResponse> responseObserver) {
@@ -83,22 +131,39 @@ public class KademliaImpl extends KademliaGrpc.KademliaImplBase
         // Retrieve the target ID from the request
         byte[] nodeID = request.getKey().toByteArray();
 
-        // Get the closest node to the target ID from the routing table
-        //TODO : Retirar o j??
-        //TODO : replace KademliaNode to Node
-        List<Node> closestNodes = rt.findClosestNode(nodeID, k_nodes );
+        byte[] signature = request.getSignature().toByteArray();
+        byte[] signedInfo = request.getNode().toByteArray();
 
-        //TODO : AddAllNodes
-        FindNodeResponse response = FindNodeResponse.newBuilder()
-                .setId(request.getKey()).addAllNodes(closestNodes).build();
+        boolean signVal = false;
+        try {
+            signVal = verify(signedInfo, signature, request.getPublicKey());
+        }
+        catch(Exception e) {
+            e.printStackTrace();
+        }
 
-        responseObserver.onNext(response);
-        responseObserver.onCompleted();
+        System.out.println("Is signature valid? " + signVal);
+
+        if (signVal) {
+            // Get the closest node to the target ID from the routing table
+            //TODO : Retirar o j??
+            //TODO : replace KademliaNode to Node
+            List<Node> closestNodes = rt.findClosestNode(nodeID, k_nodes);
+
+            //TODO : AddAllNodes
+            FindNodeResponse response = FindNodeResponse.newBuilder()
+                    .setId(request.getKey()).addAllNodes(closestNodes).build();
+
+            responseObserver.onNext(response);
+            responseObserver.onCompleted();
+        }
+        else {
+            System.out.println("Signature is invalid, discarding find node request...");
+        }
     }
 
     @Override
-    public void findValue(FindValueRequest request, StreamObserver<FindValueResponse> responseObserver)
-    {
+    public void findValue(FindValueRequest request, StreamObserver<FindValueResponse> responseObserver) {
 
         //TODO insert!
         //rt.insert(request.getNode());
@@ -108,16 +173,30 @@ public class KademliaImpl extends KademliaGrpc.KademliaImplBase
 
         // Retrieve the key from the request
         String key = request.getKey();
+        byte[] signature = request.getSignature().toByteArray();
 
-        // Get the value associated with the key from the data store
-        String value = dataStore.findValue(key);
+        boolean signVal = false;
+        try {
+            signVal = verify(request.toByteArray(), signature, request.getPublicKey());
+        }
+        catch(Exception e) {
+            e.printStackTrace();
+        }
 
-        FindValueResponse response = FindValueResponse.newBuilder()
-                .setId(request.getNode().getId())
-                .setValue(value).build();
+        if (signVal) {
+            // Get the value associated with the key from the data store
+            String value = dataStore.findValue(key);
 
-        responseObserver.onNext(response);
-        responseObserver.onCompleted();
+            FindValueResponse response = FindValueResponse.newBuilder()
+                    .setId(request.getNode().getId())
+                    .setValue(value).build();
+
+            responseObserver.onNext(response);
+            responseObserver.onCompleted();
+        }
+        else {
+            System.out.println("Signature is invalid, discarding find value request...");
+        }
     }
     @Override
     public void getPrice(getPriceRequest request, StreamObserver<getPriceResponse> responseObserver)

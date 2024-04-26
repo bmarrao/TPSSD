@@ -97,7 +97,7 @@ class Bidder implements Runnable
     {
         for (int i = 0 ; i < 10;i++ )
         {
-            x.protocol.sendPrice()
+            //x.protocol.sendPrice();
         }
     }
 

@@ -6,6 +6,7 @@ import kademlia.server.KademliaServer;
 import org.checkerframework.checker.units.qual.K;
 
 import java.math.BigInteger;
+import java.security.PrivateKey;
 import java.security.PublicKey;
 import java.util.*;
 
@@ -18,6 +19,7 @@ public class KademliaTeste
          String ipAddress = "";
         int port;
         PublicKey publicKey = null;
+        PrivateKey privateKey = null;
 
         KademliaRoutingTable rtNormal ;
         KademliaRoutingTable rtBootStrap ;
@@ -26,7 +28,7 @@ public class KademliaTeste
         port = 5003;
         nodeId = Kademlia.generateNodeId();
         System.out.println("Generated node ID: \n" + Arrays.toString(nodeId) + "\n");
-        KademliaProtocol protocol = new KademliaProtocol(nodeId,ipAddress, port, publicKey);
+        KademliaProtocol protocol = new KademliaProtocol(nodeId,ipAddress, port, publicKey, privateKey);
         System.out.println();
 
         rtNormal = new KrtNormal(nodeId, protocol, 20, 20);

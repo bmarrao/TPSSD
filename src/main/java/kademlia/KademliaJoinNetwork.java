@@ -1,5 +1,6 @@
 package kademlia;
 
+import java.security.PrivateKey;
 import java.security.PublicKey;
 import java.util.ArrayList;
 import java.util.List;
@@ -12,24 +13,31 @@ public class KademliaJoinNetwork implements Runnable {
     public String ipAddress;
     public int port;
     public PublicKey publicKey;
+    public PrivateKey privateKey;
     public String bootstrapIp;
     public int bootstrapPort;
 
-    KademliaJoinNetwork(byte[] nodeId, String ipAddress, int port, PublicKey publicKey, String bootstrapIp, int bootstrapPort) {
+    KademliaJoinNetwork(byte[] nodeId, String ipAddress, int port, PublicKey publicKey, PrivateKey privateKey, String bootstrapIp, int bootstrapPort) {
         this.nodeId = nodeId;
         this.ipAddress = ipAddress;
         this.port = port;
         this.publicKey = publicKey;
+        this.privateKey = privateKey;
         this.bootstrapIp = bootstrapIp;
         this.bootstrapPort = bootstrapPort;
     }
 
     @Override
     public void run() {
-        KademliaProtocol protocol = new KademliaProtocol(this.nodeId, this.ipAddress, this.port, this.publicKey);
+        KademliaProtocol protocol = new KademliaProtocol(this.nodeId, this.ipAddress, this.port, this.publicKey, this.privateKey);
 
         // send find node operation to selected bootstrap node
-        List<Node> closestNodes = protocol.findNodeOp(this.nodeId, this.nodeId, this.bootstrapIp, this.bootstrapPort).getNodesList();
+        List<Node> closestNodes = null;
+        try {
+            closestNodes = protocol.findNodeOp(this.nodeId, this.nodeId, this.bootstrapIp, this.bootstrapPort).getNodesList();
+        } catch (Exception e) {
+            throw new RuntimeException(e);
+        }
 
         System.out.println("Closest nodes are: " + closestNodes);
 
@@ -49,7 +57,11 @@ public class KademliaJoinNetwork implements Runnable {
             newAddedNodes.clear();
 
             for (Node n : nodesToIterate) {
-                closestNodes = protocol.findNodeOp(this.nodeId, n.getId().toByteArray(), n.getIp(), n.getPort()).getNodesList();
+                try {
+                    closestNodes = protocol.findNodeOp(this.nodeId, n.getId().toByteArray(), n.getIp(), n.getPort()).getNodesList();
+                } catch (Exception e) {
+                    throw new RuntimeException(e);
+                }
                 for (Node m : closestNodes)
                 {
                     if (rt.insert(m))
