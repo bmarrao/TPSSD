@@ -28,7 +28,6 @@ public class KademliaImpl extends KademliaGrpc.KademliaImplBase
     }
 
 
-    /*
     // Verify signatures from received RPC messages
     public static boolean verify(byte[] data, byte[] signature, String publicKeyStr) throws Exception {
         // Convert public key from String to PublicKey
@@ -200,7 +199,6 @@ public class KademliaImpl extends KademliaGrpc.KademliaImplBase
         }
     }
 
-     */
     @Override
     public void getPrice(getPriceRequest request, StreamObserver<getPriceResponse> responseObserver)
     {

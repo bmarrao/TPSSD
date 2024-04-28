@@ -1,4 +1,5 @@
 kademlia/endServiceRequest$1.class
+blockchain/Blockchain.class
 kademlia/subscribeRequestOrBuilder.class
 kademlia/subscribeResponseOrBuilder.class
 kademlia/timerOverResponse$1.class
@@ -6,12 +7,12 @@ kademlia/FindValueResponse$1.class
 kademlia/KademliaGrpc$KademliaStub.class
 kademlia/server/KademliaServer.class
 kademlia/KrtBootStrap.class
+Subscriber.class
 kademlia/initiateServiceRequest.class
 kademlia/endServiceResponseOrBuilder.class
 kademlia/NotifyRequest.class
 kademlia/KademliaOuterClass.class
 kademlia/endServiceResponse.class
-kademlia/KademliaJoinNetwork.class
 kademlia/getPriceRequest.class
 kademlia/SortedArrayList.class
 kademlia/NotifyRequestOrBuilder.class
@@ -88,6 +89,7 @@ kademlia/Node$1.class
 kademlia/StoreResponse$Builder.class
 kademlia/OfferOrBuilder.class
 kademlia/FindNodeRequest$1.class
+blockchain/Block.class
 kademlia/sendPriceRequest$1.class
 kademlia/subscribeRequest.class
 kademlia/Kademlia.class

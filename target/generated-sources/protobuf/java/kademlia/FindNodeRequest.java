@@ -17,6 +17,8 @@ public  final class FindNodeRequest extends
   private FindNodeRequest() {
     key_ = com.google.protobuf.ByteString.EMPTY;
     k_ = 0;
+    publicKey_ = "";
+    signature_ = com.google.protobuf.ByteString.EMPTY;
   }
 
   @java.lang.Override
@@ -65,6 +67,17 @@ public  final class FindNodeRequest extends
           case 24: {
 
             k_ = input.readUInt32();
+            break;
+          }
+          case 34: {
+            java.lang.String s = input.readStringRequireUtf8();
+
+            publicKey_ = s;
+            break;
+          }
+          case 42: {
+
+            signature_ = input.readBytes();
             break;
           }
         }
@@ -129,6 +142,49 @@ public  final class FindNodeRequest extends
     return k_;
   }
 
+  public static final int PUBLICKEY_FIELD_NUMBER = 4;
+  private volatile java.lang.Object publicKey_;
+  /**
+   * <code>string publicKey = 4;</code>
+   */
+  public java.lang.String getPublicKey() {
+    java.lang.Object ref = publicKey_;
+    if (ref instanceof java.lang.String) {
+      return (java.lang.String) ref;
+    } else {
+      com.google.protobuf.ByteString bs = 
+          (com.google.protobuf.ByteString) ref;
+      java.lang.String s = bs.toStringUtf8();
+      publicKey_ = s;
+      return s;
+    }
+  }
+  /**
+   * <code>string publicKey = 4;</code>
+   */
+  public com.google.protobuf.ByteString
+      getPublicKeyBytes() {
+    java.lang.Object ref = publicKey_;
+    if (ref instanceof java.lang.String) {
+      com.google.protobuf.ByteString b = 
+          com.google.protobuf.ByteString.copyFromUtf8(
+              (java.lang.String) ref);
+      publicKey_ = b;
+      return b;
+    } else {
+      return (com.google.protobuf.ByteString) ref;
+    }
+  }
+
+  public static final int SIGNATURE_FIELD_NUMBER = 5;
+  private com.google.protobuf.ByteString signature_;
+  /**
+   * <code>bytes signature = 5;</code>
+   */
+  public com.google.protobuf.ByteString getSignature() {
+    return signature_;
+  }
+
   private byte memoizedIsInitialized = -1;
   public final boolean isInitialized() {
     byte isInitialized = memoizedIsInitialized;
@@ -150,6 +206,12 @@ public  final class FindNodeRequest extends
     if (k_ != 0) {
       output.writeUInt32(3, k_);
     }
+    if (!getPublicKeyBytes().isEmpty()) {
+      com.google.protobuf.GeneratedMessageV3.writeString(output, 4, publicKey_);
+    }
+    if (!signature_.isEmpty()) {
+      output.writeBytes(5, signature_);
+    }
   }
 
   public int getSerializedSize() {
@@ -168,6 +230,13 @@ public  final class FindNodeRequest extends
     if (k_ != 0) {
       size += com.google.protobuf.CodedOutputStream
         .computeUInt32Size(3, k_);
+    }
+    if (!getPublicKeyBytes().isEmpty()) {
+      size += com.google.protobuf.GeneratedMessageV3.computeStringSize(4, publicKey_);
+    }
+    if (!signature_.isEmpty()) {
+      size += com.google.protobuf.CodedOutputStream
+        .computeBytesSize(5, signature_);
     }
     memoizedSize = size;
     return size;
@@ -194,6 +263,10 @@ public  final class FindNodeRequest extends
         .equals(other.getKey());
     result = result && (getK()
         == other.getK());
+    result = result && getPublicKey()
+        .equals(other.getPublicKey());
+    result = result && getSignature()
+        .equals(other.getSignature());
     return result;
   }
 
@@ -212,6 +285,10 @@ public  final class FindNodeRequest extends
     hash = (53 * hash) + getKey().hashCode();
     hash = (37 * hash) + K_FIELD_NUMBER;
     hash = (53 * hash) + getK();
+    hash = (37 * hash) + PUBLICKEY_FIELD_NUMBER;
+    hash = (53 * hash) + getPublicKey().hashCode();
+    hash = (37 * hash) + SIGNATURE_FIELD_NUMBER;
+    hash = (53 * hash) + getSignature().hashCode();
     hash = (29 * hash) + unknownFields.hashCode();
     memoizedHashCode = hash;
     return hash;
@@ -351,6 +428,10 @@ public  final class FindNodeRequest extends
 
       k_ = 0;
 
+      publicKey_ = "";
+
+      signature_ = com.google.protobuf.ByteString.EMPTY;
+
       return this;
     }
 
@@ -380,6 +461,8 @@ public  final class FindNodeRequest extends
       }
       result.key_ = key_;
       result.k_ = k_;
+      result.publicKey_ = publicKey_;
+      result.signature_ = signature_;
       onBuilt();
       return result;
     }
@@ -429,6 +512,13 @@ public  final class FindNodeRequest extends
       }
       if (other.getK() != 0) {
         setK(other.getK());
+      }
+      if (!other.getPublicKey().isEmpty()) {
+        publicKey_ = other.publicKey_;
+        onChanged();
+      }
+      if (other.getSignature() != com.google.protobuf.ByteString.EMPTY) {
+        setSignature(other.getSignature());
       }
       onChanged();
       return this;
@@ -624,6 +714,104 @@ public  final class FindNodeRequest extends
     public Builder clearK() {
       
       k_ = 0;
+      onChanged();
+      return this;
+    }
+
+    private java.lang.Object publicKey_ = "";
+    /**
+     * <code>string publicKey = 4;</code>
+     */
+    public java.lang.String getPublicKey() {
+      java.lang.Object ref = publicKey_;
+      if (!(ref instanceof java.lang.String)) {
+        com.google.protobuf.ByteString bs =
+            (com.google.protobuf.ByteString) ref;
+        java.lang.String s = bs.toStringUtf8();
+        publicKey_ = s;
+        return s;
+      } else {
+        return (java.lang.String) ref;
+      }
+    }
+    /**
+     * <code>string publicKey = 4;</code>
+     */
+    public com.google.protobuf.ByteString
+        getPublicKeyBytes() {
+      java.lang.Object ref = publicKey_;
+      if (ref instanceof String) {
+        com.google.protobuf.ByteString b = 
+            com.google.protobuf.ByteString.copyFromUtf8(
+                (java.lang.String) ref);
+        publicKey_ = b;
+        return b;
+      } else {
+        return (com.google.protobuf.ByteString) ref;
+      }
+    }
+    /**
+     * <code>string publicKey = 4;</code>
+     */
+    public Builder setPublicKey(
+        java.lang.String value) {
+      if (value == null) {
+    throw new NullPointerException();
+  }
+  
+      publicKey_ = value;
+      onChanged();
+      return this;
+    }
+    /**
+     * <code>string publicKey = 4;</code>
+     */
+    public Builder clearPublicKey() {
+      
+      publicKey_ = getDefaultInstance().getPublicKey();
+      onChanged();
+      return this;
+    }
+    /**
+     * <code>string publicKey = 4;</code>
+     */
+    public Builder setPublicKeyBytes(
+        com.google.protobuf.ByteString value) {
+      if (value == null) {
+    throw new NullPointerException();
+  }
+  checkByteStringIsUtf8(value);
+      
+      publicKey_ = value;
+      onChanged();
+      return this;
+    }
+
+    private com.google.protobuf.ByteString signature_ = com.google.protobuf.ByteString.EMPTY;
+    /**
+     * <code>bytes signature = 5;</code>
+     */
+    public com.google.protobuf.ByteString getSignature() {
+      return signature_;
+    }
+    /**
+     * <code>bytes signature = 5;</code>
+     */
+    public Builder setSignature(com.google.protobuf.ByteString value) {
+      if (value == null) {
+    throw new NullPointerException();
+  }
+  
+      signature_ = value;
+      onChanged();
+      return this;
+    }
+    /**
+     * <code>bytes signature = 5;</code>
+     */
+    public Builder clearSignature() {
+      
+      signature_ = getDefaultInstance().getSignature();
       onChanged();
       return this;
     }

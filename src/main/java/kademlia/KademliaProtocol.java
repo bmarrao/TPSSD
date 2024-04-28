@@ -32,7 +32,6 @@ public class KademliaProtocol
     }
 
 
-    /*
     // Create signature for specific contect from RPC message
     public static byte[] sign(byte[] data, PrivateKey privateKey) throws Exception {
         Signature signature = Signature.getInstance("SHA256withRSA");
@@ -185,7 +184,7 @@ public class KademliaProtocol
 
 
 
-     */
+
     public boolean subscribe(byte[] serviceId, Node n )
     {
         ManagedChannel channel = ManagedChannelBuilder.forAddress(n.getIp(), n.getPort()).usePlaintext().build();
@@ -231,8 +230,10 @@ public class KademliaProtocol
         }
     }
 
-
      */
+
+
+
     public float getPrice(ArrayList<Node> selectedBrokers ,byte[] serviceId)
     {
         float price = -1;

@@ -6,9 +6,11 @@
 /home/brenin/TPSSD/TPSSD/target/generated-sources/protobuf/java/kademlia/FindNodeResponseOrBuilder.java
 /home/brenin/TPSSD/TPSSD/target/generated-sources/protobuf/java/kademlia/timerOverResponseOrBuilder.java
 /home/brenin/TPSSD/TPSSD/target/generated-sources/protobuf/java/kademlia/Offer.java
+/home/brenin/TPSSD/TPSSD/src/main/java/blockchain/Block.java
 /home/brenin/TPSSD/TPSSD/target/generated-sources/protobuf/java/kademlia/NotifyResponse.java
 /home/brenin/TPSSD/TPSSD/target/generated-sources/protobuf/java/kademlia/getPriceRequest.java
 /home/brenin/TPSSD/TPSSD/target/generated-sources/protobuf/java/kademlia/subscribeResponse.java
+/home/brenin/TPSSD/TPSSD/src/main/java/blockchain/Blockchain.java
 /home/brenin/TPSSD/TPSSD/target/generated-sources/protobuf/java/kademlia/FindNodeResponse.java
 /home/brenin/TPSSD/TPSSD/target/generated-sources/protobuf/java/kademlia/OfferOrBuilder.java
 /home/brenin/TPSSD/TPSSD/target/generated-sources/protobuf/java/kademlia/FindValueResponseOrBuilder.java

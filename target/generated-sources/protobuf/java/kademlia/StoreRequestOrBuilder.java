@@ -39,4 +39,19 @@ public interface StoreRequestOrBuilder extends
    */
   com.google.protobuf.ByteString
       getValueBytes();
+
+  /**
+   * <code>string publicKey = 4;</code>
+   */
+  java.lang.String getPublicKey();
+  /**
+   * <code>string publicKey = 4;</code>
+   */
+  com.google.protobuf.ByteString
+      getPublicKeyBytes();
+
+  /**
+   * <code>bytes signature = 5;</code>
+   */
+  com.google.protobuf.ByteString getSignature();
 }
