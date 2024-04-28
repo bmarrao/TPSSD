@@ -16,6 +16,7 @@ public  final class sendPriceRequest extends
   }
   private sendPriceRequest() {
     serviceId_ = com.google.protobuf.ByteString.EMPTY;
+    signature_ = com.google.protobuf.ByteString.EMPTY;
   }
 
   @java.lang.Override
@@ -59,6 +60,11 @@ public  final class sendPriceRequest extends
               offer_ = subBuilder.buildPartial();
             }
 
+            break;
+          }
+          case 26: {
+
+            signature_ = input.readBytes();
             break;
           }
         }
@@ -114,6 +120,15 @@ public  final class sendPriceRequest extends
     return getOffer();
   }
 
+  public static final int SIGNATURE_FIELD_NUMBER = 3;
+  private com.google.protobuf.ByteString signature_;
+  /**
+   * <code>bytes signature = 3;</code>
+   */
+  public com.google.protobuf.ByteString getSignature() {
+    return signature_;
+  }
+
   private byte memoizedIsInitialized = -1;
   public final boolean isInitialized() {
     byte isInitialized = memoizedIsInitialized;
@@ -132,6 +147,9 @@ public  final class sendPriceRequest extends
     if (offer_ != null) {
       output.writeMessage(2, getOffer());
     }
+    if (!signature_.isEmpty()) {
+      output.writeBytes(3, signature_);
+    }
   }
 
   public int getSerializedSize() {
@@ -146,6 +164,10 @@ public  final class sendPriceRequest extends
     if (offer_ != null) {
       size += com.google.protobuf.CodedOutputStream
         .computeMessageSize(2, getOffer());
+    }
+    if (!signature_.isEmpty()) {
+      size += com.google.protobuf.CodedOutputStream
+        .computeBytesSize(3, signature_);
     }
     memoizedSize = size;
     return size;
@@ -170,6 +192,8 @@ public  final class sendPriceRequest extends
       result = result && getOffer()
           .equals(other.getOffer());
     }
+    result = result && getSignature()
+        .equals(other.getSignature());
     return result;
   }
 
@@ -186,6 +210,8 @@ public  final class sendPriceRequest extends
       hash = (37 * hash) + OFFER_FIELD_NUMBER;
       hash = (53 * hash) + getOffer().hashCode();
     }
+    hash = (37 * hash) + SIGNATURE_FIELD_NUMBER;
+    hash = (53 * hash) + getSignature().hashCode();
     hash = (29 * hash) + unknownFields.hashCode();
     memoizedHashCode = hash;
     return hash;
@@ -323,6 +349,8 @@ public  final class sendPriceRequest extends
         offer_ = null;
         offerBuilder_ = null;
       }
+      signature_ = com.google.protobuf.ByteString.EMPTY;
+
       return this;
     }
 
@@ -351,6 +379,7 @@ public  final class sendPriceRequest extends
       } else {
         result.offer_ = offerBuilder_.build();
       }
+      result.signature_ = signature_;
       onBuilt();
       return result;
     }
@@ -397,6 +426,9 @@ public  final class sendPriceRequest extends
       }
       if (other.hasOffer()) {
         mergeOffer(other.getOffer());
+      }
+      if (other.getSignature() != com.google.protobuf.ByteString.EMPTY) {
+        setSignature(other.getSignature());
       }
       onChanged();
       return this;
@@ -568,6 +600,35 @@ public  final class sendPriceRequest extends
         offer_ = null;
       }
       return offerBuilder_;
+    }
+
+    private com.google.protobuf.ByteString signature_ = com.google.protobuf.ByteString.EMPTY;
+    /**
+     * <code>bytes signature = 3;</code>
+     */
+    public com.google.protobuf.ByteString getSignature() {
+      return signature_;
+    }
+    /**
+     * <code>bytes signature = 3;</code>
+     */
+    public Builder setSignature(com.google.protobuf.ByteString value) {
+      if (value == null) {
+    throw new NullPointerException();
+  }
+  
+      signature_ = value;
+      onChanged();
+      return this;
+    }
+    /**
+     * <code>bytes signature = 3;</code>
+     */
+    public Builder clearSignature() {
+      
+      signature_ = getDefaultInstance().getSignature();
+      onChanged();
+      return this;
     }
     public final Builder setUnknownFields(
         final com.google.protobuf.UnknownFieldSet unknownFields) {

@@ -37,4 +37,9 @@ public interface endServiceRequestOrBuilder extends
    * <code>.kademlia.Offer of = 3;</code>
    */
   kademlia.OfferOrBuilder getOfOrBuilder();
+
+  /**
+   * <code>bytes signature = 4;</code>
+   */
+  com.google.protobuf.ByteString getSignature();
 }

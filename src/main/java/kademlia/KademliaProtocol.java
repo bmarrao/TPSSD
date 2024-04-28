@@ -208,7 +208,6 @@ public class KademliaProtocol
 
     }
 
-    /*
     public void notifySubscribed(ArrayList<Node> subscribed, Offer highestOffer, byte[] serviceId) {
         for (Node n : subscribed) {
             ManagedChannel channel = ManagedChannelBuilder.forAddress(n.getIp(), n.getPort())
@@ -222,7 +221,7 @@ public class KademliaProtocol
                     .setServiceId(ByteString.copyFrom(serviceId))
                     .build();
 
-            Response  sr= stub.getPrice(request);
+            stub.notify(request);
 
 
             // Send the request asynchronously
@@ -230,7 +229,7 @@ public class KademliaProtocol
         }
     }
 
-     */
+
 
 
 
@@ -266,6 +265,7 @@ public class KademliaProtocol
         return price ;
     }
 
+    /*
     public Offer timerOver(Node n , byte[] serviceId)
     {
         ManagedChannel channel = ManagedChannelBuilder.forAddress(n.getIp(), n.getPort()).usePlaintext().build();
@@ -287,7 +287,7 @@ public class KademliaProtocol
 
         return response.getOf();
     }
-
+    */
     public boolean sendPrice(ArrayList<Node> selectedBrokers , float price, byte[] serviceId)
     {
         boolean result = false;

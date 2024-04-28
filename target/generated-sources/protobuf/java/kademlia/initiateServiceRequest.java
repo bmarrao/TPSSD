@@ -18,6 +18,7 @@ public  final class initiateServiceRequest extends
     serviceId_ = com.google.protobuf.ByteString.EMPTY;
     nodes_ = java.util.Collections.emptyList();
     time_ = 0;
+    signature_ = com.google.protobuf.ByteString.EMPTY;
   }
 
   @java.lang.Override
@@ -75,6 +76,11 @@ public  final class initiateServiceRequest extends
           case 32: {
 
             time_ = input.readUInt32();
+            break;
+          }
+          case 42: {
+
+            signature_ = input.readBytes();
             break;
           }
         }
@@ -178,6 +184,15 @@ public  final class initiateServiceRequest extends
     return time_;
   }
 
+  public static final int SIGNATURE_FIELD_NUMBER = 5;
+  private com.google.protobuf.ByteString signature_;
+  /**
+   * <code>bytes signature = 5;</code>
+   */
+  public com.google.protobuf.ByteString getSignature() {
+    return signature_;
+  }
+
   private byte memoizedIsInitialized = -1;
   public final boolean isInitialized() {
     byte isInitialized = memoizedIsInitialized;
@@ -202,6 +217,9 @@ public  final class initiateServiceRequest extends
     if (time_ != 0) {
       output.writeUInt32(4, time_);
     }
+    if (!signature_.isEmpty()) {
+      output.writeBytes(5, signature_);
+    }
   }
 
   public int getSerializedSize() {
@@ -224,6 +242,10 @@ public  final class initiateServiceRequest extends
     if (time_ != 0) {
       size += com.google.protobuf.CodedOutputStream
         .computeUInt32Size(4, time_);
+    }
+    if (!signature_.isEmpty()) {
+      size += com.google.protobuf.CodedOutputStream
+        .computeBytesSize(5, signature_);
     }
     memoizedSize = size;
     return size;
@@ -252,6 +274,8 @@ public  final class initiateServiceRequest extends
         .equals(other.getNodesList());
     result = result && (getTime()
         == other.getTime());
+    result = result && getSignature()
+        .equals(other.getSignature());
     return result;
   }
 
@@ -274,6 +298,8 @@ public  final class initiateServiceRequest extends
     }
     hash = (37 * hash) + TIME_FIELD_NUMBER;
     hash = (53 * hash) + getTime();
+    hash = (37 * hash) + SIGNATURE_FIELD_NUMBER;
+    hash = (53 * hash) + getSignature().hashCode();
     hash = (29 * hash) + unknownFields.hashCode();
     memoizedHashCode = hash;
     return hash;
@@ -420,6 +446,8 @@ public  final class initiateServiceRequest extends
       }
       time_ = 0;
 
+      signature_ = com.google.protobuf.ByteString.EMPTY;
+
       return this;
     }
 
@@ -460,6 +488,7 @@ public  final class initiateServiceRequest extends
         result.nodes_ = nodesBuilder_.build();
       }
       result.time_ = time_;
+      result.signature_ = signature_;
       result.bitField0_ = to_bitField0_;
       onBuilt();
       return result;
@@ -536,6 +565,9 @@ public  final class initiateServiceRequest extends
       }
       if (other.getTime() != 0) {
         setTime(other.getTime());
+      }
+      if (other.getSignature() != com.google.protobuf.ByteString.EMPTY) {
+        setSignature(other.getSignature());
       }
       onChanged();
       return this;
@@ -972,6 +1004,35 @@ public  final class initiateServiceRequest extends
     public Builder clearTime() {
       
       time_ = 0;
+      onChanged();
+      return this;
+    }
+
+    private com.google.protobuf.ByteString signature_ = com.google.protobuf.ByteString.EMPTY;
+    /**
+     * <code>bytes signature = 5;</code>
+     */
+    public com.google.protobuf.ByteString getSignature() {
+      return signature_;
+    }
+    /**
+     * <code>bytes signature = 5;</code>
+     */
+    public Builder setSignature(com.google.protobuf.ByteString value) {
+      if (value == null) {
+    throw new NullPointerException();
+  }
+  
+      signature_ = value;
+      onChanged();
+      return this;
+    }
+    /**
+     * <code>bytes signature = 5;</code>
+     */
+    public Builder clearSignature() {
+      
+      signature_ = getDefaultInstance().getSignature();
       onChanged();
       return this;
     }

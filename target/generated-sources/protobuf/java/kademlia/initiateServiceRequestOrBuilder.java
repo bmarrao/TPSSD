@@ -53,4 +53,9 @@ public interface initiateServiceRequestOrBuilder extends
    * <code>uint32 time = 4;</code>
    */
   int getTime();
+
+  /**
+   * <code>bytes signature = 5;</code>
+   */
+  com.google.protobuf.ByteString getSignature();
 }

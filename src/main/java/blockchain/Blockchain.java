@@ -21,7 +21,10 @@ public class Blockchain {
         Block genesisBlock = new Block("", "0", "Genesis Block");
         genesisBlock.mineBlock(difficulty); // Ensure the genesis block has valid proof-of-work
         chain.add(genesisBlock);*/
+
+
     }
+
 
     // Getters
     public List<Block> getChain() {
@@ -65,3 +68,4 @@ public class Blockchain {
         return true; // All checks passed, the blockchain is valid
     }
 }
+

@@ -4,6 +4,19 @@
 package kademlia;
 
 /**
+ * <pre>
+ *message timerOverRequest
+ *{
+ *Node node = 1;
+ *bytes serviceId = 2;
+ *}
+ *message timerOverResponse
+ *{
+ *bool response = 1;
+ *Offer of = 2;
+ *}
+ * </pre>
+ *
  * Protobuf type {@code kademlia.endServiceRequest}
  */
 public  final class endServiceRequest extends
@@ -16,6 +29,7 @@ public  final class endServiceRequest extends
   }
   private endServiceRequest() {
     serviceId_ = com.google.protobuf.ByteString.EMPTY;
+    signature_ = com.google.protobuf.ByteString.EMPTY;
   }
 
   @java.lang.Override
@@ -72,6 +86,11 @@ public  final class endServiceRequest extends
               of_ = subBuilder.buildPartial();
             }
 
+            break;
+          }
+          case 34: {
+
+            signature_ = input.readBytes();
             break;
           }
         }
@@ -148,6 +167,15 @@ public  final class endServiceRequest extends
     return getOf();
   }
 
+  public static final int SIGNATURE_FIELD_NUMBER = 4;
+  private com.google.protobuf.ByteString signature_;
+  /**
+   * <code>bytes signature = 4;</code>
+   */
+  public com.google.protobuf.ByteString getSignature() {
+    return signature_;
+  }
+
   private byte memoizedIsInitialized = -1;
   public final boolean isInitialized() {
     byte isInitialized = memoizedIsInitialized;
@@ -169,6 +197,9 @@ public  final class endServiceRequest extends
     if (of_ != null) {
       output.writeMessage(3, getOf());
     }
+    if (!signature_.isEmpty()) {
+      output.writeBytes(4, signature_);
+    }
   }
 
   public int getSerializedSize() {
@@ -187,6 +218,10 @@ public  final class endServiceRequest extends
     if (of_ != null) {
       size += com.google.protobuf.CodedOutputStream
         .computeMessageSize(3, getOf());
+    }
+    if (!signature_.isEmpty()) {
+      size += com.google.protobuf.CodedOutputStream
+        .computeBytesSize(4, signature_);
     }
     memoizedSize = size;
     return size;
@@ -216,6 +251,8 @@ public  final class endServiceRequest extends
       result = result && getOf()
           .equals(other.getOf());
     }
+    result = result && getSignature()
+        .equals(other.getSignature());
     return result;
   }
 
@@ -236,6 +273,8 @@ public  final class endServiceRequest extends
       hash = (37 * hash) + OF_FIELD_NUMBER;
       hash = (53 * hash) + getOf().hashCode();
     }
+    hash = (37 * hash) + SIGNATURE_FIELD_NUMBER;
+    hash = (53 * hash) + getSignature().hashCode();
     hash = (29 * hash) + unknownFields.hashCode();
     memoizedHashCode = hash;
     return hash;
@@ -330,6 +369,19 @@ public  final class endServiceRequest extends
     return builder;
   }
   /**
+   * <pre>
+   *message timerOverRequest
+   *{
+   *Node node = 1;
+   *bytes serviceId = 2;
+   *}
+   *message timerOverResponse
+   *{
+   *bool response = 1;
+   *Offer of = 2;
+   *}
+   * </pre>
+   *
    * Protobuf type {@code kademlia.endServiceRequest}
    */
   public static final class Builder extends
@@ -379,6 +431,8 @@ public  final class endServiceRequest extends
         of_ = null;
         ofBuilder_ = null;
       }
+      signature_ = com.google.protobuf.ByteString.EMPTY;
+
       return this;
     }
 
@@ -412,6 +466,7 @@ public  final class endServiceRequest extends
       } else {
         result.of_ = ofBuilder_.build();
       }
+      result.signature_ = signature_;
       onBuilt();
       return result;
     }
@@ -461,6 +516,9 @@ public  final class endServiceRequest extends
       }
       if (other.hasOf()) {
         mergeOf(other.getOf());
+      }
+      if (other.getSignature() != com.google.protobuf.ByteString.EMPTY) {
+        setSignature(other.getSignature());
       }
       onChanged();
       return this;
@@ -749,6 +807,35 @@ public  final class endServiceRequest extends
         of_ = null;
       }
       return ofBuilder_;
+    }
+
+    private com.google.protobuf.ByteString signature_ = com.google.protobuf.ByteString.EMPTY;
+    /**
+     * <code>bytes signature = 4;</code>
+     */
+    public com.google.protobuf.ByteString getSignature() {
+      return signature_;
+    }
+    /**
+     * <code>bytes signature = 4;</code>
+     */
+    public Builder setSignature(com.google.protobuf.ByteString value) {
+      if (value == null) {
+    throw new NullPointerException();
+  }
+  
+      signature_ = value;
+      onChanged();
+      return this;
+    }
+    /**
+     * <code>bytes signature = 4;</code>
+     */
+    public Builder clearSignature() {
+      
+      signature_ = getDefaultInstance().getSignature();
+      onChanged();
+      return this;
     }
     public final Builder setUnknownFields(
         final com.google.protobuf.UnknownFieldSet unknownFields) {

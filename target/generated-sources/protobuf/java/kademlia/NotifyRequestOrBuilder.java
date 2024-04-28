@@ -29,4 +29,9 @@ public interface NotifyRequestOrBuilder extends
    * <code>float price = 3;</code>
    */
   float getPrice();
+
+  /**
+   * <code>bytes signature = 4;</code>
+   */
+  com.google.protobuf.ByteString getSignature();
 }

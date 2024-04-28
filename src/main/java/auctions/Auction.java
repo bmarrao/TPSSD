@@ -38,7 +38,8 @@ public class Auction
             l.unlock();
             if (bs.receiveOffer(of))
             {
-                //kp.notifySubscribed(bs.subscribed,bs.highestOffer,bs.serviceId);
+                System.out.println("NOTIFY SUBSCRIBED");
+                kp.notifySubscribed(bs.subscribed,bs.highestOffer,bs.serviceId);
                 return true;
             }
             bs.l.unlock();

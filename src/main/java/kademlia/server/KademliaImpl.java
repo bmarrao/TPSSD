@@ -200,6 +200,22 @@ public class KademliaImpl extends KademliaGrpc.KademliaImplBase
     }
 
     @Override
+    public void notify(NotifyRequest request, StreamObserver<NotifyResponse> responseObserver)
+    {
+        System.out.println("Just received Notification from service " + request.getServiceId() + "With new price " + request.getPrice());
+
+        NotifyResponse response = NotifyResponse
+                .newBuilder()
+                .setResponse(true)
+                .build();
+
+        // Send the response to the client.
+        responseObserver.onNext(response);
+
+        // Notifies the customer that the call is completed.
+        responseObserver.onCompleted();
+    }
+    @Override
     public void getPrice(getPriceRequest request, StreamObserver<getPriceResponse> responseObserver)
     {
         System.out.println("Sending Biggest Price");
@@ -279,28 +295,11 @@ public class KademliaImpl extends KademliaGrpc.KademliaImplBase
         responseObserver.onCompleted();
     }
 
-    @Override
-    public void timerOver(timerOverRequest request, StreamObserver<timerOverResponse> responseObserver)
-    {
-        Offer of = auc.timerOver(request.getServiceId().toByteArray(),request.getNode());
-
-        timerOverResponse response = timerOverResponse
-                .newBuilder()
-                .setResponse(true)
-                .setOf(of)
-                .build();
-
-        // Send the response to the client.
-        responseObserver.onNext(response);
-
-        // Notifies the customer that the call is completed.
-        responseObserver.onCompleted();
-    }
-
 
     @Override
     public void endService(endServiceRequest request, StreamObserver<endServiceResponse> responseObserver)
     {
+        
         System.out.println("End Service");
         boolean resp = auc.endService(request.getServiceId().toByteArray(),request.getNode());
 
@@ -326,6 +325,24 @@ public class KademliaImpl extends KademliaGrpc.KademliaImplBase
         communicateBiggestResponse response = communicateBiggestResponse
                 .newBuilder()
                 .setResponse(resp)
+                .build();
+
+        // Send the response to the client.
+        responseObserver.onNext(response);
+
+        // Notifies the customer that the call is completed.
+        responseObserver.onCompleted();
+    }
+
+    @Override
+    public void timerOver(timerOverRequest request, StreamObserver<timerOverResponse> responseObserver)
+    {
+        Offer of = auc.timerOver(request.getServiceId().toByteArray(),request.getNode());
+
+        timerOverResponse response = timerOverResponse
+                .newBuilder()
+                .setResponse(true)
+                .setOf(of)
                 .build();
 
         // Send the response to the client.

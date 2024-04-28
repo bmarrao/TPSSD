@@ -24,4 +24,9 @@ public interface sendPriceRequestOrBuilder extends
    * <code>.kademlia.Offer offer = 2;</code>
    */
   kademlia.OfferOrBuilder getOfferOrBuilder();
+
+  /**
+   * <code>bytes signature = 3;</code>
+   */
+  com.google.protobuf.ByteString getSignature();
 }
