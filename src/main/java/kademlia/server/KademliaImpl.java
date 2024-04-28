@@ -305,6 +305,7 @@ public class KademliaImpl extends KademliaGrpc.KademliaImplBase
         System.out.println("End Service");
         boolean resp = auc.endService(request.getServiceId().toByteArray(),request.getNode());
 
+        System.out.println(request.getOf().getPrice());
         endServiceResponse response = endServiceResponse
                 .newBuilder()
                 .setResponse(resp)

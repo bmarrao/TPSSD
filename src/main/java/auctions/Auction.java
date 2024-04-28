@@ -133,6 +133,7 @@ public class Auction
         {
             if(bs.brokerSet.contains(request))
             {
+                System.out.println("Removi com sucesso");
                 services.remove(serviceId);
                 ret = true;
             }

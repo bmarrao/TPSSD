@@ -29,17 +29,17 @@ public class BrokerService
         this.serviceId = serviceId;
         this.brokerSet = brokerSet;
         subscribed = new ArrayList<>();
+        Offer.Builder bd = Offer.newBuilder();
+        bd.setNode(owner);
+        bd.setPrice(-1);
+
         highestOffer = null;
         this.owner = owner;
         this.time = time;
     }
     public float getPrice()
     {
-        if (highestOffer != null)
-        {
-            return highestOffer.getPrice();
-        }
-        return -1;
+        return highestOffer.getPrice();
     }
 
 
@@ -47,18 +47,16 @@ public class BrokerService
     {
 
         boolean result = false;
-        if (highestOffer == null)
+
+        if (highestOffer.getPrice() < of.getPrice())
         {
+            System.out.println("É maior");
             highestOffer = of;
             result = true;
         }
         else
         {
-            if (highestOffer.getPrice() < of.getPrice())
-            {
-                highestOffer = of;
-                result = true;
-            }
+            System.out.println("É menor");
         }
         return result;
     }

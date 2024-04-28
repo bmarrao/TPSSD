@@ -14,7 +14,7 @@ public class AuctionTest
         byte[] bkId = generateNodeId();
         Node.Builder nd = Node.newBuilder();
         nd.setIp("localhost");
-        nd.setPort(5000);
+        nd.setPort(5010);
         nd.setId(ByteString.copyFrom(bkId));
         Node self = nd.build();
         ArrayList<Node> nodes = new ArrayList<>();
@@ -28,7 +28,6 @@ public class AuctionTest
         try
         {
             Thread.sleep(1000);
-            BrokerThread.start();
         }
         catch(Exception e)
         {
@@ -81,14 +80,14 @@ class Broker implements Runnable
     ArrayList<Node> nodes;
     Broker(byte[] nodeId,ArrayList<Node> nodes)
     {
-        x = new Kademlia(nodeId,"127.0.0.1",5001,true, 10,10);
+        x = new Kademlia(nodeId,"127.0.0.1",5010,true, 10,10);
         this.nodes = nodes;
     }
 
     @Override
     public void run()
     {
-        x.protocol.initiateService(nodes.get(0),x.nodeId,nodes,30000);
+        x.protocol.initiateService(nodes.get(0),x.nodeId,nodes,7500);
 
     }
 
@@ -101,7 +100,7 @@ class Bidder implements Runnable
     ArrayList<Node> brokers;
     Bidder(byte[] nodeId, byte[] serviceId,ArrayList<Node> brokers)
     {
-        x = new Kademlia(nodeId,"127.0.0.1",5000,true, 10,10);
+        x = new Kademlia(nodeId,"127.0.0.1",5011,true, 10,10);
         this.serviceId = serviceId;
         this.brokers= brokers;
     }
@@ -109,16 +108,10 @@ class Bidder implements Runnable
     @Override
     public void run()
     {
-        for (int i = 0 ; i < 10;i++ )
+        for (int i = 1 ; i < 10;i++ )
         {
-            Node.Builder nd = Node.newBuilder();
-            nd.setIp("localhost");
-            nd.setPort(5000);
-            nd.setId(ByteString.copyFrom(x.nodeId));
-            Node self = nd.build();
-            ArrayList<Node> nodes = new ArrayList<>();
-            nodes.add(self);
             x.protocol.sendPrice(brokers, i,serviceId);
+            System.out.println(x.protocol.getPrice(brokers, serviceId));
         }
     }
 

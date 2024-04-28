@@ -355,7 +355,7 @@ public class KademliaProtocol
 
 
 
-    public boolean endService (Node n, byte[] serviceId)
+    public boolean endService (Node n, byte[] serviceId,Offer of)
     {
         ManagedChannel channel = ManagedChannelBuilder.forAddress(n.getIp(), n.getPort()).usePlaintext().build();
 
@@ -370,6 +370,7 @@ public class KademliaProtocol
 
         endServiceRequest request = endServiceRequest.newBuilder()
                 .setNode(node)
+                .setOf(of)
                 .setServiceId(ByteString.copyFrom(serviceId)).build();
 
         endServiceResponse response = stub.endService(request);
