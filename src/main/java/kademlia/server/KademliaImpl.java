@@ -266,6 +266,7 @@ public class KademliaImpl extends KademliaGrpc.KademliaImplBase
     public void subscribe(subscribeRequest request, StreamObserver<subscribeResponse> responseObserver)
     {
 
+        System.out.println("Received Subscribed");
         boolean res = auc.subscribe(request.getNode(),request.getServiceId().toByteArray());
 
         subscribeResponse response = subscribeResponse

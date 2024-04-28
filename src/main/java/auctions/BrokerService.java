@@ -50,13 +50,8 @@ public class BrokerService
 
         if (highestOffer.getPrice() < of.getPrice())
         {
-            System.out.println("É maior");
             highestOffer = of;
             result = true;
-        }
-        else
-        {
-            System.out.println("É menor");
         }
         return result;
     }

@@ -21,19 +21,23 @@ public class AuctionTest
         nodes.add(self);
 
         Bidder bd = new Bidder(generateNodeId(),bkId,nodes);
+        Subscriber sb = new Subscriber(generateNodeId(),bkId,nodes);
         Broker bk = new Broker(bkId,nodes);
         Thread BidderThread = new Thread(bd);
         Thread BrokerThread = new Thread(bk);
+        Thread SubscriberThread = new Thread(sb);
+
         BrokerThread.start();
         try
         {
-            Thread.sleep(1000);
+            Thread.sleep(3000);
         }
         catch(Exception e)
         {
             e.printStackTrace();
         }
         BidderThread.start();
+        SubscriberThread.start();
         /*
         Kademlia kd1 = new Kademlia("127.0.0.1",5000,true, 10,10);
         byte[] nodeId;
@@ -111,8 +115,28 @@ class Bidder implements Runnable
         for (int i = 1 ; i < 10;i++ )
         {
             x.protocol.sendPrice(brokers, i,serviceId);
-            System.out.println(x.protocol.getPrice(brokers, serviceId));
+            System.out.println(x.protocol.getPrice(brokers,serviceId));
         }
+    }
+
+}
+
+class Subscriber implements Runnable
+{
+    Kademlia x;
+    byte[] serviceId;
+    ArrayList<Node> brokers;
+    Subscriber(byte[] nodeId, byte[] serviceId,ArrayList<Node> brokers)
+    {
+        x = new Kademlia(nodeId,"127.0.0.1",5012,true, 10,10);
+        this.serviceId = serviceId;
+        this.brokers= brokers;
+    }
+
+    @Override
+    public void run()
+    {
+        x.protocol.subscribe(serviceId, brokers.get(0));
     }
 
 }

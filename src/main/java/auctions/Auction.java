@@ -69,10 +69,10 @@ public class Auction
     {
         l.lock();
         BrokerService bs = this.getService(serviceId);
+        l.unlock();
         if (bs != null)
         {
             bs.l.lock();
-            l.unlock();
             bs.subscribed.add(node);
             bs.l.unlock();
             return true;
@@ -88,12 +88,11 @@ public class Auction
     {
         l.lock();
         BrokerService bs = this.getService(serviceId);
+        l.unlock();
         float price = -1;
         if (bs != null)
         {
             bs.l.lock();
-            l.unlock();
-
             price = bs.getPrice();
             bs.l.unlock();
         }
@@ -128,18 +127,20 @@ public class Auction
 
         l.lock();
         BrokerService bs = this.getService(serviceId);
-        boolean ret ;
+        boolean ret = false;
+        System.out.println();
         if(bs!= null)
         {
-            if(bs.brokerSet.contains(request))
+            for(Node n : bs.brokerSet)
             {
-                System.out.println("Removi com sucesso");
-                services.remove(serviceId);
-                ret = true;
-            }
-            else
-            {
-                ret = false;
+                if (compareId(n.getId().toByteArray(),request.getId().toByteArray()))
+                {
+                    System.out.println(services.size());
+                    services.remove(bs);
+                    System.out.println(services.size());
+                    ret = true ;
+                    break;
+                }
             }
         }
         else
