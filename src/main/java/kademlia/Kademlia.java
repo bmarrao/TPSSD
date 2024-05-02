@@ -29,9 +29,13 @@ public class Kademlia
     // TODO Inicialização do no kademlia , contacto com boostrap node - Cristina
     // TODO Criar bootstrap node - Breno
 
-    public Kademlia()
+    public Kademlia(byte[] nodeId, PublicKey generatedPk, PrivateKey generatedSk, KademliaRoutingTable rt, KademliaProtocol protocol)
     {
-
+        this.nodeId = nodeId;
+        this.generatedPk = generatedPk;
+        this.generatedSk = generatedSk;
+        this.rt = rt;
+        this.protocol = protocol;
     }
 
     public Kademlia(byte[] nodeId, String ipAddress, int port, boolean bootstrap, int k, int s)
@@ -58,7 +62,7 @@ public class Kademlia
             joinNetThread.start();
         }
 
-        KademliaServer server = new KademliaServer(port, new Auction(protocol,rt));
+        KademliaServer server = new KademliaServer(port, new Auction(this));
         Thread serverThread = new Thread(server);
         serverThread.start();
     }
@@ -74,7 +78,8 @@ public class Kademlia
             protocol = new KademliaProtocol(sKadNodeId,"127.0.0.1",5000, generatedPk, generatedSk);
             rt = new KrtBootStrap(sKadNodeId,protocol,20,20);
 
-            KademliaServer server = new KademliaServer(5000, new Auction(protocol,rt));
+            KademliaServer server = new KademliaServer(5000,  new Auction(new Kademlia(sKadNodeId,generatedPk,generatedSk,rt,protocol)));
+
             Thread serverThread = new Thread(server);
             serverThread.start();
 
@@ -85,7 +90,9 @@ public class Kademlia
 
             rt = new KrtNormal(sKadNodeId, protocol, 20, 20);
 
-            KademliaServer server = new KademliaServer(Integer.parseInt(args[1]), new Auction(protocol,rt));
+
+            KademliaServer server = new KademliaServer(Integer.parseInt(args[1]),
+                    new Auction(new Kademlia(sKadNodeId,generatedPk,generatedSk,rt,protocol)));
             Thread serverThread = new Thread(server);
             serverThread.start();
 
@@ -199,7 +206,7 @@ public class Kademlia
         }
     }
 
-    public static ArrayList<Node> lookup(byte[] nodeId) {
+    public static ArrayList<Node> lookup(byte[] nodeId, int a) {
         // Initialize a set to keep track of visited nodes to avoid loops
         Set<Node> visitedNodes = new HashSet<>();
         // TODO FIX THIS COMPARATOR
@@ -234,15 +241,21 @@ public class Kademlia
                 // Add the additional closest nodes found to the queue
                 closestNodesQueue.addAll(additionalClosestNodes);
 
+
             }
 
             // Check if termination condition is met (e.g., desired number of closest nodes found)
             // Not implemented in this example, you can add your termination condition here
         }
 
-        // Convert the closest nodes priority queue to a list
-        ArrayList<Node> resultNodes = new ArrayList<>(closestNodesQueue);
-// Sort the result nodes list by their distance to the target key
+        // Initialize a list to store the result nodes
+        ArrayList<Node> resultNodes = new ArrayList<>();
+
+        // Transfer elements from priority queue to resultNodes list
+        while (resultNodes.size() < a || !closestNodesQueue.isEmpty()) {
+            resultNodes.add(closestNodesQueue.poll());
+        }
+
         resultNodes.sort((node1, node2) -> {
             BigInteger distance1 = rt.calculateDistance(node1.getId().toByteArray(), nodeId);
             BigInteger distance2 = rt.calculateDistance(node2.getId().toByteArray(), nodeId);

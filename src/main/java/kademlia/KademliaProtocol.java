@@ -69,14 +69,15 @@ public class KademliaProtocol
         return response.getOnline();
     }
 
-
-    public boolean storeOp(byte[] nodeId, String key, String val, String receiverIp, int receiverPort) {
+//TIREI NODEID DA DECLARACAO - QUERO ALTERAR KEY PARA BYTE[]
+    public boolean storeOp(String key, String val, String receiverIp, int receiverPort) {
         ManagedChannel channel = ManagedChannelBuilder.forAddress(receiverIp, receiverPort).usePlaintext().build();
 
         KademliaGrpc.KademliaBlockingStub stub = KademliaGrpc.newBlockingStub(channel);
 
         Node node = Node.newBuilder()
-                .setId(ByteString.copyFrom(nodeId))
+                //.setId(ByteString.copyFrom(nodeId)) ALTEREI ISSO
+                .setId(ByteString.copyFrom(this.nodeId))
                 .setIp(ipAddress)
                 .setPort(port)
                 .build();
@@ -111,7 +112,6 @@ public class KademliaProtocol
 
 
 
-    public ArrayList<Node> lookUp (byte[])
     public KademliaFindOpResult findNodeOp(byte[] nodeId, byte[] key, String receiverIp, int receiverPort)
     {
 

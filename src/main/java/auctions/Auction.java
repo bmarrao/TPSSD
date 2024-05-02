@@ -2,7 +2,7 @@ package auctions;
 
 import kademlia.KademliaProtocol;
 
-import kademlia.KademliaRoutingTable;
+import kademlia.Kademlia;
 import kademlia.Node;
 import kademlia.Offer;
 
@@ -15,37 +15,32 @@ import java.security.NoSuchAlgorithmException;
 import java.nio.charset.StandardCharsets;
 public class Auction
 {
-    KademliaProtocol kp;
+    Kademlia k;
     private ReentrantLock l ;
     ArrayList<BrokerService> services;
-    KademliaRoutingTable rt ;
-    public Auction(KademliaProtocol kp, KademliaRoutingTable rt)
+    public Auction(Kademlia k)
     {
         l = new ReentrantLock();
         services = new ArrayList<>();
-        this.kp = kp;
-        this.rt = rt;
+        this.k = k;
     }
 
 
 
-    public ArrayList<Node> createService (String service)
+    public ArrayList<Node> createService (String service, int a)
     {
         //Develop Hash
         try {
             MessageDigest sha1 = MessageDigest.getInstance("SHA-1"); // Create a new SHA-1 digest
 
             byte[] serviceId = sha1.digest(service.getBytes(StandardCharsets.UTF_8)); // Compute the hash
-            ArrayList<Node> nodes = rt.findClosestNode(serviceId, 3);
-            ArrayList<Node> biggest = new ArrayList<>(nodes);
-            while (nodes.size() > 0)
-            {
-                nodes.get(0);
-                b
-                nodes.remove(0);
-            }
-            rt.searchMapClosest()
-            kp.findNodeOp(serviceId, serviceId,nodes.get(0).getIp(),nodes.get(0).getPort());
+            //Get closest nodes to serviceID
+            ArrayList<Node> nodes = k.lookup(serviceId,a);
+            Node broker = nodes.get(0);
+            //TODO ALTERAR STOREOP SERVICEID PARA byte[]
+            k.protocol.initiateService(serviceId,nodes.toString(),broker.getIp(),broker.getPort());
+
+            return nodes;
         }
         catch (NoSuchAlgorithmException e)
         {
@@ -67,7 +62,7 @@ public class Auction
             if (bs.receiveOffer(of))
             {
                 System.out.println("NOTIFY SUBSCRIBED");
-                kp.notifySubscribed(bs.subscribed,bs.highestOffer,bs.serviceId);
+                kademlia.protocol.notifySubscribed(bs.subscribed,bs.highestOffer,bs.serviceId);
                 return true;
             }
             bs.l.unlock();
@@ -88,7 +83,7 @@ public class Auction
         Offer.Builder nd = Offer.newBuilder();
         nd.setPrice(-1);
         bs.highestOffer = nd.build();
-        Thread rsThread = new Thread( new RunService(bs,this.kp));
+        Thread rsThread = new Thread( new RunService(bs,kademlia.protocol));
         rsThread.start();
         l.unlock();
     }
