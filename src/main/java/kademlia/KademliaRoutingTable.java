@@ -1,6 +1,7 @@
 package kademlia;
 import com.google.protobuf.ByteString;
 
+import java.lang.reflect.Array;
 import java.math.BigInteger;
 import java.time.LocalDateTime;
 import java.util.*;
@@ -60,7 +61,7 @@ public class KademliaRoutingTable
     // Tamanho dos buckets
     int k;
     // S/Kademlia sibling list
-    TreeMap<BigInteger, Node> siblingList;
+    TreeMap<BigInteger, KademliaNode> siblingList;
     // Sibling list size
     int s;
 
@@ -79,28 +80,89 @@ public class KademliaRoutingTable
 
 
 
-    // insert node to routing table considering sibling list
-    // TODO: não percebo como se decide se se usa a sibling list ou o método do last recently seen online ???
-    //       se calhar quando as distâncias entre o furthest e o atual forem iguais ???
-    public void slInsertNode(Node n) {
+    // sibling list implementation
+    public void slInsertNode(KademliaNode n, int i, int j) {
         // calcula distância do nó n ao mynodeid
-        BigInteger newNodeDistance = calculateDistance(myNodeId, n.getId().toByteArray());
+        BigInteger newNodeDistance = calculateDistance(myNodeId, n.nodeId);
 
-        if (siblingList.size() >= s) {
-            // se essa distância for mais proxima do que a distância do furthest node na sibling list
-            // entao adiciona o nó n à sibling list
-            BigInteger furthestNodeDistance = calculateDistance(myNodeId, siblingList.lastEntry().getValue().getId().toByteArray());
-            int comparisonResult = newNodeDistance.compareTo(furthestNodeDistance);
+        // se essa distância for mais proxima do que a distância do furthest node na sibling list
+        // entao adiciona o nó n à sibling list
+        BigInteger furthestNodeDistance = calculateDistance(myNodeId, siblingList.lastEntry().getValue().nodeId);
+        int comparisonResult = newNodeDistance.compareTo(furthestNodeDistance);
 
-            if (comparisonResult < 0) {
+        if (comparisonResult < 0) {
+            if (siblingList.size() >= s) {
                 siblingList.remove(siblingList.lastEntry().getKey());
-                siblingList.put(newNodeDistance, n);
             }
-        }
-        else {
+            else {
+                // TODO: não sei se esta parte está bem
+                boolean adicionou = testLeastRecentlySeen(root.kbucket, n);
+                if (!adicionou) {
+                    if (j == 0) {
+                        addToBuckets(root.left, root.right, root.kbucket, n, i + 1, 7);
+                    }
+                    else {
+                        addToBuckets(root.left, root.right, root.kbucket, n, i, j - 1);
+                    }
+                }
+            }
             siblingList.put(newNodeDistance, n);
         }
     }
+
+
+    // find out wether n1 or n2 is closer destNode
+    public int compareDistance(byte[] n1, byte[] n2, byte[] destNode) {
+        BigInteger dist1 = calculateDistance(n1, destNode);
+        BigInteger dist2 = calculateDistance(n2, destNode);
+        return dist1.compareTo(dist2);
+    }
+
+
+    // S/Kademlia: find the k closest nodes to destNode
+    public ArrayList<KademliaNode> findClosestNodesSKad(KademliaNode destNode, int k_closest_nodes) {
+        PriorityQueue<KademliaNode> closestNodes = new PriorityQueue<>((n1, n2) -> compareDistance(n1.nodeId, n2.nodeId, destNode.nodeId));
+
+        // TODO: iterate through routing table
+        for (KademliaNode m : ) {
+            closestNodes.offer(m);
+
+            if (closestNodes.size() > k_closest_nodes) {
+                closestNodes.poll();
+            }
+        }
+        return new ArrayList<>(closestNodes);
+    }
+
+
+    // Parallel lookup over d disjoint paths
+    public void skadLookup(KademliaNode destinationKey, int d_closest_nodes) {
+        // get closest nodes to destinationKey (non recursive)
+        ArrayList<KademliaNode> closestNodes = findClosestNodesSKad(destinationKey, d_closest_nodes);
+
+        // TODO:
+        //   - distribuir closest nodes obtidos em lookup buckets independentes
+        //   - para cada nó fazer lookup paralelo
+        for (KademliaNode n : closestNodes) {
+            Thread findClosestNodeRecThread = new Thread((Runnable) findClosestNodeRec(root, destinationKey.nodeId, 0, 0, 0, ""));
+            findClosestNodeRecThread.start();
+        }
+    }
+
+
+    // TODO: maintaining routing table skad
+    public void sKadAddToBucket(Node n, String validity, int x_bits) {
+        if (validity.equals("ActivelyValid")) {
+            if (this.root.kbucket.size() < k) {
+                KademliaNode kn = new KademliaNode(n.getIp(), n.getId().toByteArray(), n.getPort());
+                addToBuckets(this.root.left, this.root.right, this.root.kbucket, kn, 0, 0);
+            }
+        }
+        else {
+            // se o n.getId() diferir pelo menos x_bits do bucket, então adicionar ao bucket
+        }
+    }
+
 
     //  Função que insere um no na arvore
     public boolean insert(Node node)
