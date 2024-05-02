@@ -4,13 +4,11 @@ import auctions.Auction;
 import kademlia.server.KademliaServer;
 
 import java.io.*;
+import java.math.BigInteger;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.security.*;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
-import java.util.Random;
+import java.util.*;
 
 public class Kademlia
 {
@@ -201,6 +199,57 @@ public class Kademlia
         }
     }
 
+    public static ArrayList<Node> lookup(byte[] nodeId) {
+        // Initialize a set to keep track of visited nodes to avoid loops
+        Set<Node> visitedNodes = new HashSet<>();
+        // TODO FIX THIS COMPARATOR
+        PriorityQueue<Node> closestNodesQueue = new PriorityQueue<>((node1, node2) -> {
+            BigInteger distance1 = rt.calculateDistance(node1.getId().toByteArray(), nodeId);
+            BigInteger distance2 = rt.calculateDistance(node2.getId().toByteArray(), nodeId);
+            return distance1.compareTo(distance2);
+        });
+        // Start by finding the closest nodes in the routing table to the target key
+        List<Node> closestNodes = rt.findClosestNode(nodeId,3);
+        closestNodesQueue.addAll(closestNodes);
+
+        // Iterate until the closest nodes queue is empty or a termination condition is met
+        while (!closestNodesQueue.isEmpty()) {
+            // Take the closest node from the queue
+            Node currentNode = closestNodesQueue.poll();
+
+            // Check if the current node has already been visited
+            if (!visitedNodes.contains(currentNode))
+            {
+                // Mark the current node as visited
+                visitedNodes.add(currentNode);
+
+                List<Node> additionalClosestNodes = protocol.findNodeOp(nodeId,nodeId, currentNode.getIp(),currentNode.getPort()).getNodesList();
+
+                for (Node node : additionalClosestNodes) {
+                    if (!visitedNodes.contains(node)) {
+                        closestNodesQueue.add(node);
+                    }
+                }
+
+                // Add the additional closest nodes found to the queue
+                closestNodesQueue.addAll(additionalClosestNodes);
+
+            }
+
+            // Check if termination condition is met (e.g., desired number of closest nodes found)
+            // Not implemented in this example, you can add your termination condition here
+        }
+
+        // Convert the closest nodes priority queue to a list
+        ArrayList<Node> resultNodes = new ArrayList<>(closestNodesQueue);
+// Sort the result nodes list by their distance to the target key
+        resultNodes.sort((node1, node2) -> {
+            BigInteger distance1 = rt.calculateDistance(node1.getId().toByteArray(), nodeId);
+            BigInteger distance2 = rt.calculateDistance(node2.getId().toByteArray(), nodeId);
+            return distance1.compareTo(distance2);
+        });
+        return resultNodes;
+    }
 
     // node id is 160-bit and is based on SHA-1
     public static byte[] generateNodeId()

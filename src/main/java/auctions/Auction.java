@@ -36,8 +36,16 @@ public class Auction
             MessageDigest sha1 = MessageDigest.getInstance("SHA-1"); // Create a new SHA-1 digest
 
             byte[] serviceId = sha1.digest(service.getBytes(StandardCharsets.UTF_8)); // Compute the hash
-            ArrayList<Node> nodes = rt.findClosestNode(serviceId, 1);
-            kp.findNodeOp()
+            ArrayList<Node> nodes = rt.findClosestNode(serviceId, 3);
+            ArrayList<Node> biggest = new ArrayList<>(nodes);
+            while (nodes.size() > 0)
+            {
+                nodes.get(0);
+                b
+                nodes.remove(0);
+            }
+            rt.searchMapClosest()
+            kp.findNodeOp(serviceId, serviceId,nodes.get(0).getIp(),nodes.get(0).getPort());
         }
         catch (NoSuchAlgorithmException e)
         {
