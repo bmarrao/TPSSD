@@ -112,8 +112,11 @@ public class KademliaProtocol
         return response.getStored();
     }
 
-    public KademliaFindOpResult findNodeOp(byte[] nodeId, byte[] key, String receiverIp, int receiverPort) {
+    public KademliaFindOpResult findNodeOp(byte[] nodeId, byte[] key, String receiverIp, int receiverPort)
+    {
+
         ManagedChannel channel = ManagedChannelBuilder.forAddress(receiverIp, receiverPort).usePlaintext().build();
+
 
         KademliaGrpc.KademliaBlockingStub stub = KademliaGrpc.newBlockingStub(channel);
 

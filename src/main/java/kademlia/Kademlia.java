@@ -60,7 +60,7 @@ public class Kademlia
             joinNetThread.start();
         }
 
-        KademliaServer server = new KademliaServer(port, new Auction(protocol));
+        KademliaServer server = new KademliaServer(port, new Auction(protocol,rt));
         Thread serverThread = new Thread(server);
         serverThread.start();
     }
@@ -76,7 +76,7 @@ public class Kademlia
             protocol = new KademliaProtocol(sKadNodeId,"127.0.0.1",5000, generatedPk, generatedSk);
             rt = new KrtBootStrap(sKadNodeId,protocol,20,20);
 
-            KademliaServer server = new KademliaServer(5000, new Auction(protocol));
+            KademliaServer server = new KademliaServer(5000, new Auction(protocol,rt));
             Thread serverThread = new Thread(server);
             serverThread.start();
 
@@ -87,7 +87,7 @@ public class Kademlia
 
             rt = new KrtNormal(sKadNodeId, protocol, 20, 20);
 
-            KademliaServer server = new KademliaServer(Integer.parseInt(args[1]), new Auction(protocol));
+            KademliaServer server = new KademliaServer(Integer.parseInt(args[1]), new Auction(protocol,rt));
             Thread serverThread = new Thread(server);
             serverThread.start();
 

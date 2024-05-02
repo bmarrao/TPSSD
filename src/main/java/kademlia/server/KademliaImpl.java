@@ -299,7 +299,7 @@ public class KademliaImpl extends KademliaGrpc.KademliaImplBase
     @Override
     public void endService(endServiceRequest request, StreamObserver<endServiceResponse> responseObserver)
     {
-        
+
         System.out.println("End Service");
         boolean resp = auc.endService(request.getServiceId().toByteArray(),request.getNode());
 

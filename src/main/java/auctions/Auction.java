@@ -1,12 +1,8 @@
 package auctions;
 
-import com.google.protobuf.ByteString;
-import io.grpc.Server;
-import io.grpc.ServerBuilder;
-import io.grpc.stub.StreamObserver;
-import kademlia.KademliaGrpc;
 import kademlia.KademliaProtocol;
 
+import kademlia.KademliaRoutingTable;
 import kademlia.Node;
 import kademlia.Offer;
 
@@ -14,18 +10,42 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.concurrent.locks.ReentrantLock;
 
+import java.security.MessageDigest;
+import java.security.NoSuchAlgorithmException;
+import java.nio.charset.StandardCharsets;
 public class Auction
 {
     KademliaProtocol kp;
     private ReentrantLock l ;
     ArrayList<BrokerService> services;
-    public Auction(KademliaProtocol kp)
+    KademliaRoutingTable rt ;
+    public Auction(KademliaProtocol kp, KademliaRoutingTable rt)
     {
         l = new ReentrantLock();
         services = new ArrayList<>();
         this.kp = kp;
+        this.rt = rt;
     }
 
+
+
+    public ArrayList<Node> createService (String service)
+    {
+        //Develop Hash
+        try {
+            MessageDigest sha1 = MessageDigest.getInstance("SHA-1"); // Create a new SHA-1 digest
+
+            byte[] serviceId = sha1.digest(service.getBytes(StandardCharsets.UTF_8)); // Compute the hash
+            ArrayList<Node> nodes = rt.findClosestNode(serviceId, 1);
+            kp.findNodeOp()
+        }
+        catch (NoSuchAlgorithmException e)
+        {
+            e.printStackTrace();
+            return null;
+        }
+
+    }
 
 
     public boolean receiveOffer(Offer of,byte[] serviceId)
