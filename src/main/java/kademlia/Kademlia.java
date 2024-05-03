@@ -2,7 +2,7 @@ package kademlia;
 
 import auctions.Auction;
 import kademlia.server.KademliaServer;
-
+import kademlia.KademliaLookUp;
 import java.io.*;
 import java.math.BigInteger;
 import java.nio.file.Files;
@@ -206,22 +206,55 @@ public class Kademlia
         }
     }
 
-    /*
-    public void skadLookup(KademliaNode destinationKey, int d_closest_nodes) {
+
+    public ArrayList<Node> skadLookup(byte[] nodeId, int d_closest_nodes) {
         // get closest nodes to destinationKey (non recursive)
-        ArrayList<KademliaNode> closestNodes = findClosestNodesSKad(destinationKey, d_closest_nodes);
+        ArrayList<Node> closestNodes = rt.findClosestNode(nodeId, d_closest_nodes);
+        ArrayList<Node>[] results = new ArrayList[closestNodes.size()];
+        ArrayList<Node> allResults = new ArrayList<>(); // ArrayList to store all results
+
+        Thread[] threads = new Thread[closestNodes.size()];
 
         // TODO:
         //   - distribuir closest nodes obtidos em lookup buckets independentes
         //   - para cada nó fazer lookup paralelo
-        for (KademliaNode n : closestNodes)
-        {
-            KademliaLookUp lk = new KademliaLookUP
-            Thread findClosestNodeRecThread = new Thread((Runnable) findClosestNodeRec(root, destinationKey.nodeId, 0, 0, 0, ""));
-            findClosestNodeRecThread.start();
+        int i = 0;
+        for (Node n : closestNodes) {
+            final ArrayList<Node> currentResults = results[i]; // Final variable capturing the current results
+            KademliaLookUp lk = new KademliaLookUp(protocol, rt, currentResults, nodeId, d_closest_nodes, n);
+            threads[i] = new Thread(() -> {
+                lk.run(); // Assuming run() returns the results directly
+                synchronized (allResults) {
+                    allResults.addAll(currentResults); // Add results to the shared list
+                }
+            });
+            threads[i].start();
+            i++;
         }
+
+        // Wait for all threads to finish
+        for (Thread thread : threads) {
+            try {
+                thread.join(); // Wait for each thread to finish
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            }
+        }
+        // Sort the combined results by distance to nodeId
+        Collections.sort(allResults, (node1, node2) -> {
+            BigInteger distance1 = rt.calculateDistance(node1.getId().toByteArray(), nodeId);
+            BigInteger distance2 = rt.calculateDistance(node2.getId().toByteArray(), nodeId);
+            return distance1.compareTo(distance2);
+        });
+
+        // Trim the results to d_closest_nodes
+        if (allResults.size() > d_closest_nodes) {
+            allResults.subList(d_closest_nodes, allResults.size()).clear();
+        }
+
+        return allResults;
     }
-     */
+
 
 
     // node id is 160-bit and is based on SHA-1

@@ -119,6 +119,7 @@ public class KademliaRoutingTable
     }
 
 
+    /*
     // S/Kademlia: find the k closest nodes to destNode
     public ArrayList<KademliaNode> findClosestNodesSKad(KademliaNode destNode, int k_closest_nodes) {
         PriorityQueue<KademliaNode> closestNodes = new PriorityQueue<>((n1, n2) -> compareDistance(n1.nodeId, n2.nodeId, destNode.nodeId));
@@ -133,8 +134,6 @@ public class KademliaRoutingTable
         }
         return new ArrayList<>(closestNodes);
     }
-
-
     // Parallel lookup over d disjoint paths
     public void skadLookup(KademliaNode destinationKey, int d_closest_nodes) {
         // get closest nodes to destinationKey (non recursive)
@@ -150,6 +149,7 @@ public class KademliaRoutingTable
         }
     }
 
+     */
 
     // TODO: maintaining routing table skad
     public void sKadAddToBucket(Node n, String validity, int x_bits) {
