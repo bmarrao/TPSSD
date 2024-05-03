@@ -38,6 +38,7 @@ public class Auction
             ArrayList<Node> nodes = k.lookup(serviceId,a);
             Node broker = nodes.get(0);
             //TODO ALTERAR STOREOP SERVICEID PARA byte[]
+            //TODO IDEA MANDAR COMO STORE PRA K MAIS PERTOS AONDE ACONTECE O AUCTION ASSIM CONSEGUE DESCOBRIR DE QUALQUER MANEIRA AONDE ESTA O BROKER
             k.protocol.initiateService(serviceId,nodes.toString(),broker.getIp(),broker.getPort());
 
             return nodes;

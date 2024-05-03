@@ -143,7 +143,8 @@ public class KademliaRoutingTable
         // TODO:
         //   - distribuir closest nodes obtidos em lookup buckets independentes
         //   - para cada nó fazer lookup paralelo
-        for (KademliaNode n : closestNodes) {
+        for (KademliaNode n : closestNodes)
+        {
             Thread findClosestNodeRecThread = new Thread((Runnable) findClosestNodeRec(root, destinationKey.nodeId, 0, 0, 0, ""));
             findClosestNodeRecThread.start();
         }
