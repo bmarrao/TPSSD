@@ -4,19 +4,6 @@
 package kademlia;
 
 /**
- * <pre>
- *message timerOverRequest
- *{
- *Node node = 1;
- *bytes serviceId = 2;
- *}
- *message timerOverResponse
- *{
- *bool response = 1;
- *Offer of = 2;
- *}
- * </pre>
- *
  * Protobuf type {@code kademlia.endServiceRequest}
  */
 public  final class endServiceRequest extends
@@ -29,6 +16,7 @@ public  final class endServiceRequest extends
   }
   private endServiceRequest() {
     serviceId_ = com.google.protobuf.ByteString.EMPTY;
+    publicKey_ = "";
     signature_ = com.google.protobuf.ByteString.EMPTY;
   }
 
@@ -89,6 +77,12 @@ public  final class endServiceRequest extends
             break;
           }
           case 34: {
+            java.lang.String s = input.readStringRequireUtf8();
+
+            publicKey_ = s;
+            break;
+          }
+          case 42: {
 
             signature_ = input.readBytes();
             break;
@@ -167,10 +161,44 @@ public  final class endServiceRequest extends
     return getOf();
   }
 
-  public static final int SIGNATURE_FIELD_NUMBER = 4;
+  public static final int PUBLICKEY_FIELD_NUMBER = 4;
+  private volatile java.lang.Object publicKey_;
+  /**
+   * <code>string publicKey = 4;</code>
+   */
+  public java.lang.String getPublicKey() {
+    java.lang.Object ref = publicKey_;
+    if (ref instanceof java.lang.String) {
+      return (java.lang.String) ref;
+    } else {
+      com.google.protobuf.ByteString bs = 
+          (com.google.protobuf.ByteString) ref;
+      java.lang.String s = bs.toStringUtf8();
+      publicKey_ = s;
+      return s;
+    }
+  }
+  /**
+   * <code>string publicKey = 4;</code>
+   */
+  public com.google.protobuf.ByteString
+      getPublicKeyBytes() {
+    java.lang.Object ref = publicKey_;
+    if (ref instanceof java.lang.String) {
+      com.google.protobuf.ByteString b = 
+          com.google.protobuf.ByteString.copyFromUtf8(
+              (java.lang.String) ref);
+      publicKey_ = b;
+      return b;
+    } else {
+      return (com.google.protobuf.ByteString) ref;
+    }
+  }
+
+  public static final int SIGNATURE_FIELD_NUMBER = 5;
   private com.google.protobuf.ByteString signature_;
   /**
-   * <code>bytes signature = 4;</code>
+   * <code>bytes signature = 5;</code>
    */
   public com.google.protobuf.ByteString getSignature() {
     return signature_;
@@ -197,8 +225,11 @@ public  final class endServiceRequest extends
     if (of_ != null) {
       output.writeMessage(3, getOf());
     }
+    if (!getPublicKeyBytes().isEmpty()) {
+      com.google.protobuf.GeneratedMessageV3.writeString(output, 4, publicKey_);
+    }
     if (!signature_.isEmpty()) {
-      output.writeBytes(4, signature_);
+      output.writeBytes(5, signature_);
     }
   }
 
@@ -219,9 +250,12 @@ public  final class endServiceRequest extends
       size += com.google.protobuf.CodedOutputStream
         .computeMessageSize(3, getOf());
     }
+    if (!getPublicKeyBytes().isEmpty()) {
+      size += com.google.protobuf.GeneratedMessageV3.computeStringSize(4, publicKey_);
+    }
     if (!signature_.isEmpty()) {
       size += com.google.protobuf.CodedOutputStream
-        .computeBytesSize(4, signature_);
+        .computeBytesSize(5, signature_);
     }
     memoizedSize = size;
     return size;
@@ -251,6 +285,8 @@ public  final class endServiceRequest extends
       result = result && getOf()
           .equals(other.getOf());
     }
+    result = result && getPublicKey()
+        .equals(other.getPublicKey());
     result = result && getSignature()
         .equals(other.getSignature());
     return result;
@@ -273,6 +309,8 @@ public  final class endServiceRequest extends
       hash = (37 * hash) + OF_FIELD_NUMBER;
       hash = (53 * hash) + getOf().hashCode();
     }
+    hash = (37 * hash) + PUBLICKEY_FIELD_NUMBER;
+    hash = (53 * hash) + getPublicKey().hashCode();
     hash = (37 * hash) + SIGNATURE_FIELD_NUMBER;
     hash = (53 * hash) + getSignature().hashCode();
     hash = (29 * hash) + unknownFields.hashCode();
@@ -369,19 +407,6 @@ public  final class endServiceRequest extends
     return builder;
   }
   /**
-   * <pre>
-   *message timerOverRequest
-   *{
-   *Node node = 1;
-   *bytes serviceId = 2;
-   *}
-   *message timerOverResponse
-   *{
-   *bool response = 1;
-   *Offer of = 2;
-   *}
-   * </pre>
-   *
    * Protobuf type {@code kademlia.endServiceRequest}
    */
   public static final class Builder extends
@@ -431,6 +456,8 @@ public  final class endServiceRequest extends
         of_ = null;
         ofBuilder_ = null;
       }
+      publicKey_ = "";
+
       signature_ = com.google.protobuf.ByteString.EMPTY;
 
       return this;
@@ -466,6 +493,7 @@ public  final class endServiceRequest extends
       } else {
         result.of_ = ofBuilder_.build();
       }
+      result.publicKey_ = publicKey_;
       result.signature_ = signature_;
       onBuilt();
       return result;
@@ -516,6 +544,10 @@ public  final class endServiceRequest extends
       }
       if (other.hasOf()) {
         mergeOf(other.getOf());
+      }
+      if (!other.getPublicKey().isEmpty()) {
+        publicKey_ = other.publicKey_;
+        onChanged();
       }
       if (other.getSignature() != com.google.protobuf.ByteString.EMPTY) {
         setSignature(other.getSignature());
@@ -809,15 +841,84 @@ public  final class endServiceRequest extends
       return ofBuilder_;
     }
 
+    private java.lang.Object publicKey_ = "";
+    /**
+     * <code>string publicKey = 4;</code>
+     */
+    public java.lang.String getPublicKey() {
+      java.lang.Object ref = publicKey_;
+      if (!(ref instanceof java.lang.String)) {
+        com.google.protobuf.ByteString bs =
+            (com.google.protobuf.ByteString) ref;
+        java.lang.String s = bs.toStringUtf8();
+        publicKey_ = s;
+        return s;
+      } else {
+        return (java.lang.String) ref;
+      }
+    }
+    /**
+     * <code>string publicKey = 4;</code>
+     */
+    public com.google.protobuf.ByteString
+        getPublicKeyBytes() {
+      java.lang.Object ref = publicKey_;
+      if (ref instanceof String) {
+        com.google.protobuf.ByteString b = 
+            com.google.protobuf.ByteString.copyFromUtf8(
+                (java.lang.String) ref);
+        publicKey_ = b;
+        return b;
+      } else {
+        return (com.google.protobuf.ByteString) ref;
+      }
+    }
+    /**
+     * <code>string publicKey = 4;</code>
+     */
+    public Builder setPublicKey(
+        java.lang.String value) {
+      if (value == null) {
+    throw new NullPointerException();
+  }
+  
+      publicKey_ = value;
+      onChanged();
+      return this;
+    }
+    /**
+     * <code>string publicKey = 4;</code>
+     */
+    public Builder clearPublicKey() {
+      
+      publicKey_ = getDefaultInstance().getPublicKey();
+      onChanged();
+      return this;
+    }
+    /**
+     * <code>string publicKey = 4;</code>
+     */
+    public Builder setPublicKeyBytes(
+        com.google.protobuf.ByteString value) {
+      if (value == null) {
+    throw new NullPointerException();
+  }
+  checkByteStringIsUtf8(value);
+      
+      publicKey_ = value;
+      onChanged();
+      return this;
+    }
+
     private com.google.protobuf.ByteString signature_ = com.google.protobuf.ByteString.EMPTY;
     /**
-     * <code>bytes signature = 4;</code>
+     * <code>bytes signature = 5;</code>
      */
     public com.google.protobuf.ByteString getSignature() {
       return signature_;
     }
     /**
-     * <code>bytes signature = 4;</code>
+     * <code>bytes signature = 5;</code>
      */
     public Builder setSignature(com.google.protobuf.ByteString value) {
       if (value == null) {
@@ -829,7 +930,7 @@ public  final class endServiceRequest extends
       return this;
     }
     /**
-     * <code>bytes signature = 4;</code>
+     * <code>bytes signature = 5;</code>
      */
     public Builder clearSignature() {
       

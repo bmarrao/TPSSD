@@ -16,6 +16,8 @@ public  final class getPriceResponse extends
   }
   private getPriceResponse() {
     price_ = 0F;
+    publicKey_ = "";
+    signature_ = com.google.protobuf.ByteString.EMPTY;
   }
 
   @java.lang.Override
@@ -46,6 +48,17 @@ public  final class getPriceResponse extends
           case 13: {
 
             price_ = input.readFloat();
+            break;
+          }
+          case 18: {
+            java.lang.String s = input.readStringRequireUtf8();
+
+            publicKey_ = s;
+            break;
+          }
+          case 26: {
+
+            signature_ = input.readBytes();
             break;
           }
         }
@@ -80,6 +93,49 @@ public  final class getPriceResponse extends
     return price_;
   }
 
+  public static final int PUBLICKEY_FIELD_NUMBER = 2;
+  private volatile java.lang.Object publicKey_;
+  /**
+   * <code>string publicKey = 2;</code>
+   */
+  public java.lang.String getPublicKey() {
+    java.lang.Object ref = publicKey_;
+    if (ref instanceof java.lang.String) {
+      return (java.lang.String) ref;
+    } else {
+      com.google.protobuf.ByteString bs = 
+          (com.google.protobuf.ByteString) ref;
+      java.lang.String s = bs.toStringUtf8();
+      publicKey_ = s;
+      return s;
+    }
+  }
+  /**
+   * <code>string publicKey = 2;</code>
+   */
+  public com.google.protobuf.ByteString
+      getPublicKeyBytes() {
+    java.lang.Object ref = publicKey_;
+    if (ref instanceof java.lang.String) {
+      com.google.protobuf.ByteString b = 
+          com.google.protobuf.ByteString.copyFromUtf8(
+              (java.lang.String) ref);
+      publicKey_ = b;
+      return b;
+    } else {
+      return (com.google.protobuf.ByteString) ref;
+    }
+  }
+
+  public static final int SIGNATURE_FIELD_NUMBER = 3;
+  private com.google.protobuf.ByteString signature_;
+  /**
+   * <code>bytes signature = 3;</code>
+   */
+  public com.google.protobuf.ByteString getSignature() {
+    return signature_;
+  }
+
   private byte memoizedIsInitialized = -1;
   public final boolean isInitialized() {
     byte isInitialized = memoizedIsInitialized;
@@ -95,6 +151,12 @@ public  final class getPriceResponse extends
     if (price_ != 0F) {
       output.writeFloat(1, price_);
     }
+    if (!getPublicKeyBytes().isEmpty()) {
+      com.google.protobuf.GeneratedMessageV3.writeString(output, 2, publicKey_);
+    }
+    if (!signature_.isEmpty()) {
+      output.writeBytes(3, signature_);
+    }
   }
 
   public int getSerializedSize() {
@@ -105,6 +167,13 @@ public  final class getPriceResponse extends
     if (price_ != 0F) {
       size += com.google.protobuf.CodedOutputStream
         .computeFloatSize(1, price_);
+    }
+    if (!getPublicKeyBytes().isEmpty()) {
+      size += com.google.protobuf.GeneratedMessageV3.computeStringSize(2, publicKey_);
+    }
+    if (!signature_.isEmpty()) {
+      size += com.google.protobuf.CodedOutputStream
+        .computeBytesSize(3, signature_);
     }
     memoizedSize = size;
     return size;
@@ -126,6 +195,10 @@ public  final class getPriceResponse extends
         java.lang.Float.floatToIntBits(getPrice())
         == java.lang.Float.floatToIntBits(
             other.getPrice()));
+    result = result && getPublicKey()
+        .equals(other.getPublicKey());
+    result = result && getSignature()
+        .equals(other.getSignature());
     return result;
   }
 
@@ -139,6 +212,10 @@ public  final class getPriceResponse extends
     hash = (37 * hash) + PRICE_FIELD_NUMBER;
     hash = (53 * hash) + java.lang.Float.floatToIntBits(
         getPrice());
+    hash = (37 * hash) + PUBLICKEY_FIELD_NUMBER;
+    hash = (53 * hash) + getPublicKey().hashCode();
+    hash = (37 * hash) + SIGNATURE_FIELD_NUMBER;
+    hash = (53 * hash) + getSignature().hashCode();
     hash = (29 * hash) + unknownFields.hashCode();
     memoizedHashCode = hash;
     return hash;
@@ -270,6 +347,10 @@ public  final class getPriceResponse extends
       super.clear();
       price_ = 0F;
 
+      publicKey_ = "";
+
+      signature_ = com.google.protobuf.ByteString.EMPTY;
+
       return this;
     }
 
@@ -293,6 +374,8 @@ public  final class getPriceResponse extends
     public kademlia.getPriceResponse buildPartial() {
       kademlia.getPriceResponse result = new kademlia.getPriceResponse(this);
       result.price_ = price_;
+      result.publicKey_ = publicKey_;
+      result.signature_ = signature_;
       onBuilt();
       return result;
     }
@@ -336,6 +419,13 @@ public  final class getPriceResponse extends
       if (other == kademlia.getPriceResponse.getDefaultInstance()) return this;
       if (other.getPrice() != 0F) {
         setPrice(other.getPrice());
+      }
+      if (!other.getPublicKey().isEmpty()) {
+        publicKey_ = other.publicKey_;
+        onChanged();
+      }
+      if (other.getSignature() != com.google.protobuf.ByteString.EMPTY) {
+        setSignature(other.getSignature());
       }
       onChanged();
       return this;
@@ -385,6 +475,104 @@ public  final class getPriceResponse extends
     public Builder clearPrice() {
       
       price_ = 0F;
+      onChanged();
+      return this;
+    }
+
+    private java.lang.Object publicKey_ = "";
+    /**
+     * <code>string publicKey = 2;</code>
+     */
+    public java.lang.String getPublicKey() {
+      java.lang.Object ref = publicKey_;
+      if (!(ref instanceof java.lang.String)) {
+        com.google.protobuf.ByteString bs =
+            (com.google.protobuf.ByteString) ref;
+        java.lang.String s = bs.toStringUtf8();
+        publicKey_ = s;
+        return s;
+      } else {
+        return (java.lang.String) ref;
+      }
+    }
+    /**
+     * <code>string publicKey = 2;</code>
+     */
+    public com.google.protobuf.ByteString
+        getPublicKeyBytes() {
+      java.lang.Object ref = publicKey_;
+      if (ref instanceof String) {
+        com.google.protobuf.ByteString b = 
+            com.google.protobuf.ByteString.copyFromUtf8(
+                (java.lang.String) ref);
+        publicKey_ = b;
+        return b;
+      } else {
+        return (com.google.protobuf.ByteString) ref;
+      }
+    }
+    /**
+     * <code>string publicKey = 2;</code>
+     */
+    public Builder setPublicKey(
+        java.lang.String value) {
+      if (value == null) {
+    throw new NullPointerException();
+  }
+  
+      publicKey_ = value;
+      onChanged();
+      return this;
+    }
+    /**
+     * <code>string publicKey = 2;</code>
+     */
+    public Builder clearPublicKey() {
+      
+      publicKey_ = getDefaultInstance().getPublicKey();
+      onChanged();
+      return this;
+    }
+    /**
+     * <code>string publicKey = 2;</code>
+     */
+    public Builder setPublicKeyBytes(
+        com.google.protobuf.ByteString value) {
+      if (value == null) {
+    throw new NullPointerException();
+  }
+  checkByteStringIsUtf8(value);
+      
+      publicKey_ = value;
+      onChanged();
+      return this;
+    }
+
+    private com.google.protobuf.ByteString signature_ = com.google.protobuf.ByteString.EMPTY;
+    /**
+     * <code>bytes signature = 3;</code>
+     */
+    public com.google.protobuf.ByteString getSignature() {
+      return signature_;
+    }
+    /**
+     * <code>bytes signature = 3;</code>
+     */
+    public Builder setSignature(com.google.protobuf.ByteString value) {
+      if (value == null) {
+    throw new NullPointerException();
+  }
+  
+      signature_ = value;
+      onChanged();
+      return this;
+    }
+    /**
+     * <code>bytes signature = 3;</code>
+     */
+    public Builder clearSignature() {
+      
+      signature_ = getDefaultInstance().getSignature();
       onChanged();
       return this;
     }

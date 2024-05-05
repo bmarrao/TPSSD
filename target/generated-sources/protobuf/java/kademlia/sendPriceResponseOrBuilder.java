@@ -11,4 +11,19 @@ public interface sendPriceResponseOrBuilder extends
    * <code>bool result = 1;</code>
    */
   boolean getResult();
+
+  /**
+   * <code>string publicKey = 2;</code>
+   */
+  java.lang.String getPublicKey();
+  /**
+   * <code>string publicKey = 2;</code>
+   */
+  com.google.protobuf.ByteString
+      getPublicKeyBytes();
+
+  /**
+   * <code>bytes signature = 3;</code>
+   */
+  com.google.protobuf.ByteString getSignature();
 }

@@ -55,7 +55,17 @@ public interface initiateServiceRequestOrBuilder extends
   int getTime();
 
   /**
-   * <code>bytes signature = 5;</code>
+   * <code>string publicKey = 5;</code>
+   */
+  java.lang.String getPublicKey();
+  /**
+   * <code>string publicKey = 5;</code>
+   */
+  com.google.protobuf.ByteString
+      getPublicKeyBytes();
+
+  /**
+   * <code>bytes signature = 6;</code>
    */
   com.google.protobuf.ByteString getSignature();
 }

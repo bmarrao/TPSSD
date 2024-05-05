@@ -31,7 +31,17 @@ public interface NotifyRequestOrBuilder extends
   float getPrice();
 
   /**
-   * <code>bytes signature = 4;</code>
+   * <code>string publicKey = 4;</code>
+   */
+  java.lang.String getPublicKey();
+  /**
+   * <code>string publicKey = 4;</code>
+   */
+  com.google.protobuf.ByteString
+      getPublicKeyBytes();
+
+  /**
+   * <code>bytes signature = 5;</code>
    */
   com.google.protobuf.ByteString getSignature();
 }

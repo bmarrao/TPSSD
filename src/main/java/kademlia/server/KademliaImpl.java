@@ -126,7 +126,7 @@ public class KademliaImpl extends KademliaGrpc.KademliaImplBase
     @Override
     public void findNode(FindNodeRequest request, StreamObserver<FindNodeResponse> responseObserver) {
         //TODO insert!
-        rt.insert(request.getNode());
+        //rt.insert(request.getNode());
 
         // Retrieve the target ID from the request
         byte[] nodeID = request.getKey().toByteArray();
@@ -199,22 +199,48 @@ public class KademliaImpl extends KademliaGrpc.KademliaImplBase
         }
     }
 
+    /*
     @Override
     public void notify(NotifyRequest request, StreamObserver<NotifyResponse> responseObserver)
     {
         System.out.println("Just received Notification from service " + request.getServiceId() + "With new price " + request.getPrice());
 
-        NotifyResponse response = NotifyResponse
-                .newBuilder()
-                .setResponse(true)
-                .build();
+        //TODO insert!
+        //rt.insert(request.getNode());
 
-        // Send the response to the client.
-        responseObserver.onNext(response);
+        byte[] signature = request.getSignature().toByteArray();
 
-        // Notifies the customer that the call is completed.
-        responseObserver.onCompleted();
+        boolean signVal = false;
+        try {
+            signVal = verify(request.toByteArray(), signature, request.getPublicKey());
+        }
+        catch(Exception e) {
+            e.printStackTrace();
+        }
+
+        if (signVal) {
+            // Get the value associated with the key from the data store
+            //TODO insert!
+            //rt.insert(request.getNode());
+
+            NotifyResponse response = NotifyResponse
+                    .newBuilder()
+                    .setResponse(true)
+                    .build();
+
+            // Send the response to the client.
+            responseObserver.onNext(response);
+
+            // Notifies the customer that the call is completed.
+            responseObserver.onCompleted();
+        }
+        else {
+            System.out.println("Signature is invalid, discarding find value request...");
+        }
+
     }
+
+     */
     @Override
     public void getPrice(getPriceRequest request, StreamObserver<getPriceResponse> responseObserver)
     {

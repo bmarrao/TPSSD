@@ -6,7 +6,8 @@ import blockchain.Block;
 import java.util.ArrayList;
 import java.util.List;
 
-public class Blockchain {
+public class Blockchain
+{
     private List<Block> blockchain;
     private int difficulty;
 
@@ -39,6 +40,25 @@ public class Blockchain {
         return difficulty;
     }
 
+    public void newBid()
+    {
+        // Adicionar no bloco
+        // criar uma instancia de uma transaction
+        // disseminar transaction
+    }
+    public void newAuction()
+    {
+        // Adicionar no bloco
+        // criar uma instancia de uma transaction
+        // disseminar transaction
+    }
+
+    public void closeAuction()
+    {
+        // Adicionar no bloco
+        // criar uma instancia de uma transaction
+        // disseminar transaction
+    }
     // Method to add a new block to the blockchain
     public void addBlock(Block newBlock) {
         // Set the previous hash to the hash of the latest block
