@@ -13,17 +13,20 @@ public class KademliaServer extends KademliaGrpc.KademliaImplBase implements Run
     public Server server;
     public int port;
     Auction auc;
-    public KademliaServer(int port, Auction auc)
+    public int leadingZeros;
+
+    public KademliaServer(int port, Auction auc, int leadingZeros)
     {
         this.port = port;
         this.auc = auc;
+        this.leadingZeros = leadingZeros;
     }
 
     @Override
     public void run() {
         // Server is kept alive for the client to communicate.
         server = ServerBuilder.forPort(port)
-                .addService(new KademliaImpl(auc))
+                .addService(new KademliaImpl(auc, leadingZeros))
                 .build();
         try
         {

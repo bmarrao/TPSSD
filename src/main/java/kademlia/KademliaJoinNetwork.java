@@ -5,7 +5,7 @@ import java.security.PublicKey;
 import java.util.ArrayList;
 import java.util.List;
 
-import static kademlia.Kademlia.rt;
+import static kademlia.Kademlia.rtn;
 
 
 public class KademliaJoinNetwork implements Runnable {
@@ -16,8 +16,9 @@ public class KademliaJoinNetwork implements Runnable {
     public PrivateKey privateKey;
     public String bootstrapIp;
     public int bootstrapPort;
+    public byte[] cryptoPuzzleSol;
 
-    KademliaJoinNetwork(byte[] nodeId, String ipAddress, int port, PublicKey publicKey, PrivateKey privateKey, String bootstrapIp, int bootstrapPort) {
+    KademliaJoinNetwork(byte[] nodeId, String ipAddress, int port, PublicKey publicKey, PrivateKey privateKey, String bootstrapIp, int bootstrapPort, byte[] cryptoPuzzleSol) {
         this.nodeId = nodeId;
         this.ipAddress = ipAddress;
         this.port = port;
@@ -25,14 +26,15 @@ public class KademliaJoinNetwork implements Runnable {
         this.privateKey = privateKey;
         this.bootstrapIp = bootstrapIp;
         this.bootstrapPort = bootstrapPort;
+        this.cryptoPuzzleSol = cryptoPuzzleSol;
     }
 
     @Override
     public void run() {
-        KademliaProtocol protocol = new KademliaProtocol(this.nodeId, this.ipAddress, this.port, this.publicKey, this.privateKey);
+        KademliaProtocol protocol = new KademliaProtocol(this.nodeId, this.ipAddress, this.port, this.publicKey, this.privateKey, this.cryptoPuzzleSol);
 
         // send find node operation to selected bootstrap node
-        List<Node> closestNodes = null;
+        List<Node> closestNodes;
         try {
             closestNodes = protocol.findNodeOp(this.nodeId, this.nodeId, this.bootstrapIp, this.bootstrapPort).getNodesList();
         } catch (Exception e) {
@@ -45,7 +47,7 @@ public class KademliaJoinNetwork implements Runnable {
         ArrayList<Node> newAddedNodes = new ArrayList<>();
         for (Node n : closestNodes)
         {
-            if (rt.insert(n))
+            if (rtn.insert(n, 1))
             {
                 System.out.println("Got new closest node to contact: " + n.getId());
                 newAddedNodes.add(n);
@@ -64,7 +66,7 @@ public class KademliaJoinNetwork implements Runnable {
                 }
                 for (Node m : closestNodes)
                 {
-                    if (rt.insert(m))
+                    if (rtn.insert(m, 1))
                     {
                         System.out.println("Got new closest node to contact: " + n.getId());
                         newAddedNodes.add(m);

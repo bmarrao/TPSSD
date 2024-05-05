@@ -15,11 +15,12 @@ public class Kademlia
     public static byte[] nodeId;
     public static PublicKey generatedPk;
     public static PrivateKey generatedSk;
-
-    // public static String ipAddress;
-    // public static int port;
+    public static byte[] cryptoPuzzleSol;
+    public static int leadingZeros;
 
     public static KademliaRoutingTable rt;
+    public static KrtNormal rtn;
+    public static KrtBootStrap rtb;
     public static KademliaProtocol protocol;
     public static String bootstrapFilePath = "src/main/java/kademlia/BootstrapNodes.txt";
     // Auction a;
@@ -29,28 +30,30 @@ public class Kademlia
     // TODO Inicialização do no kademlia , contacto com boostrap node - Cristina
     // TODO Criar bootstrap node - Breno
 
+
     public Kademlia(byte[] nodeId, PublicKey generatedPk, PrivateKey generatedSk, KademliaRoutingTable rt, KademliaProtocol protocol)
     {
-        this.nodeId = nodeId;
-        this.generatedPk = generatedPk;
-        this.generatedSk = generatedSk;
-        this.rt = rt;
-        this.protocol = protocol;
+        Kademlia.nodeId = nodeId;
+        Kademlia.generatedPk = generatedPk;
+        Kademlia.generatedSk = generatedSk;
+        Kademlia.rt = rt;
+        Kademlia.protocol = protocol;
     }
+
 
     public Kademlia(byte[] nodeId, String ipAddress, int port, boolean bootstrap, int k, int s)
     {
         this.nodeId = nodeId;
-        protocol = new KademliaProtocol(nodeId,ipAddress,port,generatedPk,generatedSk);
+        protocol = new KademliaProtocol(nodeId,ipAddress,port,generatedPk,generatedSk,cryptoPuzzleSol);
 
         if (bootstrap)
         {
-            rt = new KrtBootStrap(nodeId,protocol,k,s);
+            rtb = new KrtBootStrap(nodeId,protocol,k,s);
             addIpPortBSFile(ipAddress, port, bootstrapFilePath);
         }
         else
         {
-            rt = new KrtNormal(nodeId, protocol, k, s);
+            rtn = new KrtNormal(nodeId, protocol, k, s);
 
             // Randomly select one bootstrap node from BootstrapNodes.txt to contact
             List<String> bootstrapNodesInfo = getBootstrapNodesInfo(bootstrapFilePath);
@@ -58,27 +61,27 @@ public class Kademlia
             String[] bootstrapIpPort = selectedBootstrap.split(" ");
 
             // Start thread for joining network
-            Thread joinNetThread = new Thread(new KademliaJoinNetwork(nodeId, ipAddress, port, generatedPk, generatedSk, bootstrapIpPort[0], Integer.parseInt(bootstrapIpPort[1])));
+            Thread joinNetThread = new Thread(new KademliaJoinNetwork(nodeId, ipAddress, port, generatedPk, generatedSk, bootstrapIpPort[0], Integer.parseInt(bootstrapIpPort[1]), cryptoPuzzleSol));
             joinNetThread.start();
         }
 
-        KademliaServer server = new KademliaServer(port, new Auction(this));
+        KademliaServer server = new KademliaServer(port, new Auction(this), leadingZeros);
         Thread serverThread = new Thread(server);
         serverThread.start();
     }
 
 
     public static void main(String[] args) throws NoSuchAlgorithmException {
-        byte[] sKadNodeId = solveStaticPuzzle(8);
-        solveDynamicPuzzle(sKadNodeId, 8);
+        byte[] sKadNodeId = solveStaticPuzzle(leadingZeros);
+        solveDynamicPuzzle(sKadNodeId, leadingZeros);
         System.out.println("S/Kademlia nodeId: " + Arrays.toString(sKadNodeId));
 
         if (args[0].equals("bootstrap"))
         {
-            protocol = new KademliaProtocol(sKadNodeId,"127.0.0.1",5000, generatedPk, generatedSk);
-            rt = new KrtBootStrap(sKadNodeId,protocol,20,20);
+            protocol = new KademliaProtocol(sKadNodeId,"127.0.0.1",5000, generatedPk, generatedSk,cryptoPuzzleSol);
+            rtb = new KrtBootStrap(sKadNodeId,protocol,20,20);
 
-            KademliaServer server = new KademliaServer(5000,  new Auction(new Kademlia(sKadNodeId,generatedPk,generatedSk,rt,protocol)));
+            KademliaServer server = new KademliaServer(5000,  new Auction(new Kademlia(sKadNodeId,generatedPk,generatedSk,rt,protocol)),leadingZeros);
 
             Thread serverThread = new Thread(server);
             serverThread.start();
@@ -86,13 +89,13 @@ public class Kademlia
             addIpPortBSFile("127.0.0.1", 5000, bootstrapFilePath);
         }
         else {
-            protocol = new KademliaProtocol(sKadNodeId,"localhost",Integer.parseInt(args[1]), generatedPk, generatedSk);
+            protocol = new KademliaProtocol(sKadNodeId,"localhost",Integer.parseInt(args[1]), generatedPk, generatedSk,cryptoPuzzleSol);
 
-            rt = new KrtNormal(sKadNodeId, protocol, 20, 20);
+            rtn = new KrtNormal(sKadNodeId, protocol, 20, 20);
 
 
             KademliaServer server = new KademliaServer(Integer.parseInt(args[1]),
-                    new Auction(new Kademlia(sKadNodeId,generatedPk,generatedSk,rt,protocol)));
+                    new Auction(new Kademlia(sKadNodeId,generatedPk,generatedSk,rt,protocol)), leadingZeros);
             Thread serverThread = new Thread(server);
             serverThread.start();
 
@@ -102,7 +105,7 @@ public class Kademlia
             String[] bootstrapIpPort = selectedBootstrap.split(" ");
 
             // Start thread for joining network
-            Thread joinNetThread = new Thread(new KademliaJoinNetwork(sKadNodeId, "localhost", Integer.parseInt(args[1]), generatedPk, generatedSk, bootstrapIpPort[0], Integer.parseInt(bootstrapIpPort[1])));
+            Thread joinNetThread = new Thread(new KademliaJoinNetwork(sKadNodeId, "localhost", Integer.parseInt(args[1]), generatedPk, generatedSk, bootstrapIpPort[0], Integer.parseInt(bootstrapIpPort[1]), cryptoPuzzleSol));
             joinNetThread.start();
 
         }
@@ -201,6 +204,7 @@ public class Kademlia
             if (checkZeroCount(dynamicPuzzle, leadingZerosDynamic))
             {
                 System.out.println("Dynamic puzzle solved!");
+                cryptoPuzzleSol = dynamicPuzzle;
                 return;
             }
         }

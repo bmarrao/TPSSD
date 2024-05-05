@@ -2,12 +2,11 @@ package kademlia.server;
 import auctions.Auction;
 
 import auctions.BrokerService;
+import com.google.protobuf.ByteString;
 import io.grpc.stub.StreamObserver;
 import kademlia.*;
 
-import java.security.KeyFactory;
-import java.security.PublicKey;
-import java.security.Signature;
+import java.security.*;
 import java.security.spec.X509EncodedKeySpec;
 import java.util.ArrayList;
 import java.util.Base64;
@@ -20,11 +19,38 @@ import static kademlia.Kademlia.rt;
 public class KademliaImpl extends KademliaGrpc.KademliaImplBase
 {
     private static final int k_nodes = 3;
-
+    private PrivateKey privateKey;
+    private PublicKey publicKey;
     private final Auction auc;
-    KademliaImpl(Auction auc)
+    private final int leadingZeros;
+
+    KademliaImpl(Auction auc, int leadingZeros)
     {
         this.auc = auc;
+        this.leadingZeros = leadingZeros;
+        generatePrivateKey();
+    }
+
+
+    private void generatePrivateKey() {
+        try {
+            KeyPairGenerator keyPairGen = KeyPairGenerator.getInstance("SHA-256");
+            keyPairGen.initialize(2048);
+            KeyPair pair = keyPairGen.generateKeyPair();
+            this.privateKey = pair.getPrivate();
+            this.publicKey = pair.getPublic();
+        }
+        catch(Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+    // Create signature for specific contect from RPC message
+    public static byte[] sign(byte[] data, PrivateKey privateKey) throws Exception {
+        Signature signature = Signature.getInstance("SHA256withRSA");
+        signature.initSign(privateKey);
+        signature.update(data);
+        return signature.sign();
     }
 
 
@@ -41,20 +67,44 @@ public class KademliaImpl extends KademliaGrpc.KademliaImplBase
     }
 
 
+
+    // Check crypto puzzle zero count
+    public static boolean checkZeroCount(byte[] puzzle, int numOfLeadingZeros) {
+        int leadingZeros = 0;
+
+        for (byte b : puzzle) {
+            // If byte is zero -> add 8 since byte contains 8 bits
+            if (b == 0)
+            {
+                leadingZeros += 8;
+            }
+            else
+            {
+                // Count leading zeros in the byte using bit manipulation
+                int byteLeadingZeros = Integer.numberOfLeadingZeros(b & 0xFF) - 24;
+                leadingZeros += byteLeadingZeros;
+                break;
+            }
+        }
+        System.out.println("Leading zeros count: " + leadingZeros);
+
+        return leadingZeros >= numOfLeadingZeros;
+    }
+
+
+
     @Override
     public void ping(PingRequest request, StreamObserver<PingResponse> responseObserver) {
 
         //TODO insert!
         //rt.insert(request.getNode());
-
         // String sender = request.getMyNodeId();
-
         // Atualizar o horario da última vez online do sender
         //boolean resultMsg = true;
 
-        byte[] signature = request.getSignature().toByteArray();
 
         // Verify signature
+        byte[] signature = request.getSignature().toByteArray();
         boolean signVal = false;
         try {
             signVal = verify(request.getNode().toByteArray(), signature, request.getPublicKey());
@@ -63,10 +113,22 @@ public class KademliaImpl extends KademliaGrpc.KademliaImplBase
             e.printStackTrace();
         }
 
-        if (signVal) {
+
+        if (signVal && checkZeroCount(request.getCryptoPuzzle().toByteArray(), leadingZeros)) {
+            // Sign RPC response
+            try {
+                signature = sign(request.getNode().getId().toByteArray(), privateKey);
+            }
+            catch(Exception e) {
+                e.printStackTrace();
+            }
+
             PingResponse pingResponse = PingResponse
                     .newBuilder()
+                    .setId(request.getNode().getId())
                     .setOnline(true)
+                    .setPublicKey(Base64.getEncoder().encodeToString(publicKey.getEncoded()))
+                    .setSignature(ByteString.copyFrom(signature))
                     .build();
 
             // Send the response to the client.
@@ -105,12 +167,25 @@ public class KademliaImpl extends KademliaGrpc.KademliaImplBase
             e.printStackTrace();
         }
 
-        if (signVal) {
+
+        if (signVal && checkZeroCount(request.getCryptoPuzzle().toByteArray(), leadingZeros)) {
             dataStore.store(key,value);
+
+            // Sign RPC response
+            try {
+                signature = sign(request.getNode().getId().toByteArray(), privateKey);
+            }
+            catch(Exception e) {
+                e.printStackTrace();
+            }
 
             // if store successfull -> send true, else false
             //TODO [ When it's false? ]
-            StoreResponse response = StoreResponse.newBuilder().setStored(true).build();
+            StoreResponse response = StoreResponse.newBuilder()
+                    .setId(request.getNode().getId())
+                    .setStored(true)
+                    .setPublicKey(Base64.getEncoder().encodeToString(publicKey.getEncoded()))
+                    .setSignature(ByteString.copyFrom(signature)).build();
 
             responseObserver.onNext(response);
             responseObserver.onCompleted();
@@ -126,17 +201,17 @@ public class KademliaImpl extends KademliaGrpc.KademliaImplBase
     @Override
     public void findNode(FindNodeRequest request, StreamObserver<FindNodeResponse> responseObserver) {
         //TODO insert!
-        //rt.insert(request.getNode());
+        rt.insert(request.getNode(), 1);
 
         // Retrieve the target ID from the request
         byte[] nodeID = request.getKey().toByteArray();
 
-        byte[] signature = request.getSignature().toByteArray();
-        byte[] signedInfo = request.getNode().toByteArray();
 
+        // Verify received signature
+        byte[] signature = request.getSignature().toByteArray();
         boolean signVal = false;
         try {
-            signVal = verify(signedInfo, signature, request.getPublicKey());
+            signVal = verify(request.getNode().toByteArray(), signature, request.getPublicKey());
         }
         catch(Exception e) {
             e.printStackTrace();
@@ -144,15 +219,31 @@ public class KademliaImpl extends KademliaGrpc.KademliaImplBase
 
         System.out.println("Is signature valid? " + signVal);
 
-        if (signVal) {
+        if (signVal && checkZeroCount(request.getCryptoPuzzle().toByteArray(), leadingZeros)) {
             // Get the closest node to the target ID from the routing table
-            //TODO : Retirar o j??
-            //TODO : replace KademliaNode to Node
             List<Node> closestNodes = rt.findClosestNode(nodeID, k_nodes);
 
-            //TODO : AddAllNodes
+            // Sign message content
+            List<NodeSignature> closestNodesByteList = new ArrayList<>();
+            NodeSignature.Builder ns = NodeSignature.newBuilder();
+            byte[] idSignature = null;
+            try {
+                for (Node closestNode : closestNodes) {
+                    closestNodesByteList.add(ns.setSignature(ByteString.copyFrom(sign(closestNode.toByteArray(), privateKey))).build());
+                }
+                idSignature = sign(request.getNode().getId().toByteArray(), privateKey);
+            }
+            catch(Exception e) {
+                e.printStackTrace();
+            }
+
+
             FindNodeResponse response = FindNodeResponse.newBuilder()
-                    .setId(request.getKey()).addAllNodes(closestNodes).build();
+                    .setId(request.getKey())
+                    .setPublicKey(Base64.getEncoder().encodeToString(publicKey.getEncoded()))
+                    .addAllNodes(closestNodes)
+                    .addAllNs(closestNodesByteList)
+                    .setIdSignature(ByteString.copyFrom(idSignature)).build();
 
             responseObserver.onNext(response);
             responseObserver.onCompleted();
@@ -171,10 +262,13 @@ public class KademliaImpl extends KademliaGrpc.KademliaImplBase
         //Creates a new instance of storage. If already exists, use it.
         KademliaStore dataStore = KademliaStore.getInstance();
 
+
         // Retrieve the key from the request
         String key = request.getKey();
         byte[] signature = request.getSignature().toByteArray();
 
+
+        // Verify signature
         boolean signVal = false;
         try {
             signVal = verify(request.toByteArray(), signature, request.getPublicKey());
@@ -183,13 +277,30 @@ public class KademliaImpl extends KademliaGrpc.KademliaImplBase
             e.printStackTrace();
         }
 
-        if (signVal) {
+
+        if (signVal && checkZeroCount(request.getCryptoPuzzle().toByteArray(), leadingZeros)) {
             // Get the value associated with the key from the data store
             String value = dataStore.findValue(key);
 
+            // Sign RPC response
+            try {
+                byte[] infoToSign = new byte[request.getNode().getId().size() + 1];
+                int i;
+                for (i = 0; i < request.getNode().getId().size() - 1; i++) {
+                    infoToSign[i] = request.getNode().getId().byteAt(i);
+                }
+                infoToSign[request.getNode().getId().size()] = Byte.parseByte(value);
+                signature = sign(infoToSign, privateKey);
+            }
+            catch(Exception e) {
+                e.printStackTrace();
+            }
+
             FindValueResponse response = FindValueResponse.newBuilder()
                     .setId(request.getNode().getId())
-                    .setValue(value).build();
+                    .setValue(value)
+                    .setPublicKey(Base64.getEncoder().encodeToString(publicKey.getEncoded()))
+                    .setSignature(ByteString.copyFrom(signature)).build();
 
             responseObserver.onNext(response);
             responseObserver.onCompleted();

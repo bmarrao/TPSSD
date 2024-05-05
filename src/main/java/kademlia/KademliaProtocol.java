@@ -5,9 +5,11 @@ import io.grpc.ManagedChannel;
 import io.grpc.ManagedChannelBuilder;
 import kademlia.Offer;
 
+import java.security.KeyFactory;
 import java.security.PrivateKey;
 import java.security.PublicKey;
 import java.security.Signature;
+import java.security.spec.X509EncodedKeySpec;
 import java.util.*;
 
 
@@ -18,14 +20,16 @@ public class KademliaProtocol
     public int port;
     public PublicKey publicKey;
     public PrivateKey privateKey;
+    public byte[] cryptoPuzzleSol;
 
-    public KademliaProtocol(byte[] nodeId, String ipAddress, int port, PublicKey publicKey, PrivateKey privateKey)
+    public KademliaProtocol(byte[] nodeId, String ipAddress, int port, PublicKey publicKey, PrivateKey privateKey, byte[] cryptoPuzzleSol)
     {
         this.nodeId = nodeId;
         this.ipAddress = ipAddress;
         this.port = port;
         this.publicKey = publicKey;
         this.privateKey = privateKey;
+        this.cryptoPuzzleSol = cryptoPuzzleSol;
     }
 
 
@@ -36,6 +40,20 @@ public class KademliaProtocol
         signature.update(data);
         return signature.sign();
     }
+
+
+    // Verify signatures from received RPC messages
+    public static boolean verify(byte[] data, byte[] signature, String publicKeyStr) throws Exception {
+        // Convert public key from String to PublicKey
+        byte[] publicKeyBytes = Base64.getDecoder().decode(publicKeyStr);
+        PublicKey publicKey = KeyFactory.getInstance("RSA").generatePublic(new X509EncodedKeySpec(publicKeyBytes));
+
+        Signature sig = Signature.getInstance("SHA256withRSA");
+        sig.initVerify(publicKey);
+        sig.update(data);
+        return sig.verify(signature);
+    }
+
 
     public boolean pingOp(byte[] nodeId, String receiverIp, int receiverPort) {
         ManagedChannel channel = ManagedChannelBuilder.forAddress(receiverIp, receiverPort).usePlaintext().build();
@@ -55,19 +73,34 @@ public class KademliaProtocol
             e.printStackTrace();
         }
 
-        // Convert PublicKey to String
-        String publicKeyStr = Base64.getEncoder().encodeToString(publicKey.getEncoded());
 
         KademliaGrpc.KademliaBlockingStub stub = KademliaGrpc.newBlockingStub(channel);
+
         PingRequest request = PingRequest.newBuilder()
                 .setNode(node)
-                .setPublicKey(publicKeyStr)
-                .setSignature(ByteString.copyFrom(signature)).build();
+                .setPublicKey(Base64.getEncoder().encodeToString(publicKey.getEncoded()))
+                .setSignature(ByteString.copyFrom(signature))
+                .setCryptoPuzzle(ByteString.copyFrom(cryptoPuzzleSol)).build();
 
+        // Receive response
         PingResponse response = stub.ping(request);
 
-        return response.getOnline();
+        // Check signature
+        boolean signVal = false;
+        try {
+            signVal = verify(response.getId().toByteArray(), response.getSignature().toByteArray(), response.getPublicKey());
+        }
+        catch(Exception e) {
+            e.printStackTrace();
+        }
+
+        if (signVal) {
+            return response.getOnline();
+        }
+        return false;
     }
+
+
 
 //TIREI NODEID DA DECLARACAO - QUERO ALTERAR KEY PARA BYTE[]
     public boolean storeOp(String key, String val, String receiverIp, int receiverPort) {
@@ -96,18 +129,30 @@ public class KademliaProtocol
             e.printStackTrace();
         }
 
-        String publicKeyStr = Base64.getEncoder().encodeToString(publicKey.getEncoded());
-
         StoreRequest request = StoreRequest.newBuilder()
                 .setNode(node)
                 .setKey(key)
                 .setValue(val)
-                .setPublicKey(publicKeyStr)
-                .setSignature(ByteString.copyFrom(signature)).build();
+                .setPublicKey(Base64.getEncoder().encodeToString(publicKey.getEncoded()))
+                .setSignature(ByteString.copyFrom(signature))
+                .setCryptoPuzzle(ByteString.copyFrom(cryptoPuzzleSol)).build();
 
         StoreResponse response = stub.store(request);
 
-        return response.getStored();
+
+        // Check signature
+        boolean signVal = false;
+        try {
+            signVal = verify(response.getId().toByteArray(), response.getSignature().toByteArray(), response.getPublicKey());
+        }
+        catch(Exception e) {
+            e.printStackTrace();
+        }
+
+        if (signVal) {
+            return response.getStored();
+        }
+        return false;
     }
 
 
@@ -133,20 +178,41 @@ public class KademliaProtocol
             e.printStackTrace();
         }
 
-        String publicKeyStr = Base64.getEncoder().encodeToString(publicKey.getEncoded());
-
         System.out.println("Signature: " + Arrays.toString(signature));
 
         FindNodeRequest request = FindNodeRequest.newBuilder()
                 .setNode(node)
                 .setKey(ByteString.copyFrom(key))
-                .setPublicKey(publicKeyStr)
-                .setSignature(ByteString.copyFrom(signature)).build();
+                .setPublicKey(Base64.getEncoder().encodeToString(publicKey.getEncoded()))
+                .setSignature(ByteString.copyFrom(signature))
+                .setCryptoPuzzle(ByteString.copyFrom(cryptoPuzzleSol)).build();
 
         FindNodeResponse response = stub.findNode(request);
 
-        return new KademliaFindOpResult(response.getId().toByteArray(), "", response.getNodesList());
+        boolean idSignVal = false;
+        boolean nodesSignVal = false;
+        try {
+            idSignVal = verify(response.getId().toByteArray(), response.getIdSignature().toByteArray(), response.getPublicKey());
+            for (int i = 0; i < response.getNodesList().size(); i++) {
+                if (verify(response.getNodesList().get(i).toByteArray(), response.getNsList().get(i).toByteArray(), response.getPublicKey())) {
+                    nodesSignVal = true;
+                }
+                else {
+                    break;
+                }
+            }
+        }
+        catch(Exception e) {
+            e.printStackTrace();
+        }
+
+        if (idSignVal && nodesSignVal) {
+            return new KademliaFindOpResult(response.getId().toByteArray(), "", response.getNodesList());
+        }
+        return null;
     }
+
+
 
     public KademliaFindOpResult findValueOp(byte[] nodeId, String key, String receiverIp, int receiverPort) {
         ManagedChannel channel = ManagedChannelBuilder.forAddress(receiverIp, receiverPort).usePlaintext().build();
@@ -172,17 +238,27 @@ public class KademliaProtocol
             e.printStackTrace();
         }
 
-        String publicKeyStr = Base64.getEncoder().encodeToString(publicKey.getEncoded());
-
         FindValueRequest request = FindValueRequest.newBuilder()
                 .setNode(node)
                 .setKey(key)
-                .setPublicKey(publicKeyStr)
-                .setSignature(ByteString.copyFrom(signature)).build();
+                .setPublicKey(Base64.getEncoder().encodeToString(publicKey.getEncoded()))
+                .setSignature(ByteString.copyFrom(signature))
+                .setCryptoPuzzle(ByteString.copyFrom(cryptoPuzzleSol)).build();
 
         FindValueResponse response = stub.findValue(request);
 
-        return new KademliaFindOpResult(response.getId().toByteArray(), response.getValue(), new ArrayList<>());
+        boolean signVal = false;
+        try {
+            signVal = verify(response.getValue().getBytes(), response.getSignature().toByteArray(), response.getPublicKey());
+        }
+        catch(Exception e) {
+            e.printStackTrace();
+        }
+
+        if (signVal) {
+            return new KademliaFindOpResult(response.getId().toByteArray(), response.getValue(), new ArrayList<>());
+        }
+        return null;
     }
 
 

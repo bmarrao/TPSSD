@@ -24,16 +24,20 @@ public class KademliaTeste
         KademliaRoutingTable rtNormal ;
         KademliaRoutingTable rtBootStrap ;
 
+        byte[] cryptoPuzzleSol = null;
+        int leadingZeros = 8;
+
         //Kademlia kd = new Kademlia();
         port = 5003;
         nodeId = Kademlia.generateNodeId();
         System.out.println("Generated node ID: \n" + Arrays.toString(nodeId) + "\n");
-        KademliaProtocol protocol = new KademliaProtocol(nodeId,ipAddress, port, publicKey, privateKey);
+        KademliaProtocol protocol = new KademliaProtocol(nodeId,ipAddress, port, publicKey, privateKey, cryptoPuzzleSol);
         System.out.println();
 
         rtNormal = new KrtNormal(nodeId, protocol, 20, 20);
 
-        KademliaServer server = new KademliaServer(port, new Auction(protocol));
+
+        KademliaServer server = new KademliaServer(port, new Auction(protocol), leadingZeros);
         Thread serverThread = new Thread(server);
         serverThread.start();
 
@@ -48,8 +52,8 @@ public class KademliaTeste
             assert nodeId != null;
             nd.setId(ByteString.copyFrom(nodeId));
             Node ins = nd.build();
-            rtNormal.insert(ins);
-            rtBootStrap.insert(ins);
+            rtNormal.insert(ins, 0);
+            rtBootStrap.insert(ins, 0);
 
         }
                 /*

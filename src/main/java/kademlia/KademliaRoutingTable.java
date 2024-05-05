@@ -1,9 +1,7 @@
 package kademlia;
 import com.google.protobuf.ByteString;
 
-import java.lang.reflect.Array;
 import java.math.BigInteger;
-import java.time.LocalDateTime;
 import java.util.*;
 import java.util.concurrent.locks.Lock;
 import java.util.concurrent.locks.ReentrantLock;
@@ -12,7 +10,7 @@ import java.util.concurrent.locks.ReentrantLock;
 
 class SortedArrayList<T> extends ArrayList<T>
 {
-    private Comparator<T> comparator;
+    private final Comparator<T> comparator;
 
     public SortedArrayList(Comparator<T> comparator) {
         this.comparator = comparator;
@@ -21,7 +19,7 @@ class SortedArrayList<T> extends ArrayList<T>
     @Override
     public boolean add(T element) {
         boolean result = super.add(element);
-        Collections.sort(this, comparator);
+        this.sort(comparator);
         return result;
     }
 }
@@ -166,10 +164,11 @@ public class KademliaRoutingTable
 
 
     //  Função que insere um no na arvore
-    public boolean insert(Node node, boolean valid )
+    public boolean insert(Node node, int valid)
     {
         return false;
     }
+
 
     public boolean n_diff32_prefix(byte[] id1, byte[] id2 )
     {
@@ -196,9 +195,9 @@ public class KademliaRoutingTable
                 // Iterate through each byte and compare them
                 for (int i = 0; i < id1.length; i++)
                 {
-                    if (id1[i] != id2[i])
-                    {
+                    if (id1[i] != id2[i]) {
                         isEqual = false;
+                        break;
                     }
                 }
 
@@ -297,7 +296,7 @@ public class KademliaRoutingTable
         }
         else if (this.root.kc == 1)
         {
-            nodos = new ArrayList<KademliaNode>();
+            nodos = new ArrayList<>();
         }
         else
         {
@@ -311,7 +310,7 @@ public class KademliaRoutingTable
             }
         }// Chama a função recursiva para resolver o problema
         lock.unlock();
-        ArrayList<Node> ret = new ArrayList<Node>();
+        ArrayList<Node> ret = new ArrayList<>();
         for (KademliaNode kn : nodos )
         {
             Node.Builder nd = Node.newBuilder();
@@ -325,7 +324,7 @@ public class KademliaRoutingTable
 
     private ArrayList<KademliaNode> findClosestNodeRec(TreeNode curr, byte[] nodeId, int i, int j,int a, String path)
     {
-        ArrayList<KademliaNode> nodes = new ArrayList<KademliaNode>();
+        ArrayList<KademliaNode> nodes = new ArrayList<>();
         if (curr != null)
         {
             // Testa se tem um kbucket
@@ -418,13 +417,13 @@ public class KademliaRoutingTable
     // Função que pesquisa o map pelo node mais perto da variavel 'nodeId'
     public ArrayList<KademliaNode> searchMapClosest(ArrayList<KademliaNode> kbucket,byte[] nodeId, int a)
     {
-        ArrayList<KademliaNode> result  = new ArrayList<KademliaNode>();
+        ArrayList<KademliaNode> result  = new ArrayList<>();
         // Iniciamos a distancia por 1
         // Iniciamos uma variavel para guardar o no mais perto para retorrmos
         // Percorremos a lista procurando a distancia mais perto
         if (kbucket.size() != 0)
         {
-            ArrayList<Tuple> sortDist = new ArrayList<Tuple>();
+            ArrayList<Tuple> sortDist = new ArrayList<>();
             KademliaNode node = kbucket.get(0);
             BigInteger distance = calculateDistance(nodeId, node.nodeId);
             System.out.println();
@@ -454,7 +453,7 @@ public class KademliaRoutingTable
         return result;
     }
 
-    public class Tuple implements Comparable<Tuple>
+    public static class Tuple implements Comparable<Tuple>
     {
         public KademliaNode kd ;
         public BigInteger dist ;
@@ -546,7 +545,7 @@ public class KademliaRoutingTable
 
     public String printId(byte [] id)
     {
-        String nodeId="";
+        StringBuilder nodeId= new StringBuilder();
         for (int j = 0 ; j < 20; j++)
         {
             byte b = id[j];
@@ -556,15 +555,15 @@ public class KademliaRoutingTable
                 // Print the bit value
                 if (bit)
                 {
-                    nodeId = nodeId+"1";
+                    nodeId.append("1");
                 }
                 else
                 {
-                    nodeId = nodeId +"0";
+                    nodeId.append("0");
                 }
             }
         }
-        return nodeId;
+        return nodeId.toString();
     }
 }
 
