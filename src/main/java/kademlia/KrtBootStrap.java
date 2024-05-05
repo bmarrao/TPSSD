@@ -10,13 +10,29 @@ public class KrtBootStrap extends KademliaRoutingTable
     }
 
     @Override
-    public boolean insert(Node node)
+    public boolean insert(Node node, boolean valid)
     {
         KademliaNode kn = new KademliaNode(node.getIp(),node.getId().toByteArray(),node.getPort());
         lock.lock();
         TreeNode curr = root;
+        boolean ret ;
+        if (valid)
+        {
+            ret = insertRec(kn, curr,0, 7, 'd');
+
+        }
+        else
+        {
+            if (n_diff32_prefix(myNodeId,kn.nodeId))
+            {
+                ret = insertRec(kn, curr,0, 7, 'd');
+            }
+            else
+            {
+                ret =false;
+            }
+        }
         // Função recursiva que ira percorrer a arvore
-        boolean ret = insertRec(kn, curr,0, 7, 'd');
         lock.unlock();
         return ret;
     }

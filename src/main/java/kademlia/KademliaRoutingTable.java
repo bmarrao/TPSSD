@@ -166,11 +166,23 @@ public class KademliaRoutingTable
 
 
     //  Função que insere um no na arvore
-    public boolean insert(Node node)
+    public boolean insert(Node node, boolean valid )
     {
         return false;
     }
 
+    public boolean n_diff32_prefix(byte[] id1, byte[] id2 )
+    {
+        for (int i = 0; i < 4; i++)
+        {
+            if (id1[i] != id2[i])
+            {
+                return false;
+            }
+        }
+        return true;
+
+    }
     public boolean hasObject(SortedArrayList<KademliaNode> kbucket,KademliaNode node)
     {
         byte[] id1 = node.nodeId;
