@@ -5,7 +5,7 @@ import java.security.PublicKey;
 import java.util.ArrayList;
 import java.util.List;
 
-import static kademlia.Kademlia.rtn;
+import static kademlia.Kademlia.rt;
 
 
 public class KademliaJoinNetwork implements Runnable {
@@ -47,7 +47,7 @@ public class KademliaJoinNetwork implements Runnable {
         ArrayList<Node> newAddedNodes = new ArrayList<>();
         for (Node n : closestNodes)
         {
-            if (rtn.insert(n, 1))
+            if (rt.insert(n, 1))
             {
                 System.out.println("Got new closest node to contact: " + n.getId());
                 newAddedNodes.add(n);
@@ -66,7 +66,7 @@ public class KademliaJoinNetwork implements Runnable {
                 }
                 for (Node m : closestNodes)
                 {
-                    if (rtn.insert(m, 1))
+                    if (rt.insert(m, 1))
                     {
                         System.out.println("Got new closest node to contact: " + n.getId());
                         newAddedNodes.add(m);

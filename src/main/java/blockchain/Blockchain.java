@@ -3,17 +3,16 @@ package blockchain;
 
 import blockchain.Block;
 
-import java.util.ArrayList;
-import java.util.List;
+import java.util.*;
 
 public class Blockchain
 {
-    private List<Block> blockchain;
-    private int difficulty;
+    public static List<Block> blockchain;
+    private final int difficulty;
 
     // Constructor
     public Blockchain(int initialDifficulty) {
-        this.blockchain = new ArrayList<>();
+        Blockchain.blockchain = new ArrayList<>();
         this.difficulty = initialDifficulty;
 
         // Create the genesis block (first block in the blockchain)
@@ -22,8 +21,6 @@ public class Blockchain
         Block genesisBlock = new Block("", "0", "Genesis Block");
         genesisBlock.mineBlock(difficulty); // Ensure the genesis block has valid proof-of-work
         chain.add(genesisBlock);*/
-
-
     }
 
 
@@ -62,7 +59,7 @@ public class Blockchain
     // Method to add a new block to the blockchain
     public void addBlock(Block newBlock) {
         // Set the previous hash to the hash of the latest block
-        newBlock = new Block(getLatestBlock().getHash(), newBlock.getData());
+        newBlock = new Block(getLatestBlock().getHash(), newBlock.getData(), true, newBlock.getReputationScore());
         newBlock.mineBlock(difficulty); // Ensure the block has valid proof-of-work
         blockchain.add(newBlock);
     }
@@ -87,5 +84,30 @@ public class Blockchain
         }
         return true; // All checks passed, the blockchain is valid
     }
+
+
+    // Used by consensus group to verify validity of keyblocks and then pin one of them, then choose a new leader
+    /*
+    public void pinKeyblock(ArrayList<Block> keyblocks, int minReputation) {
+        // TODO: verificar a validade da hash e da reputationScore
+        for (Block keyblock : keyblocks) {
+            if (!isHashValid(keyblock.getHash()) || !(keyblock.getReputationScore() >= minReputation)) {
+                keyblocks.remove(keyblock);
+                keyblock.setReputationScore(-100);
+            }
+        }
+
+        // TODO: pin one of the keyblocks
+        Block pinnedKeyblock = null;
+
+        // miner que criou o keyblock que foi pinned recebe um reward
+        pinnedKeyblock.setReputationScore(100);
+
+        // escolher aleatoriamente novo lider do CG
+        Random random = new Random(0);
+        int randomIndex = random.nextInt(consensusGroup.size());
+        String leader = consensusGroup.get(randomIndex);
+    }
+    */
 }
 

@@ -19,8 +19,7 @@ public class Kademlia
     public static int leadingZeros;
 
     public static KademliaRoutingTable rt;
-    public static KrtNormal rtn;
-    public static KrtBootStrap rtb;
+
     public static KademliaProtocol protocol;
     public static String bootstrapFilePath = "src/main/java/kademlia/BootstrapNodes.txt";
     // Auction a;
@@ -43,17 +42,17 @@ public class Kademlia
 
     public Kademlia(byte[] nodeId, String ipAddress, int port, boolean bootstrap, int k, int s)
     {
-        this.nodeId = nodeId;
+        Kademlia.nodeId = nodeId;
         protocol = new KademliaProtocol(nodeId,ipAddress,port,generatedPk,generatedSk,cryptoPuzzleSol);
 
         if (bootstrap)
         {
-            rtb = new KrtBootStrap(nodeId,protocol,k,s);
+            rt = new KrtBootStrap(nodeId,protocol,k,s);
             addIpPortBSFile(ipAddress, port, bootstrapFilePath);
         }
         else
         {
-            rtn = new KrtNormal(nodeId, protocol, k, s);
+            rt = new KrtNormal(nodeId, protocol, k, s);
 
             // Randomly select one bootstrap node from BootstrapNodes.txt to contact
             List<String> bootstrapNodesInfo = getBootstrapNodesInfo(bootstrapFilePath);
@@ -79,7 +78,7 @@ public class Kademlia
         if (args[0].equals("bootstrap"))
         {
             protocol = new KademliaProtocol(sKadNodeId,"127.0.0.1",5000, generatedPk, generatedSk,cryptoPuzzleSol);
-            rtb = new KrtBootStrap(sKadNodeId,protocol,20,20);
+            rt = new KrtBootStrap(sKadNodeId,protocol,20,20);
 
             KademliaServer server = new KademliaServer(5000,  new Auction(new Kademlia(sKadNodeId,generatedPk,generatedSk,rt,protocol)),leadingZeros);
 
@@ -91,7 +90,7 @@ public class Kademlia
         else {
             protocol = new KademliaProtocol(sKadNodeId,"localhost",Integer.parseInt(args[1]), generatedPk, generatedSk,cryptoPuzzleSol);
 
-            rtn = new KrtNormal(sKadNodeId, protocol, 20, 20);
+            rt = new KrtNormal(sKadNodeId, protocol, 20, 20);
 
 
             KademliaServer server = new KademliaServer(Integer.parseInt(args[1]),

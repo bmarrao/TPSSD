@@ -1,9 +1,13 @@
 
 package blockchain;
 
+import java.security.*;
+import java.util.Base64;
 import java.util.Date;
 import org.bouncycastle.jcajce.provider.digest.SHA256;
 import java.nio.charset.StandardCharsets;
+
+import static blockchain.Blockchain.blockchain;
 
 public class Block
 {
@@ -12,19 +16,32 @@ public class Block
     public String previousHash;
     private long timestamp;
     private int nonce;
+    private int reputationScore;
 
     //private ArrayList<Transaction> transactionList;
 
     //TODO : definir que dados serão estes, lista de transações?
     private String data;
+    private PublicKey publicKey;
+    private PrivateKey privateKey;
+    private byte[] signature;
 
-    public Block(String previousHash, String data) {
-
+    public Block(String previousHash, String data, boolean proofReputation, int reputationScore) {
         this.previousHash = previousHash;
         this.timestamp = new Date().getTime();
         this.nonce = 0;
         this.data = data;
         this.hash = calculateHash();
+        this.reputationScore = reputationScore;
+
+        try {
+            generateKeyPair();
+        }
+        catch(Exception e) {
+            e.printStackTrace();
+        }
+
+        signBlockContent();
     }
 
     public String getHash() {
@@ -47,6 +64,14 @@ public class Block
         return nonce;
     }
 
+    public int getReputationScore() {
+        return reputationScore;
+    }
+
+    public void setReputationScore(int score) {
+        reputationScore = score;
+    }
+
     public void setNonce(int nonce) {
         this.nonce = nonce;
     }
@@ -58,6 +83,57 @@ public class Block
     public void setData(String data) {
         this.data = data;
     }
+
+    public byte[] getSignature() { return this.signature; }
+
+    public PublicKey getPublicKey() { return this.publicKey; }
+
+
+    // Create signature for specific contect from RPC message
+    public static byte[] sign(byte[] data, PrivateKey privateKey) throws Exception {
+        Signature signature = Signature.getInstance("SHA256withRSA");
+        signature.initSign(privateKey);
+        signature.update(data);
+        return signature.sign();
+    }
+
+
+    // Verify signatures from received RPC messages
+    public static boolean verify(byte[] data, byte[] signature, PublicKey publicKey) throws Exception {
+        Signature sig = Signature.getInstance("SHA256withRSA");
+        sig.initVerify(publicKey);
+        sig.update(data);
+        return sig.verify(signature);
+    }
+
+
+    private void generateKeyPair() throws NoSuchAlgorithmException {
+        KeyPairGenerator keyPairGen = KeyPairGenerator.getInstance("RSA");
+        keyPairGen.initialize(2048);
+        KeyPair pair = keyPairGen.generateKeyPair();
+        this.publicKey = pair.getPublic();
+        this.privateKey = pair.getPrivate();
+    }
+
+
+    private void signBlockContent() {
+        byte[] infoToSign = {
+                Byte.parseByte(previousHash),
+                (byte) timestamp,
+                (byte) nonce,
+                Byte.parseByte(data),
+                Byte.parseByte(hash),
+                (byte) reputationScore
+        };
+
+        try {
+            this.signature = sign(infoToSign, this.privateKey);
+        }
+        catch(Exception e) {
+            e.printStackTrace();
+        }
+    }
+
 
     // Method to apply SHA-256 hash
     private String applySha256(String input) {
@@ -74,15 +150,20 @@ public class Block
         return hexString.toString(); // Return the full hash as a string
     }
 
+
     // Calculate the block's hash || almost a checksum
     public String calculateHash() {
+        //return applySha256(previousHash + nonce + publicKeyStr + reputationScore);
         return applySha256(
-                previousHash +
-                        Long.toString(timestamp) +
-                        Integer.toString(nonce) +
-                        data
+            previousHash +
+            Long.toString(timestamp) +
+            Integer.toString(nonce) +
+            Base64.getEncoder().encodeToString(publicKey.getEncoded()) +
+            reputationScore +
+            data
         );
     }
+
 
     // Mine the block using Proof-of-Work
     //TODO definir dificuldade
@@ -97,6 +178,60 @@ public class Block
         System.out.println("Block mined: " + hash); // Block successfully mined
     }
 
+
+    // TODO: why would a miner want to have higher reputation in our case
+    public boolean isBlockValid(Block block, int difficulty, float repIncreasePercentage) {
+        int currRepScore = block.getReputationScore();
+
+        // Verify previous block reference and that POW was done
+        String target = new String(new char[difficulty]).replace('\0', '0');
+        String bcLatestBlockHash = blockchain.get(blockchain.size() - 1).getHash();
+        String previousBlockHash = block.getPreviousHash();
+        if (!bcLatestBlockHash.equals(previousBlockHash) || !block.getHash().startsWith(target)) {
+            block.setReputationScore(0);
+            return false;
+        }
+
+        // Verify block signature
+        // No RepuCoin:
+        //   - keyblock sig_m = H(prev_KB_hash, nonce, PK, reputation=
+        //   - sig microblock = Sign(H(KB_hash, prev_MB_hash, TXs))
+        // Neste caso inclui assinatura do bloco completo
+        byte[] infoToVerify = {
+                Byte.parseByte(block.getPreviousHash()),
+                (byte) block.getTimestamp(),
+                (byte) block.getNonce(),
+                Byte.parseByte(block.getData()),
+                Byte.parseByte(block.getHash()),
+                (byte) block.getReputationScore()
+        };
+
+        try {
+            if (!verify(infoToVerify, block.getSignature(), block.getPublicKey())) {
+                block.setReputationScore(0);
+                return false;
+            }
+        }
+        catch(Exception e) {
+            e.printStackTrace();
+        }
+
+
+        // TODO:
+        //  - decrease reputation and return false if:
+        //     - transaction is null or transaction amount <= 0
+        //     - sender/receiver/hash is null or empty
+        //     - transaction amount > sender's funds
+        String transaction = block.getData();
+
+
+        // increases reputation based on defined percentage
+        if (block.getReputationScore() != 0) {
+            block.setReputationScore((int) ((currRepScore * repIncreasePercentage) + currRepScore));
+        }
+        else {
+            block.setReputationScore((int) (0.01 + currRepScore));
+        }
+        return true;
+    }
 }
-
-
