@@ -59,7 +59,7 @@ public class KademliaRoutingTable
     // Tamanho dos buckets
     int k;
     // S/Kademlia sibling list
-    TreeMap<BigInteger, KademliaNode> siblingList;
+    ArrayList<Tuple> siblingList;
     // Sibling list size
     int s;
 
@@ -72,41 +72,10 @@ public class KademliaRoutingTable
         this.myNodeId = nodeId;
         this.k = k;
         this.protocol = protocol;
-        this.siblingList = new TreeMap<>();
+        this.siblingList= new ArrayList<>();
         this.s = s;
     }
 
-
-
-    // sibling list implementation
-    public void slInsertNode(KademliaNode n, int i, int j) {
-        // calcula distância do nó n ao mynodeid
-        BigInteger newNodeDistance = calculateDistance(myNodeId, n.nodeId);
-
-        // se essa distância for mais proxima do que a distância do furthest node na sibling list
-        // entao adiciona o nó n à sibling list
-        BigInteger furthestNodeDistance = calculateDistance(myNodeId, siblingList.lastEntry().getValue().nodeId);
-        int comparisonResult = newNodeDistance.compareTo(furthestNodeDistance);
-
-        if (comparisonResult < 0) {
-            if (siblingList.size() >= s) {
-                siblingList.remove(siblingList.lastEntry().getKey());
-            }
-            else {
-                // TODO: não sei se esta parte está bem
-                boolean adicionou = testLeastRecentlySeen(root.kbucket, n);
-                if (!adicionou) {
-                    if (j == 0) {
-                        addToBuckets(root.left, root.right, root.kbucket, n, i + 1, 7);
-                    }
-                    else {
-                        addToBuckets(root.left, root.right, root.kbucket, n, i, j - 1);
-                    }
-                }
-            }
-            siblingList.put(newNodeDistance, n);
-        }
-    }
 
 
     // find out wether n1 or n2 is closer destNode
@@ -114,52 +83,6 @@ public class KademliaRoutingTable
         BigInteger dist1 = calculateDistance(n1, destNode);
         BigInteger dist2 = calculateDistance(n2, destNode);
         return dist1.compareTo(dist2);
-    }
-
-
-    /*
-    // S/Kademlia: find the k closest nodes to destNode
-    public ArrayList<KademliaNode> findClosestNodesSKad(KademliaNode destNode, int k_closest_nodes) {
-        PriorityQueue<KademliaNode> closestNodes = new PriorityQueue<>((n1, n2) -> compareDistance(n1.nodeId, n2.nodeId, destNode.nodeId));
-
-        // TODO: iterate through routing table
-        for (KademliaNode m : ) {
-            closestNodes.offer(m);
-
-            if (closestNodes.size() > k_closest_nodes) {
-                closestNodes.poll();
-            }
-        }
-        return new ArrayList<>(closestNodes);
-    }
-    // Parallel lookup over d disjoint paths
-    public void skadLookup(KademliaNode destinationKey, int d_closest_nodes) {
-        // get closest nodes to destinationKey (non recursive)
-        ArrayList<KademliaNode> closestNodes = findClosestNodesSKad(destinationKey, d_closest_nodes);
-
-        // TODO:
-        //   - distribuir closest nodes obtidos em lookup buckets independentes
-        //   - para cada nó fazer lookup paralelo
-        for (KademliaNode n : closestNodes)
-        {
-            Thread findClosestNodeRecThread = new Thread((Runnable) findClosestNodeRec(root, destinationKey.nodeId, 0, 0, 0, ""));
-            findClosestNodeRecThread.start();
-        }
-    }
-
-     */
-
-    // TODO: maintaining routing table skad
-    public void sKadAddToBucket(Node n, String validity, int x_bits) {
-        if (validity.equals("ActivelyValid")) {
-            if (this.root.kbucket.size() < k) {
-                KademliaNode kn = new KademliaNode(n.getIp(), n.getId().toByteArray(), n.getPort());
-                addToBuckets(this.root.left, this.root.right, this.root.kbucket, kn, 0, 0);
-            }
-        }
-        else {
-            // se o n.getId() diferir pelo menos x_bits do bucket, então adicionar ao bucket
-        }
     }
 
 
@@ -252,6 +175,7 @@ public class KademliaRoutingTable
             else
             {
                 left.kc++;
+                addSiblingList(node);
                 left.kbucket.add(node);
             }
         }
@@ -260,6 +184,7 @@ public class KademliaRoutingTable
             if (direction)
             {
                 right.kc++;
+                addSiblingList(node);
                 right.kbucket.add(node);
             }
             else
@@ -397,13 +322,11 @@ public class KademliaRoutingTable
         int tamanho = kbucket.size();
         // Função que ira retornar o node ultimo visto no kbucket
         KademliaNode testPing = kbucket.get(tamanho-1);
-        //boolean notActive =  this.protocol.pingOp(testPing.nodeId,testPing.ipAdress,testPing.port);
-        boolean notActive = true;
-        //TODO Ajeitar isso quando o protocol.ping tiver funcionando
-        // Ping least recently active node
+        boolean notActive =  this.protocol.pingOp(testPing.nodeId,testPing.ipAdress,testPing.port);
         if (!notActive)
         {
             kbucket.remove(tamanho-1);
+            addSiblingList(node);
             kbucket.add(node);
             return true;
         }
@@ -414,6 +337,17 @@ public class KademliaRoutingTable
         }
     }
 
+    public void addSiblingList(KademliaNode node)
+    {
+        BigInteger distance = calculateDistance(this.myNodeId, node.nodeId);
+        siblingList.add(new Tuple(node, distance));
+        Collections.sort(siblingList);
+        int tamanho = siblingList.size();
+        if (tamanho >= this.s)
+        {
+            this.siblingList.remove(tamanho);
+        }
+    }
     // Função que pesquisa o map pelo node mais perto da variavel 'nodeId'
     public ArrayList<KademliaNode> searchMapClosest(ArrayList<KademliaNode> kbucket,byte[] nodeId, int a)
     {

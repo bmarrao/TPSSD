@@ -35,12 +35,13 @@ public class Auction
 
             byte[] serviceId = sha1.digest(service.getBytes(StandardCharsets.UTF_8)); // Compute the hash
             //Get closest nodes to serviceID
-            ArrayList<Node> nodes = k.lookup(serviceId,a);
-            Node broker = nodes.get(0);
-            //TODO ALTERAR STOREOP SERVICEID PARA byte[]
-            //TODO IDEA MANDAR COMO STORE PRA K MAIS PERTOS AONDE ACONTECE O AUCTION ASSIM CONSEGUE DESCOBRIR DE QUALQUER MANEIRA AONDE ESTA O BROKER
-            k.protocol.initiateService(serviceId,nodes.toString(),broker.getIp(),broker.getPort());
+            ArrayList<Node> nodes = k.skadLookup(serviceId,a);
+            for (Node n : nodes)
+            {
+                //k.protocol.storeOp(serviceId, /*TODO COLOCAR MEU PROPRIONODE*/,n.getIp(),n.getPort());
 
+            }
+            //TODO INITIATE OWN SERVICE this.initiateService();
             return nodes;
         }
         catch (NoSuchAlgorithmException e)
@@ -50,8 +51,6 @@ public class Auction
         }
 
     }
-
-
     public boolean receiveOffer(Offer of,byte[] serviceId)
     {
         l.lock();
@@ -63,7 +62,7 @@ public class Auction
             if (bs.receiveOffer(of))
             {
                 System.out.println("NOTIFY SUBSCRIBED");
-                kademlia.protocol.notifySubscribed(bs.subscribed,bs.highestOffer,bs.serviceId);
+                //TODO RETIRAR COMENTARIOkademlia.protocol.notifySubscribed(bs.subscribed,bs.highestOffer,bs.serviceId);
                 return true;
             }
             bs.l.unlock();
@@ -84,7 +83,7 @@ public class Auction
         Offer.Builder nd = Offer.newBuilder();
         nd.setPrice(-1);
         bs.highestOffer = nd.build();
-        Thread rsThread = new Thread( new RunService(bs,kademlia.protocol));
+        Thread rsThread = new Thread( new RunService(bs,k.protocol));
         rsThread.start();
         l.unlock();
     }

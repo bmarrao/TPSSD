@@ -16,4 +16,19 @@ public interface StoreResponseOrBuilder extends
    * <code>bool stored = 2;</code>
    */
   boolean getStored();
+
+  /**
+   * <code>string publicKey = 3;</code>
+   */
+  java.lang.String getPublicKey();
+  /**
+   * <code>string publicKey = 3;</code>
+   */
+  com.google.protobuf.ByteString
+      getPublicKeyBytes();
+
+  /**
+   * <code>bytes signature = 4;</code>
+   */
+  com.google.protobuf.ByteString getSignature();
 }

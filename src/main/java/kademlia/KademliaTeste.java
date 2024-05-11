@@ -12,6 +12,8 @@ import java.util.*;
 
 public class KademliaTeste
 {
+                    /*
+
     public static void main(String[] args)
     {
          byte[] nodeId;
@@ -56,7 +58,6 @@ public class KademliaTeste
             rtBootStrap.insert(ins, 0);
 
         }
-                /*
 
         System.out.println();
         rtNormal.printTree();
@@ -74,7 +75,6 @@ public class KademliaTeste
         }
 
 
-         */
         System.out.println();
         ArrayList<Node> arr = rtBootStrap.findClosestNode(nodeId, 1);
         for (Node n : arr)
@@ -90,4 +90,6 @@ public class KademliaTeste
 
         //
     }
+             */
+
 }

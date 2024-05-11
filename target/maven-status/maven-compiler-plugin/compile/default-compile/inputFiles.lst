@@ -5,9 +5,11 @@
 /home/brenin/TPSSD/TPSSD/target/generated-sources/protobuf/java/kademlia/StoreResponse.java
 /home/brenin/TPSSD/TPSSD/src/main/java/AuctionTest.java
 /home/brenin/TPSSD/TPSSD/target/generated-sources/protobuf/java/kademlia/FindNodeResponseOrBuilder.java
+/home/brenin/TPSSD/TPSSD/target/generated-sources/protobuf/java/kademlia/NodeSignatureOrBuilder.java
 /home/brenin/TPSSD/TPSSD/target/generated-sources/protobuf/java/kademlia/Offer.java
 /home/brenin/TPSSD/TPSSD/src/main/java/blockchain/Block.java
 /home/brenin/TPSSD/TPSSD/target/generated-sources/protobuf/java/kademlia/NotifyResponse.java
+/home/brenin/TPSSD/TPSSD/target/generated-sources/protobuf/java/kademlia/NodeSignature.java
 /home/brenin/TPSSD/TPSSD/target/generated-sources/protobuf/java/kademlia/getPriceRequest.java
 /home/brenin/TPSSD/TPSSD/target/generated-sources/protobuf/java/kademlia/subscribeResponse.java
 /home/brenin/TPSSD/TPSSD/src/main/java/blockchain/Blockchain.java

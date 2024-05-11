@@ -35,4 +35,43 @@ public interface FindNodeResponseOrBuilder extends
    */
   kademlia.NodeOrBuilder getNodesOrBuilder(
       int index);
+
+  /**
+   * <code>string publicKey = 3;</code>
+   */
+  java.lang.String getPublicKey();
+  /**
+   * <code>string publicKey = 3;</code>
+   */
+  com.google.protobuf.ByteString
+      getPublicKeyBytes();
+
+  /**
+   * <code>repeated .kademlia.NodeSignature ns = 4;</code>
+   */
+  java.util.List<kademlia.NodeSignature> 
+      getNsList();
+  /**
+   * <code>repeated .kademlia.NodeSignature ns = 4;</code>
+   */
+  kademlia.NodeSignature getNs(int index);
+  /**
+   * <code>repeated .kademlia.NodeSignature ns = 4;</code>
+   */
+  int getNsCount();
+  /**
+   * <code>repeated .kademlia.NodeSignature ns = 4;</code>
+   */
+  java.util.List<? extends kademlia.NodeSignatureOrBuilder> 
+      getNsOrBuilderList();
+  /**
+   * <code>repeated .kademlia.NodeSignature ns = 4;</code>
+   */
+  kademlia.NodeSignatureOrBuilder getNsOrBuilder(
+      int index);
+
+  /**
+   * <code>bytes idSignature = 5;</code>
+   */
+  com.google.protobuf.ByteString getIdSignature();
 }

@@ -19,6 +19,7 @@ public  final class StoreRequest extends
     value_ = "";
     publicKey_ = "";
     signature_ = com.google.protobuf.ByteString.EMPTY;
+    cryptoPuzzle_ = com.google.protobuf.ByteString.EMPTY;
   }
 
   @java.lang.Override
@@ -80,6 +81,11 @@ public  final class StoreRequest extends
           case 42: {
 
             signature_ = input.readBytes();
+            break;
+          }
+          case 50: {
+
+            cryptoPuzzle_ = input.readBytes();
             break;
           }
         }
@@ -237,6 +243,15 @@ public  final class StoreRequest extends
     return signature_;
   }
 
+  public static final int CRYPTOPUZZLE_FIELD_NUMBER = 6;
+  private com.google.protobuf.ByteString cryptoPuzzle_;
+  /**
+   * <code>bytes cryptoPuzzle = 6;</code>
+   */
+  public com.google.protobuf.ByteString getCryptoPuzzle() {
+    return cryptoPuzzle_;
+  }
+
   private byte memoizedIsInitialized = -1;
   public final boolean isInitialized() {
     byte isInitialized = memoizedIsInitialized;
@@ -264,6 +279,9 @@ public  final class StoreRequest extends
     if (!signature_.isEmpty()) {
       output.writeBytes(5, signature_);
     }
+    if (!cryptoPuzzle_.isEmpty()) {
+      output.writeBytes(6, cryptoPuzzle_);
+    }
   }
 
   public int getSerializedSize() {
@@ -287,6 +305,10 @@ public  final class StoreRequest extends
     if (!signature_.isEmpty()) {
       size += com.google.protobuf.CodedOutputStream
         .computeBytesSize(5, signature_);
+    }
+    if (!cryptoPuzzle_.isEmpty()) {
+      size += com.google.protobuf.CodedOutputStream
+        .computeBytesSize(6, cryptoPuzzle_);
     }
     memoizedSize = size;
     return size;
@@ -317,6 +339,8 @@ public  final class StoreRequest extends
         .equals(other.getPublicKey());
     result = result && getSignature()
         .equals(other.getSignature());
+    result = result && getCryptoPuzzle()
+        .equals(other.getCryptoPuzzle());
     return result;
   }
 
@@ -339,6 +363,8 @@ public  final class StoreRequest extends
     hash = (53 * hash) + getPublicKey().hashCode();
     hash = (37 * hash) + SIGNATURE_FIELD_NUMBER;
     hash = (53 * hash) + getSignature().hashCode();
+    hash = (37 * hash) + CRYPTOPUZZLE_FIELD_NUMBER;
+    hash = (53 * hash) + getCryptoPuzzle().hashCode();
     hash = (29 * hash) + unknownFields.hashCode();
     memoizedHashCode = hash;
     return hash;
@@ -482,6 +508,8 @@ public  final class StoreRequest extends
 
       signature_ = com.google.protobuf.ByteString.EMPTY;
 
+      cryptoPuzzle_ = com.google.protobuf.ByteString.EMPTY;
+
       return this;
     }
 
@@ -513,6 +541,7 @@ public  final class StoreRequest extends
       result.value_ = value_;
       result.publicKey_ = publicKey_;
       result.signature_ = signature_;
+      result.cryptoPuzzle_ = cryptoPuzzle_;
       onBuilt();
       return result;
     }
@@ -571,6 +600,9 @@ public  final class StoreRequest extends
       }
       if (other.getSignature() != com.google.protobuf.ByteString.EMPTY) {
         setSignature(other.getSignature());
+      }
+      if (other.getCryptoPuzzle() != com.google.protobuf.ByteString.EMPTY) {
+        setCryptoPuzzle(other.getCryptoPuzzle());
       }
       onChanged();
       return this;
@@ -947,6 +979,35 @@ public  final class StoreRequest extends
     public Builder clearSignature() {
       
       signature_ = getDefaultInstance().getSignature();
+      onChanged();
+      return this;
+    }
+
+    private com.google.protobuf.ByteString cryptoPuzzle_ = com.google.protobuf.ByteString.EMPTY;
+    /**
+     * <code>bytes cryptoPuzzle = 6;</code>
+     */
+    public com.google.protobuf.ByteString getCryptoPuzzle() {
+      return cryptoPuzzle_;
+    }
+    /**
+     * <code>bytes cryptoPuzzle = 6;</code>
+     */
+    public Builder setCryptoPuzzle(com.google.protobuf.ByteString value) {
+      if (value == null) {
+    throw new NullPointerException();
+  }
+  
+      cryptoPuzzle_ = value;
+      onChanged();
+      return this;
+    }
+    /**
+     * <code>bytes cryptoPuzzle = 6;</code>
+     */
+    public Builder clearCryptoPuzzle() {
+      
+      cryptoPuzzle_ = getDefaultInstance().getCryptoPuzzle();
       onChanged();
       return this;
     }

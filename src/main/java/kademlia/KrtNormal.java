@@ -83,6 +83,7 @@ public class KrtNormal extends KademliaRoutingTable
                     } else {
                         //Adiciona o no a o kbucket
                         curr.kc++;
+                        addSiblingList(node);
                         curr.kbucket.add(node);
                         return true;
                     }

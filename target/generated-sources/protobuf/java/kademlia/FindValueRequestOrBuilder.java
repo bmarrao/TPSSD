@@ -21,10 +21,18 @@ public interface FindValueRequestOrBuilder extends
   kademlia.NodeOrBuilder getNodeOrBuilder();
 
   /**
+   * <pre>
+   * TODO: a key é um id, tem de ser em bytes
+   * </pre>
+   *
    * <code>string key = 2;</code>
    */
   java.lang.String getKey();
   /**
+   * <pre>
+   * TODO: a key é um id, tem de ser em bytes
+   * </pre>
+   *
    * <code>string key = 2;</code>
    */
   com.google.protobuf.ByteString
@@ -44,4 +52,9 @@ public interface FindValueRequestOrBuilder extends
    * <code>bytes signature = 4;</code>
    */
   com.google.protobuf.ByteString getSignature();
+
+  /**
+   * <code>bytes cryptoPuzzle = 5;</code>
+   */
+  com.google.protobuf.ByteString getCryptoPuzzle();
 }

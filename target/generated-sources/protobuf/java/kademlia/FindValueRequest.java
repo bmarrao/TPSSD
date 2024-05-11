@@ -18,6 +18,7 @@ public  final class FindValueRequest extends
     key_ = "";
     publicKey_ = "";
     signature_ = com.google.protobuf.ByteString.EMPTY;
+    cryptoPuzzle_ = com.google.protobuf.ByteString.EMPTY;
   }
 
   @java.lang.Override
@@ -75,6 +76,11 @@ public  final class FindValueRequest extends
             signature_ = input.readBytes();
             break;
           }
+          case 42: {
+
+            cryptoPuzzle_ = input.readBytes();
+            break;
+          }
         }
       }
     } catch (com.google.protobuf.InvalidProtocolBufferException e) {
@@ -122,6 +128,10 @@ public  final class FindValueRequest extends
   public static final int KEY_FIELD_NUMBER = 2;
   private volatile java.lang.Object key_;
   /**
+   * <pre>
+   * TODO: a key é um id, tem de ser em bytes
+   * </pre>
+   *
    * <code>string key = 2;</code>
    */
   public java.lang.String getKey() {
@@ -137,6 +147,10 @@ public  final class FindValueRequest extends
     }
   }
   /**
+   * <pre>
+   * TODO: a key é um id, tem de ser em bytes
+   * </pre>
+   *
    * <code>string key = 2;</code>
    */
   public com.google.protobuf.ByteString
@@ -196,6 +210,15 @@ public  final class FindValueRequest extends
     return signature_;
   }
 
+  public static final int CRYPTOPUZZLE_FIELD_NUMBER = 5;
+  private com.google.protobuf.ByteString cryptoPuzzle_;
+  /**
+   * <code>bytes cryptoPuzzle = 5;</code>
+   */
+  public com.google.protobuf.ByteString getCryptoPuzzle() {
+    return cryptoPuzzle_;
+  }
+
   private byte memoizedIsInitialized = -1;
   public final boolean isInitialized() {
     byte isInitialized = memoizedIsInitialized;
@@ -220,6 +243,9 @@ public  final class FindValueRequest extends
     if (!signature_.isEmpty()) {
       output.writeBytes(4, signature_);
     }
+    if (!cryptoPuzzle_.isEmpty()) {
+      output.writeBytes(5, cryptoPuzzle_);
+    }
   }
 
   public int getSerializedSize() {
@@ -240,6 +266,10 @@ public  final class FindValueRequest extends
     if (!signature_.isEmpty()) {
       size += com.google.protobuf.CodedOutputStream
         .computeBytesSize(4, signature_);
+    }
+    if (!cryptoPuzzle_.isEmpty()) {
+      size += com.google.protobuf.CodedOutputStream
+        .computeBytesSize(5, cryptoPuzzle_);
     }
     memoizedSize = size;
     return size;
@@ -268,6 +298,8 @@ public  final class FindValueRequest extends
         .equals(other.getPublicKey());
     result = result && getSignature()
         .equals(other.getSignature());
+    result = result && getCryptoPuzzle()
+        .equals(other.getCryptoPuzzle());
     return result;
   }
 
@@ -288,6 +320,8 @@ public  final class FindValueRequest extends
     hash = (53 * hash) + getPublicKey().hashCode();
     hash = (37 * hash) + SIGNATURE_FIELD_NUMBER;
     hash = (53 * hash) + getSignature().hashCode();
+    hash = (37 * hash) + CRYPTOPUZZLE_FIELD_NUMBER;
+    hash = (53 * hash) + getCryptoPuzzle().hashCode();
     hash = (29 * hash) + unknownFields.hashCode();
     memoizedHashCode = hash;
     return hash;
@@ -429,6 +463,8 @@ public  final class FindValueRequest extends
 
       signature_ = com.google.protobuf.ByteString.EMPTY;
 
+      cryptoPuzzle_ = com.google.protobuf.ByteString.EMPTY;
+
       return this;
     }
 
@@ -459,6 +495,7 @@ public  final class FindValueRequest extends
       result.key_ = key_;
       result.publicKey_ = publicKey_;
       result.signature_ = signature_;
+      result.cryptoPuzzle_ = cryptoPuzzle_;
       onBuilt();
       return result;
     }
@@ -513,6 +550,9 @@ public  final class FindValueRequest extends
       }
       if (other.getSignature() != com.google.protobuf.ByteString.EMPTY) {
         setSignature(other.getSignature());
+      }
+      if (other.getCryptoPuzzle() != com.google.protobuf.ByteString.EMPTY) {
+        setCryptoPuzzle(other.getCryptoPuzzle());
       }
       onChanged();
       return this;
@@ -659,6 +699,10 @@ public  final class FindValueRequest extends
 
     private java.lang.Object key_ = "";
     /**
+     * <pre>
+     * TODO: a key é um id, tem de ser em bytes
+     * </pre>
+     *
      * <code>string key = 2;</code>
      */
     public java.lang.String getKey() {
@@ -674,6 +718,10 @@ public  final class FindValueRequest extends
       }
     }
     /**
+     * <pre>
+     * TODO: a key é um id, tem de ser em bytes
+     * </pre>
+     *
      * <code>string key = 2;</code>
      */
     public com.google.protobuf.ByteString
@@ -690,6 +738,10 @@ public  final class FindValueRequest extends
       }
     }
     /**
+     * <pre>
+     * TODO: a key é um id, tem de ser em bytes
+     * </pre>
+     *
      * <code>string key = 2;</code>
      */
     public Builder setKey(
@@ -703,6 +755,10 @@ public  final class FindValueRequest extends
       return this;
     }
     /**
+     * <pre>
+     * TODO: a key é um id, tem de ser em bytes
+     * </pre>
+     *
      * <code>string key = 2;</code>
      */
     public Builder clearKey() {
@@ -712,6 +768,10 @@ public  final class FindValueRequest extends
       return this;
     }
     /**
+     * <pre>
+     * TODO: a key é um id, tem de ser em bytes
+     * </pre>
+     *
      * <code>string key = 2;</code>
      */
     public Builder setKeyBytes(
@@ -820,6 +880,35 @@ public  final class FindValueRequest extends
     public Builder clearSignature() {
       
       signature_ = getDefaultInstance().getSignature();
+      onChanged();
+      return this;
+    }
+
+    private com.google.protobuf.ByteString cryptoPuzzle_ = com.google.protobuf.ByteString.EMPTY;
+    /**
+     * <code>bytes cryptoPuzzle = 5;</code>
+     */
+    public com.google.protobuf.ByteString getCryptoPuzzle() {
+      return cryptoPuzzle_;
+    }
+    /**
+     * <code>bytes cryptoPuzzle = 5;</code>
+     */
+    public Builder setCryptoPuzzle(com.google.protobuf.ByteString value) {
+      if (value == null) {
+    throw new NullPointerException();
+  }
+  
+      cryptoPuzzle_ = value;
+      onChanged();
+      return this;
+    }
+    /**
+     * <code>bytes cryptoPuzzle = 5;</code>
+     */
+    public Builder clearCryptoPuzzle() {
+      
+      cryptoPuzzle_ = getDefaultInstance().getCryptoPuzzle();
       onChanged();
       return this;
     }
