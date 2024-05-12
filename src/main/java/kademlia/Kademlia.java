@@ -308,6 +308,10 @@ public class Kademlia
 
 
 
+    public Node getOwnNode()
+    {
+
+    }
     /*
     public static void callOps(KademliaProtocol protocol, byte []nodeId, String ip, int port)
     {

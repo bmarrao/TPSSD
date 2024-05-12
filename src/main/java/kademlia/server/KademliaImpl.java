@@ -390,30 +390,6 @@ public class KademliaImpl extends KademliaGrpc.KademliaImplBase
 
 
     @Override
-    public void initiateService(initiateServiceRequest request, StreamObserver<initiateServiceResponse> responseObserver)
-    {
-        System.out.println("In initiate Service");
-        auc.initiateService(request.getOwner(),request.getServiceId().toByteArray()
-                                        , request.getTime()
-                                        , new ArrayList<>(request.getNodesList()));
-
-        initiateServiceResponse response = initiateServiceResponse
-                .newBuilder()
-                .setResponse(true)
-                .build();
-
-        // Send the response to the client.
-        responseObserver.onNext(response);
-
-        // Notifies the customer that the call is completed.
-        responseObserver.onCompleted();
-    }
-
-
-
-
-
-    @Override
     public void subscribe(subscribeRequest request, StreamObserver<subscribeResponse> responseObserver)
     {
 
@@ -431,6 +407,31 @@ public class KademliaImpl extends KademliaGrpc.KademliaImplBase
         // Notifies the customer that the call is completed.
         responseObserver.onCompleted();
     }
+
+
+    /*
+@Override
+public void initiateService(initiateServiceRequest request, StreamObserver<initiateServiceResponse> responseObserver)
+{
+    System.out.println("In initiate Service");
+    auc.initiateService(request.getOwner(),request.getServiceId().toByteArray()
+                                    , request.getTime()
+                                    , new ArrayList<>(request.getNodesList()));
+
+    initiateServiceResponse response = initiateServiceResponse
+            .newBuilder()
+            .setResponse(true)
+            .build();
+
+    // Send the response to the client.
+    responseObserver.onNext(response);
+
+    // Notifies the customer that the call is completed.
+    responseObserver.onCompleted();
+}
+
+
+
 
 
     @Override
@@ -453,7 +454,7 @@ public class KademliaImpl extends KademliaGrpc.KademliaImplBase
         responseObserver.onCompleted();
     }
 
-    /*
+
     @Override
     public void communicateBiggest(communicateBiggestRequest request, StreamObserver<communicateBiggestResponse> responseObserver)
     {

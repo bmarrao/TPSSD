@@ -14,8 +14,10 @@ public class RunService implements Runnable {
 
     BrokerService bs;
     KademliaProtocol kp;
-    RunService(BrokerService bs, KademliaProtocol kp)
+    Auction a ;
+    RunService(Auction a, BrokerService bs, KademliaProtocol kp)
     {
+        this.a = a;
         this.bs = bs;
         this.kp = kp;
     }
@@ -41,33 +43,13 @@ public class RunService implements Runnable {
 
                 if (bs.highestOffer.getPrice() == of.getPrice())
                 {
-                    kp.endService(bs.brokerSet.get(0),bs.serviceId,bs.highestOffer);
+                    a.endService(bs.serviceId);
                     break;
-                } else {
-                    of = clone(bs.highestOffer);
-                }
-                /*
-                bs.endTimer.await();
-                if (bs.sleep)
-                {
-                    Offer newOf= null; //getOfferFromBrokers();
-                    communicateBiggest(newOf);
-                    if (newOf.equals(of))
-                    {
-                        break;
-                    }
                 }
                 else
                 {
-                    bs.waitBiggestOffer.wait();
-                    if(of.equals(bs.highestOffer))
-                    {
-                        break;
-                    }
-
+                    of = clone(bs.highestOffer);
                 }
-
-                 */
             }
             catch (InterruptedException e)
             {
@@ -85,42 +67,6 @@ public class RunService implements Runnable {
         return nd.build();
     }
 
-    /*
-    private Offer getOfferFromBrokers()
-    {
-
-        Offer of  = Offer.newBuilder().setNode(null).setPrice(-1).build();
-        Offer newOffer ;
-        for (Node n : bs.brokerSet)
-        {
-            newOffer = kp.timerOver(n,bs.serviceId);
-            if (newOffer.getPrice() > of.getPrice())
-            {
-                of = newOffer;
-            }
-        }
-
-        return null;
-    }
-
-
-     */
-    private void endService()
-    {
-
-        for (Node n : bs.brokerSet)
-        {
-            //newOffer = kp.endService(bs.serviceId)
-        }
-    }
-
-    private void communicateBiggest(Offer of)
-    {
-        for (Node n : bs.brokerSet)
-        {
-            //qnewOffer = kp.endService(bs.serviceId)
-        }
-    }
 }
 
 class Sleeper implements Runnable

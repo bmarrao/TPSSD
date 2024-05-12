@@ -27,9 +27,8 @@ public class Auction
 
 
 
-    public ArrayList<Node> createService (String service, int a)
+    public ArrayList<Node> createService (String service, int a, int time)
     {
-        //Develop Hash
         try {
             MessageDigest sha1 = MessageDigest.getInstance("SHA-1"); // Create a new SHA-1 digest
 
@@ -41,7 +40,8 @@ public class Auction
                 //k.protocol.storeOp(serviceId, /*TODO COLOCAR MEU PROPRIONODE*/,n.getIp(),n.getPort());
 
             }
-            //TODO INITIATE OWN SERVICE this.initiateService();
+
+            this.initiateService(serviceId, time );
             return nodes;
         }
         catch (NoSuchAlgorithmException e)
@@ -74,16 +74,15 @@ public class Auction
         return false;
     }
 
-
-    public void initiateService(Node owner, byte[] serviceId, int time, ArrayList<Node> brokerSet)
+    public void initiateService(byte[] serviceId, int time)
     {
         l.lock();
-        BrokerService bs = new BrokerService(serviceId,owner,time,brokerSet);
+        BrokerService bs = new BrokerService(serviceId,null, time,null);
         services.add(bs);
         Offer.Builder nd = Offer.newBuilder();
         nd.setPrice(-1);
         bs.highestOffer = nd.build();
-        Thread rsThread = new Thread( new RunService(bs,k.protocol));
+        Thread rsThread = new Thread( new RunService(this,bs,k.protocol));
         rsThread.start();
         l.unlock();
     }
@@ -128,25 +127,49 @@ public class Auction
 
     }
 
-    public Offer timerOver(byte[] serviceId, Node request)
+    private boolean compareId(byte[] id1, byte[] id2)
     {
 
-        l.lock();
-        BrokerService bs = this.getService(serviceId);
-        l.unlock();
-        if(bs != null)
+        // Iterate through each byte and compare them
+        for (int i = 0; i < id1.length; i++)
         {
-            bs.endTimer.signal();
-            //Tester essa parte
-            if(bs.brokerSet.contains(request))
+            if (id1[i] != id2[i])
             {
-                return bs.highestOffer;
+                return false; // If any byte differs, return false
+            }
+        }
+
+
+        // If all bytes are the same, return true
+        return true;
+    }
+    public BrokerService getService(byte[] serviceId)
+    {
+        for(BrokerService bs : this.services)
+        {
+            if (compareId(bs.serviceId,serviceId))
+            {
+                return bs;
             }
         }
         return null;
     }
 
-    public boolean endService(byte[] serviceId, Node request)
+
+    public void endService(byte[] serviceId)
+    {
+
+        l.lock();
+        BrokerService bs = this.getService(serviceId);
+        System.out.println();
+        if (bs != null)
+        {
+            services.remove(bs);
+        }
+        l.unlock();
+    }
+    /*
+        public boolean endService(byte[] serviceId, Node request)
     {
 
         l.lock();
@@ -178,32 +201,20 @@ public class Auction
 
     }
 
-    private boolean compareId(byte[] id1, byte[] id2)
+        public void initiateService(Node owner, byte[] serviceId, int time, ArrayList<Node> brokerSet)
     {
-
-        // Iterate through each byte and compare them
-        for (int i = 0; i < id1.length; i++)
-        {
-            if (id1[i] != id2[i])
-            {
-                return false; // If any byte differs, return false
-            }
-        }
-
-
-        // If all bytes are the same, return true
-        return true;
+        l.lock();
+        BrokerService bs = new BrokerService(serviceId,owner,time,brokerSet);
+        services.add(bs);
+        Offer.Builder nd = Offer.newBuilder();
+        nd.setPrice(-1);
+        bs.highestOffer = nd.build();
+        Thread rsThread = new Thread( new RunService(bs,k.protocol));
+        rsThread.start();
+        l.unlock();
     }
-    public BrokerService getService(byte[] serviceId)
-    {
-        for(BrokerService bs : this.services)
-        {
-            if (compareId(bs.serviceId,serviceId))
-            {
-                return bs;
-            }
-        }
-        return null;
-    }
+
+
+     */
 
 }
