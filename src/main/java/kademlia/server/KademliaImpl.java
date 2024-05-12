@@ -23,12 +23,14 @@ public class KademliaImpl extends KademliaGrpc.KademliaImplBase
     private PublicKey publicKey;
     private final Auction auc;
     private final int leadingZeros;
+    private final KademliaStore ks;
 
-    KademliaImpl(Auction auc, int leadingZeros)
+    KademliaImpl(Auction auc, int leadingZeros, KademliaStore ks)
     {
         this.auc = auc;
         this.leadingZeros = leadingZeros;
         generatePrivateKey();
+        this.ks = ks;
     }
 
 
@@ -142,8 +144,6 @@ public class KademliaImpl extends KademliaGrpc.KademliaImplBase
         }
     }
 
-
-
     @Override
     public void store(StoreRequest request, StreamObserver<StoreResponse> responseObserver) {
 
@@ -151,11 +151,10 @@ public class KademliaImpl extends KademliaGrpc.KademliaImplBase
         //rt.insert(request.getNode());
 
         //Creates a new instance of storage. If already exists, use it.
-        KademliaStore dataStore = KademliaStore.getInstance();
 
         // Retrieve the key, value and signature from the request
-        String key = request.getKey();
-        String value = request.getValue();
+        byte[] key = request.getKey().toByteArray();
+        Node value = request.getValue();
         byte[] signature = request.getSignature().toByteArray();
 
         // Verify signature
@@ -169,7 +168,7 @@ public class KademliaImpl extends KademliaGrpc.KademliaImplBase
 
 
         if (signVal && checkZeroCount(request.getCryptoPuzzle().toByteArray(), leadingZeros)) {
-            dataStore.store(key,value);
+            ks.store(key,value);
 
             // Sign RPC response
             try {
@@ -193,9 +192,9 @@ public class KademliaImpl extends KademliaGrpc.KademliaImplBase
         else {
             System.out.println("Signature is invalid, discarding store request...");
         }
-        // blockchain bc
-        // bid a b
+
     }
+
 
 
     @Override
@@ -252,19 +251,18 @@ public class KademliaImpl extends KademliaGrpc.KademliaImplBase
             System.out.println("Signature is invalid, discarding find node request...");
         }
     }
-
     @Override
-    public void findValue(FindValueRequest request, StreamObserver<FindValueResponse> responseObserver) {
+    public void findValue(FindValueRequest request, StreamObserver<FindValueResponse> responseObserver)
+    {
 
         //TODO insert!
         //rt.insert(request.getNode());
 
         //Creates a new instance of storage. If already exists, use it.
-        KademliaStore dataStore = KademliaStore.getInstance();
 
 
         // Retrieve the key from the request
-        String key = request.getKey();
+        byte[] key = request.getKey().toByteArray();
         byte[] signature = request.getSignature().toByteArray();
 
 
@@ -280,8 +278,13 @@ public class KademliaImpl extends KademliaGrpc.KademliaImplBase
 
         if (signVal && checkZeroCount(request.getCryptoPuzzle().toByteArray(), leadingZeros)) {
             // Get the value associated with the key from the data store
-            String value = dataStore.findValue(key);
+            Node value = ks.findValue(key);
 
+            if (value != null)
+            {
+                List<Node> closestNodes = rt.findClosestNode(key, k_nodes);
+
+            }
             // Sign RPC response
             try {
                 byte[] infoToSign = new byte[request.getNode().getId().size() + 1];
@@ -289,6 +292,7 @@ public class KademliaImpl extends KademliaGrpc.KademliaImplBase
                 for (i = 0; i < request.getNode().getId().size() - 1; i++) {
                     infoToSign[i] = request.getNode().getId().byteAt(i);
                 }
+                // FIX THIS INFO TO SIGN
                 infoToSign[request.getNode().getId().size()] = Byte.parseByte(value);
                 signature = sign(infoToSign, privateKey);
             }
@@ -309,7 +313,6 @@ public class KademliaImpl extends KademliaGrpc.KademliaImplBase
             System.out.println("Signature is invalid, discarding find value request...");
         }
     }
-
     /*
     @Override
     public void notify(NotifyRequest request, StreamObserver<NotifyResponse> responseObserver)

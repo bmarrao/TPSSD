@@ -100,7 +100,7 @@ public class KademliaProtocol
         return false;
     }
 
-
+    /*
 
 //TIREI NODEID DA DECLARACAO - QUERO ALTERAR KEY PARA BYTE[]
     public boolean storeOp(String key, String val, String receiverIp, int receiverPort) {
@@ -157,6 +157,8 @@ public class KademliaProtocol
 
 
 
+     */
+
     public KademliaFindOpResult findNodeOp(byte[] nodeId, byte[] key, String receiverIp, int receiverPort)
     {
 
@@ -212,8 +214,8 @@ public class KademliaProtocol
         return null;
     }
 
-
-
+    /*
+    TODO UNCOMMENT AND FIX
     public KademliaFindOpResult findValueOp(byte[] nodeId, String key, String receiverIp, int receiverPort) {
         ManagedChannel channel = ManagedChannelBuilder.forAddress(receiverIp, receiverPort).usePlaintext().build();
 
@@ -262,7 +264,7 @@ public class KademliaProtocol
     }
 
 
-
+*/
 
     public boolean subscribe(byte[] serviceId, Node n )
     {
@@ -397,7 +399,7 @@ public class KademliaProtocol
 
         return result ;
     }
-
+    /*
     public boolean initiateService(Node owner, byte[] serviceId, ArrayList<Node> brokerlist, int time)
     {
 
@@ -434,7 +436,6 @@ public class KademliaProtocol
     }
 
 
-
     public boolean endService (Node n, byte[] serviceId,Offer of)
     {
         ManagedChannel channel = ManagedChannelBuilder.forAddress(n.getIp(), n.getPort()).usePlaintext().build();
@@ -457,4 +458,6 @@ public class KademliaProtocol
 
         return response.getResponse();
     }
+
+     */
 }

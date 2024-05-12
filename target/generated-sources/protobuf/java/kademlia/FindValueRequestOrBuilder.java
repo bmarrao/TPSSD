@@ -21,22 +21,9 @@ public interface FindValueRequestOrBuilder extends
   kademlia.NodeOrBuilder getNodeOrBuilder();
 
   /**
-   * <pre>
-   * TODO: a key é um id, tem de ser em bytes
-   * </pre>
-   *
-   * <code>string key = 2;</code>
+   * <code>bytes key = 2;</code>
    */
-  java.lang.String getKey();
-  /**
-   * <pre>
-   * TODO: a key é um id, tem de ser em bytes
-   * </pre>
-   *
-   * <code>string key = 2;</code>
-   */
-  com.google.protobuf.ByteString
-      getKeyBytes();
+  com.google.protobuf.ByteString getKey();
 
   /**
    * <code>string publicKey = 3;</code>

@@ -91,7 +91,7 @@ class Broker implements Runnable
     @Override
     public void run()
     {
-        x.protocol.initiateService(nodes.get(0),x.nodeId,nodes,7500);
+        //x.a.createService("service",x.nodeId,nodes,7500);
 
     }
 

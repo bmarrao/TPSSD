@@ -21,24 +21,22 @@ public interface StoreRequestOrBuilder extends
   kademlia.NodeOrBuilder getNodeOrBuilder();
 
   /**
-   * <code>string key = 2;</code>
+   * <code>bytes key = 2;</code>
    */
-  java.lang.String getKey();
-  /**
-   * <code>string key = 2;</code>
-   */
-  com.google.protobuf.ByteString
-      getKeyBytes();
+  com.google.protobuf.ByteString getKey();
 
   /**
-   * <code>string value = 3;</code>
+   * <code>.kademlia.Node value = 3;</code>
    */
-  java.lang.String getValue();
+  boolean hasValue();
   /**
-   * <code>string value = 3;</code>
+   * <code>.kademlia.Node value = 3;</code>
    */
-  com.google.protobuf.ByteString
-      getValueBytes();
+  kademlia.Node getValue();
+  /**
+   * <code>.kademlia.Node value = 3;</code>
+   */
+  kademlia.NodeOrBuilder getValueOrBuilder();
 
   /**
    * <code>string publicKey = 4;</code>

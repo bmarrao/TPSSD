@@ -13,27 +13,54 @@ public interface FindValueResponseOrBuilder extends
   com.google.protobuf.ByteString getId();
 
   /**
-   * <code>string value = 2;</code>
+   * <code>.kademlia.Node value = 2;</code>
    */
-  java.lang.String getValue();
+  boolean hasValue();
   /**
-   * <code>string value = 2;</code>
+   * <code>.kademlia.Node value = 2;</code>
    */
-  com.google.protobuf.ByteString
-      getValueBytes();
+  kademlia.Node getValue();
+  /**
+   * <code>.kademlia.Node value = 2;</code>
+   */
+  kademlia.NodeOrBuilder getValueOrBuilder();
 
   /**
-   * <code>string publicKey = 3;</code>
+   * <code>repeated .kademlia.Node nodes = 3;</code>
+   */
+  java.util.List<kademlia.Node> 
+      getNodesList();
+  /**
+   * <code>repeated .kademlia.Node nodes = 3;</code>
+   */
+  kademlia.Node getNodes(int index);
+  /**
+   * <code>repeated .kademlia.Node nodes = 3;</code>
+   */
+  int getNodesCount();
+  /**
+   * <code>repeated .kademlia.Node nodes = 3;</code>
+   */
+  java.util.List<? extends kademlia.NodeOrBuilder> 
+      getNodesOrBuilderList();
+  /**
+   * <code>repeated .kademlia.Node nodes = 3;</code>
+   */
+  kademlia.NodeOrBuilder getNodesOrBuilder(
+      int index);
+
+  /**
+   * <code>string publicKey = 4;</code>
    */
   java.lang.String getPublicKey();
   /**
-   * <code>string publicKey = 3;</code>
+   * <code>string publicKey = 4;</code>
    */
   com.google.protobuf.ByteString
       getPublicKeyBytes();
 
   /**
-   * <code>bytes signature = 4;</code>
+   * <code>bytes signature = 5;</code>
    */
   com.google.protobuf.ByteString getSignature();
 }

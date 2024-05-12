@@ -15,8 +15,7 @@ public  final class StoreRequest extends
     super(builder);
   }
   private StoreRequest() {
-    key_ = "";
-    value_ = "";
+    key_ = com.google.protobuf.ByteString.EMPTY;
     publicKey_ = "";
     signature_ = com.google.protobuf.ByteString.EMPTY;
     cryptoPuzzle_ = com.google.protobuf.ByteString.EMPTY;
@@ -61,15 +60,21 @@ public  final class StoreRequest extends
             break;
           }
           case 18: {
-            java.lang.String s = input.readStringRequireUtf8();
 
-            key_ = s;
+            key_ = input.readBytes();
             break;
           }
           case 26: {
-            java.lang.String s = input.readStringRequireUtf8();
+            kademlia.Node.Builder subBuilder = null;
+            if (value_ != null) {
+              subBuilder = value_.toBuilder();
+            }
+            value_ = input.readMessage(kademlia.Node.parser(), extensionRegistry);
+            if (subBuilder != null) {
+              subBuilder.mergeFrom(value_);
+              value_ = subBuilder.buildPartial();
+            }
 
-            value_ = s;
             break;
           }
           case 34: {
@@ -133,71 +138,33 @@ public  final class StoreRequest extends
   }
 
   public static final int KEY_FIELD_NUMBER = 2;
-  private volatile java.lang.Object key_;
+  private com.google.protobuf.ByteString key_;
   /**
-   * <code>string key = 2;</code>
+   * <code>bytes key = 2;</code>
    */
-  public java.lang.String getKey() {
-    java.lang.Object ref = key_;
-    if (ref instanceof java.lang.String) {
-      return (java.lang.String) ref;
-    } else {
-      com.google.protobuf.ByteString bs = 
-          (com.google.protobuf.ByteString) ref;
-      java.lang.String s = bs.toStringUtf8();
-      key_ = s;
-      return s;
-    }
-  }
-  /**
-   * <code>string key = 2;</code>
-   */
-  public com.google.protobuf.ByteString
-      getKeyBytes() {
-    java.lang.Object ref = key_;
-    if (ref instanceof java.lang.String) {
-      com.google.protobuf.ByteString b = 
-          com.google.protobuf.ByteString.copyFromUtf8(
-              (java.lang.String) ref);
-      key_ = b;
-      return b;
-    } else {
-      return (com.google.protobuf.ByteString) ref;
-    }
+  public com.google.protobuf.ByteString getKey() {
+    return key_;
   }
 
   public static final int VALUE_FIELD_NUMBER = 3;
-  private volatile java.lang.Object value_;
+  private kademlia.Node value_;
   /**
-   * <code>string value = 3;</code>
+   * <code>.kademlia.Node value = 3;</code>
    */
-  public java.lang.String getValue() {
-    java.lang.Object ref = value_;
-    if (ref instanceof java.lang.String) {
-      return (java.lang.String) ref;
-    } else {
-      com.google.protobuf.ByteString bs = 
-          (com.google.protobuf.ByteString) ref;
-      java.lang.String s = bs.toStringUtf8();
-      value_ = s;
-      return s;
-    }
+  public boolean hasValue() {
+    return value_ != null;
   }
   /**
-   * <code>string value = 3;</code>
+   * <code>.kademlia.Node value = 3;</code>
    */
-  public com.google.protobuf.ByteString
-      getValueBytes() {
-    java.lang.Object ref = value_;
-    if (ref instanceof java.lang.String) {
-      com.google.protobuf.ByteString b = 
-          com.google.protobuf.ByteString.copyFromUtf8(
-              (java.lang.String) ref);
-      value_ = b;
-      return b;
-    } else {
-      return (com.google.protobuf.ByteString) ref;
-    }
+  public kademlia.Node getValue() {
+    return value_ == null ? kademlia.Node.getDefaultInstance() : value_;
+  }
+  /**
+   * <code>.kademlia.Node value = 3;</code>
+   */
+  public kademlia.NodeOrBuilder getValueOrBuilder() {
+    return getValue();
   }
 
   public static final int PUBLICKEY_FIELD_NUMBER = 4;
@@ -267,11 +234,11 @@ public  final class StoreRequest extends
     if (node_ != null) {
       output.writeMessage(1, getNode());
     }
-    if (!getKeyBytes().isEmpty()) {
-      com.google.protobuf.GeneratedMessageV3.writeString(output, 2, key_);
+    if (!key_.isEmpty()) {
+      output.writeBytes(2, key_);
     }
-    if (!getValueBytes().isEmpty()) {
-      com.google.protobuf.GeneratedMessageV3.writeString(output, 3, value_);
+    if (value_ != null) {
+      output.writeMessage(3, getValue());
     }
     if (!getPublicKeyBytes().isEmpty()) {
       com.google.protobuf.GeneratedMessageV3.writeString(output, 4, publicKey_);
@@ -293,11 +260,13 @@ public  final class StoreRequest extends
       size += com.google.protobuf.CodedOutputStream
         .computeMessageSize(1, getNode());
     }
-    if (!getKeyBytes().isEmpty()) {
-      size += com.google.protobuf.GeneratedMessageV3.computeStringSize(2, key_);
+    if (!key_.isEmpty()) {
+      size += com.google.protobuf.CodedOutputStream
+        .computeBytesSize(2, key_);
     }
-    if (!getValueBytes().isEmpty()) {
-      size += com.google.protobuf.GeneratedMessageV3.computeStringSize(3, value_);
+    if (value_ != null) {
+      size += com.google.protobuf.CodedOutputStream
+        .computeMessageSize(3, getValue());
     }
     if (!getPublicKeyBytes().isEmpty()) {
       size += com.google.protobuf.GeneratedMessageV3.computeStringSize(4, publicKey_);
@@ -333,8 +302,11 @@ public  final class StoreRequest extends
     }
     result = result && getKey()
         .equals(other.getKey());
-    result = result && getValue()
-        .equals(other.getValue());
+    result = result && (hasValue() == other.hasValue());
+    if (hasValue()) {
+      result = result && getValue()
+          .equals(other.getValue());
+    }
     result = result && getPublicKey()
         .equals(other.getPublicKey());
     result = result && getSignature()
@@ -357,8 +329,10 @@ public  final class StoreRequest extends
     }
     hash = (37 * hash) + KEY_FIELD_NUMBER;
     hash = (53 * hash) + getKey().hashCode();
-    hash = (37 * hash) + VALUE_FIELD_NUMBER;
-    hash = (53 * hash) + getValue().hashCode();
+    if (hasValue()) {
+      hash = (37 * hash) + VALUE_FIELD_NUMBER;
+      hash = (53 * hash) + getValue().hashCode();
+    }
     hash = (37 * hash) + PUBLICKEY_FIELD_NUMBER;
     hash = (53 * hash) + getPublicKey().hashCode();
     hash = (37 * hash) + SIGNATURE_FIELD_NUMBER;
@@ -500,10 +474,14 @@ public  final class StoreRequest extends
         node_ = null;
         nodeBuilder_ = null;
       }
-      key_ = "";
+      key_ = com.google.protobuf.ByteString.EMPTY;
 
-      value_ = "";
-
+      if (valueBuilder_ == null) {
+        value_ = null;
+      } else {
+        value_ = null;
+        valueBuilder_ = null;
+      }
       publicKey_ = "";
 
       signature_ = com.google.protobuf.ByteString.EMPTY;
@@ -538,7 +516,11 @@ public  final class StoreRequest extends
         result.node_ = nodeBuilder_.build();
       }
       result.key_ = key_;
-      result.value_ = value_;
+      if (valueBuilder_ == null) {
+        result.value_ = value_;
+      } else {
+        result.value_ = valueBuilder_.build();
+      }
       result.publicKey_ = publicKey_;
       result.signature_ = signature_;
       result.cryptoPuzzle_ = cryptoPuzzle_;
@@ -586,13 +568,11 @@ public  final class StoreRequest extends
       if (other.hasNode()) {
         mergeNode(other.getNode());
       }
-      if (!other.getKey().isEmpty()) {
-        key_ = other.key_;
-        onChanged();
+      if (other.getKey() != com.google.protobuf.ByteString.EMPTY) {
+        setKey(other.getKey());
       }
-      if (!other.getValue().isEmpty()) {
-        value_ = other.value_;
-        onChanged();
+      if (other.hasValue()) {
+        mergeValue(other.getValue());
       }
       if (!other.getPublicKey().isEmpty()) {
         publicKey_ = other.publicKey_;
@@ -747,43 +727,17 @@ public  final class StoreRequest extends
       return nodeBuilder_;
     }
 
-    private java.lang.Object key_ = "";
+    private com.google.protobuf.ByteString key_ = com.google.protobuf.ByteString.EMPTY;
     /**
-     * <code>string key = 2;</code>
+     * <code>bytes key = 2;</code>
      */
-    public java.lang.String getKey() {
-      java.lang.Object ref = key_;
-      if (!(ref instanceof java.lang.String)) {
-        com.google.protobuf.ByteString bs =
-            (com.google.protobuf.ByteString) ref;
-        java.lang.String s = bs.toStringUtf8();
-        key_ = s;
-        return s;
-      } else {
-        return (java.lang.String) ref;
-      }
+    public com.google.protobuf.ByteString getKey() {
+      return key_;
     }
     /**
-     * <code>string key = 2;</code>
+     * <code>bytes key = 2;</code>
      */
-    public com.google.protobuf.ByteString
-        getKeyBytes() {
-      java.lang.Object ref = key_;
-      if (ref instanceof String) {
-        com.google.protobuf.ByteString b = 
-            com.google.protobuf.ByteString.copyFromUtf8(
-                (java.lang.String) ref);
-        key_ = b;
-        return b;
-      } else {
-        return (com.google.protobuf.ByteString) ref;
-      }
-    }
-    /**
-     * <code>string key = 2;</code>
-     */
-    public Builder setKey(
-        java.lang.String value) {
+    public Builder setKey(com.google.protobuf.ByteString value) {
       if (value == null) {
     throw new NullPointerException();
   }
@@ -793,7 +747,7 @@ public  final class StoreRequest extends
       return this;
     }
     /**
-     * <code>string key = 2;</code>
+     * <code>bytes key = 2;</code>
      */
     public Builder clearKey() {
       
@@ -801,88 +755,122 @@ public  final class StoreRequest extends
       onChanged();
       return this;
     }
+
+    private kademlia.Node value_ = null;
+    private com.google.protobuf.SingleFieldBuilderV3<
+        kademlia.Node, kademlia.Node.Builder, kademlia.NodeOrBuilder> valueBuilder_;
     /**
-     * <code>string key = 2;</code>
+     * <code>.kademlia.Node value = 3;</code>
      */
-    public Builder setKeyBytes(
-        com.google.protobuf.ByteString value) {
-      if (value == null) {
-    throw new NullPointerException();
-  }
-  checkByteStringIsUtf8(value);
-      
-      key_ = value;
-      onChanged();
+    public boolean hasValue() {
+      return valueBuilder_ != null || value_ != null;
+    }
+    /**
+     * <code>.kademlia.Node value = 3;</code>
+     */
+    public kademlia.Node getValue() {
+      if (valueBuilder_ == null) {
+        return value_ == null ? kademlia.Node.getDefaultInstance() : value_;
+      } else {
+        return valueBuilder_.getMessage();
+      }
+    }
+    /**
+     * <code>.kademlia.Node value = 3;</code>
+     */
+    public Builder setValue(kademlia.Node value) {
+      if (valueBuilder_ == null) {
+        if (value == null) {
+          throw new NullPointerException();
+        }
+        value_ = value;
+        onChanged();
+      } else {
+        valueBuilder_.setMessage(value);
+      }
+
       return this;
     }
-
-    private java.lang.Object value_ = "";
     /**
-     * <code>string value = 3;</code>
-     */
-    public java.lang.String getValue() {
-      java.lang.Object ref = value_;
-      if (!(ref instanceof java.lang.String)) {
-        com.google.protobuf.ByteString bs =
-            (com.google.protobuf.ByteString) ref;
-        java.lang.String s = bs.toStringUtf8();
-        value_ = s;
-        return s;
-      } else {
-        return (java.lang.String) ref;
-      }
-    }
-    /**
-     * <code>string value = 3;</code>
-     */
-    public com.google.protobuf.ByteString
-        getValueBytes() {
-      java.lang.Object ref = value_;
-      if (ref instanceof String) {
-        com.google.protobuf.ByteString b = 
-            com.google.protobuf.ByteString.copyFromUtf8(
-                (java.lang.String) ref);
-        value_ = b;
-        return b;
-      } else {
-        return (com.google.protobuf.ByteString) ref;
-      }
-    }
-    /**
-     * <code>string value = 3;</code>
+     * <code>.kademlia.Node value = 3;</code>
      */
     public Builder setValue(
-        java.lang.String value) {
-      if (value == null) {
-    throw new NullPointerException();
-  }
-  
-      value_ = value;
-      onChanged();
+        kademlia.Node.Builder builderForValue) {
+      if (valueBuilder_ == null) {
+        value_ = builderForValue.build();
+        onChanged();
+      } else {
+        valueBuilder_.setMessage(builderForValue.build());
+      }
+
       return this;
     }
     /**
-     * <code>string value = 3;</code>
+     * <code>.kademlia.Node value = 3;</code>
+     */
+    public Builder mergeValue(kademlia.Node value) {
+      if (valueBuilder_ == null) {
+        if (value_ != null) {
+          value_ =
+            kademlia.Node.newBuilder(value_).mergeFrom(value).buildPartial();
+        } else {
+          value_ = value;
+        }
+        onChanged();
+      } else {
+        valueBuilder_.mergeFrom(value);
+      }
+
+      return this;
+    }
+    /**
+     * <code>.kademlia.Node value = 3;</code>
      */
     public Builder clearValue() {
-      
-      value_ = getDefaultInstance().getValue();
-      onChanged();
+      if (valueBuilder_ == null) {
+        value_ = null;
+        onChanged();
+      } else {
+        value_ = null;
+        valueBuilder_ = null;
+      }
+
       return this;
     }
     /**
-     * <code>string value = 3;</code>
+     * <code>.kademlia.Node value = 3;</code>
      */
-    public Builder setValueBytes(
-        com.google.protobuf.ByteString value) {
-      if (value == null) {
-    throw new NullPointerException();
-  }
-  checkByteStringIsUtf8(value);
+    public kademlia.Node.Builder getValueBuilder() {
       
-      value_ = value;
       onChanged();
-      return this;
+      return getValueFieldBuilder().getBuilder();
+    }
+    /**
+     * <code>.kademlia.Node value = 3;</code>
+     */
+    public kademlia.NodeOrBuilder getValueOrBuilder() {
+      if (valueBuilder_ != null) {
+        return valueBuilder_.getMessageOrBuilder();
+      } else {
+        return value_ == null ?
+            kademlia.Node.getDefaultInstance() : value_;
+      }
+    }
+    /**
+     * <code>.kademlia.Node value = 3;</code>
+     */
+    private com.google.protobuf.SingleFieldBuilderV3<
+        kademlia.Node, kademlia.Node.Builder, kademlia.NodeOrBuilder> 
+        getValueFieldBuilder() {
+      if (valueBuilder_ == null) {
+        valueBuilder_ = new com.google.protobuf.SingleFieldBuilderV3<
+            kademlia.Node, kademlia.Node.Builder, kademlia.NodeOrBuilder>(
+                getValue(),
+                getParentForChildren(),
+                isClean());
+        value_ = null;
+      }
+      return valueBuilder_;
     }
 
     private java.lang.Object publicKey_ = "";

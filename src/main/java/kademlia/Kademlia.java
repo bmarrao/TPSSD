@@ -1,6 +1,7 @@
 package kademlia;
 
 import auctions.Auction;
+import com.google.protobuf.ByteString;
 import kademlia.server.KademliaServer;
 import kademlia.KademliaLookUp;
 import java.io.*;
@@ -17,7 +18,7 @@ public class Kademlia
     public static PrivateKey generatedSk;
     public static byte[] cryptoPuzzleSol;
     public static int leadingZeros;
-
+    public static KademliaStore ks;
     public static KademliaRoutingTable rt;
 
     public static KademliaProtocol protocol;
@@ -64,7 +65,8 @@ public class Kademlia
             joinNetThread.start();
         }
 
-        KademliaServer server = new KademliaServer(port, new Auction(this), leadingZeros);
+        this.ks = new KademliaStore();
+        KademliaServer server = new KademliaServer(port, new Auction(this), leadingZeros,ks);
         Thread serverThread = new Thread(server);
         serverThread.start();
     }
@@ -79,8 +81,8 @@ public class Kademlia
         {
             protocol = new KademliaProtocol(sKadNodeId,"127.0.0.1",5000, generatedPk, generatedSk,cryptoPuzzleSol);
             rt = new KrtBootStrap(sKadNodeId,protocol,20,20);
-
-            KademliaServer server = new KademliaServer(5000,  new Auction(new Kademlia(sKadNodeId,generatedPk,generatedSk,rt,protocol)),leadingZeros);
+            ks = new KademliaStore();
+            KademliaServer server = new KademliaServer(5000,  new Auction(new Kademlia(sKadNodeId,generatedPk,generatedSk,rt,protocol)),leadingZeros,ks);
 
             Thread serverThread = new Thread(server);
             serverThread.start();
@@ -92,9 +94,9 @@ public class Kademlia
 
             rt = new KrtNormal(sKadNodeId, protocol, 20, 20);
 
-
+            ks= new KademliaStore();
             KademliaServer server = new KademliaServer(Integer.parseInt(args[1]),
-                    new Auction(new Kademlia(sKadNodeId,generatedPk,generatedSk,rt,protocol)), leadingZeros);
+                    new Auction(new Kademlia(sKadNodeId,generatedPk,generatedSk,rt,protocol)), leadingZeros,ks);
             Thread serverThread = new Thread(server);
             serverThread.start();
 
@@ -310,7 +312,13 @@ public class Kademlia
 
     public Node getOwnNode()
     {
-
+        Node node = Node.newBuilder()
+                //.setId(ByteString.copyFrom(nodeId)) ALTEREI ISSO
+                .setId(ByteString.copyFrom(this.nodeId))
+                .setIp(protocol.ipAddress)
+                .setPort(protocol.port)
+                .build();
+        return node;
     }
     /*
     public static void callOps(KademliaProtocol protocol, byte []nodeId, String ip, int port)

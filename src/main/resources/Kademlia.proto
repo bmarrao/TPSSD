@@ -56,8 +56,8 @@ message Transaction
 message StoreRequest
 {
   Node node = 1;
-  string key = 2;
-  string value = 3;
+  bytes key = 2;
+  Node value = 3;
   string publicKey = 4;
   bytes signature = 5;
   bytes cryptoPuzzle = 6;
@@ -94,8 +94,7 @@ message FindNodeResponse
 message FindValueRequest
 {
   Node node = 1;
-  // TODO: a key é um id, tem de ser em bytes
-  string key = 2;
+  bytes key = 2;
   string publicKey = 3;
   bytes signature = 4;
   bytes cryptoPuzzle = 5;
@@ -104,9 +103,10 @@ message FindValueRequest
 message FindValueResponse
 {
   bytes id = 1;
-  string value = 2;
-  string publicKey = 3;
-  bytes signature = 4;
+  Node value = 2;
+  repeated Node nodes = 3;
+  string publicKey = 4;
+  bytes signature = 5;
 }
 
 message NotifyRequest

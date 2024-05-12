@@ -15,7 +15,7 @@ public  final class FindValueRequest extends
     super(builder);
   }
   private FindValueRequest() {
-    key_ = "";
+    key_ = com.google.protobuf.ByteString.EMPTY;
     publicKey_ = "";
     signature_ = com.google.protobuf.ByteString.EMPTY;
     cryptoPuzzle_ = com.google.protobuf.ByteString.EMPTY;
@@ -60,9 +60,8 @@ public  final class FindValueRequest extends
             break;
           }
           case 18: {
-            java.lang.String s = input.readStringRequireUtf8();
 
-            key_ = s;
+            key_ = input.readBytes();
             break;
           }
           case 26: {
@@ -126,45 +125,12 @@ public  final class FindValueRequest extends
   }
 
   public static final int KEY_FIELD_NUMBER = 2;
-  private volatile java.lang.Object key_;
+  private com.google.protobuf.ByteString key_;
   /**
-   * <pre>
-   * TODO: a key é um id, tem de ser em bytes
-   * </pre>
-   *
-   * <code>string key = 2;</code>
+   * <code>bytes key = 2;</code>
    */
-  public java.lang.String getKey() {
-    java.lang.Object ref = key_;
-    if (ref instanceof java.lang.String) {
-      return (java.lang.String) ref;
-    } else {
-      com.google.protobuf.ByteString bs = 
-          (com.google.protobuf.ByteString) ref;
-      java.lang.String s = bs.toStringUtf8();
-      key_ = s;
-      return s;
-    }
-  }
-  /**
-   * <pre>
-   * TODO: a key é um id, tem de ser em bytes
-   * </pre>
-   *
-   * <code>string key = 2;</code>
-   */
-  public com.google.protobuf.ByteString
-      getKeyBytes() {
-    java.lang.Object ref = key_;
-    if (ref instanceof java.lang.String) {
-      com.google.protobuf.ByteString b = 
-          com.google.protobuf.ByteString.copyFromUtf8(
-              (java.lang.String) ref);
-      key_ = b;
-      return b;
-    } else {
-      return (com.google.protobuf.ByteString) ref;
-    }
+  public com.google.protobuf.ByteString getKey() {
+    return key_;
   }
 
   public static final int PUBLICKEY_FIELD_NUMBER = 3;
@@ -234,8 +200,8 @@ public  final class FindValueRequest extends
     if (node_ != null) {
       output.writeMessage(1, getNode());
     }
-    if (!getKeyBytes().isEmpty()) {
-      com.google.protobuf.GeneratedMessageV3.writeString(output, 2, key_);
+    if (!key_.isEmpty()) {
+      output.writeBytes(2, key_);
     }
     if (!getPublicKeyBytes().isEmpty()) {
       com.google.protobuf.GeneratedMessageV3.writeString(output, 3, publicKey_);
@@ -257,8 +223,9 @@ public  final class FindValueRequest extends
       size += com.google.protobuf.CodedOutputStream
         .computeMessageSize(1, getNode());
     }
-    if (!getKeyBytes().isEmpty()) {
-      size += com.google.protobuf.GeneratedMessageV3.computeStringSize(2, key_);
+    if (!key_.isEmpty()) {
+      size += com.google.protobuf.CodedOutputStream
+        .computeBytesSize(2, key_);
     }
     if (!getPublicKeyBytes().isEmpty()) {
       size += com.google.protobuf.GeneratedMessageV3.computeStringSize(3, publicKey_);
@@ -457,7 +424,7 @@ public  final class FindValueRequest extends
         node_ = null;
         nodeBuilder_ = null;
       }
-      key_ = "";
+      key_ = com.google.protobuf.ByteString.EMPTY;
 
       publicKey_ = "";
 
@@ -540,9 +507,8 @@ public  final class FindValueRequest extends
       if (other.hasNode()) {
         mergeNode(other.getNode());
       }
-      if (!other.getKey().isEmpty()) {
-        key_ = other.key_;
-        onChanged();
+      if (other.getKey() != com.google.protobuf.ByteString.EMPTY) {
+        setKey(other.getKey());
       }
       if (!other.getPublicKey().isEmpty()) {
         publicKey_ = other.publicKey_;
@@ -697,55 +663,17 @@ public  final class FindValueRequest extends
       return nodeBuilder_;
     }
 
-    private java.lang.Object key_ = "";
+    private com.google.protobuf.ByteString key_ = com.google.protobuf.ByteString.EMPTY;
     /**
-     * <pre>
-     * TODO: a key é um id, tem de ser em bytes
-     * </pre>
-     *
-     * <code>string key = 2;</code>
+     * <code>bytes key = 2;</code>
      */
-    public java.lang.String getKey() {
-      java.lang.Object ref = key_;
-      if (!(ref instanceof java.lang.String)) {
-        com.google.protobuf.ByteString bs =
-            (com.google.protobuf.ByteString) ref;
-        java.lang.String s = bs.toStringUtf8();
-        key_ = s;
-        return s;
-      } else {
-        return (java.lang.String) ref;
-      }
+    public com.google.protobuf.ByteString getKey() {
+      return key_;
     }
     /**
-     * <pre>
-     * TODO: a key é um id, tem de ser em bytes
-     * </pre>
-     *
-     * <code>string key = 2;</code>
+     * <code>bytes key = 2;</code>
      */
-    public com.google.protobuf.ByteString
-        getKeyBytes() {
-      java.lang.Object ref = key_;
-      if (ref instanceof String) {
-        com.google.protobuf.ByteString b = 
-            com.google.protobuf.ByteString.copyFromUtf8(
-                (java.lang.String) ref);
-        key_ = b;
-        return b;
-      } else {
-        return (com.google.protobuf.ByteString) ref;
-      }
-    }
-    /**
-     * <pre>
-     * TODO: a key é um id, tem de ser em bytes
-     * </pre>
-     *
-     * <code>string key = 2;</code>
-     */
-    public Builder setKey(
-        java.lang.String value) {
+    public Builder setKey(com.google.protobuf.ByteString value) {
       if (value == null) {
     throw new NullPointerException();
   }
@@ -755,33 +683,11 @@ public  final class FindValueRequest extends
       return this;
     }
     /**
-     * <pre>
-     * TODO: a key é um id, tem de ser em bytes
-     * </pre>
-     *
-     * <code>string key = 2;</code>
+     * <code>bytes key = 2;</code>
      */
     public Builder clearKey() {
       
       key_ = getDefaultInstance().getKey();
-      onChanged();
-      return this;
-    }
-    /**
-     * <pre>
-     * TODO: a key é um id, tem de ser em bytes
-     * </pre>
-     *
-     * <code>string key = 2;</code>
-     */
-    public Builder setKeyBytes(
-        com.google.protobuf.ByteString value) {
-      if (value == null) {
-    throw new NullPointerException();
-  }
-  checkByteStringIsUtf8(value);
-      
-      key_ = value;
       onChanged();
       return this;
     }

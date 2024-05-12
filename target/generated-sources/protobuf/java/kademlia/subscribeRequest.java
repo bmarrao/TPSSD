@@ -4,6 +4,24 @@
 package kademlia;
 
 /**
+ * <pre>
+ *message initiateServiceRequest
+ *{
+ *Node owner = 1;
+ *bytes serviceId = 2;
+ *repeated Node nodes = 3;
+ *uint32 time = 4;
+ *string publicKey = 5;
+ *bytes signature = 6;
+ *}
+ *message initiateServiceResponse
+ *{
+ *bool response = 1;
+ *string publicKey = 2;
+ *bytes signature = 3;
+ *}
+ * </pre>
+ *
  * Protobuf type {@code kademlia.subscribeRequest}
  */
 public  final class subscribeRequest extends
@@ -357,6 +375,24 @@ public  final class subscribeRequest extends
     return builder;
   }
   /**
+   * <pre>
+   *message initiateServiceRequest
+   *{
+   *Node owner = 1;
+   *bytes serviceId = 2;
+   *repeated Node nodes = 3;
+   *uint32 time = 4;
+   *string publicKey = 5;
+   *bytes signature = 6;
+   *}
+   *message initiateServiceResponse
+   *{
+   *bool response = 1;
+   *string publicKey = 2;
+   *bytes signature = 3;
+   *}
+   * </pre>
+   *
    * Protobuf type {@code kademlia.subscribeRequest}
    */
   public static final class Builder extends

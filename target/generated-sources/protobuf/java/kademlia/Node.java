@@ -18,6 +18,7 @@ public  final class Node extends
     id_ = com.google.protobuf.ByteString.EMPTY;
     ip_ = "";
     port_ = 0;
+    publicKey_ = "";
   }
 
   @java.lang.Override
@@ -59,6 +60,12 @@ public  final class Node extends
           case 24: {
 
             port_ = input.readUInt32();
+            break;
+          }
+          case 34: {
+            java.lang.String s = input.readStringRequireUtf8();
+
+            publicKey_ = s;
             break;
           }
         }
@@ -136,6 +143,40 @@ public  final class Node extends
     return port_;
   }
 
+  public static final int PUBLICKEY_FIELD_NUMBER = 4;
+  private volatile java.lang.Object publicKey_;
+  /**
+   * <code>string publicKey = 4;</code>
+   */
+  public java.lang.String getPublicKey() {
+    java.lang.Object ref = publicKey_;
+    if (ref instanceof java.lang.String) {
+      return (java.lang.String) ref;
+    } else {
+      com.google.protobuf.ByteString bs = 
+          (com.google.protobuf.ByteString) ref;
+      java.lang.String s = bs.toStringUtf8();
+      publicKey_ = s;
+      return s;
+    }
+  }
+  /**
+   * <code>string publicKey = 4;</code>
+   */
+  public com.google.protobuf.ByteString
+      getPublicKeyBytes() {
+    java.lang.Object ref = publicKey_;
+    if (ref instanceof java.lang.String) {
+      com.google.protobuf.ByteString b = 
+          com.google.protobuf.ByteString.copyFromUtf8(
+              (java.lang.String) ref);
+      publicKey_ = b;
+      return b;
+    } else {
+      return (com.google.protobuf.ByteString) ref;
+    }
+  }
+
   private byte memoizedIsInitialized = -1;
   public final boolean isInitialized() {
     byte isInitialized = memoizedIsInitialized;
@@ -157,6 +198,9 @@ public  final class Node extends
     if (port_ != 0) {
       output.writeUInt32(3, port_);
     }
+    if (!getPublicKeyBytes().isEmpty()) {
+      com.google.protobuf.GeneratedMessageV3.writeString(output, 4, publicKey_);
+    }
   }
 
   public int getSerializedSize() {
@@ -174,6 +218,9 @@ public  final class Node extends
     if (port_ != 0) {
       size += com.google.protobuf.CodedOutputStream
         .computeUInt32Size(3, port_);
+    }
+    if (!getPublicKeyBytes().isEmpty()) {
+      size += com.google.protobuf.GeneratedMessageV3.computeStringSize(4, publicKey_);
     }
     memoizedSize = size;
     return size;
@@ -197,6 +244,8 @@ public  final class Node extends
         .equals(other.getIp());
     result = result && (getPort()
         == other.getPort());
+    result = result && getPublicKey()
+        .equals(other.getPublicKey());
     return result;
   }
 
@@ -213,6 +262,8 @@ public  final class Node extends
     hash = (53 * hash) + getIp().hashCode();
     hash = (37 * hash) + PORT_FIELD_NUMBER;
     hash = (53 * hash) + getPort();
+    hash = (37 * hash) + PUBLICKEY_FIELD_NUMBER;
+    hash = (53 * hash) + getPublicKey().hashCode();
     hash = (29 * hash) + unknownFields.hashCode();
     memoizedHashCode = hash;
     return hash;
@@ -348,6 +399,8 @@ public  final class Node extends
 
       port_ = 0;
 
+      publicKey_ = "";
+
       return this;
     }
 
@@ -373,6 +426,7 @@ public  final class Node extends
       result.id_ = id_;
       result.ip_ = ip_;
       result.port_ = port_;
+      result.publicKey_ = publicKey_;
       onBuilt();
       return result;
     }
@@ -423,6 +477,10 @@ public  final class Node extends
       }
       if (other.getPort() != 0) {
         setPort(other.getPort());
+      }
+      if (!other.getPublicKey().isEmpty()) {
+        publicKey_ = other.publicKey_;
+        onChanged();
       }
       onChanged();
       return this;
@@ -570,6 +628,75 @@ public  final class Node extends
     public Builder clearPort() {
       
       port_ = 0;
+      onChanged();
+      return this;
+    }
+
+    private java.lang.Object publicKey_ = "";
+    /**
+     * <code>string publicKey = 4;</code>
+     */
+    public java.lang.String getPublicKey() {
+      java.lang.Object ref = publicKey_;
+      if (!(ref instanceof java.lang.String)) {
+        com.google.protobuf.ByteString bs =
+            (com.google.protobuf.ByteString) ref;
+        java.lang.String s = bs.toStringUtf8();
+        publicKey_ = s;
+        return s;
+      } else {
+        return (java.lang.String) ref;
+      }
+    }
+    /**
+     * <code>string publicKey = 4;</code>
+     */
+    public com.google.protobuf.ByteString
+        getPublicKeyBytes() {
+      java.lang.Object ref = publicKey_;
+      if (ref instanceof String) {
+        com.google.protobuf.ByteString b = 
+            com.google.protobuf.ByteString.copyFromUtf8(
+                (java.lang.String) ref);
+        publicKey_ = b;
+        return b;
+      } else {
+        return (com.google.protobuf.ByteString) ref;
+      }
+    }
+    /**
+     * <code>string publicKey = 4;</code>
+     */
+    public Builder setPublicKey(
+        java.lang.String value) {
+      if (value == null) {
+    throw new NullPointerException();
+  }
+  
+      publicKey_ = value;
+      onChanged();
+      return this;
+    }
+    /**
+     * <code>string publicKey = 4;</code>
+     */
+    public Builder clearPublicKey() {
+      
+      publicKey_ = getDefaultInstance().getPublicKey();
+      onChanged();
+      return this;
+    }
+    /**
+     * <code>string publicKey = 4;</code>
+     */
+    public Builder setPublicKeyBytes(
+        com.google.protobuf.ByteString value) {
+      if (value == null) {
+    throw new NullPointerException();
+  }
+  checkByteStringIsUtf8(value);
+      
+      publicKey_ = value;
       onChanged();
       return this;
     }
