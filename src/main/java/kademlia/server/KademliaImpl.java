@@ -81,6 +81,35 @@ public class KademliaImpl extends KademliaGrpc.KademliaImplBase
     }
 
 
+    public boolean arePuzzlesValid(byte[] nodeId, byte randomX) {
+        // verify static puzzle
+        boolean isStaticPuzzleValid = false;
+        try {
+            MessageDigest md = MessageDigest.getInstance("SHA-256");
+            isStaticPuzzleValid = checkZeroCount(md.digest(nodeId), leadingZeros);
+        }
+        catch(Exception e) {
+            e.printStackTrace();
+        }
+
+        // verify dynamic puzzle
+        boolean isDynamicPuzzleValid = false;
+        try {
+            MessageDigest md = MessageDigest.getInstance("SHA-256");
+            byte[] xorOp = new byte[nodeId.length];
+
+            for (int i = 0; i < nodeId.length; i++) {
+                xorOp[i] = (byte) (nodeId[i] ^ randomX);
+            }
+
+            isDynamicPuzzleValid = checkZeroCount(md.digest(xorOp), leadingZeros);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+        return isStaticPuzzleValid && isDynamicPuzzleValid;
+    }
+
 
     @Override
     public void ping(PingRequest request, StreamObserver<PingResponse> responseObserver) {
@@ -97,18 +126,15 @@ public class KademliaImpl extends KademliaGrpc.KademliaImplBase
         boolean signVal = false;
         try {
             signVal = verify(request.getNode().toByteArray(), signature, request.getPublicKey());
-        }
-        catch(Exception e) {
+        } catch (Exception e) {
             e.printStackTrace();
         }
 
-
-        if (signVal && checkZeroCount(request.getNode().getCryptoPuzzle().toByteArray(), leadingZeros)) {
+        if (signVal && arePuzzlesValid(request.getNode().getId().toByteArray(), request.getNode().getRandomX().byteAt(0))) {
             // Sign RPC response
             try {
                 signature = sign(request.getNode().getId().toByteArray(), privateKey);
-            }
-            catch(Exception e) {
+            } catch (Exception e) {
                 e.printStackTrace();
             }
 
@@ -125,8 +151,7 @@ public class KademliaImpl extends KademliaGrpc.KademliaImplBase
 
             // Notifies the customer that the call is completed.
             responseObserver.onCompleted();
-        }
-        else {
+        } else {
             System.out.println("Signature is invalid, discarding ping request...");
         }
     }
@@ -154,7 +179,7 @@ public class KademliaImpl extends KademliaGrpc.KademliaImplBase
         }
 
 
-        if (signVal && checkZeroCount(request.getNode().getCryptoPuzzle().toByteArray(), leadingZeros)) {
+        if (signVal && arePuzzlesValid(request.getNode().getId().toByteArray(), request.getNode().getRandomX().byteAt(0))) {
             ks.store(key,value);
 
             // Sign RPC response
@@ -205,7 +230,7 @@ public class KademliaImpl extends KademliaGrpc.KademliaImplBase
 
         System.out.println("Is signature valid? " + signVal);
 
-        if (signVal && checkZeroCount(request.getNode().getCryptoPuzzle().toByteArray(), leadingZeros)) {
+        if (signVal && arePuzzlesValid(request.getNode().getId().toByteArray(), request.getNode().getRandomX().byteAt(0))) {
             // Get the closest node to the target ID from the routing table
             List<Node> closestNodes = rt.findClosestNode(nodeID, k_nodes);
 
@@ -263,7 +288,7 @@ public class KademliaImpl extends KademliaGrpc.KademliaImplBase
         }
 
 
-        if (signVal && checkZeroCount(request.getNode().getCryptoPuzzle().toByteArray(), leadingZeros)) {
+        if (signVal && arePuzzlesValid(request.getNode().getId().toByteArray(), request.getNode().getRandomX().byteAt(0))) {
             // Get the value associated with the key from the data store
             Node value = ks.findValue(key);
 
@@ -319,7 +344,7 @@ public class KademliaImpl extends KademliaGrpc.KademliaImplBase
             e.printStackTrace();
         }
 
-        if (signVal) {
+        if (signVal && arePuzzlesValid(request.getNode().getId().toByteArray(), request.getNode().getRandomX().byteAt(0))) {
             // Get the value associated with the key from the data store
             //TODO insert!
             //rt.insert(request.getNode());

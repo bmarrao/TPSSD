@@ -20,15 +20,17 @@ public class KademliaProtocol
     public int port;
     public PublicKey publicKey;
     public PrivateKey privateKey;
+    public int randomX;
     public byte[] cryptoPuzzleSol;
 
-    public KademliaProtocol(byte[] nodeId, String ipAddress, int port, PublicKey publicKey, PrivateKey privateKey, byte[] cryptoPuzzleSol)
+    public KademliaProtocol(byte[] nodeId, String ipAddress, int port, PublicKey publicKey, PrivateKey privateKey, int randomX, byte[] cryptoPuzzleSol)
     {
         this.nodeId = nodeId;
         this.ipAddress = ipAddress;
         this.port = port;
         this.publicKey = publicKey;
         this.privateKey = privateKey;
+        this.randomX = randomX;
         this.cryptoPuzzleSol = cryptoPuzzleSol;
     }
 
@@ -62,8 +64,7 @@ public class KademliaProtocol
         Node node = Node.newBuilder()
             .setId(ByteString.copyFrom(nodeId))
             .setIp(ipAddress)
-            .setPort(port)
-            .setCryptoPuzzle(ByteString.copyFrom(cryptoPuzzleSol)).build();
+            .setPort(port).build();
 
         // Sign node content
         byte[] signature = null;
@@ -170,8 +171,7 @@ public class KademliaProtocol
         Node node = Node.newBuilder()
                 .setId(ByteString.copyFrom(nodeId))
                 .setIp(ipAddress)
-                .setPort(port)
-                .setCryptoPuzzle(ByteString.copyFrom(cryptoPuzzleSol)).build();
+                .setPort(port).build();
 
         byte[] signature = null;
         try {
@@ -224,9 +224,7 @@ public class KademliaProtocol
         Node node = Node.newBuilder()
                 .setId(ByteString.copyFrom(nodeId))
                 .setIp(ipAddress)
-                .setPort(port)
-                .setCryptoPuzzle(ByteString.copyFrom(cryptoPuzzleSol))
-                .build();
+                .setPort(port).build();
 
         byte[] nodeInfoToSign = node.toByteArray();
         byte[] infoToSign = new byte[nodeInfoToSign.length + 1];

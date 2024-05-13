@@ -14,16 +14,18 @@ public class KademliaJoinNetwork implements Runnable {
     public int port;
     public PublicKey publicKey;
     public PrivateKey privateKey;
+    public byte randomX;
     public String bootstrapIp;
     public int bootstrapPort;
     public byte[] cryptoPuzzleSol;
 
-    KademliaJoinNetwork(byte[] nodeId, String ipAddress, int port, PublicKey publicKey, PrivateKey privateKey, String bootstrapIp, int bootstrapPort, byte[] cryptoPuzzleSol) {
+    KademliaJoinNetwork(byte[] nodeId, String ipAddress, int port, PublicKey publicKey, PrivateKey privateKey, byte randomX, String bootstrapIp, int bootstrapPort, byte[] cryptoPuzzleSol) {
         this.nodeId = nodeId;
         this.ipAddress = ipAddress;
         this.port = port;
         this.publicKey = publicKey;
         this.privateKey = privateKey;
+        this.randomX = randomX;
         this.bootstrapIp = bootstrapIp;
         this.bootstrapPort = bootstrapPort;
         this.cryptoPuzzleSol = cryptoPuzzleSol;
@@ -31,7 +33,7 @@ public class KademliaJoinNetwork implements Runnable {
 
     @Override
     public void run() {
-        KademliaProtocol protocol = new KademliaProtocol(this.nodeId, this.ipAddress, this.port, this.publicKey, this.privateKey, this.cryptoPuzzleSol);
+        KademliaProtocol protocol = new KademliaProtocol(this.nodeId, this.ipAddress, this.port, this.publicKey, this.privateKey, this.randomX, this.cryptoPuzzleSol);
 
         // send find node operation to selected bootstrap node
         List<Node> closestNodes;

@@ -6,7 +6,6 @@ import io.grpc.ServerBuilder;
 import kademlia.KademliaGrpc;
 import kademlia.KademliaStore;
 
-import java.io.IOException;
 import java.security.PrivateKey;
 import java.security.PublicKey;
 
