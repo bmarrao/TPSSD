@@ -45,6 +45,8 @@ public class Auction
             }
 
             this.initiateService(serviceId, time );
+            //TODO UNCOMMENT
+            // bc.newAuction(serviceId);
             return nodes;
         }
         catch (NoSuchAlgorithmException e)
@@ -65,7 +67,7 @@ public class Auction
             if (bs.receiveOffer(of))
             {
                 System.out.println("NOTIFY SUBSCRIBED");
-                //TODO RETIRAR COMENTARIOkademlia.protocol.notifySubscribed(bs.subscribed,bs.highestOffer,bs.serviceId);
+                k.protocol.notifySubscribed(bs.subscribed,bs.highestOffer,bs.serviceId);
                 return true;
             }
             bs.l.unlock();
@@ -172,6 +174,13 @@ public class Auction
             services.remove(bs);
         }
         l.unlock();
+        NotifyThread ns = new NotifyThread(bs.subscribed,bs.serviceId,bs.highestOffer,k.protocol);
+        Thread notifyThread = new Thread(ns);
+        //TODO UNCOMMENT
+        // bc.closeAuction(bs.serviceId,bs.highestOffer );
+
+        notifyThread.start();
+
     }
     /*
         public boolean endService(byte[] serviceId, Node request)
@@ -221,5 +230,27 @@ public class Auction
 
 
      */
+
+}
+
+class NotifyThread implements Runnable
+{
+    ArrayList<Node> subscribed;
+    byte[] serviceId;
+    Offer highestOffer;
+    KademliaProtocol protocol;
+    NotifyThread(ArrayList<Node> subscribed, byte[] serviceId, Offer highestOffer,KademliaProtocol protocol)
+    {
+        this.subscribed = subscribed;
+        this.serviceId = serviceId;
+        this.highestOffer = highestOffer;
+        this.protocol = protocol;
+    }
+
+    @Override
+    public void run()
+    {
+        protocol.notifySubscribed(subscribed,highestOffer,serviceId);
+    }
 
 }
