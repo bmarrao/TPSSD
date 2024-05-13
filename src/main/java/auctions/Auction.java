@@ -1,5 +1,6 @@
 package auctions;
 
+import blockchain.Blockchain;
 import kademlia.KademliaProtocol;
 
 import kademlia.Kademlia;
@@ -18,11 +19,13 @@ public class Auction
     Kademlia k;
     private ReentrantLock l ;
     ArrayList<BrokerService> services;
-    public Auction(Kademlia k)
+    Blockchain bc ;
+    public Auction(Kademlia k, Blockchain bc)
     {
         l = new ReentrantLock();
         services = new ArrayList<>();
         this.k = k;
+        this.bc = bc;
     }
 
 
@@ -84,6 +87,8 @@ public class Auction
         bs.highestOffer = nd.build();
         Thread rsThread = new Thread( new RunService(this,bs,k.protocol));
         rsThread.start();
+        //TODO UNCOMMENT
+        //bc.newAuction(serviceId);
         l.unlock();
     }
 
