@@ -19,32 +19,19 @@ import static kademlia.Kademlia.rt;
 public class KademliaImpl extends KademliaGrpc.KademliaImplBase
 {
     private static final int k_nodes = 3;
-    private PrivateKey privateKey;
-    private PublicKey publicKey;
     private final Auction auc;
     private final int leadingZeros;
+    private final PrivateKey privateKey;
+    private final PublicKey publicKey;
     private final KademliaStore ks;
 
-    KademliaImpl(Auction auc, int leadingZeros, KademliaStore ks)
+    KademliaImpl(Auction auc, int leadingZeros, PublicKey publicKey, PrivateKey privateKey, KademliaStore ks)
     {
         this.auc = auc;
         this.leadingZeros = leadingZeros;
-        generatePrivateKey();
+        this.publicKey = publicKey;
+        this.privateKey = privateKey;
         this.ks = ks;
-    }
-
-
-    private void generatePrivateKey() {
-        try {
-            KeyPairGenerator keyPairGen = KeyPairGenerator.getInstance("SHA-256");
-            keyPairGen.initialize(2048);
-            KeyPair pair = keyPairGen.generateKeyPair();
-            this.privateKey = pair.getPrivate();
-            this.publicKey = pair.getPublic();
-        }
-        catch(Exception e) {
-            e.printStackTrace();
-        }
     }
 
     // Create signature for specific contect from RPC message
@@ -116,7 +103,7 @@ public class KademliaImpl extends KademliaGrpc.KademliaImplBase
         }
 
 
-        if (signVal && checkZeroCount(request.getCryptoPuzzle().toByteArray(), leadingZeros)) {
+        if (signVal && checkZeroCount(request.getNode().getCryptoPuzzle().toByteArray(), leadingZeros)) {
             // Sign RPC response
             try {
                 signature = sign(request.getNode().getId().toByteArray(), privateKey);
@@ -167,7 +154,7 @@ public class KademliaImpl extends KademliaGrpc.KademliaImplBase
         }
 
 
-        if (signVal && checkZeroCount(request.getCryptoPuzzle().toByteArray(), leadingZeros)) {
+        if (signVal && checkZeroCount(request.getNode().getCryptoPuzzle().toByteArray(), leadingZeros)) {
             ks.store(key,value);
 
             // Sign RPC response
@@ -218,7 +205,7 @@ public class KademliaImpl extends KademliaGrpc.KademliaImplBase
 
         System.out.println("Is signature valid? " + signVal);
 
-        if (signVal && checkZeroCount(request.getCryptoPuzzle().toByteArray(), leadingZeros)) {
+        if (signVal && checkZeroCount(request.getNode().getCryptoPuzzle().toByteArray(), leadingZeros)) {
             // Get the closest node to the target ID from the routing table
             List<Node> closestNodes = rt.findClosestNode(nodeID, k_nodes);
 
@@ -276,7 +263,7 @@ public class KademliaImpl extends KademliaGrpc.KademliaImplBase
         }
 
 
-        if (signVal && checkZeroCount(request.getCryptoPuzzle().toByteArray(), leadingZeros)) {
+        if (signVal && checkZeroCount(request.getNode().getCryptoPuzzle().toByteArray(), leadingZeros)) {
             // Get the value associated with the key from the data store
             Node value = ks.findValue(key);
 
@@ -293,7 +280,7 @@ public class KademliaImpl extends KademliaGrpc.KademliaImplBase
                     infoToSign[i] = request.getNode().getId().byteAt(i);
                 }
                 // FIX THIS INFO TO SIGN
-                infoToSign[request.getNode().getId().size()] = Byte.parseByte(value);
+                infoToSign[request.getNode().getId().size()] = Byte.parseByte(String.valueOf(value));
                 signature = sign(infoToSign, privateKey);
             }
             catch(Exception e) {

@@ -7,6 +7,8 @@ import kademlia.KademliaGrpc;
 import kademlia.KademliaStore;
 
 import java.io.IOException;
+import java.security.PrivateKey;
+import java.security.PublicKey;
 
 public class KademliaServer extends KademliaGrpc.KademliaImplBase implements Runnable
 {
@@ -14,12 +16,16 @@ public class KademliaServer extends KademliaGrpc.KademliaImplBase implements Run
     public int port;
     Auction auc;
     public int leadingZeros;
+    public PublicKey publicKey;
+    public PrivateKey privateKey;
     public KademliaStore ks;
-    public KademliaServer(int port, Auction auc, int leadingZeros, KademliaStore ks)
+    public KademliaServer(int port, Auction auc, int leadingZeros, PublicKey publicKey, PrivateKey privateKey, KademliaStore ks)
     {
         this.port = port;
         this.auc = auc;
         this.leadingZeros = leadingZeros;
+        this.publicKey = publicKey;
+        this.privateKey = privateKey;
         this.ks = ks;
     }
 
@@ -27,7 +33,7 @@ public class KademliaServer extends KademliaGrpc.KademliaImplBase implements Run
     public void run() {
         // Server is kept alive for the client to communicate.
         server = ServerBuilder.forPort(port)
-                .addService(new KademliaImpl(auc, leadingZeros, ks))
+                .addService(new KademliaImpl(auc, leadingZeros, publicKey, privateKey, ks))
                 .build();
         try
         {

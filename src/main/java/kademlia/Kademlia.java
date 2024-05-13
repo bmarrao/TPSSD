@@ -66,7 +66,7 @@ public class Kademlia
         }
 
         this.ks = new KademliaStore();
-        KademliaServer server = new KademliaServer(port, new Auction(this), leadingZeros,ks);
+        KademliaServer server = new KademliaServer(port, new Auction(this), leadingZeros,generatedPk, generatedSk, ks);
         Thread serverThread = new Thread(server);
         serverThread.start();
     }
@@ -82,7 +82,7 @@ public class Kademlia
             protocol = new KademliaProtocol(sKadNodeId,"127.0.0.1",5000, generatedPk, generatedSk,cryptoPuzzleSol);
             rt = new KrtBootStrap(sKadNodeId,protocol,20,20);
             ks = new KademliaStore();
-            KademliaServer server = new KademliaServer(5000,  new Auction(new Kademlia(sKadNodeId,generatedPk,generatedSk,rt,protocol)),leadingZeros,ks);
+            KademliaServer server = new KademliaServer(5000,  new Auction(new Kademlia(sKadNodeId,generatedPk,generatedSk,rt,protocol)),leadingZeros,generatedPk, generatedSk, ks);
 
             Thread serverThread = new Thread(server);
             serverThread.start();
@@ -96,7 +96,7 @@ public class Kademlia
 
             ks= new KademliaStore();
             KademliaServer server = new KademliaServer(Integer.parseInt(args[1]),
-                    new Auction(new Kademlia(sKadNodeId,generatedPk,generatedSk,rt,protocol)), leadingZeros,ks);
+                    new Auction(new Kademlia(sKadNodeId,generatedPk,generatedSk,rt,protocol)), leadingZeros,generatedPk, generatedSk, ks);
             Thread serverThread = new Thread(server);
             serverThread.start();
 

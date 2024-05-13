@@ -62,7 +62,8 @@ public class KademliaProtocol
         Node node = Node.newBuilder()
             .setId(ByteString.copyFrom(nodeId))
             .setIp(ipAddress)
-            .setPort(port).build();
+            .setPort(port)
+            .setCryptoPuzzle(ByteString.copyFrom(cryptoPuzzleSol)).build();
 
         // Sign node content
         byte[] signature = null;
@@ -79,8 +80,7 @@ public class KademliaProtocol
         PingRequest request = PingRequest.newBuilder()
                 .setNode(node)
                 .setPublicKey(Base64.getEncoder().encodeToString(publicKey.getEncoded()))
-                .setSignature(ByteString.copyFrom(signature))
-                .setCryptoPuzzle(ByteString.copyFrom(cryptoPuzzleSol)).build();
+                .setSignature(ByteString.copyFrom(signature)).build();
 
         // Receive response
         PingResponse response = stub.ping(request);
@@ -113,6 +113,7 @@ public class KademliaProtocol
                 .setId(ByteString.copyFrom(this.nodeId))
                 .setIp(ipAddress)
                 .setPort(port)
+                .setCryptoPuzzle(ByteString.copyFrom(cryptoPuzzleSol))
                 .build();
 
         byte[] nodeInfoToSign = node.toByteArray();
@@ -134,8 +135,7 @@ public class KademliaProtocol
                 .setKey(key)
                 .setValue(val)
                 .setPublicKey(Base64.getEncoder().encodeToString(publicKey.getEncoded()))
-                .setSignature(ByteString.copyFrom(signature))
-                .setCryptoPuzzle(ByteString.copyFrom(cryptoPuzzleSol)).build();
+                .setSignature(ByteString.copyFrom(signature)).build();
 
         StoreResponse response = stub.store(request);
 
@@ -170,7 +170,8 @@ public class KademliaProtocol
         Node node = Node.newBuilder()
                 .setId(ByteString.copyFrom(nodeId))
                 .setIp(ipAddress)
-                .setPort(port).build();
+                .setPort(port)
+                .setCryptoPuzzle(ByteString.copyFrom(cryptoPuzzleSol)).build();
 
         byte[] signature = null;
         try {
@@ -186,8 +187,7 @@ public class KademliaProtocol
                 .setNode(node)
                 .setKey(ByteString.copyFrom(key))
                 .setPublicKey(Base64.getEncoder().encodeToString(publicKey.getEncoded()))
-                .setSignature(ByteString.copyFrom(signature))
-                .setCryptoPuzzle(ByteString.copyFrom(cryptoPuzzleSol)).build();
+                .setSignature(ByteString.copyFrom(signature)).build();
 
         FindNodeResponse response = stub.findNode(request);
 
@@ -225,6 +225,7 @@ public class KademliaProtocol
                 .setId(ByteString.copyFrom(nodeId))
                 .setIp(ipAddress)
                 .setPort(port)
+                .setCryptoPuzzle(ByteString.copyFrom(cryptoPuzzleSol))
                 .build();
 
         byte[] nodeInfoToSign = node.toByteArray();
@@ -244,8 +245,7 @@ public class KademliaProtocol
                 .setNode(node)
                 .setKey(key)
                 .setPublicKey(Base64.getEncoder().encodeToString(publicKey.getEncoded()))
-                .setSignature(ByteString.copyFrom(signature))
-                .setCryptoPuzzle(ByteString.copyFrom(cryptoPuzzleSol)).build();
+                .setSignature(ByteString.copyFrom(signature)).build();
 
         FindValueResponse response = stub.findValue(request);
 
