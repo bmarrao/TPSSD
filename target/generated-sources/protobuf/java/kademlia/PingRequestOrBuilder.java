@@ -34,9 +34,4 @@ public interface PingRequestOrBuilder extends
    * <code>bytes signature = 3;</code>
    */
   com.google.protobuf.ByteString getSignature();
-
-  /**
-   * <code>bytes cryptoPuzzle = 4;</code>
-   */
-  com.google.protobuf.ByteString getCryptoPuzzle();
 }

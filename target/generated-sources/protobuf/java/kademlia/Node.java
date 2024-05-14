@@ -18,7 +18,7 @@ public  final class Node extends
     id_ = com.google.protobuf.ByteString.EMPTY;
     ip_ = "";
     port_ = 0;
-    publicKey_ = "";
+    randomX_ = com.google.protobuf.ByteString.EMPTY;
   }
 
   @java.lang.Override
@@ -63,9 +63,8 @@ public  final class Node extends
             break;
           }
           case 34: {
-            java.lang.String s = input.readStringRequireUtf8();
 
-            publicKey_ = s;
+            randomX_ = input.readBytes();
             break;
           }
         }
@@ -143,38 +142,13 @@ public  final class Node extends
     return port_;
   }
 
-  public static final int PUBLICKEY_FIELD_NUMBER = 4;
-  private volatile java.lang.Object publicKey_;
+  public static final int RANDOMX_FIELD_NUMBER = 4;
+  private com.google.protobuf.ByteString randomX_;
   /**
-   * <code>string publicKey = 4;</code>
+   * <code>bytes randomX = 4;</code>
    */
-  public java.lang.String getPublicKey() {
-    java.lang.Object ref = publicKey_;
-    if (ref instanceof java.lang.String) {
-      return (java.lang.String) ref;
-    } else {
-      com.google.protobuf.ByteString bs = 
-          (com.google.protobuf.ByteString) ref;
-      java.lang.String s = bs.toStringUtf8();
-      publicKey_ = s;
-      return s;
-    }
-  }
-  /**
-   * <code>string publicKey = 4;</code>
-   */
-  public com.google.protobuf.ByteString
-      getPublicKeyBytes() {
-    java.lang.Object ref = publicKey_;
-    if (ref instanceof java.lang.String) {
-      com.google.protobuf.ByteString b = 
-          com.google.protobuf.ByteString.copyFromUtf8(
-              (java.lang.String) ref);
-      publicKey_ = b;
-      return b;
-    } else {
-      return (com.google.protobuf.ByteString) ref;
-    }
+  public com.google.protobuf.ByteString getRandomX() {
+    return randomX_;
   }
 
   private byte memoizedIsInitialized = -1;
@@ -198,8 +172,8 @@ public  final class Node extends
     if (port_ != 0) {
       output.writeUInt32(3, port_);
     }
-    if (!getPublicKeyBytes().isEmpty()) {
-      com.google.protobuf.GeneratedMessageV3.writeString(output, 4, publicKey_);
+    if (!randomX_.isEmpty()) {
+      output.writeBytes(4, randomX_);
     }
   }
 
@@ -219,8 +193,9 @@ public  final class Node extends
       size += com.google.protobuf.CodedOutputStream
         .computeUInt32Size(3, port_);
     }
-    if (!getPublicKeyBytes().isEmpty()) {
-      size += com.google.protobuf.GeneratedMessageV3.computeStringSize(4, publicKey_);
+    if (!randomX_.isEmpty()) {
+      size += com.google.protobuf.CodedOutputStream
+        .computeBytesSize(4, randomX_);
     }
     memoizedSize = size;
     return size;
@@ -244,8 +219,8 @@ public  final class Node extends
         .equals(other.getIp());
     result = result && (getPort()
         == other.getPort());
-    result = result && getPublicKey()
-        .equals(other.getPublicKey());
+    result = result && getRandomX()
+        .equals(other.getRandomX());
     return result;
   }
 
@@ -262,8 +237,8 @@ public  final class Node extends
     hash = (53 * hash) + getIp().hashCode();
     hash = (37 * hash) + PORT_FIELD_NUMBER;
     hash = (53 * hash) + getPort();
-    hash = (37 * hash) + PUBLICKEY_FIELD_NUMBER;
-    hash = (53 * hash) + getPublicKey().hashCode();
+    hash = (37 * hash) + RANDOMX_FIELD_NUMBER;
+    hash = (53 * hash) + getRandomX().hashCode();
     hash = (29 * hash) + unknownFields.hashCode();
     memoizedHashCode = hash;
     return hash;
@@ -399,7 +374,7 @@ public  final class Node extends
 
       port_ = 0;
 
-      publicKey_ = "";
+      randomX_ = com.google.protobuf.ByteString.EMPTY;
 
       return this;
     }
@@ -426,7 +401,7 @@ public  final class Node extends
       result.id_ = id_;
       result.ip_ = ip_;
       result.port_ = port_;
-      result.publicKey_ = publicKey_;
+      result.randomX_ = randomX_;
       onBuilt();
       return result;
     }
@@ -478,9 +453,8 @@ public  final class Node extends
       if (other.getPort() != 0) {
         setPort(other.getPort());
       }
-      if (!other.getPublicKey().isEmpty()) {
-        publicKey_ = other.publicKey_;
-        onChanged();
+      if (other.getRandomX() != com.google.protobuf.ByteString.EMPTY) {
+        setRandomX(other.getRandomX());
       }
       onChanged();
       return this;
@@ -632,71 +606,31 @@ public  final class Node extends
       return this;
     }
 
-    private java.lang.Object publicKey_ = "";
+    private com.google.protobuf.ByteString randomX_ = com.google.protobuf.ByteString.EMPTY;
     /**
-     * <code>string publicKey = 4;</code>
+     * <code>bytes randomX = 4;</code>
      */
-    public java.lang.String getPublicKey() {
-      java.lang.Object ref = publicKey_;
-      if (!(ref instanceof java.lang.String)) {
-        com.google.protobuf.ByteString bs =
-            (com.google.protobuf.ByteString) ref;
-        java.lang.String s = bs.toStringUtf8();
-        publicKey_ = s;
-        return s;
-      } else {
-        return (java.lang.String) ref;
-      }
+    public com.google.protobuf.ByteString getRandomX() {
+      return randomX_;
     }
     /**
-     * <code>string publicKey = 4;</code>
+     * <code>bytes randomX = 4;</code>
      */
-    public com.google.protobuf.ByteString
-        getPublicKeyBytes() {
-      java.lang.Object ref = publicKey_;
-      if (ref instanceof String) {
-        com.google.protobuf.ByteString b = 
-            com.google.protobuf.ByteString.copyFromUtf8(
-                (java.lang.String) ref);
-        publicKey_ = b;
-        return b;
-      } else {
-        return (com.google.protobuf.ByteString) ref;
-      }
-    }
-    /**
-     * <code>string publicKey = 4;</code>
-     */
-    public Builder setPublicKey(
-        java.lang.String value) {
+    public Builder setRandomX(com.google.protobuf.ByteString value) {
       if (value == null) {
     throw new NullPointerException();
   }
   
-      publicKey_ = value;
+      randomX_ = value;
       onChanged();
       return this;
     }
     /**
-     * <code>string publicKey = 4;</code>
+     * <code>bytes randomX = 4;</code>
      */
-    public Builder clearPublicKey() {
+    public Builder clearRandomX() {
       
-      publicKey_ = getDefaultInstance().getPublicKey();
-      onChanged();
-      return this;
-    }
-    /**
-     * <code>string publicKey = 4;</code>
-     */
-    public Builder setPublicKeyBytes(
-        com.google.protobuf.ByteString value) {
-      if (value == null) {
-    throw new NullPointerException();
-  }
-  checkByteStringIsUtf8(value);
-      
-      publicKey_ = value;
+      randomX_ = getDefaultInstance().getRandomX();
       onChanged();
       return this;
     }

@@ -23,6 +23,7 @@ kademlia/KademliaStore.class
 kademlia/PingResponse$Builder.class
 kademlia/PingResponseOrBuilder.class
 kademlia/KademliaLookUp.class
+auctions/NotifyThread.class
 kademlia/KademliaTeste.class
 kademlia/KademliaGrpc$MethodHandlers.class
 kademlia/StoreResponse.class

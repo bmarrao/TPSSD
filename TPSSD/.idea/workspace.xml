@@ -1,0 +1,195 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="AutoImportSettings">
+    <option name="autoReloadType" value="SELECTIVE" />
+  </component>
+  <component name="ChangeListManager">
+    <list default="true" id="5a1810cf-442b-4e73-b1f5-15a7319138c8" name="Changes" comment="" />
+    <option name="SHOW_DIALOG" value="false" />
+    <option name="HIGHLIGHT_CONFLICTS" value="true" />
+    <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
+    <option name="LAST_RESOLUTION" value="IGNORE" />
+  </component>
+  <component name="FileTemplateManagerImpl">
+    <option name="RECENT_TEMPLATES">
+      <list>
+        <option value="Class" />
+      </list>
+    </option>
+  </component>
+  <component name="Git.Settings">
+    <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$/.." />
+  </component>
+  <component name="ProblemsViewState">
+    <option name="selectedTabId" value="CurrentFile" />
+  </component>
+  <component name="ProjectColorInfo">{
+  &quot;associatedIndex&quot;: 5
+}</component>
+  <component name="ProjectId" id="2eE3c9kOJpcnhLsEZAfWrOdW9L0" />
+  <component name="ProjectLevelVcsManager">
+    <ConfirmationsSetting value="2" id="Add" />
+  </component>
+  <component name="ProjectViewState">
+    <option name="hideEmptyMiddlePackages" value="true" />
+    <option name="showLibraryContents" value="true" />
+  </component>
+  <component name="PropertiesComponent"><![CDATA[{
+  "keyToString": {
+    "Application.AuctionTest.executor": "Run",
+    "Application.Kademlia.executor": "Run",
+    "Application.KademliaTeste.executor": "Run",
+    "RunOnceActivity.OpenProjectViewOnStart": "true",
+    "RunOnceActivity.ShowReadmeOnStart": "true",
+    "git-widget-placeholder": "main",
+    "kotlin-language-version-configured": "true",
+    "last_opened_file_path": "/home/brenin/TPSSD",
+    "node.js.detected.package.eslint": "true",
+    "node.js.detected.package.tslint": "true",
+    "node.js.selected.package.eslint": "(autodetect)",
+    "node.js.selected.package.tslint": "(autodetect)",
+    "nodejs_package_manager_path": "npm",
+    "project.structure.last.edited": "Modules",
+    "project.structure.proportion": "0.15",
+    "project.structure.side.proportion": "0.2",
+    "settings.editor.selected.configurable": "preferences.lookFeel",
+    "vue.rearranger.settings.migration": "true"
+  }
+}]]></component>
+  <component name="RunManager" selected="Application.AuctionTest">
+    <configuration name="AuctionTest" type="Application" factoryName="Application" temporary="true" nameIsGenerated="true">
+      <option name="MAIN_CLASS_NAME" value="AuctionTest" />
+      <module name="Kademlia" />
+      <method v="2">
+        <option name="Make" enabled="true" />
+      </method>
+    </configuration>
+    <configuration name="Kademlia" type="Application" factoryName="Application" nameIsGenerated="true">
+      <option name="MAIN_CLASS_NAME" value="kademlia.Kademlia" />
+      <module name="Kademlia" />
+      <option name="PROGRAM_PARAMETERS" value="localhost 5003 BootStrapNodes.txt " />
+      <extension name="coverage">
+        <pattern>
+          <option name="PATTERN" value="kademlia.*" />
+          <option name="ENABLED" value="true" />
+        </pattern>
+      </extension>
+      <method v="2">
+        <option name="Make" enabled="true" />
+      </method>
+    </configuration>
+    <configuration name="KademliaTeste" type="Application" factoryName="Application" temporary="true" nameIsGenerated="true">
+      <option name="MAIN_CLASS_NAME" value="kademlia.KademliaTeste" />
+      <module name="Kademlia" />
+      <extension name="coverage">
+        <pattern>
+          <option name="PATTERN" value="kademlia.*" />
+          <option name="ENABLED" value="true" />
+        </pattern>
+      </extension>
+      <method v="2">
+        <option name="Make" enabled="true" />
+      </method>
+    </configuration>
+    <recent_temporary>
+      <list>
+        <item itemvalue="Application.AuctionTest" />
+        <item itemvalue="Application.KademliaTeste" />
+      </list>
+    </recent_temporary>
+  </component>
+  <component name="SharedIndexes">
+    <attachedChunks>
+      <set>
+        <option value="bundled-jdk-9f38398b9061-39b83d9b5494-intellij.indexing.shared.core-IU-241.15989.150" />
+        <option value="bundled-js-predefined-1d06a55b98c1-91d5c284f522-JavaScript-IU-241.15989.150" />
+      </set>
+    </attachedChunks>
+  </component>
+  <component name="SpellCheckerSettings" RuntimeDictionaries="0" Folders="0" CustomDictionaries="0" DefaultDictionary="application-level" UseSingleDictionary="true" transferred="true" />
+  <component name="TaskManager">
+    <task active="true" id="Default" summary="Default task">
+      <changelist id="5a1810cf-442b-4e73-b1f5-15a7319138c8" name="Changes" comment="" />
+      <created>1711455987222</created>
+      <option name="number" value="Default" />
+      <option name="presentableId" value="Default" />
+      <updated>1711455987222</updated>
+      <workItem from="1711455988228" duration="448000" />
+      <workItem from="1711456615293" duration="54000" />
+      <workItem from="1711459786951" duration="8000" />
+      <workItem from="1711460521274" duration="40000" />
+      <workItem from="1711460724800" duration="215000" />
+      <workItem from="1711481129484" duration="348000" />
+      <workItem from="1711962120230" duration="2558000" />
+      <workItem from="1712046999014" duration="4147000" />
+      <workItem from="1712062585898" duration="11080000" />
+      <workItem from="1712137182395" duration="2894000" />
+      <workItem from="1712403939077" duration="8364000" />
+      <workItem from="1712498629625" duration="872000" />
+      <workItem from="1712586457886" duration="5108000" />
+      <workItem from="1712653697348" duration="5949000" />
+      <workItem from="1712851258124" duration="7558000" />
+      <workItem from="1712867379940" duration="2785000" />
+      <workItem from="1712904002811" duration="4256000" />
+      <workItem from="1712924913086" duration="2736000" />
+      <workItem from="1713010854388" duration="3786000" />
+      <workItem from="1713020534913" duration="755000" />
+      <workItem from="1713267162317" duration="5772000" />
+      <workItem from="1713279011737" duration="1670000" />
+      <workItem from="1713285848658" duration="527000" />
+      <workItem from="1713286475860" duration="471000" />
+      <workItem from="1713336418439" duration="4582000" />
+      <workItem from="1713351627972" duration="537000" />
+      <workItem from="1713472338245" duration="4342000" />
+      <workItem from="1713520908812" duration="4726000" />
+      <workItem from="1713940876754" duration="2543000" />
+      <workItem from="1713950661361" duration="1446000" />
+      <workItem from="1713971962934" duration="641000" />
+      <workItem from="1714036188149" duration="1633000" />
+      <workItem from="1714041715546" duration="2205000" />
+      <workItem from="1714049276884" duration="6885000" />
+      <workItem from="1714114021921" duration="893000" />
+      <workItem from="1714134751523" duration="2360000" />
+      <workItem from="1714141702605" duration="1967000" />
+      <workItem from="1714295740691" duration="3078000" />
+      <workItem from="1714309185763" duration="8225000" />
+      <workItem from="1714397117289" duration="305000" />
+      <workItem from="1714653819451" duration="2303000" />
+      <workItem from="1714657191911" duration="4126000" />
+      <workItem from="1714681932814" duration="2139000" />
+      <workItem from="1714739043618" duration="4526000" />
+      <workItem from="1714745569973" duration="1082000" />
+      <workItem from="1714913371920" duration="3265000" />
+      <workItem from="1714939985393" duration="1424000" />
+      <workItem from="1715419205453" duration="2588000" />
+      <workItem from="1715439416395" duration="396000" />
+      <workItem from="1715440756731" duration="23000" />
+      <workItem from="1715509535359" duration="1677000" />
+      <workItem from="1715523970055" duration="2939000" />
+      <workItem from="1715604511511" duration="1996000" />
+      <workItem from="1715629949174" duration="1621000" />
+      <workItem from="1715676589644" duration="725000" />
+    </task>
+    <servers />
+  </component>
+  <component name="TypeScriptGeneratedFilesManager">
+    <option name="version" value="3" />
+  </component>
+  <component name="Vcs.Log.Tabs.Properties">
+    <option name="TAB_STATES">
+      <map>
+        <entry key="MAIN">
+          <value>
+            <State>
+              <option name="CUSTOM_BOOLEAN_PROPERTIES">
+                <map>
+                  <entry key="Show.Git.Branches" value="false" />
+                </map>
+              </option>
+            </State>
+          </value>
+        </entry>
+      </map>
+    </option>
+  </component>
+</project>

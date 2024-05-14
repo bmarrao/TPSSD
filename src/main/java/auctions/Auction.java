@@ -66,8 +66,9 @@ public class Auction
             l.unlock();
             if (bs.receiveOffer(of))
             {
-                System.out.println("NOTIFY SUBSCRIBED");
-                k.protocol.notifySubscribed(bs.subscribed,bs.highestOffer,bs.serviceId);
+                NotifyThread ns = new NotifyThread(bs.subscribed,bs.serviceId,bs.highestOffer,0,k.protocol);
+                Thread notifyThread = new Thread(ns);
+                notifyThread.start();
                 return true;
             }
             bs.l.unlock();
@@ -174,7 +175,7 @@ public class Auction
             services.remove(bs);
         }
         l.unlock();
-        NotifyThread ns = new NotifyThread(bs.subscribed,bs.serviceId,bs.highestOffer,k.protocol);
+        NotifyThread ns = new NotifyThread(bs.subscribed,bs.serviceId,bs.highestOffer,1,k.protocol);
         Thread notifyThread = new Thread(ns);
         //TODO UNCOMMENT
         // bc.closeAuction(bs.serviceId,bs.highestOffer );
@@ -239,18 +240,20 @@ class NotifyThread implements Runnable
     byte[] serviceId;
     Offer highestOffer;
     KademliaProtocol protocol;
-    NotifyThread(ArrayList<Node> subscribed, byte[] serviceId, Offer highestOffer,KademliaProtocol protocol)
+    int type;
+    NotifyThread(ArrayList<Node> subscribed, byte[] serviceId, Offer highestOffer,int type,KademliaProtocol protocol)
     {
         this.subscribed = subscribed;
         this.serviceId = serviceId;
         this.highestOffer = highestOffer;
         this.protocol = protocol;
+        this.type = type;
     }
 
     @Override
     public void run()
     {
-        protocol.notifySubscribed(subscribed,highestOffer,serviceId);
+        protocol.notifySubscribed(subscribed,highestOffer,serviceId, type);
     }
 
 }

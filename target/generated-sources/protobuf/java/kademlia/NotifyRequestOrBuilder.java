@@ -41,7 +41,12 @@ public interface NotifyRequestOrBuilder extends
       getPublicKeyBytes();
 
   /**
-   * <code>bytes signature = 5;</code>
+   * <code>uint32 type = 5;</code>
+   */
+  int getType();
+
+  /**
+   * <code>bytes signature = 6;</code>
    */
   com.google.protobuf.ByteString getSignature();
 }

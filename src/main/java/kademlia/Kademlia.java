@@ -1,6 +1,7 @@
 package kademlia;
 
 import auctions.Auction;
+import blockchain.Blockchain;
 import com.google.protobuf.ByteString;
 import kademlia.server.KademliaServer;
 import kademlia.KademliaLookUp;
@@ -67,7 +68,9 @@ public class Kademlia
         }
 
         this.ks = new KademliaStore();
-        KademliaServer server = new KademliaServer(port, new Auction(this), leadingZeros,generatedPk, generatedSk, ks);
+        // TODO CREATE PROPERLY BC
+        Blockchain bc = new Blockchain(5);
+        KademliaServer server = new KademliaServer(port, new Auction(this, bc), leadingZeros,generatedPk, generatedSk, ks);
         Thread serverThread = new Thread(server);
         serverThread.start();
     }
@@ -83,7 +86,9 @@ public class Kademlia
             protocol = new KademliaProtocol(sKadNodeId,"127.0.0.1",5000, generatedPk, generatedSk,randomX, cryptoPuzzleSol);
             rt = new KrtBootStrap(sKadNodeId,protocol,20,20);
             ks = new KademliaStore();
-            KademliaServer server = new KademliaServer(5000,  new Auction(new Kademlia(sKadNodeId,generatedPk,generatedSk,rt,protocol)),leadingZeros,generatedPk, generatedSk, ks);
+            // TODO CREATE PROPERLY BC
+            Blockchain bc = new Blockchain(5);
+            KademliaServer server = new KademliaServer(5000,  new Auction(new Kademlia(sKadNodeId,generatedPk,generatedSk,rt,protocol),bc),leadingZeros,generatedPk, generatedSk, ks);
 
             Thread serverThread = new Thread(server);
             serverThread.start();
@@ -96,8 +101,10 @@ public class Kademlia
             rt = new KrtNormal(sKadNodeId, protocol, 20, 20);
 
             ks= new KademliaStore();
+            // TODO CREATE PROPERLY BC
+            Blockchain bc = new Blockchain(5);
             KademliaServer server = new KademliaServer(Integer.parseInt(args[1]),
-                    new Auction(new Kademlia(sKadNodeId,generatedPk,generatedSk,rt,protocol)), leadingZeros,generatedPk, generatedSk, ks);
+                    new Auction(new Kademlia(sKadNodeId,generatedPk,generatedSk,rt,protocol),bc), leadingZeros,generatedPk, generatedSk, ks);
             Thread serverThread = new Thread(server);
             serverThread.start();
 
@@ -220,10 +227,7 @@ public class Kademlia
         ArrayList<Node> allResults = new ArrayList<>(); // ArrayList to store all results
 
         Thread[] threads = new Thread[closestNodes.size()];
-
-        // TODO:
-        //   - distribuir closest nodes obtidos em lookup buckets independentes
-        //   - para cada nó fazer lookup paralelo
+        
         int i = 0;
         for (Node n : closestNodes) {
             final ArrayList<Node> currentResults = results[i]; // Final variable capturing the current results
@@ -260,6 +264,7 @@ public class Kademlia
 
         return allResults;
     }
+
 
 
 

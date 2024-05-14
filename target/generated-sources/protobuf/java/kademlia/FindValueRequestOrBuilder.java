@@ -39,9 +39,4 @@ public interface FindValueRequestOrBuilder extends
    * <code>bytes signature = 4;</code>
    */
   com.google.protobuf.ByteString getSignature();
-
-  /**
-   * <code>bytes cryptoPuzzle = 5;</code>
-   */
-  com.google.protobuf.ByteString getCryptoPuzzle();
 }

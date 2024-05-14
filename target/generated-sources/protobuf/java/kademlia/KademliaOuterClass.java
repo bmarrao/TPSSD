@@ -124,70 +124,68 @@ public final class KademliaOuterClass {
   static {
     java.lang.String[] descriptorData = {
       "\n\016Kademlia.proto\022\010kademlia\032\033google/proto" +
-      "buf/empty.proto\"g\n\013PingRequest\022\034\n\004node\030\001" +
+      "buf/empty.proto\"Q\n\013PingRequest\022\034\n\004node\030\001" +
       " \001(\0132\016.kademlia.Node\022\021\n\tpublicKey\030\002 \001(\t\022" +
-      "\021\n\tsignature\030\003 \001(\014\022\024\n\014cryptoPuzzle\030\004 \001(\014" +
-      "\"P\n\014PingResponse\022\n\n\002id\030\001 \001(\014\022\016\n\006online\030\002" +
-      " \001(\010\022\021\n\tpublicKey\030\003 \001(\t\022\021\n\tsignature\030\004 \001" +
-      "(\014\"?\n\004Node\022\n\n\002id\030\001 \001(\014\022\n\n\002ip\030\002 \001(\t\022\014\n\004po" +
-      "rt\030\003 \001(\r\022\021\n\tpublicKey\030\004 \001(\t\"\"\n\rNodeSigna" +
-      "ture\022\021\n\tsignature\030\001 \001(\014\"4\n\005Offer\022\034\n\004node" +
-      "\030\001 \001(\0132\016.kademlia.Node\022\r\n\005price\030\002 \001(\002\"\232\001",
-      "\n\013Transaction\022\n\n\002id\030\001 \001(\014\022\014\n\004type\030\002 \001(\r\022" +
-      "\035\n\005owner\030\003 \001(\0132\016.kademlia.Node\022\036\n\006broker" +
-      "\030\004 \001(\0132\016.kademlia.Node\022\021\n\tsignature\030\005 \001(" +
-      "\014\022\037\n\006sender\030\006 \001(\0132\017.kademlia.Offer\"\224\001\n\014S" +
-      "toreRequest\022\034\n\004node\030\001 \001(\0132\016.kademlia.Nod" +
-      "e\022\013\n\003key\030\002 \001(\014\022\035\n\005value\030\003 \001(\0132\016.kademlia" +
-      ".Node\022\021\n\tpublicKey\030\004 \001(\t\022\021\n\tsignature\030\005 " +
-      "\001(\014\022\024\n\014cryptoPuzzle\030\006 \001(\014\"Q\n\rStoreRespon" +
-      "se\022\n\n\002id\030\001 \001(\014\022\016\n\006stored\030\002 \001(\010\022\021\n\tpublic" +
-      "Key\030\003 \001(\t\022\021\n\tsignature\030\004 \001(\014\"\203\001\n\017FindNod",
-      "eRequest\022\034\n\004node\030\001 \001(\0132\016.kademlia.Node\022\013" +
-      "\n\003key\030\002 \001(\014\022\t\n\001k\030\003 \001(\r\022\021\n\tpublicKey\030\004 \001(" +
-      "\t\022\021\n\tsignature\030\005 \001(\014\022\024\n\014cryptoPuzzle\030\006 \001" +
-      "(\014\"\212\001\n\020FindNodeResponse\022\n\n\002id\030\001 \001(\014\022\035\n\005n" +
-      "odes\030\002 \003(\0132\016.kademlia.Node\022\021\n\tpublicKey\030" +
-      "\003 \001(\t\022#\n\002ns\030\004 \003(\0132\027.kademlia.NodeSignatu" +
-      "re\022\023\n\013idSignature\030\005 \001(\014\"y\n\020FindValueRequ" +
-      "est\022\034\n\004node\030\001 \001(\0132\016.kademlia.Node\022\013\n\003key" +
-      "\030\002 \001(\014\022\021\n\tpublicKey\030\003 \001(\t\022\021\n\tsignature\030\004" +
-      " \001(\014\022\024\n\014cryptoPuzzle\030\005 \001(\014\"\203\001\n\021FindValue",
-      "Response\022\n\n\002id\030\001 \001(\014\022\035\n\005value\030\002 \001(\0132\016.ka" +
-      "demlia.Node\022\035\n\005nodes\030\003 \003(\0132\016.kademlia.No" +
-      "de\022\021\n\tpublicKey\030\004 \001(\t\022\021\n\tsignature\030\005 \001(\014" +
-      "\"u\n\rNotifyRequest\022\021\n\tserviceId\030\001 \001(\014\022\034\n\004" +
-      "node\030\002 \001(\0132\016.kademlia.Node\022\r\n\005price\030\003 \001(" +
-      "\002\022\021\n\tpublicKey\030\004 \001(\t\022\021\n\tsignature\030\005 \001(\014\"" +
-      "H\n\016NotifyResponse\022\020\n\010response\030\001 \001(\010\022\021\n\tp" +
-      "ublicKey\030\002 \001(\t\022\021\n\tsignature\030\003 \001(\014\"J\n\017get" +
-      "PriceRequest\022\021\n\tserviceId\030\001 \001(\014\022\021\n\tpubli" +
-      "cKey\030\002 \001(\t\022\021\n\tsignature\030\003 \001(\014\"G\n\020getPric",
-      "eResponse\022\r\n\005price\030\001 \001(\002\022\021\n\tpublicKey\030\002 " +
-      "\001(\t\022\021\n\tsignature\030\003 \001(\014\"k\n\020sendPriceReque" +
-      "st\022\021\n\tserviceId\030\001 \001(\014\022\036\n\005offer\030\002 \001(\0132\017.k" +
-      "ademlia.Offer\022\021\n\tpublicKey\030\003 \001(\t\022\021\n\tsign" +
-      "ature\030\004 \001(\014\"I\n\021sendPriceResponse\022\016\n\006resu" +
-      "lt\030\001 \001(\010\022\021\n\tpublicKey\030\002 \001(\t\022\021\n\tsignature" +
-      "\030\003 \001(\014\"i\n\020subscribeRequest\022\034\n\004node\030\001 \001(\013" +
-      "2\016.kademlia.Node\022\021\n\tserviceId\030\002 \001(\014\022\021\n\tp" +
-      "ublicKey\030\003 \001(\t\022\021\n\tsignature\030\004 \001(\014\"K\n\021sub" +
-      "scribeResponse\022\020\n\010response\030\001 \001(\010\022\021\n\tpubl",
-      "icKey\030\002 \001(\t\022\021\n\tsignature\030\003 \001(\0142\220\004\n\010Kadem" +
-      "lia\0225\n\004ping\022\025.kademlia.PingRequest\032\026.kad" +
-      "emlia.PingResponse\0228\n\005store\022\026.kademlia.S" +
-      "toreRequest\032\027.kademlia.StoreResponse\022A\n\010" +
-      "findNode\022\031.kademlia.FindNodeRequest\032\032.ka" +
-      "demlia.FindNodeResponse\022D\n\tfindValue\022\032.k" +
-      "ademlia.FindValueRequest\032\033.kademlia.Find" +
-      "ValueResponse\022;\n\006notify\022\027.kademlia.Notif" +
-      "yRequest\032\030.kademlia.NotifyResponse\022A\n\010ge" +
-      "tPrice\022\031.kademlia.getPriceRequest\032\032.kade",
-      "mlia.getPriceResponse\022D\n\tsendPrice\022\032.kad" +
-      "emlia.sendPriceRequest\032\033.kademlia.sendPr" +
-      "iceResponse\022D\n\tsubscribe\022\032.kademlia.subs" +
-      "cribeRequest\032\033.kademlia.subscribeRespons" +
-      "eB\002P\001b\006proto3"
+      "\021\n\tsignature\030\003 \001(\014\"P\n\014PingResponse\022\n\n\002id" +
+      "\030\001 \001(\014\022\016\n\006online\030\002 \001(\010\022\021\n\tpublicKey\030\003 \001(" +
+      "\t\022\021\n\tsignature\030\004 \001(\014\"=\n\004Node\022\n\n\002id\030\001 \001(\014" +
+      "\022\n\n\002ip\030\002 \001(\t\022\014\n\004port\030\003 \001(\r\022\017\n\007randomX\030\004 " +
+      "\001(\014\"\"\n\rNodeSignature\022\021\n\tsignature\030\001 \001(\014\"" +
+      "4\n\005Offer\022\034\n\004node\030\001 \001(\0132\016.kademlia.Node\022\r" +
+      "\n\005price\030\002 \001(\002\"\232\001\n\013Transaction\022\n\n\002id\030\001 \001(",
+      "\014\022\014\n\004type\030\002 \001(\r\022\035\n\005owner\030\003 \001(\0132\016.kademli" +
+      "a.Node\022\036\n\006broker\030\004 \001(\0132\016.kademlia.Node\022\021" +
+      "\n\tsignature\030\005 \001(\014\022\037\n\006sender\030\006 \001(\0132\017.kade" +
+      "mlia.Offer\"~\n\014StoreRequest\022\034\n\004node\030\001 \001(\013" +
+      "2\016.kademlia.Node\022\013\n\003key\030\002 \001(\014\022\035\n\005value\030\003" +
+      " \001(\0132\016.kademlia.Node\022\021\n\tpublicKey\030\004 \001(\t\022" +
+      "\021\n\tsignature\030\005 \001(\014\"Q\n\rStoreResponse\022\n\n\002i" +
+      "d\030\001 \001(\014\022\016\n\006stored\030\002 \001(\010\022\021\n\tpublicKey\030\003 \001" +
+      "(\t\022\021\n\tsignature\030\004 \001(\014\"m\n\017FindNodeRequest" +
+      "\022\034\n\004node\030\001 \001(\0132\016.kademlia.Node\022\013\n\003key\030\002 ",
+      "\001(\014\022\t\n\001k\030\003 \001(\r\022\021\n\tpublicKey\030\004 \001(\t\022\021\n\tsig" +
+      "nature\030\005 \001(\014\"\212\001\n\020FindNodeResponse\022\n\n\002id\030" +
+      "\001 \001(\014\022\035\n\005nodes\030\002 \003(\0132\016.kademlia.Node\022\021\n\t" +
+      "publicKey\030\003 \001(\t\022#\n\002ns\030\004 \003(\0132\027.kademlia.N" +
+      "odeSignature\022\023\n\013idSignature\030\005 \001(\014\"c\n\020Fin" +
+      "dValueRequest\022\034\n\004node\030\001 \001(\0132\016.kademlia.N" +
+      "ode\022\013\n\003key\030\002 \001(\014\022\021\n\tpublicKey\030\003 \001(\t\022\021\n\ts" +
+      "ignature\030\004 \001(\014\"\203\001\n\021FindValueResponse\022\n\n\002" +
+      "id\030\001 \001(\014\022\035\n\005value\030\002 \001(\0132\016.kademlia.Node\022" +
+      "\035\n\005nodes\030\003 \003(\0132\016.kademlia.Node\022\021\n\tpublic",
+      "Key\030\004 \001(\t\022\021\n\tsignature\030\005 \001(\014\"\203\001\n\rNotifyR" +
+      "equest\022\021\n\tserviceId\030\001 \001(\014\022\034\n\004node\030\002 \001(\0132" +
+      "\016.kademlia.Node\022\r\n\005price\030\003 \001(\002\022\021\n\tpublic" +
+      "Key\030\004 \001(\t\022\014\n\004type\030\005 \001(\r\022\021\n\tsignature\030\006 \001" +
+      "(\014\"H\n\016NotifyResponse\022\020\n\010response\030\001 \001(\010\022\021" +
+      "\n\tpublicKey\030\002 \001(\t\022\021\n\tsignature\030\003 \001(\014\"J\n\017" +
+      "getPriceRequest\022\021\n\tserviceId\030\001 \001(\014\022\021\n\tpu" +
+      "blicKey\030\002 \001(\t\022\021\n\tsignature\030\003 \001(\014\"G\n\020getP" +
+      "riceResponse\022\r\n\005price\030\001 \001(\002\022\021\n\tpublicKey" +
+      "\030\002 \001(\t\022\021\n\tsignature\030\003 \001(\014\"k\n\020sendPriceRe",
+      "quest\022\021\n\tserviceId\030\001 \001(\014\022\036\n\005offer\030\002 \001(\0132" +
+      "\017.kademlia.Offer\022\021\n\tpublicKey\030\003 \001(\t\022\021\n\ts" +
+      "ignature\030\004 \001(\014\"I\n\021sendPriceResponse\022\016\n\006r" +
+      "esult\030\001 \001(\010\022\021\n\tpublicKey\030\002 \001(\t\022\021\n\tsignat" +
+      "ure\030\003 \001(\014\"i\n\020subscribeRequest\022\034\n\004node\030\001 " +
+      "\001(\0132\016.kademlia.Node\022\021\n\tserviceId\030\002 \001(\014\022\021" +
+      "\n\tpublicKey\030\003 \001(\t\022\021\n\tsignature\030\004 \001(\014\"K\n\021" +
+      "subscribeResponse\022\020\n\010response\030\001 \001(\010\022\021\n\tp" +
+      "ublicKey\030\002 \001(\t\022\021\n\tsignature\030\003 \001(\0142\220\004\n\010Ka" +
+      "demlia\0225\n\004ping\022\025.kademlia.PingRequest\032\026.",
+      "kademlia.PingResponse\0228\n\005store\022\026.kademli" +
+      "a.StoreRequest\032\027.kademlia.StoreResponse\022" +
+      "A\n\010findNode\022\031.kademlia.FindNodeRequest\032\032" +
+      ".kademlia.FindNodeResponse\022D\n\tfindValue\022" +
+      "\032.kademlia.FindValueRequest\032\033.kademlia.F" +
+      "indValueResponse\022;\n\006notify\022\027.kademlia.No" +
+      "tifyRequest\032\030.kademlia.NotifyResponse\022A\n" +
+      "\010getPrice\022\031.kademlia.getPriceRequest\032\032.k" +
+      "ademlia.getPriceResponse\022D\n\tsendPrice\022\032." +
+      "kademlia.sendPriceRequest\032\033.kademlia.sen",
+      "dPriceResponse\022D\n\tsubscribe\022\032.kademlia.s" +
+      "ubscribeRequest\032\033.kademlia.subscribeResp" +
+      "onseB\002P\001b\006proto3"
     };
     com.google.protobuf.Descriptors.FileDescriptor.InternalDescriptorAssigner assigner =
         new com.google.protobuf.Descriptors.FileDescriptor.    InternalDescriptorAssigner() {
@@ -207,7 +205,7 @@ public final class KademliaOuterClass {
     internal_static_kademlia_PingRequest_fieldAccessorTable = new
       com.google.protobuf.GeneratedMessageV3.FieldAccessorTable(
         internal_static_kademlia_PingRequest_descriptor,
-        new java.lang.String[] { "Node", "PublicKey", "Signature", "CryptoPuzzle", });
+        new java.lang.String[] { "Node", "PublicKey", "Signature", });
     internal_static_kademlia_PingResponse_descriptor =
       getDescriptor().getMessageTypes().get(1);
     internal_static_kademlia_PingResponse_fieldAccessorTable = new
@@ -219,7 +217,7 @@ public final class KademliaOuterClass {
     internal_static_kademlia_Node_fieldAccessorTable = new
       com.google.protobuf.GeneratedMessageV3.FieldAccessorTable(
         internal_static_kademlia_Node_descriptor,
-        new java.lang.String[] { "Id", "Ip", "Port", "PublicKey", });
+        new java.lang.String[] { "Id", "Ip", "Port", "RandomX", });
     internal_static_kademlia_NodeSignature_descriptor =
       getDescriptor().getMessageTypes().get(3);
     internal_static_kademlia_NodeSignature_fieldAccessorTable = new
@@ -243,7 +241,7 @@ public final class KademliaOuterClass {
     internal_static_kademlia_StoreRequest_fieldAccessorTable = new
       com.google.protobuf.GeneratedMessageV3.FieldAccessorTable(
         internal_static_kademlia_StoreRequest_descriptor,
-        new java.lang.String[] { "Node", "Key", "Value", "PublicKey", "Signature", "CryptoPuzzle", });
+        new java.lang.String[] { "Node", "Key", "Value", "PublicKey", "Signature", });
     internal_static_kademlia_StoreResponse_descriptor =
       getDescriptor().getMessageTypes().get(7);
     internal_static_kademlia_StoreResponse_fieldAccessorTable = new
@@ -255,7 +253,7 @@ public final class KademliaOuterClass {
     internal_static_kademlia_FindNodeRequest_fieldAccessorTable = new
       com.google.protobuf.GeneratedMessageV3.FieldAccessorTable(
         internal_static_kademlia_FindNodeRequest_descriptor,
-        new java.lang.String[] { "Node", "Key", "K", "PublicKey", "Signature", "CryptoPuzzle", });
+        new java.lang.String[] { "Node", "Key", "K", "PublicKey", "Signature", });
     internal_static_kademlia_FindNodeResponse_descriptor =
       getDescriptor().getMessageTypes().get(9);
     internal_static_kademlia_FindNodeResponse_fieldAccessorTable = new
@@ -267,7 +265,7 @@ public final class KademliaOuterClass {
     internal_static_kademlia_FindValueRequest_fieldAccessorTable = new
       com.google.protobuf.GeneratedMessageV3.FieldAccessorTable(
         internal_static_kademlia_FindValueRequest_descriptor,
-        new java.lang.String[] { "Node", "Key", "PublicKey", "Signature", "CryptoPuzzle", });
+        new java.lang.String[] { "Node", "Key", "PublicKey", "Signature", });
     internal_static_kademlia_FindValueResponse_descriptor =
       getDescriptor().getMessageTypes().get(11);
     internal_static_kademlia_FindValueResponse_fieldAccessorTable = new
@@ -279,7 +277,7 @@ public final class KademliaOuterClass {
     internal_static_kademlia_NotifyRequest_fieldAccessorTable = new
       com.google.protobuf.GeneratedMessageV3.FieldAccessorTable(
         internal_static_kademlia_NotifyRequest_descriptor,
-        new java.lang.String[] { "ServiceId", "Node", "Price", "PublicKey", "Signature", });
+        new java.lang.String[] { "ServiceId", "Node", "Price", "PublicKey", "Type", "Signature", });
     internal_static_kademlia_NotifyResponse_descriptor =
       getDescriptor().getMessageTypes().get(13);
     internal_static_kademlia_NotifyResponse_fieldAccessorTable = new

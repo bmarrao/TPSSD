@@ -11,7 +11,6 @@ message PingRequest
   Node node = 1;
   string publicKey = 2;
   bytes signature = 3;
-  bytes cryptoPuzzle = 4;
 }
 
 message PingResponse 
@@ -27,9 +26,7 @@ message Node
   bytes id = 1;
   string ip = 2;
   uint32 port = 3;
-  string publicKey = 4;
-
-
+  bytes randomX = 4;
 }
 
 message NodeSignature
@@ -60,7 +57,6 @@ message StoreRequest
   Node value = 3;
   string publicKey = 4;
   bytes signature = 5;
-  bytes cryptoPuzzle = 6;
 }
 
 message StoreResponse
@@ -78,7 +74,6 @@ message FindNodeRequest
   uint32 k = 3;
   string publicKey = 4;
   bytes signature = 5;
-  bytes cryptoPuzzle = 6;
 }
 
 // Interativo ou recursivo
@@ -97,7 +92,6 @@ message FindValueRequest
   bytes key = 2;
   string publicKey = 3;
   bytes signature = 4;
-  bytes cryptoPuzzle = 5;
 }
 
 message FindValueResponse
@@ -115,7 +109,8 @@ message NotifyRequest
   Node node = 2;
   float price = 3;
   string publicKey = 4;
-  bytes signature = 5;
+  uint32 type = 5;
+  bytes signature = 6;
 
 }
 

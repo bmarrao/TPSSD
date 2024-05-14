@@ -44,9 +44,4 @@ public interface FindNodeRequestOrBuilder extends
    * <code>bytes signature = 5;</code>
    */
   com.google.protobuf.ByteString getSignature();
-
-  /**
-   * <code>bytes cryptoPuzzle = 6;</code>
-   */
-  com.google.protobuf.ByteString getCryptoPuzzle();
 }

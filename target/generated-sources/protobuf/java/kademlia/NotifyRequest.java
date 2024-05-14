@@ -18,6 +18,7 @@ public  final class NotifyRequest extends
     serviceId_ = com.google.protobuf.ByteString.EMPTY;
     price_ = 0F;
     publicKey_ = "";
+    type_ = 0;
     signature_ = com.google.protobuf.ByteString.EMPTY;
   }
 
@@ -75,7 +76,12 @@ public  final class NotifyRequest extends
             publicKey_ = s;
             break;
           }
-          case 42: {
+          case 40: {
+
+            type_ = input.readUInt32();
+            break;
+          }
+          case 50: {
 
             signature_ = input.readBytes();
             break;
@@ -176,10 +182,19 @@ public  final class NotifyRequest extends
     }
   }
 
-  public static final int SIGNATURE_FIELD_NUMBER = 5;
+  public static final int TYPE_FIELD_NUMBER = 5;
+  private int type_;
+  /**
+   * <code>uint32 type = 5;</code>
+   */
+  public int getType() {
+    return type_;
+  }
+
+  public static final int SIGNATURE_FIELD_NUMBER = 6;
   private com.google.protobuf.ByteString signature_;
   /**
-   * <code>bytes signature = 5;</code>
+   * <code>bytes signature = 6;</code>
    */
   public com.google.protobuf.ByteString getSignature() {
     return signature_;
@@ -209,8 +224,11 @@ public  final class NotifyRequest extends
     if (!getPublicKeyBytes().isEmpty()) {
       com.google.protobuf.GeneratedMessageV3.writeString(output, 4, publicKey_);
     }
+    if (type_ != 0) {
+      output.writeUInt32(5, type_);
+    }
     if (!signature_.isEmpty()) {
-      output.writeBytes(5, signature_);
+      output.writeBytes(6, signature_);
     }
   }
 
@@ -234,9 +252,13 @@ public  final class NotifyRequest extends
     if (!getPublicKeyBytes().isEmpty()) {
       size += com.google.protobuf.GeneratedMessageV3.computeStringSize(4, publicKey_);
     }
+    if (type_ != 0) {
+      size += com.google.protobuf.CodedOutputStream
+        .computeUInt32Size(5, type_);
+    }
     if (!signature_.isEmpty()) {
       size += com.google.protobuf.CodedOutputStream
-        .computeBytesSize(5, signature_);
+        .computeBytesSize(6, signature_);
     }
     memoizedSize = size;
     return size;
@@ -267,6 +289,8 @@ public  final class NotifyRequest extends
             other.getPrice()));
     result = result && getPublicKey()
         .equals(other.getPublicKey());
+    result = result && (getType()
+        == other.getType());
     result = result && getSignature()
         .equals(other.getSignature());
     return result;
@@ -290,6 +314,8 @@ public  final class NotifyRequest extends
         getPrice());
     hash = (37 * hash) + PUBLICKEY_FIELD_NUMBER;
     hash = (53 * hash) + getPublicKey().hashCode();
+    hash = (37 * hash) + TYPE_FIELD_NUMBER;
+    hash = (53 * hash) + getType();
     hash = (37 * hash) + SIGNATURE_FIELD_NUMBER;
     hash = (53 * hash) + getSignature().hashCode();
     hash = (29 * hash) + unknownFields.hashCode();
@@ -433,6 +459,8 @@ public  final class NotifyRequest extends
 
       publicKey_ = "";
 
+      type_ = 0;
+
       signature_ = com.google.protobuf.ByteString.EMPTY;
 
       return this;
@@ -465,6 +493,7 @@ public  final class NotifyRequest extends
       }
       result.price_ = price_;
       result.publicKey_ = publicKey_;
+      result.type_ = type_;
       result.signature_ = signature_;
       onBuilt();
       return result;
@@ -519,6 +548,9 @@ public  final class NotifyRequest extends
       if (!other.getPublicKey().isEmpty()) {
         publicKey_ = other.publicKey_;
         onChanged();
+      }
+      if (other.getType() != 0) {
+        setType(other.getType());
       }
       if (other.getSignature() != com.google.protobuf.ByteString.EMPTY) {
         setSignature(other.getSignature());
@@ -790,15 +822,41 @@ public  final class NotifyRequest extends
       return this;
     }
 
+    private int type_ ;
+    /**
+     * <code>uint32 type = 5;</code>
+     */
+    public int getType() {
+      return type_;
+    }
+    /**
+     * <code>uint32 type = 5;</code>
+     */
+    public Builder setType(int value) {
+      
+      type_ = value;
+      onChanged();
+      return this;
+    }
+    /**
+     * <code>uint32 type = 5;</code>
+     */
+    public Builder clearType() {
+      
+      type_ = 0;
+      onChanged();
+      return this;
+    }
+
     private com.google.protobuf.ByteString signature_ = com.google.protobuf.ByteString.EMPTY;
     /**
-     * <code>bytes signature = 5;</code>
+     * <code>bytes signature = 6;</code>
      */
     public com.google.protobuf.ByteString getSignature() {
       return signature_;
     }
     /**
-     * <code>bytes signature = 5;</code>
+     * <code>bytes signature = 6;</code>
      */
     public Builder setSignature(com.google.protobuf.ByteString value) {
       if (value == null) {
@@ -810,7 +868,7 @@ public  final class NotifyRequest extends
       return this;
     }
     /**
-     * <code>bytes signature = 5;</code>
+     * <code>bytes signature = 6;</code>
      */
     public Builder clearSignature() {
       

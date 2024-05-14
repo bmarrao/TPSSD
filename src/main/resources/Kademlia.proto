@@ -109,7 +109,8 @@ message NotifyRequest
   Node node = 2;
   float price = 3;
   string publicKey = 4;
-  bytes signature = 5;
+  uint32 type = 5;
+  bytes signature = 6;
 
 }
 

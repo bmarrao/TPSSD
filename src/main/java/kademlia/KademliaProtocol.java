@@ -4,6 +4,7 @@ import com.google.protobuf.ByteString;
 import io.grpc.ManagedChannel;
 import io.grpc.ManagedChannelBuilder;
 import kademlia.Offer;
+import io.grpc.stub.StreamObserver;
 
 import java.security.KeyFactory;
 import java.security.PrivateKey;
@@ -22,7 +23,20 @@ public class KademliaProtocol
     public PrivateKey privateKey;
     public int randomX;
     public byte[] cryptoPuzzleSol;
+    StreamObserver response = new StreamObserver<NotifyResponse>() {
+        @Override
+        public void onNext(NotifyResponse response) {
+        }
 
+        @Override
+        public void onError(Throwable t) {
+        }
+
+        @Override
+        public void onCompleted() {
+
+        }
+    };
     public KademliaProtocol(byte[] nodeId, String ipAddress, int port, PublicKey publicKey, PrivateKey privateKey, int randomX, byte[] cryptoPuzzleSol)
     {
         this.nodeId = nodeId;
@@ -101,10 +115,8 @@ public class KademliaProtocol
         return false;
     }
 
-    /*
-
 //TIREI NODEID DA DECLARACAO - QUERO ALTERAR KEY PARA BYTE[]
-    public boolean storeOp(String key, String val, String receiverIp, int receiverPort) {
+    public boolean storeOp(byte[] key, Node val, String receiverIp, int receiverPort) {
         ManagedChannel channel = ManagedChannelBuilder.forAddress(receiverIp, receiverPort).usePlaintext().build();
 
         KademliaGrpc.KademliaBlockingStub stub = KademliaGrpc.newBlockingStub(channel);
@@ -114,14 +126,21 @@ public class KademliaProtocol
                 .setId(ByteString.copyFrom(this.nodeId))
                 .setIp(ipAddress)
                 .setPort(port)
-                .setCryptoPuzzle(ByteString.copyFrom(cryptoPuzzleSol))
+                .setRandomX(ByteString.copyFrom(cryptoPuzzleSol))
                 .build();
 
         byte[] nodeInfoToSign = node.toByteArray();
-        byte[] infoToSign = new byte[nodeInfoToSign.length + 2];
+        byte[] nodeToStore = val.toByteArray();
+        byte[] valToStore = val.toByteArray();
+
+        int totalLength = nodeInfoToSign.length + nodeToStore.length + valToStore.length;
+
+        byte[] infoToSign = new byte[totalLength];
+
         System.arraycopy(nodeInfoToSign, 0, infoToSign, 0, nodeInfoToSign.length);
-        infoToSign[nodeInfoToSign.length] = Byte.parseByte(key);
-        infoToSign[nodeInfoToSign.length+1] = Byte.parseByte(val);
+        System.arraycopy(nodeToStore, 0, infoToSign, nodeInfoToSign.length, nodeToStore.length);
+        System.arraycopy(valToStore, 0, infoToSign, nodeInfoToSign.length + nodeToStore.length, valToStore.length);
+
 
         byte[] signature = null;
         try {
@@ -133,7 +152,7 @@ public class KademliaProtocol
 
         StoreRequest request = StoreRequest.newBuilder()
                 .setNode(node)
-                .setKey(key)
+                .setKey(ByteString.copyFrom(key))
                 .setValue(val)
                 .setPublicKey(Base64.getEncoder().encodeToString(publicKey.getEncoded()))
                 .setSignature(ByteString.copyFrom(signature)).build();
@@ -143,7 +162,8 @@ public class KademliaProtocol
 
         // Check signature
         boolean signVal = false;
-        try {
+        try
+        {
             signVal = verify(response.getId().toByteArray(), response.getSignature().toByteArray(), response.getPublicKey());
         }
         catch(Exception e) {
@@ -158,7 +178,6 @@ public class KademliaProtocol
 
 
 
-     */
 
     public KademliaFindOpResult findNodeOp(byte[] nodeId, byte[] key, String receiverIp, int receiverPort)
     {
@@ -287,26 +306,24 @@ public class KademliaProtocol
 
     }
 
-    public void notifySubscribed(ArrayList<Node> subscribed, Offer highestOffer, byte[] serviceId) {
+    public void notifySubscribed(ArrayList<Node> subscribed, Offer highestOffer, byte[] serviceId, int type) {
         for (Node n : subscribed) {
             ManagedChannel channel = ManagedChannelBuilder.forAddress(n.getIp(), n.getPort())
                     .usePlaintext()
                     .build();
-            KademliaGrpc.KademliaBlockingStub stub = KademliaGrpc.newBlockingStub(channel);
+            KademliaGrpc.KademliaStub stub = KademliaGrpc.newStub(channel);
 
             NotifyRequest request = NotifyRequest.newBuilder()
                     .setNode(n)
                     .setPrice(highestOffer.getPrice())
+                    .setType(type)
                     .setServiceId(ByteString.copyFrom(serviceId))
                     .build();
 
-            stub.notify(request);
-
-
-            // Send the request asynchronously
-
+            stub.notify(request, response);
         }
     }
+
 
 
 
