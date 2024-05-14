@@ -4,10 +4,10 @@ import java.util.List;
 
 public class KademliaFindOpResult {
     byte[] nodeId;
-    String val;
+    Node val;
     List<Node> nodesList;
 
-    public KademliaFindOpResult(byte[] nodeId, String val, List<Node> nodesList)
+    public KademliaFindOpResult(byte[] nodeId, Node val, List<Node> nodesList)
     {
         this.nodeId = nodeId;
         this.val = val;
@@ -18,7 +18,7 @@ public class KademliaFindOpResult {
         return this.nodeId;
     }
 
-    public String getVal() {
+    public Node getVal() {
         return this.val;
     }
 

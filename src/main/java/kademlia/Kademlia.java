@@ -46,7 +46,7 @@ public class Kademlia
     public Kademlia(byte[] nodeId, String ipAddress, int port, boolean bootstrap, int k, int s)
     {
         Kademlia.nodeId = nodeId;
-        protocol = new KademliaProtocol(nodeId,ipAddress,port,generatedPk,generatedSk,randomX, cryptoPuzzleSol);
+        protocol = new KademliaProtocol(nodeId,ipAddress,port,generatedPk,generatedSk,randomX);
 
         if (bootstrap)
         {
@@ -63,7 +63,7 @@ public class Kademlia
             String[] bootstrapIpPort = selectedBootstrap.split(" ");
 
             // Start thread for joining network
-            Thread joinNetThread = new Thread(new KademliaJoinNetwork(nodeId, ipAddress, port, generatedPk, generatedSk, randomX, bootstrapIpPort[0], Integer.parseInt(bootstrapIpPort[1]), cryptoPuzzleSol));
+            Thread joinNetThread = new Thread(new KademliaJoinNetwork(nodeId, ipAddress, port, generatedPk, generatedSk, randomX, bootstrapIpPort[0], Integer.parseInt(bootstrapIpPort[1])));
             joinNetThread.start();
         }
 
@@ -83,7 +83,7 @@ public class Kademlia
 
         if (args[0].equals("bootstrap"))
         {
-            protocol = new KademliaProtocol(sKadNodeId,"127.0.0.1",5000, generatedPk, generatedSk,randomX, cryptoPuzzleSol);
+            protocol = new KademliaProtocol(sKadNodeId,"127.0.0.1",5000, generatedPk, generatedSk,randomX);
             rt = new KrtBootStrap(sKadNodeId,protocol,20,20);
             ks = new KademliaStore();
             // TODO CREATE PROPERLY BC
@@ -96,7 +96,7 @@ public class Kademlia
             addIpPortBSFile("127.0.0.1", 5000, bootstrapFilePath);
         }
         else {
-            protocol = new KademliaProtocol(sKadNodeId,"localhost",Integer.parseInt(args[1]), generatedPk, generatedSk,randomX,cryptoPuzzleSol);
+            protocol = new KademliaProtocol(sKadNodeId,"localhost",Integer.parseInt(args[1]), generatedPk, generatedSk,randomX);
 
             rt = new KrtNormal(sKadNodeId, protocol, 20, 20);
 
@@ -114,7 +114,7 @@ public class Kademlia
             String[] bootstrapIpPort = selectedBootstrap.split(" ");
 
             // Start thread for joining network
-            Thread joinNetThread = new Thread(new KademliaJoinNetwork(sKadNodeId, "localhost", Integer.parseInt(args[1]), generatedPk, generatedSk, randomX, bootstrapIpPort[0], Integer.parseInt(bootstrapIpPort[1]), cryptoPuzzleSol));
+            Thread joinNetThread = new Thread(new KademliaJoinNetwork(sKadNodeId, "localhost", Integer.parseInt(args[1]), generatedPk, generatedSk, randomX, bootstrapIpPort[0], Integer.parseInt(bootstrapIpPort[1])));
             joinNetThread.start();
 
         }

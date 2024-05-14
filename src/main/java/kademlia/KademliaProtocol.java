@@ -6,11 +6,8 @@ import io.grpc.ManagedChannelBuilder;
 import kademlia.Offer;
 import io.grpc.stub.StreamObserver;
 
-import java.security.KeyFactory;
 import java.security.PrivateKey;
 import java.security.PublicKey;
-import java.security.Signature;
-import java.security.spec.X509EncodedKeySpec;
 import java.util.*;
 
 
@@ -21,8 +18,8 @@ public class KademliaProtocol
     public int port;
     public PublicKey publicKey;
     public PrivateKey privateKey;
-    public int randomX;
-    public byte[] cryptoPuzzleSol;
+    public byte randomX;
+
     StreamObserver response = new StreamObserver<NotifyResponse>() {
         @Override
         public void onNext(NotifyResponse response) {
@@ -37,7 +34,7 @@ public class KademliaProtocol
 
         }
     };
-    public KademliaProtocol(byte[] nodeId, String ipAddress, int port, PublicKey publicKey, PrivateKey privateKey, int randomX, byte[] cryptoPuzzleSol)
+    public KademliaProtocol(byte[] nodeId, String ipAddress, int port, PublicKey publicKey, PrivateKey privateKey, byte randomX)
     {
         this.nodeId = nodeId;
         this.ipAddress = ipAddress;
@@ -45,45 +42,22 @@ public class KademliaProtocol
         this.publicKey = publicKey;
         this.privateKey = privateKey;
         this.randomX = randomX;
-        this.cryptoPuzzleSol = cryptoPuzzleSol;
-    }
-
-
-    // Create signature for specific contect from RPC message
-    public static byte[] sign(byte[] data, PrivateKey privateKey) throws Exception {
-        Signature signature = Signature.getInstance("SHA256withRSA");
-        signature.initSign(privateKey);
-        signature.update(data);
-        return signature.sign();
-    }
-
-
-    // Verify signatures from received RPC messages
-    public static boolean verify(byte[] data, byte[] signature, String publicKeyStr) throws Exception {
-        // Convert public key from String to PublicKey
-        byte[] publicKeyBytes = Base64.getDecoder().decode(publicKeyStr);
-        PublicKey publicKey = KeyFactory.getInstance("RSA").generatePublic(new X509EncodedKeySpec(publicKeyBytes));
-
-        Signature sig = Signature.getInstance("SHA256withRSA");
-        sig.initVerify(publicKey);
-        sig.update(data);
-        return sig.verify(signature);
     }
 
 
     public boolean pingOp(byte[] nodeId, String receiverIp, int receiverPort) {
         ManagedChannel channel = ManagedChannelBuilder.forAddress(receiverIp, receiverPort).usePlaintext().build();
 
-        // TODO O ip aqui , não está errado ?
         Node node = Node.newBuilder()
             .setId(ByteString.copyFrom(nodeId))
             .setIp(ipAddress)
-            .setPort(port).build();
+            .setPort(port)
+            .setRandomX(ByteString.copyFrom(new byte[]{randomX})).build();
 
         // Sign node content
         byte[] signature = null;
         try {
-            signature = sign(node.toByteArray(), privateKey);
+            signature = SignatureClass.sign(node.toByteArray(), privateKey);
         }
         catch(Exception e) {
             e.printStackTrace();
@@ -94,8 +68,8 @@ public class KademliaProtocol
 
         PingRequest request = PingRequest.newBuilder()
                 .setNode(node)
-                .setPublicKey(Base64.getEncoder().encodeToString(publicKey.getEncoded()))
-                .setSignature(ByteString.copyFrom(signature)).build();
+                .setSignature(ByteString.copyFrom(signature))
+                .setPublicKey(Base64.getEncoder().encodeToString(publicKey.getEncoded())).build();
 
         // Receive response
         PingResponse response = stub.ping(request);
@@ -103,7 +77,7 @@ public class KademliaProtocol
         // Check signature
         boolean signVal = false;
         try {
-            signVal = verify(response.getId().toByteArray(), response.getSignature().toByteArray(), response.getPublicKey());
+            signVal = SignatureClass.verify(response.getId().toByteArray(), response.getSignature().toByteArray(), response.getPublicKey());
         }
         catch(Exception e) {
             e.printStackTrace();
@@ -115,18 +89,16 @@ public class KademliaProtocol
         return false;
     }
 
-//TIREI NODEID DA DECLARACAO - QUERO ALTERAR KEY PARA BYTE[]
     public boolean storeOp(byte[] key, Node val, String receiverIp, int receiverPort) {
         ManagedChannel channel = ManagedChannelBuilder.forAddress(receiverIp, receiverPort).usePlaintext().build();
 
         KademliaGrpc.KademliaBlockingStub stub = KademliaGrpc.newBlockingStub(channel);
 
         Node node = Node.newBuilder()
-                //.setId(ByteString.copyFrom(nodeId)) ALTEREI ISSO
                 .setId(ByteString.copyFrom(this.nodeId))
                 .setIp(ipAddress)
                 .setPort(port)
-                .setRandomX(ByteString.copyFrom(cryptoPuzzleSol))
+                .setRandomX(ByteString.copyFrom(new byte[]{randomX}))
                 .build();
 
         byte[] nodeInfoToSign = node.toByteArray();
@@ -135,21 +107,22 @@ public class KademliaProtocol
 
         int totalLength = nodeInfoToSign.length + nodeToStore.length + valToStore.length;
 
+        // Add message content to byte[] for signature
         byte[] infoToSign = new byte[totalLength];
-
         System.arraycopy(nodeInfoToSign, 0, infoToSign, 0, nodeInfoToSign.length);
         System.arraycopy(nodeToStore, 0, infoToSign, nodeInfoToSign.length, nodeToStore.length);
         System.arraycopy(valToStore, 0, infoToSign, nodeInfoToSign.length + nodeToStore.length, valToStore.length);
 
-
+        // Sign message content
         byte[] signature = null;
         try {
-            signature = sign(infoToSign, privateKey);
+            signature = SignatureClass.sign(infoToSign, privateKey);
         }
         catch(Exception e) {
             e.printStackTrace();
         }
 
+        // Send RPC request
         StoreRequest request = StoreRequest.newBuilder()
                 .setNode(node)
                 .setKey(ByteString.copyFrom(key))
@@ -159,12 +132,11 @@ public class KademliaProtocol
 
         StoreResponse response = stub.store(request);
 
-
-        // Check signature
+        // Check response's signature
         boolean signVal = false;
         try
         {
-            signVal = verify(response.getId().toByteArray(), response.getSignature().toByteArray(), response.getPublicKey());
+            signVal = SignatureClass.verify(response.getId().toByteArray(), response.getSignature().toByteArray(), response.getPublicKey());
         }
         catch(Exception e) {
             e.printStackTrace();
@@ -181,20 +153,19 @@ public class KademliaProtocol
 
     public KademliaFindOpResult findNodeOp(byte[] nodeId, byte[] key, String receiverIp, int receiverPort)
     {
-
         ManagedChannel channel = ManagedChannelBuilder.forAddress(receiverIp, receiverPort).usePlaintext().build();
-
-
         KademliaGrpc.KademliaBlockingStub stub = KademliaGrpc.newBlockingStub(channel);
 
         Node node = Node.newBuilder()
                 .setId(ByteString.copyFrom(nodeId))
                 .setIp(ipAddress)
-                .setPort(port).build();
+                .setPort(port)
+                .setRandomX(ByteString.copyFrom(new byte[]{randomX})).build();
 
+        // Sign message content
         byte[] signature = null;
         try {
-            signature = sign(node.toByteArray(), privateKey);
+            signature = SignatureClass.sign(node.toByteArray(), privateKey);
         }
         catch(Exception e) {
             e.printStackTrace();
@@ -202,6 +173,7 @@ public class KademliaProtocol
 
         System.out.println("Signature: " + Arrays.toString(signature));
 
+        // Send RPC request
         FindNodeRequest request = FindNodeRequest.newBuilder()
                 .setNode(node)
                 .setKey(ByteString.copyFrom(key))
@@ -210,12 +182,13 @@ public class KademliaProtocol
 
         FindNodeResponse response = stub.findNode(request);
 
+        // Check response's signature
         boolean idSignVal = false;
         boolean nodesSignVal = false;
         try {
-            idSignVal = verify(response.getId().toByteArray(), response.getIdSignature().toByteArray(), response.getPublicKey());
+            idSignVal = SignatureClass.verify(response.getId().toByteArray(), response.getIdSignature().toByteArray(), response.getPublicKey());
             for (int i = 0; i < response.getNodesList().size(); i++) {
-                if (verify(response.getNodesList().get(i).toByteArray(), response.getNsList().get(i).toByteArray(), response.getPublicKey())) {
+                if (SignatureClass.verify(response.getNodesList().get(i).toByteArray(), response.getNsList().get(i).toByteArray(), response.getPublicKey())) {
                     nodesSignVal = true;
                 }
                 else {
@@ -228,14 +201,13 @@ public class KademliaProtocol
         }
 
         if (idSignVal && nodesSignVal) {
-            return new KademliaFindOpResult(response.getId().toByteArray(), "", response.getNodesList());
+            return new KademliaFindOpResult(response.getId().toByteArray(), null, response.getNodesList());
         }
         return null;
     }
 
-    /*
-    TODO UNCOMMENT AND FIX
-    public KademliaFindOpResult findValueOp(byte[] nodeId, String key, String receiverIp, int receiverPort) {
+
+    public KademliaFindOpResult findValueOp(byte[] nodeId, byte[] key, String receiverIp, int receiverPort) {
         ManagedChannel channel = ManagedChannelBuilder.forAddress(receiverIp, receiverPort).usePlaintext().build();
 
         KademliaGrpc.KademliaBlockingStub stub = KademliaGrpc.newBlockingStub(channel);
@@ -243,32 +215,38 @@ public class KademliaProtocol
         Node node = Node.newBuilder()
                 .setId(ByteString.copyFrom(nodeId))
                 .setIp(ipAddress)
-                .setPort(port).build();
+                .setPort(port)
+                .setRandomX(ByteString.copyFrom(new byte[]{randomX})).build();
 
+        // Add message content to byte[] for signature
         byte[] nodeInfoToSign = node.toByteArray();
-        byte[] infoToSign = new byte[nodeInfoToSign.length + 1];
+        byte[] infoToSign = new byte[nodeInfoToSign.length + key.length];
         System.arraycopy(nodeInfoToSign, 0, infoToSign, 0, nodeInfoToSign.length);
-        infoToSign[nodeInfoToSign.length] = Byte.parseByte(key);
+        System.arraycopy(key, 0, infoToSign, nodeInfoToSign.length, infoToSign.length);
 
+
+        // Sign message content
         byte[] signature = null;
         try {
-            signature = sign(infoToSign, privateKey);
+            signature = SignatureClass.sign(infoToSign, privateKey);
         }
         catch(Exception e) {
             e.printStackTrace();
         }
 
+        // Send RPC request
         FindValueRequest request = FindValueRequest.newBuilder()
                 .setNode(node)
-                .setKey(key)
+                .setKey(ByteString.copyFrom(key))
                 .setPublicKey(Base64.getEncoder().encodeToString(publicKey.getEncoded()))
                 .setSignature(ByteString.copyFrom(signature)).build();
 
         FindValueResponse response = stub.findValue(request);
 
+        // Check response's signature
         boolean signVal = false;
         try {
-            signVal = verify(response.getValue().getBytes(), response.getSignature().toByteArray(), response.getPublicKey());
+            signVal = SignatureClass.verify(response.getValue().toByteArray(), response.getSignature().toByteArray(), response.getPublicKey());
         }
         catch(Exception e) {
             e.printStackTrace();
@@ -281,8 +259,6 @@ public class KademliaProtocol
     }
 
 
-*/
-
     public boolean subscribe(byte[] serviceId, Node n )
     {
         ManagedChannel channel = ManagedChannelBuilder.forAddress(n.getIp(), n.getPort()).usePlaintext().build();
@@ -291,14 +267,26 @@ public class KademliaProtocol
                 .setId(ByteString.copyFrom(nodeId))
                 .setIp(ipAddress)
                 .setPort(port)
+                .setRandomX(ByteString.copyFrom(new byte[]{randomX}))
                 .build();
 
         KademliaGrpc.KademliaBlockingStub stub = KademliaGrpc.newBlockingStub(channel);
 
 
+        byte[] signature = null;
+        try {
+            signature = SignatureClass.sign(node.toByteArray(), privateKey);
+        }
+        catch(Exception e) {
+            e.printStackTrace();
+        }
+
+
         subscribeRequest request = subscribeRequest.newBuilder()
                 .setNode(node)
-                .setServiceId(ByteString.copyFrom(serviceId)).build();
+                .setServiceId(ByteString.copyFrom(serviceId))
+                .setPublicKey(Base64.getEncoder().encodeToString(publicKey.getEncoded()))
+                .setSignature(ByteString.copyFrom(signature)).build();
 
         subscribeResponse response = stub.subscribe(request);
 
@@ -318,6 +306,7 @@ public class KademliaProtocol
                     .setPrice(highestOffer.getPrice())
                     .setType(type)
                     .setServiceId(ByteString.copyFrom(serviceId))
+                    .setPublicKey(Base64.getEncoder().encodeToString(publicKey.getEncoded()))
                     .build();
 
             stub.notify(request, response);
@@ -336,6 +325,7 @@ public class KademliaProtocol
                 .setId(ByteString.copyFrom(nodeId))
                 .setIp(ipAddress)
                 .setPort(port)
+                .setRandomX(ByteString.copyFrom(new byte[]{randomX}))
                 .build();
 
         ManagedChannel channel;
@@ -373,6 +363,7 @@ public class KademliaProtocol
                 .setId(ByteString.copyFrom(nodeId))
                 .setIp(ipAddress)
                 .setPort(port)
+                .setRandomX(ByteString.copyFrom(new byte[]{randomX}))
                 .build();
 
         timerOverRequest request = timerOverRequest.newBuilder()
@@ -391,7 +382,9 @@ public class KademliaProtocol
                 .setId(ByteString.copyFrom(nodeId))
                 .setIp(ipAddress)
                 .setPort(port)
+                .setRandomX(ByteString.copyFrom(new byte[]{randomX}))
                 .build();
+
         ManagedChannel channel;
         ByteString bs= ByteString.copyFrom(serviceId);
         for (Node n: selectedBrokers)
@@ -402,7 +395,10 @@ public class KademliaProtocol
 
             Offer of = Offer.newBuilder().setNode(node).setPrice(price).build();
 
-            sendPriceRequest request = sendPriceRequest.newBuilder().setOffer(of).setServiceId(bs).build();
+            sendPriceRequest request = sendPriceRequest.newBuilder()
+                    .setOffer(of)
+                    .setServiceId(bs)
+                    .setPublicKey(Base64.getEncoder().encodeToString(publicKey.getEncoded())).build();
 
             sendPriceResponse  sr= stub.sendPrice(request);
             if(sr.getResult())
@@ -423,6 +419,7 @@ public class KademliaProtocol
                 .setId(ByteString.copyFrom(nodeId))
                 .setIp(ipAddress)
                 .setPort(port)
+                .setRandomX(ByteString.copyFrom(new byte[]{randomX}))
                 .build();
         ManagedChannel channel;
         ByteString bs= ByteString.copyFrom(serviceId);
@@ -462,6 +459,7 @@ public class KademliaProtocol
                 .setId(ByteString.copyFrom(nodeId))
                 .setIp(ipAddress)
                 .setPort(port)
+                .setRandomX(ByteString.copyFrom(new byte[]{randomX}))
                 .build();
 
         endServiceRequest request = endServiceRequest.newBuilder()

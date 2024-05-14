@@ -4,6 +4,8 @@ package blockchain;
 import java.security.*;
 import java.util.Base64;
 import java.util.Date;
+
+import kademlia.SignatureClass;
 import org.bouncycastle.jcajce.provider.digest.SHA256;
 import java.nio.charset.StandardCharsets;
 
@@ -26,7 +28,7 @@ public class Block
     private PrivateKey privateKey;
     private byte[] signature;
 
-    public Block(String previousHash, String data, boolean proofReputation, int reputationScore) {
+    public Block(String previousHash, String data, int reputationScore) {
         this.previousHash = previousHash;
         this.timestamp = new Date().getTime();
         this.nonce = 0;
@@ -89,24 +91,6 @@ public class Block
     public PublicKey getPublicKey() { return this.publicKey; }
 
 
-    // Create signature for specific contect from RPC message
-    public static byte[] sign(byte[] data, PrivateKey privateKey) throws Exception {
-        Signature signature = Signature.getInstance("SHA256withRSA");
-        signature.initSign(privateKey);
-        signature.update(data);
-        return signature.sign();
-    }
-
-
-    // Verify signatures from received RPC messages
-    public static boolean verify(byte[] data, byte[] signature, PublicKey publicKey) throws Exception {
-        Signature sig = Signature.getInstance("SHA256withRSA");
-        sig.initVerify(publicKey);
-        sig.update(data);
-        return sig.verify(signature);
-    }
-
-
     private void generateKeyPair() throws NoSuchAlgorithmException {
         KeyPairGenerator keyPairGen = KeyPairGenerator.getInstance("RSA");
         keyPairGen.initialize(2048);
@@ -127,7 +111,7 @@ public class Block
         };
 
         try {
-            this.signature = sign(infoToSign, this.privateKey);
+            this.signature = SignatureClass.sign(infoToSign, this.privateKey);
         }
         catch(Exception e) {
             e.printStackTrace();
@@ -156,11 +140,11 @@ public class Block
         //return applySha256(previousHash + nonce + publicKeyStr + reputationScore);
         return applySha256(
             previousHash +
-            Long.toString(timestamp) +
-            Integer.toString(nonce) +
-            Base64.getEncoder().encodeToString(publicKey.getEncoded()) +
-            reputationScore +
-            data
+                    timestamp +
+                    nonce +
+                    Base64.getEncoder().encodeToString(publicKey.getEncoded()) +
+                    reputationScore +
+                    data
         );
     }
 
@@ -207,7 +191,7 @@ public class Block
         };
 
         try {
-            if (!verify(infoToVerify, block.getSignature(), block.getPublicKey())) {
+            if (!SignatureClass.verify(infoToVerify, block.getSignature(), Base64.getEncoder().encodeToString(publicKey.getEncoded()))) {
                 block.setReputationScore(0);
                 return false;
             }

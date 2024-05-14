@@ -59,7 +59,7 @@ public class Blockchain
     // Method to add a new block to the blockchain
     public void addBlock(Block newBlock) {
         // Set the previous hash to the hash of the latest block
-        newBlock = new Block(getLatestBlock().getHash(), newBlock.getData(), true, newBlock.getReputationScore());
+        newBlock = new Block(getLatestBlock().getHash(), newBlock.getData(), newBlock.getReputationScore());
         newBlock.mineBlock(difficulty); // Ensure the block has valid proof-of-work
         blockchain.add(newBlock);
     }
