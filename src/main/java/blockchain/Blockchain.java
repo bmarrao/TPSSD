@@ -1,36 +1,40 @@
 
 package blockchain;
 
-import blockchain.Block;
-
 import java.util.*;
 
 public class Blockchain
 {
-    public static List<Block> blockchain;
+    private List<Block> chain;
     private final int difficulty;
 
     // Constructor
     public Blockchain(int initialDifficulty) {
-        Blockchain.blockchain = new ArrayList<>();
+        this.chain = new ArrayList<>();
         this.difficulty = initialDifficulty;
+        Block genesis = createGenesisBlock();
+        this.chain.add(genesis);
+    }
 
-        // Create the genesis block (first block in the blockchain)
-        // TODO faz sentido criarmos um primeiro bloco assim que a blockchain arranca?
-        /*
-        Block genesisBlock = new Block("", "0", "Genesis Block");
-        genesisBlock.mineBlock(difficulty); // Ensure the genesis block has valid proof-of-work
-        chain.add(genesisBlock);*/
+    // Create the genesis block
+    private Block createGenesisBlock() {
+        // Implement logic to create the first block in the blockchain
+        ArrayList<Transaction> transactions = new ArrayList<Transaction>();
+        Block genesisBlock = new Block("", transactions, 0);
+        // Ensure the genesis block has valid proof-of-work
+        genesisBlock.mineBlock(difficulty);
+
+        return genesisBlock;
     }
 
 
     // Getters
     public List<Block> getChain() {
-        return blockchain;
+        return chain;
     }
 
     public Block getLatestBlock() {
-        return blockchain.get(blockchain.size() - 1);
+        return chain.get(chain.size() - 1);
     }
 
     public int getDifficulty() {
@@ -56,19 +60,19 @@ public class Blockchain
         // criar uma instancia de uma transaction
         // disseminar transaction
     }
+
     // Method to add a new block to the blockchain
     public void addBlock(Block newBlock) {
         // Set the previous hash to the hash of the latest block
-        newBlock = new Block(getLatestBlock().getHash(), newBlock.getData(), newBlock.getReputationScore());
         newBlock.mineBlock(difficulty); // Ensure the block has valid proof-of-work
-        blockchain.add(newBlock);
+        chain.add(newBlock);
     }
 
     // Method to validate the blockchain
     public boolean isChainValid() {
-        for (int i = 1; i < blockchain.size(); i++) {
-            Block currentBlock = blockchain.get(i);
-            Block previousBlock = blockchain.get(i - 1);
+        for (int i = 1; i < chain.size(); i++) {
+            Block currentBlock = chain.get(i);
+            Block previousBlock = chain.get(i - 1);
 
             // Validate the block's hash
             if (!currentBlock.getHash().equals(currentBlock.calculateHash())) {

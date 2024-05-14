@@ -2,6 +2,7 @@
 package blockchain;
 
 import java.security.*;
+import java.util.ArrayList;
 import java.util.Base64;
 import java.util.Date;
 
@@ -9,30 +10,26 @@ import kademlia.SignatureClass;
 import org.bouncycastle.jcajce.provider.digest.SHA256;
 import java.nio.charset.StandardCharsets;
 
-import static blockchain.Blockchain.blockchain;
-
 public class Block
 {
+    //TODO Needed?
+    //private int index;
 
     public String hash;
     public String previousHash;
     private long timestamp;
     private int nonce;
     private int reputationScore;
-
-    //private ArrayList<Transaction> transactionList;
-
-    //TODO : definir que dados serão estes, lista de transações?
-    private String data;
+    private ArrayList<Transaction> transactionList;
     private PublicKey publicKey;
     private PrivateKey privateKey;
     private byte[] signature;
 
-    public Block(String previousHash, String data, int reputationScore) {
+    public Block(String previousHash, ArrayList<Transaction> transactionList, int reputationScore) {
         this.previousHash = previousHash;
         this.timestamp = new Date().getTime();
         this.nonce = 0;
-        this.data = data;
+        this.transactionList = transactionList;
         this.hash = calculateHash();
         this.reputationScore = reputationScore;
 
@@ -78,12 +75,12 @@ public class Block
         this.nonce = nonce;
     }
 
-    public String getData() {
-        return data;
+    public ArrayList<Transaction> getTransactionList() {
+        return transactionList;
     }
 
-    public void setData(String data) {
-        this.data = data;
+    public void setTransactionList(ArrayList<Transaction> transactionList) {
+        this.transactionList = transactionList;
     }
 
     public byte[] getSignature() { return this.signature; }
@@ -105,7 +102,7 @@ public class Block
                 Byte.parseByte(previousHash),
                 (byte) timestamp,
                 (byte) nonce,
-                Byte.parseByte(data),
+                Byte.parseByte(transactionList.toString()),
                 Byte.parseByte(hash),
                 (byte) reputationScore
         };
@@ -144,13 +141,22 @@ public class Block
                     nonce +
                     Base64.getEncoder().encodeToString(publicKey.getEncoded()) +
                     reputationScore +
-                    data
+                    transactionList.toString()
         );
     }
 
+    // Add a transaction to the block
+    public void addTransaction(Transaction transaction) {
+        transactionList.add(transaction);
+    }
+
+    //TODO : Faz sentido? Validate transactions in the block
+    /*public boolean validateTransactions() {
+        // Implement validation logic here (e.g., check if transactions are valid)
+        return true; // Placeholder, implement actual validation
+    }*/
 
     // Mine the block using Proof-of-Work
-    //TODO definir dificuldade
     public void mineBlock(int difficulty) {
         String target = new String(new char[difficulty]).replace('\0', '0'); // Create a string with difficulty * "0"
 
@@ -164,12 +170,12 @@ public class Block
 
 
     // TODO: why would a miner want to have higher reputation in our case
-    public boolean isBlockValid(Block block, int difficulty, float repIncreasePercentage) {
+    /*public boolean isBlockValid(Block block, int difficulty, float repIncreasePercentage) {
         int currRepScore = block.getReputationScore();
 
         // Verify previous block reference and that POW was done
         String target = new String(new char[difficulty]).replace('\0', '0');
-        String bcLatestBlockHash = blockchain.get(blockchain.size() - 1).getHash();
+        String bcLatestBlockHash = chain.get(chain.size() - 1).getHash();
         String previousBlockHash = block.getPreviousHash();
         if (!bcLatestBlockHash.equals(previousBlockHash) || !block.getHash().startsWith(target)) {
             block.setReputationScore(0);
@@ -185,7 +191,8 @@ public class Block
                 Byte.parseByte(block.getPreviousHash()),
                 (byte) block.getTimestamp(),
                 (byte) block.getNonce(),
-                Byte.parseByte(block.getData()),
+                //TODO como fica agora?
+                //Byte.parseByte(block.getTransactionList()),
                 Byte.parseByte(block.getHash()),
                 (byte) block.getReputationScore()
         };
@@ -206,7 +213,7 @@ public class Block
         //     - transaction is null or transaction amount <= 0
         //     - sender/receiver/hash is null or empty
         //     - transaction amount > sender's funds
-        String transaction = block.getData();
+        ArrayList<Transaction> transactions = block.getTransactionList();
 
 
         // increases reputation based on defined percentage
@@ -217,5 +224,5 @@ public class Block
             block.setReputationScore((int) (0.01 + currRepScore));
         }
         return true;
-    }
+    }*/
 }
