@@ -220,7 +220,8 @@ public class Kademlia
     }
 
 
-    public ArrayList<Node> skadLookup(byte[] nodeId, int d_closest_nodes) {
+    public ArrayList<Node> skadLookup(byte[] nodeId, int d_closest_nodes)
+    {
         // get closest nodes to destinationKey (non recursive)
         ArrayList<Node> closestNodes = rt.findClosestNode(nodeId, d_closest_nodes);
         ArrayList<Node>[] results = new ArrayList[closestNodes.size()];
@@ -267,6 +268,11 @@ public class Kademlia
 
 
 
+    public Node sKadValueLookups(byte[] nodeId, int d_closest_nodes)
+    {
+        // TODO FINISH THIS FUNCTION IMPORTANT TO LOOK FOR AUCTIONS
+        return null;
+    }
 
     // node id is 160-bit and is based on SHA-1
     public static byte[] generateNodeId()

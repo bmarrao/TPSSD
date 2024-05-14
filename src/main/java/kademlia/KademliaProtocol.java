@@ -206,21 +206,23 @@ public class KademliaProtocol
         return null;
     }
 
-
-    public KademliaFindOpResult findValueOp(byte[] nodeId, byte[] key, String receiverIp, int receiverPort) {
+    public FindValueResponse findValueOp(byte[] nodeId, byte[] key, String receiverIp, int receiverPort) {
         ManagedChannel channel = ManagedChannelBuilder.forAddress(receiverIp, receiverPort).usePlaintext().build();
 
         KademliaGrpc.KademliaBlockingStub stub = KademliaGrpc.newBlockingStub(channel);
 
+
         Node node = Node.newBuilder()
                 .setId(ByteString.copyFrom(nodeId))
                 .setIp(ipAddress)
-                .setPort(port)
-                .setRandomX(ByteString.copyFrom(new byte[]{randomX})).build();
+                .setRandomX(cryptoPuzzleSol)
+                .setPort(port).build();
 
-        // Add message content to byte[] for signature
+        //TODO FIX THIS
         byte[] nodeInfoToSign = node.toByteArray();
-        byte[] infoToSign = new byte[nodeInfoToSign.length + key.length];
+        byte[] keyToSign = key.getBytes();
+        byte[] publicKeyToSign = this.publicKey.getBytes()
+        byte[] infoToSign = new byte[nodeInfoToSign.length + 1];
         System.arraycopy(nodeInfoToSign, 0, infoToSign, 0, nodeInfoToSign.length);
         System.arraycopy(key, 0, infoToSign, nodeInfoToSign.length, infoToSign.length);
 
@@ -253,7 +255,7 @@ public class KademliaProtocol
         }
 
         if (signVal) {
-            return new KademliaFindOpResult(response.getId().toByteArray(), response.getValue(), new ArrayList<>());
+            return FindValueResponse;
         }
         return null;
     }
