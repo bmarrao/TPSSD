@@ -68,7 +68,7 @@ public class KademliaProtocol
         PingRequest request = PingRequest.newBuilder()
                 .setNode(node)
                 .setSignature(ByteString.copyFrom(signature))
-                .setPublicKey(Base64.getEncoder().encodeToString(publicKey.getEncoded())).build();
+                .setPublicKey(ByteString.copyFrom(publicKey.getEncoded())).build();
 
         // Receive response
         PingResponse response = stub.ping(request);
