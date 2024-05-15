@@ -1,15 +1,11 @@
 package kademlia.server;
 import auctions.Auction;
 
-import auctions.BrokerService;
 import com.google.protobuf.ByteString;
 import io.grpc.stub.StreamObserver;
 import kademlia.*;
 
 import java.security.*;
-import java.security.spec.X509EncodedKeySpec;
-import java.util.ArrayList;
-import java.util.Base64;
 import java.util.List;
 
 import static kademlia.Kademlia.rt;
@@ -90,22 +86,23 @@ public class KademliaImpl extends KademliaGrpc.KademliaImplBase
 
     @Override
     public void ping(PingRequest request, StreamObserver<PingResponse> responseObserver) {
-
-        // TODO insert!
-        // rt.insert(request.getNode());
-        // Atualizar o horario da última vez online do sender
-
-
         // Verify signature from request RPC
         byte[] signature = request.getSignature().toByteArray();
         boolean signVal = false;
         try {
-            signVal = SignatureClass.verify(request.getNode().toByteArray(), signature, request.getPublicKey());
+            signVal = SignatureClass.verify(request.getNode().toByteArray(), signature, request.getPublicKey().toByteArray());
         } catch (Exception e) {
             e.printStackTrace();
         }
 
         if (signVal && arePuzzlesValid(request.getNode().getId().toByteArray(), request.getNode().getRandomX().byteAt(0))) {
+            rt.insert(request.getNode(), 1);
+
+            // Atualizar o horario da última vez online do sender TODO: confirmar isto
+            new KademliaNode(request.getNode().getIp(),
+                    request.getNode().getId().toByteArray(),
+                    request.getNode().getPort()).setTime();
+
             // Sign RPC response
             try {
                 signature = SignatureClass.sign(request.getNode().getId().toByteArray(), privateKey);
@@ -117,7 +114,7 @@ public class KademliaImpl extends KademliaGrpc.KademliaImplBase
                     .newBuilder()
                     .setId(request.getNode().getId())
                     .setOnline(true)
-                    .setPublicKey(Base64.getEncoder().encodeToString(publicKey.getEncoded()))
+                    .setPublicKey(ByteString.copyFrom(publicKey.getEncoded()))
                     .setSignature(ByteString.copyFrom(signature))
                     .build();
 
@@ -141,7 +138,7 @@ public class KademliaImpl extends KademliaGrpc.KademliaImplBase
         // Verify signature from request RPC
         boolean signVal = false;
         try {
-            signVal = SignatureClass.verify(request.toByteArray(), signature, request.getPublicKey());
+            signVal = SignatureClass.verify(request.toByteArray(), signature, request.getPublicKey().toByteArray());
         }
         catch(Exception e) {
             e.printStackTrace();
@@ -149,7 +146,7 @@ public class KademliaImpl extends KademliaGrpc.KademliaImplBase
 
 
         if (signVal && arePuzzlesValid(request.getNode().getId().toByteArray(), request.getNode().getRandomX().byteAt(0))) {
-            // rt.insert(request.getNode(), 1);
+            rt.insert(request.getNode(), 1);
 
             // Creates a new instance of storage. If already exists, use it.
             ks.store(key,value);
@@ -167,7 +164,7 @@ public class KademliaImpl extends KademliaGrpc.KademliaImplBase
             StoreResponse response = StoreResponse.newBuilder()
                     .setId(request.getNode().getId())
                     .setStored(true)
-                    .setPublicKey(Base64.getEncoder().encodeToString(publicKey.getEncoded()))
+                    .setPublicKey(ByteString.copyFrom(publicKey.getEncoded()))
                     .setSignature(ByteString.copyFrom(signature)).build();
 
             responseObserver.onNext(response);
@@ -188,26 +185,21 @@ public class KademliaImpl extends KademliaGrpc.KademliaImplBase
         byte[] signature = request.getSignature().toByteArray();
         boolean signVal = false;
         try {
-            signVal = SignatureClass.verify(request.getNode().toByteArray(), signature, request.getPublicKey());
+            signVal = SignatureClass.verify(request.getNode().toByteArray(), signature, request.getPublicKey().toByteArray());
         }
         catch(Exception e) {
             e.printStackTrace();
         }
 
-        System.out.println("Is signature valid? " + signVal);
+        System.out.println("Impl: Is signature valid? " + signVal);
 
         if (signVal && arePuzzlesValid(request.getNode().getId().toByteArray(), request.getNode().getRandomX().byteAt(0))) {
             // Get the closest node to the target ID from the routing table
             List<Node> closestNodes = rt.findClosestNode(request.getKey().toByteArray(), k_nodes);
 
-            // Sign message content
-            List<NodeSignature> closestNodesByteList = new ArrayList<>();
-            NodeSignature.Builder ns = NodeSignature.newBuilder();
+            // Sign id
             byte[] idSignature = null;
             try {
-                for (Node closestNode : closestNodes) {
-                    closestNodesByteList.add(ns.setSignature(ByteString.copyFrom(SignatureClass.sign(closestNode.toByteArray(), privateKey))).build());
-                }
                 idSignature = SignatureClass.sign(request.getNode().getId().toByteArray(), privateKey);
             }
             catch(Exception e) {
@@ -217,9 +209,8 @@ public class KademliaImpl extends KademliaGrpc.KademliaImplBase
             // send RPC response
             FindNodeResponse response = FindNodeResponse.newBuilder()
                     .setId(request.getKey())
-                    .setPublicKey(Base64.getEncoder().encodeToString(publicKey.getEncoded()))
+                    .setPublicKey(ByteString.copyFrom(publicKey.getEncoded()))
                     .addAllNodes(closestNodes)
-                    .addAllNs(closestNodesByteList)
                     .setIdSignature(ByteString.copyFrom(idSignature)).build();
 
             responseObserver.onNext(response);
@@ -239,7 +230,7 @@ public class KademliaImpl extends KademliaGrpc.KademliaImplBase
         // Verify signature
         boolean signVal = false;
         try {
-            signVal = SignatureClass.verify(request.toByteArray(), signature, request.getPublicKey());
+            signVal = SignatureClass.verify(request.toByteArray(), signature, request.getPublicKey().toByteArray());
         }
         catch(Exception e) {
             e.printStackTrace();
@@ -276,7 +267,7 @@ public class KademliaImpl extends KademliaGrpc.KademliaImplBase
             FindValueResponse response = FindValueResponse.newBuilder()
                     .setId(request.getNode().getId())
                     .setValue(value)
-                    .setPublicKey(Base64.getEncoder().encodeToString(publicKey.getEncoded()))
+                    .setPublicKey(ByteString.copyFrom(publicKey.getEncoded()))
                     .setSignature(ByteString.copyFrom(signature)).build();
 
             responseObserver.onNext(response);

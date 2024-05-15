@@ -22,7 +22,7 @@ public class KademliaFindOpResult {
         return this.val;
     }
 
-    public List<Node> getNodesList() {
+    public List<Node> getFindOpNodesList() {
         return this.nodesList;
     }
 }

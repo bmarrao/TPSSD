@@ -37,7 +37,7 @@ public class KademliaJoinNetwork implements Runnable {
         // send find node operation to selected bootstrap node
         List<Node> closestNodes;
         try {
-            closestNodes = protocol.findNodeOp(this.nodeId, this.nodeId, this.bootstrapIp, this.bootstrapPort).getNodesList();
+            closestNodes = protocol.findNodeOp(this.nodeId, this.nodeId, this.bootstrapIp, this.bootstrapPort);
         } catch (Exception e) {
             throw new RuntimeException(e);
         }
@@ -61,7 +61,7 @@ public class KademliaJoinNetwork implements Runnable {
 
             for (Node n : nodesToIterate) {
                 try {
-                    closestNodes = protocol.findNodeOp(this.nodeId, n.getId().toByteArray(), n.getIp(), n.getPort()).getNodesList();
+                    closestNodes = protocol.findNodeOp(this.nodeId, n.getId().toByteArray(), n.getIp(), n.getPort());
                 } catch (Exception e) {
                     throw new RuntimeException(e);
                 }

@@ -9,7 +9,7 @@ package kademlia;
 message PingRequest 
 {
   Node node = 1;
-  string publicKey = 2;
+  bytes publicKey = 2;
   bytes signature = 3;
 }
 
@@ -17,7 +17,7 @@ message PingResponse
 {
   bytes id = 1;
   bool online = 2;
-  string publicKey = 3;
+  bytes publicKey = 3;
   bytes signature = 4;
 }
 
@@ -55,7 +55,7 @@ message StoreRequest
   Node node = 1;
   bytes key = 2;
   Node value = 3;
-  string publicKey = 4;
+  bytes publicKey = 4;
   bytes signature = 5;
 }
 
@@ -63,7 +63,7 @@ message StoreResponse
 {
   bytes id = 1;
   bool stored = 2;
-  string publicKey = 3;
+  bytes publicKey = 3;
   bytes signature = 4;
 }
 
@@ -72,7 +72,7 @@ message FindNodeRequest
   Node node = 1;
   bytes key = 2;
   uint32 k = 3;
-  string publicKey = 4;
+  bytes publicKey = 4;
   bytes signature = 5;
 }
 
@@ -81,16 +81,17 @@ message FindNodeResponse
 {
   bytes id = 1;
   repeated Node nodes = 2;
-  string publicKey = 3;
-  repeated NodeSignature ns = 4;
-  bytes idSignature = 5;
+  bytes publicKey = 3;
+  bytes idSignature = 4;
+  //repeated NodeSignature ns = 4;
+  //bytes idSignature = 5;
 }
 
 message FindValueRequest
 {
   Node node = 1;
   bytes key = 2;
-  string publicKey = 3;
+  bytes publicKey = 3;
   bytes signature = 4;
 }
 
@@ -99,7 +100,7 @@ message FindValueResponse
   bytes id = 1;
   Node value = 2;
   repeated Node nodes = 3;
-  string publicKey = 4;
+  bytes publicKey = 4;
   bytes signature = 5;
 }
 
@@ -108,7 +109,7 @@ message NotifyRequest
   bytes serviceId = 1;
   Node node = 2;
   float price = 3;
-  string publicKey = 4;
+  bytes publicKey = 4;
   uint32 type = 5;
   bytes signature = 6;
 
@@ -117,7 +118,7 @@ message NotifyRequest
 message NotifyResponse
 {
   bool response = 1;
-  string publicKey = 2;
+  bytes publicKey = 2;
   bytes signature = 3;
 
 }
@@ -125,7 +126,7 @@ message NotifyResponse
 message getPriceRequest
 {
   bytes serviceId = 1;
-  string publicKey = 2;
+  bytes publicKey = 2;
   bytes signature = 3;
 
 }
@@ -133,7 +134,7 @@ message getPriceRequest
 message getPriceResponse
 {
   float price = 1;
-  string publicKey = 2;
+  bytes publicKey = 2;
   bytes signature = 3;
 
 }
@@ -142,7 +143,7 @@ message sendPriceRequest
 {
   bytes serviceId = 1;
   Offer offer = 2;
-  string publicKey = 3;
+  bytes publicKey = 3;
   bytes signature = 4;
 
 }
@@ -150,7 +151,7 @@ message sendPriceRequest
 message sendPriceResponse
 {
   bool result = 1;
-  string publicKey = 2;
+  bytes publicKey = 2;
   bytes signature = 3;
 
 }
@@ -162,7 +163,7 @@ message initiateServiceRequest
   bytes serviceId = 2;
   repeated Node nodes = 3;
   uint32 time = 4;
-  string publicKey = 5;
+  bytes publicKey = 5;
   bytes signature = 6;
 
 }
@@ -170,7 +171,7 @@ message initiateServiceRequest
 message initiateServiceResponse
 {
   bool response = 1;
-  string publicKey = 2;
+  bytes publicKey = 2;
   bytes signature = 3;
 
 }
@@ -181,14 +182,14 @@ message subscribeRequest
 {
   Node node = 1;
   bytes serviceId = 2;
-  string publicKey = 3;
+  bytes publicKey = 3;
   bytes signature = 4;
 }
 
 message subscribeResponse
 {
   bool response = 1;
-  string publicKey = 2;
+  bytes publicKey = 2;
   bytes signature = 3;
 }
 
@@ -198,7 +199,7 @@ message endServiceRequest
   Node node =1 ;
   bytes serviceId = 2;
   Offer of = 3;
-  string publicKey = 4;
+  bytes publicKey = 4;
   bytes signature = 5;
 
 }
@@ -206,7 +207,7 @@ message endServiceRequest
 message endServiceResponse
 {
   bool response =1;
-  string publicKey = 2;
+  bytes publicKey = 2;
   bytes signature = 3;
 }
 

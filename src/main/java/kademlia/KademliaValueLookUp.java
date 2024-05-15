@@ -34,8 +34,9 @@ public class KademliaValueLookUp implements Runnable
             return distance1.compareTo(distance2);
         });
         // Start by finding the closest nodes in the routing table to the target key
-        FindValueResponse response = protocol.findValueOp(key, n.getIp(),n.getPort());
+        //FindValueResponse response = protocol.findValueOp(key, n.getIp(),n.getPort());
 
+        /*
         if (response.getValue() != null)
         {
             //ADD CODE TO ADD TO RESULT
@@ -53,7 +54,7 @@ public class KademliaValueLookUp implements Runnable
                     // Mark the current node as visited
                     visitedNodes.add(currentNode);
 
-                    response = protocol.findValueOp(key, currentNode.getIp(),currentNode.getPort()));
+                    //response = protocol.findValueOp(key, currentNode.getIp(),currentNode.getPort());
 
                     if (response.getValue() != null)
                     {
@@ -74,6 +75,7 @@ public class KademliaValueLookUp implements Runnable
 
                 }
             }
+         */
 
             // Initialize a list to store the result nodes
             ArrayList<Node> resultNodes = new ArrayList<>();
@@ -93,4 +95,3 @@ public class KademliaValueLookUp implements Runnable
 
 
     }
-}

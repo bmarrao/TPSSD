@@ -6,6 +6,7 @@ import java.util.ArrayList;
 import java.util.Base64;
 import java.util.Date;
 
+import com.google.protobuf.ByteString;
 import kademlia.SignatureClass;
 import org.bouncycastle.jcajce.provider.digest.SHA256;
 import java.nio.charset.StandardCharsets;
@@ -139,7 +140,7 @@ public class Block
             previousHash +
                     timestamp +
                     nonce +
-                    Base64.getEncoder().encodeToString(publicKey.getEncoded()) +
+                    Base64.getUrlEncoder().withoutPadding().encodeToString(publicKey.getEncoded()) +
                     reputationScore +
                     transactionList.toString()
         );
@@ -198,7 +199,7 @@ public class Block
         };
 
         try {
-            if (!SignatureClass.verify(infoToVerify, block.getSignature(), Base64.getEncoder().encodeToString(publicKey.getEncoded()))) {
+            if (!SignatureClass.verify(infoToVerify, block.getSignature(), publicKey.getEncoded())) {
                 block.setReputationScore(0);
                 return false;
             }

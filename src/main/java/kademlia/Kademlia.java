@@ -8,6 +8,7 @@ import kademlia.KademliaLookUp;
 import java.io.*;
 import java.math.BigInteger;
 import java.nio.file.Files;
+import java.util.Properties;
 import java.nio.file.Paths;
 import java.security.*;
 import java.util.*;
@@ -24,7 +25,9 @@ public class Kademlia
 
     public static KademliaProtocol protocol;
     public static byte randomX;
+    public static Properties properties;
     public static String bootstrapFilePath = "src/main/java/kademlia/BootstrapNodes.txt";
+    public static String configFilePath = "src/main/java/config.properties";
     // Auction a;
     // BlockChain b;
 
@@ -67,43 +70,67 @@ public class Kademlia
             joinNetThread.start();
         }
 
-        this.ks = new KademliaStore();
-        // TODO CREATE PROPERLY BC
-        Blockchain bc = new Blockchain(5);
+        ks = new KademliaStore();
+        Blockchain bc = new Blockchain(Integer.parseInt(properties.getProperty("blockchain.difficulty")));
         KademliaServer server = new KademliaServer(port, new Auction(this, bc), leadingZeros,generatedPk, generatedSk, ks);
         Thread serverThread = new Thread(server);
         serverThread.start();
     }
 
 
+    // args[0] = "bootstrap" ou "normal"
+    // args[1] = ip
+    // args[2] = port
     public static void main(String[] args) throws NoSuchAlgorithmException {
+        // Read properties file
+        properties = new Properties();
+        try {
+            FileInputStream fileInputStream = new FileInputStream(configFilePath);
+            properties.load(fileInputStream);
+            fileInputStream.close();
+        } catch (IOException e) {
+            e.printStackTrace();
+            return;
+        }
+
+        // Generate nodeId by solving crypto puzzles
+        leadingZeros = Integer.parseInt(properties.getProperty("puzzles.difficulty"));
         byte[] sKadNodeId = solveStaticPuzzle(leadingZeros);
         solveDynamicPuzzle(sKadNodeId, leadingZeros);
         System.out.println("S/Kademlia nodeId: " + Arrays.toString(sKadNodeId));
 
         if (args[0].equals("bootstrap"))
         {
-            protocol = new KademliaProtocol(sKadNodeId,"127.0.0.1",5000, generatedPk, generatedSk,randomX);
-            rt = new KrtBootStrap(sKadNodeId,protocol,20,20);
+            protocol = new KademliaProtocol(sKadNodeId, args[1], Integer.parseInt(args[2]), generatedPk, generatedSk,randomX);
+            rt = new KrtBootStrap(sKadNodeId,protocol,
+                    Integer.parseInt(properties.getProperty("bucket.size")),
+                    Integer.parseInt(properties.getProperty("siblingList.size")));
             ks = new KademliaStore();
-            // TODO CREATE PROPERLY BC
-            Blockchain bc = new Blockchain(5);
-            KademliaServer server = new KademliaServer(5000,  new Auction(new Kademlia(sKadNodeId,generatedPk,generatedSk,rt,protocol),bc),leadingZeros,generatedPk, generatedSk, ks);
+
+            //Blockchain bc = new Blockchain(Integer.parseInt(properties.getProperty("blockchain.difficulty")));
+            Blockchain bc = null;
+            KademliaServer server = new KademliaServer(Integer.parseInt(args[2]),  new Auction(new Kademlia(sKadNodeId,generatedPk,generatedSk,rt,protocol),bc),leadingZeros,generatedPk, generatedSk, ks);
 
             Thread serverThread = new Thread(server);
             serverThread.start();
 
-            addIpPortBSFile("127.0.0.1", 5000, bootstrapFilePath);
+            addIpPortBSFile(args[1], Integer.parseInt(args[2]), bootstrapFilePath);
         }
         else {
-            protocol = new KademliaProtocol(sKadNodeId,"localhost",Integer.parseInt(args[1]), generatedPk, generatedSk,randomX);
+            protocol = new KademliaProtocol(sKadNodeId, args[1], Integer.parseInt(args[2]), generatedPk, generatedSk,randomX);
 
-            rt = new KrtNormal(sKadNodeId, protocol, 20, 20);
+            rt = new KrtNormal(sKadNodeId, protocol,
+                    Integer.parseInt(properties.getProperty("bucket.size")),
+                    Integer.parseInt(properties.getProperty("siblingList.size")));
 
             ks= new KademliaStore();
-            // TODO CREATE PROPERLY BC
-            Blockchain bc = new Blockchain(5);
-            KademliaServer server = new KademliaServer(Integer.parseInt(args[1]),
+
+            //Blockchain bc = new Blockchain(Integer.parseInt(properties.getProperty("blockchain.difficulty")));
+            Blockchain bc = null;
+
+
+
+            KademliaServer server = new KademliaServer(Integer.parseInt(args[2]),
                     new Auction(new Kademlia(sKadNodeId,generatedPk,generatedSk,rt,protocol),bc), leadingZeros,generatedPk, generatedSk, ks);
             Thread serverThread = new Thread(server);
             serverThread.start();
@@ -114,7 +141,7 @@ public class Kademlia
             String[] bootstrapIpPort = selectedBootstrap.split(" ");
 
             // Start thread for joining network
-            Thread joinNetThread = new Thread(new KademliaJoinNetwork(sKadNodeId, "localhost", Integer.parseInt(args[1]), generatedPk, generatedSk, randomX, bootstrapIpPort[0], Integer.parseInt(bootstrapIpPort[1])));
+            Thread joinNetThread = new Thread(new KademliaJoinNetwork(sKadNodeId, args[1], Integer.parseInt(args[2]), generatedPk, generatedSk, randomX, bootstrapIpPort[0], Integer.parseInt(bootstrapIpPort[1])));
             joinNetThread.start();
 
         }
@@ -144,8 +171,6 @@ public class Kademlia
     }
 
     public static byte[] solveStaticPuzzle(int leadingZerosStatic) throws NoSuchAlgorithmException {
-
-    //public static byte[] solveStaticPuzzle(int leadingZerosStatic) throws NoSuchAlgorithmException {
         /* against eclipe attacks
              1) generate pair (Spub, Spriv)
              2) P = H(H(Spub))
@@ -267,14 +292,14 @@ public class Kademlia
     }
 
 
-
     public Node sKadValueLookups(byte[] nodeId, int d_closest_nodes)
     {
         // TODO FINISH THIS FUNCTION IMPORTANT TO LOOK FOR AUCTIONS
         return null;
     }
 
-    // node id is 160-bit and is based on SHA-1
+    /*
+    // node id generation without crypto puzzles
     public static byte[] generateNodeId()
     {
         byte[] array = new byte[20];
@@ -291,6 +316,7 @@ public class Kademlia
             return null;
         }
     }
+    */
 
     public static void addIpPortBSFile(String ipAddress, int port, String bootstrapFilePath) {
         try {
