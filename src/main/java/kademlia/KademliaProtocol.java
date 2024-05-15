@@ -148,9 +148,6 @@ public class KademliaProtocol
         return false;
     }
 
-
-
-
     public KademliaFindOpResult findNodeOp(byte[] nodeId, byte[] key, String receiverIp, int receiverPort)
     {
         ManagedChannel channel = ManagedChannelBuilder.forAddress(receiverIp, receiverPort).usePlaintext().build();
@@ -312,11 +309,6 @@ public class KademliaProtocol
             stub.notify(request, response);
         }
     }
-
-
-
-
-
 
     public float getPrice(ArrayList<Node> selectedBrokers ,byte[] serviceId)
     {
