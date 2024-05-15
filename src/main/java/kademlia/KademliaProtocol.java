@@ -215,16 +215,22 @@ public class KademliaProtocol
         Node node = Node.newBuilder()
                 .setId(ByteString.copyFrom(nodeId))
                 .setIp(ipAddress)
-                .setRandomX(cryptoPuzzleSol)
+                .setRandomX(ByteString.copyFrom(new byte[]{randomX}))
                 .setPort(port).build();
 
-        //TODO FIX THIS
+
+// TODO FIX THIS
         byte[] nodeInfoToSign = node.toByteArray();
-        byte[] keyToSign = key.getBytes();
-        byte[] publicKeyToSign = this.publicKey.getBytes()
-        byte[] infoToSign = new byte[nodeInfoToSign.length + 1];
+        byte[] keyToSign = key;
+        byte[] publicKeyToSign = this.publicKey.getEncoded();
+        byte[] infoToSign = new byte[nodeInfoToSign.length + keyToSign.length + publicKeyToSign.length];
+
         System.arraycopy(nodeInfoToSign, 0, infoToSign, 0, nodeInfoToSign.length);
-        System.arraycopy(key, 0, infoToSign, nodeInfoToSign.length, infoToSign.length);
+
+        System.arraycopy(keyToSign, 0, infoToSign, nodeInfoToSign.length, keyToSign.length);
+
+        System.arraycopy(publicKeyToSign, 0, infoToSign, nodeInfoToSign.length + keyToSign.length, publicKeyToSign.length);
+
 
 
         // Sign message content
@@ -255,7 +261,7 @@ public class KademliaProtocol
         }
 
         if (signVal) {
-            return FindValueResponse;
+            return response;
         }
         return null;
     }

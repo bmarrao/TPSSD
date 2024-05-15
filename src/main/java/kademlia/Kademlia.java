@@ -225,7 +225,7 @@ public class Kademlia
         // get closest nodes to destinationKey (non recursive)
         ArrayList<Node> closestNodes = rt.findClosestNode(nodeId, d_closest_nodes);
         ArrayList<Node>[] results = new ArrayList[closestNodes.size()];
-        ArrayList<Node> allResults = new ArrayList<>(); // ArrayList to store all results
+        ArrayList<Node> allResults = new ArrayList<>();
 
         Thread[] threads = new Thread[closestNodes.size()];
         
@@ -234,9 +234,9 @@ public class Kademlia
             final ArrayList<Node> currentResults = results[i]; // Final variable capturing the current results
             KademliaLookUp lk = new KademliaLookUp(protocol, rt, currentResults, nodeId, d_closest_nodes, n);
             threads[i] = new Thread(() -> {
-                lk.run(); // Assuming run() returns the results directly
+                lk.run();
                 synchronized (allResults) {
-                    allResults.addAll(currentResults); // Add results to the shared list
+                    allResults.addAll(currentResults);
                 }
             });
             threads[i].start();
