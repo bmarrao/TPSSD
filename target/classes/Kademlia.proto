@@ -9,7 +9,7 @@ package kademlia;
 message PingRequest 
 {
   Node node = 1;
-  string publicKey = 2;
+  bytes publicKey = 2;
   bytes signature = 3;
 }
 
@@ -17,7 +17,7 @@ message PingResponse
 {
   bytes id = 1;
   bool online = 2;
-  string publicKey = 3;
+  bytes publicKey = 3;
   bytes signature = 4;
 }
 
@@ -50,12 +50,13 @@ message Transaction
   bytes signature = 5;
   Offer sender = 6;
 }
+
 message StoreRequest
 {
   Node node = 1;
   bytes key = 2;
   Node value = 3;
-  string publicKey = 4;
+  bytes publicKey = 4;
   bytes signature = 5;
 }
 
@@ -63,7 +64,7 @@ message StoreResponse
 {
   bytes id = 1;
   bool stored = 2;
-  string publicKey = 3;
+  bytes publicKey = 3;
   bytes signature = 4;
 }
 
@@ -72,7 +73,7 @@ message FindNodeRequest
   Node node = 1;
   bytes key = 2;
   uint32 k = 3;
-  string publicKey = 4;
+  bytes publicKey = 4;
   bytes signature = 5;
 }
 
@@ -81,16 +82,15 @@ message FindNodeResponse
 {
   bytes id = 1;
   repeated Node nodes = 2;
-  string publicKey = 3;
-  repeated NodeSignature ns = 4;
-  bytes idSignature = 5;
+  bytes publicKey = 3;
+  bytes idSignature = 4;
 }
 
 message FindValueRequest
 {
   Node node = 1;
   bytes key = 2;
-  string publicKey = 3;
+  bytes publicKey = 3;
   bytes signature = 4;
 }
 
@@ -99,7 +99,7 @@ message FindValueResponse
   bytes id = 1;
   Node value = 2;
   repeated Node nodes = 3;
-  string publicKey = 4;
+  bytes publicKey = 4;
   bytes signature = 5;
 }
 
@@ -108,7 +108,7 @@ message NotifyRequest
   bytes serviceId = 1;
   Node node = 2;
   float price = 3;
-  string publicKey = 4;
+  bytes publicKey = 4;
   uint32 type = 5;
   bytes signature = 6;
 
@@ -117,15 +117,43 @@ message NotifyRequest
 message NotifyResponse
 {
   bool response = 1;
-  string publicKey = 2;
+  bytes publicKey = 2;
   bytes signature = 3;
 
+}
+
+message NewAuctionRequest
+{
+
+  bytes serviceID = 1;
+  Node sender = 2;
+  Node owner = 3;
+  bytes signature = 4;
+
+}
+
+message CloseAuctionRequest
+{
+  bytes serviceID = 1;
+  Node sender = 2;
+  Node owner = 3;
+  bytes signature = 4;
+  Offer winner = 5;
+}
+
+message PlaceBidRequest
+{
+  bytes serviceID = 1;
+  Node sender = 2;
+  Node owner = 3;
+  bytes signature = 4;
+  Offer newBid = 5;
 }
 
 message getPriceRequest
 {
   bytes serviceId = 1;
-  string publicKey = 2;
+  bytes publicKey = 2;
   bytes signature = 3;
 
 }
@@ -133,7 +161,7 @@ message getPriceRequest
 message getPriceResponse
 {
   float price = 1;
-  string publicKey = 2;
+  bytes publicKey = 2;
   bytes signature = 3;
 
 }
@@ -142,7 +170,7 @@ message sendPriceRequest
 {
   bytes serviceId = 1;
   Offer offer = 2;
-  string publicKey = 3;
+  bytes publicKey = 3;
   bytes signature = 4;
 
 }
@@ -150,68 +178,25 @@ message sendPriceRequest
 message sendPriceResponse
 {
   bool result = 1;
-  string publicKey = 2;
+  bytes publicKey = 2;
   bytes signature = 3;
 
 }
 
-/*
-message initiateServiceRequest
-{
-  Node owner = 1;
-  bytes serviceId = 2;
-  repeated Node nodes = 3;
-  uint32 time = 4;
-  string publicKey = 5;
-  bytes signature = 6;
-
-}
-
-message initiateServiceResponse
-{
-  bool response = 1;
-  string publicKey = 2;
-  bytes signature = 3;
-
-}
-
-
- */
 message subscribeRequest
 {
   Node node = 1;
   bytes serviceId = 2;
-  string publicKey = 3;
+  bytes publicKey = 3;
   bytes signature = 4;
 }
 
 message subscribeResponse
 {
   bool response = 1;
-  string publicKey = 2;
+  bytes publicKey = 2;
   bytes signature = 3;
 }
-
-/*
-message endServiceRequest
-{
-  Node node =1 ;
-  bytes serviceId = 2;
-  Offer of = 3;
-  string publicKey = 4;
-  bytes signature = 5;
-
-}
-
-message endServiceResponse
-{
-  bool response =1;
-  string publicKey = 2;
-  bytes signature = 3;
-}
-
-
- */
 
 
 service Kademlia
@@ -228,19 +213,19 @@ service Kademlia
   // similar to findNode + if RPC recipient received a STORE for the given key then it returns the stored value
   rpc findValue(FindValueRequest) returns (FindValueResponse);
 
+  rpc NewAuction(NewAuctionRequest) returns (google.protobuf.Empty);
+
+  rpc PlaceBid(PlaceBidRequest) returns (google.protobuf.Empty);
+
+  rpc CloseAuction(CloseAuctionRequest) returns (google.protobuf.Empty);
+
   rpc notify(NotifyRequest) returns (NotifyResponse);
 
   rpc getPrice(getPriceRequest) returns (getPriceResponse);
 
   rpc sendPrice(sendPriceRequest) returns (sendPriceResponse);
 
-  //rpc initiateService(initiateServiceRequest) returns (initiateServiceResponse);
-
   rpc subscribe(subscribeRequest) returns (subscribeResponse);
-
-  //rpc timerOver(timerOverRequest) returns (timerOverResponse);
-
-  //rpc endService(endServiceRequest) returns (endServiceResponse);
 
 }
 

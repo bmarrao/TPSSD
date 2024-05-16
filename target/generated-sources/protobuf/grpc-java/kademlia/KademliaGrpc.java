@@ -76,6 +76,42 @@ public final class KademliaGrpc {
               kademlia.FindValueResponse.getDefaultInstance()))
           .build();
   @io.grpc.ExperimentalApi("https://github.com/grpc/grpc-java/issues/1901")
+  public static final io.grpc.MethodDescriptor<kademlia.NewAuctionRequest,
+      com.google.protobuf.Empty> METHOD_NEW_AUCTION =
+      io.grpc.MethodDescriptor.<kademlia.NewAuctionRequest, com.google.protobuf.Empty>newBuilder()
+          .setType(io.grpc.MethodDescriptor.MethodType.UNARY)
+          .setFullMethodName(generateFullMethodName(
+              "kademlia.Kademlia", "NewAuction"))
+          .setRequestMarshaller(io.grpc.protobuf.ProtoUtils.marshaller(
+              kademlia.NewAuctionRequest.getDefaultInstance()))
+          .setResponseMarshaller(io.grpc.protobuf.ProtoUtils.marshaller(
+              com.google.protobuf.Empty.getDefaultInstance()))
+          .build();
+  @io.grpc.ExperimentalApi("https://github.com/grpc/grpc-java/issues/1901")
+  public static final io.grpc.MethodDescriptor<kademlia.PlaceBidRequest,
+      com.google.protobuf.Empty> METHOD_PLACE_BID =
+      io.grpc.MethodDescriptor.<kademlia.PlaceBidRequest, com.google.protobuf.Empty>newBuilder()
+          .setType(io.grpc.MethodDescriptor.MethodType.UNARY)
+          .setFullMethodName(generateFullMethodName(
+              "kademlia.Kademlia", "PlaceBid"))
+          .setRequestMarshaller(io.grpc.protobuf.ProtoUtils.marshaller(
+              kademlia.PlaceBidRequest.getDefaultInstance()))
+          .setResponseMarshaller(io.grpc.protobuf.ProtoUtils.marshaller(
+              com.google.protobuf.Empty.getDefaultInstance()))
+          .build();
+  @io.grpc.ExperimentalApi("https://github.com/grpc/grpc-java/issues/1901")
+  public static final io.grpc.MethodDescriptor<kademlia.CloseAuctionRequest,
+      com.google.protobuf.Empty> METHOD_CLOSE_AUCTION =
+      io.grpc.MethodDescriptor.<kademlia.CloseAuctionRequest, com.google.protobuf.Empty>newBuilder()
+          .setType(io.grpc.MethodDescriptor.MethodType.UNARY)
+          .setFullMethodName(generateFullMethodName(
+              "kademlia.Kademlia", "CloseAuction"))
+          .setRequestMarshaller(io.grpc.protobuf.ProtoUtils.marshaller(
+              kademlia.CloseAuctionRequest.getDefaultInstance()))
+          .setResponseMarshaller(io.grpc.protobuf.ProtoUtils.marshaller(
+              com.google.protobuf.Empty.getDefaultInstance()))
+          .build();
+  @io.grpc.ExperimentalApi("https://github.com/grpc/grpc-java/issues/1901")
   public static final io.grpc.MethodDescriptor<kademlia.NotifyRequest,
       kademlia.NotifyResponse> METHOD_NOTIFY =
       io.grpc.MethodDescriptor.<kademlia.NotifyRequest, kademlia.NotifyResponse>newBuilder()
@@ -193,6 +229,27 @@ public final class KademliaGrpc {
 
     /**
      */
+    public void newAuction(kademlia.NewAuctionRequest request,
+        io.grpc.stub.StreamObserver<com.google.protobuf.Empty> responseObserver) {
+      asyncUnimplementedUnaryCall(METHOD_NEW_AUCTION, responseObserver);
+    }
+
+    /**
+     */
+    public void placeBid(kademlia.PlaceBidRequest request,
+        io.grpc.stub.StreamObserver<com.google.protobuf.Empty> responseObserver) {
+      asyncUnimplementedUnaryCall(METHOD_PLACE_BID, responseObserver);
+    }
+
+    /**
+     */
+    public void closeAuction(kademlia.CloseAuctionRequest request,
+        io.grpc.stub.StreamObserver<com.google.protobuf.Empty> responseObserver) {
+      asyncUnimplementedUnaryCall(METHOD_CLOSE_AUCTION, responseObserver);
+    }
+
+    /**
+     */
     public void notify(kademlia.NotifyRequest request,
         io.grpc.stub.StreamObserver<kademlia.NotifyResponse> responseObserver) {
       asyncUnimplementedUnaryCall(METHOD_NOTIFY, responseObserver);
@@ -249,6 +306,27 @@ public final class KademliaGrpc {
                 kademlia.FindValueRequest,
                 kademlia.FindValueResponse>(
                   this, METHODID_FIND_VALUE)))
+          .addMethod(
+            METHOD_NEW_AUCTION,
+            asyncUnaryCall(
+              new MethodHandlers<
+                kademlia.NewAuctionRequest,
+                com.google.protobuf.Empty>(
+                  this, METHODID_NEW_AUCTION)))
+          .addMethod(
+            METHOD_PLACE_BID,
+            asyncUnaryCall(
+              new MethodHandlers<
+                kademlia.PlaceBidRequest,
+                com.google.protobuf.Empty>(
+                  this, METHODID_PLACE_BID)))
+          .addMethod(
+            METHOD_CLOSE_AUCTION,
+            asyncUnaryCall(
+              new MethodHandlers<
+                kademlia.CloseAuctionRequest,
+                com.google.protobuf.Empty>(
+                  this, METHODID_CLOSE_AUCTION)))
           .addMethod(
             METHOD_NOTIFY,
             asyncUnaryCall(
@@ -345,6 +423,30 @@ public final class KademliaGrpc {
 
     /**
      */
+    public void newAuction(kademlia.NewAuctionRequest request,
+        io.grpc.stub.StreamObserver<com.google.protobuf.Empty> responseObserver) {
+      asyncUnaryCall(
+          getChannel().newCall(METHOD_NEW_AUCTION, getCallOptions()), request, responseObserver);
+    }
+
+    /**
+     */
+    public void placeBid(kademlia.PlaceBidRequest request,
+        io.grpc.stub.StreamObserver<com.google.protobuf.Empty> responseObserver) {
+      asyncUnaryCall(
+          getChannel().newCall(METHOD_PLACE_BID, getCallOptions()), request, responseObserver);
+    }
+
+    /**
+     */
+    public void closeAuction(kademlia.CloseAuctionRequest request,
+        io.grpc.stub.StreamObserver<com.google.protobuf.Empty> responseObserver) {
+      asyncUnaryCall(
+          getChannel().newCall(METHOD_CLOSE_AUCTION, getCallOptions()), request, responseObserver);
+    }
+
+    /**
+     */
     public void notify(kademlia.NotifyRequest request,
         io.grpc.stub.StreamObserver<kademlia.NotifyResponse> responseObserver) {
       asyncUnaryCall(
@@ -432,6 +534,27 @@ public final class KademliaGrpc {
     public kademlia.FindValueResponse findValue(kademlia.FindValueRequest request) {
       return blockingUnaryCall(
           getChannel(), METHOD_FIND_VALUE, getCallOptions(), request);
+    }
+
+    /**
+     */
+    public com.google.protobuf.Empty newAuction(kademlia.NewAuctionRequest request) {
+      return blockingUnaryCall(
+          getChannel(), METHOD_NEW_AUCTION, getCallOptions(), request);
+    }
+
+    /**
+     */
+    public com.google.protobuf.Empty placeBid(kademlia.PlaceBidRequest request) {
+      return blockingUnaryCall(
+          getChannel(), METHOD_PLACE_BID, getCallOptions(), request);
+    }
+
+    /**
+     */
+    public com.google.protobuf.Empty closeAuction(kademlia.CloseAuctionRequest request) {
+      return blockingUnaryCall(
+          getChannel(), METHOD_CLOSE_AUCTION, getCallOptions(), request);
     }
 
     /**
@@ -527,6 +650,30 @@ public final class KademliaGrpc {
 
     /**
      */
+    public com.google.common.util.concurrent.ListenableFuture<com.google.protobuf.Empty> newAuction(
+        kademlia.NewAuctionRequest request) {
+      return futureUnaryCall(
+          getChannel().newCall(METHOD_NEW_AUCTION, getCallOptions()), request);
+    }
+
+    /**
+     */
+    public com.google.common.util.concurrent.ListenableFuture<com.google.protobuf.Empty> placeBid(
+        kademlia.PlaceBidRequest request) {
+      return futureUnaryCall(
+          getChannel().newCall(METHOD_PLACE_BID, getCallOptions()), request);
+    }
+
+    /**
+     */
+    public com.google.common.util.concurrent.ListenableFuture<com.google.protobuf.Empty> closeAuction(
+        kademlia.CloseAuctionRequest request) {
+      return futureUnaryCall(
+          getChannel().newCall(METHOD_CLOSE_AUCTION, getCallOptions()), request);
+    }
+
+    /**
+     */
     public com.google.common.util.concurrent.ListenableFuture<kademlia.NotifyResponse> notify(
         kademlia.NotifyRequest request) {
       return futureUnaryCall(
@@ -562,10 +709,13 @@ public final class KademliaGrpc {
   private static final int METHODID_STORE = 1;
   private static final int METHODID_FIND_NODE = 2;
   private static final int METHODID_FIND_VALUE = 3;
-  private static final int METHODID_NOTIFY = 4;
-  private static final int METHODID_GET_PRICE = 5;
-  private static final int METHODID_SEND_PRICE = 6;
-  private static final int METHODID_SUBSCRIBE = 7;
+  private static final int METHODID_NEW_AUCTION = 4;
+  private static final int METHODID_PLACE_BID = 5;
+  private static final int METHODID_CLOSE_AUCTION = 6;
+  private static final int METHODID_NOTIFY = 7;
+  private static final int METHODID_GET_PRICE = 8;
+  private static final int METHODID_SEND_PRICE = 9;
+  private static final int METHODID_SUBSCRIBE = 10;
 
   private static final class MethodHandlers<Req, Resp> implements
       io.grpc.stub.ServerCalls.UnaryMethod<Req, Resp>,
@@ -599,6 +749,18 @@ public final class KademliaGrpc {
         case METHODID_FIND_VALUE:
           serviceImpl.findValue((kademlia.FindValueRequest) request,
               (io.grpc.stub.StreamObserver<kademlia.FindValueResponse>) responseObserver);
+          break;
+        case METHODID_NEW_AUCTION:
+          serviceImpl.newAuction((kademlia.NewAuctionRequest) request,
+              (io.grpc.stub.StreamObserver<com.google.protobuf.Empty>) responseObserver);
+          break;
+        case METHODID_PLACE_BID:
+          serviceImpl.placeBid((kademlia.PlaceBidRequest) request,
+              (io.grpc.stub.StreamObserver<com.google.protobuf.Empty>) responseObserver);
+          break;
+        case METHODID_CLOSE_AUCTION:
+          serviceImpl.closeAuction((kademlia.CloseAuctionRequest) request,
+              (io.grpc.stub.StreamObserver<com.google.protobuf.Empty>) responseObserver);
           break;
         case METHODID_NOTIFY:
           serviceImpl.notify((kademlia.NotifyRequest) request,
@@ -653,6 +815,9 @@ public final class KademliaGrpc {
               .addMethod(METHOD_STORE)
               .addMethod(METHOD_FIND_NODE)
               .addMethod(METHOD_FIND_VALUE)
+              .addMethod(METHOD_NEW_AUCTION)
+              .addMethod(METHOD_PLACE_BID)
+              .addMethod(METHOD_CLOSE_AUCTION)
               .addMethod(METHOD_NOTIFY)
               .addMethod(METHOD_GET_PRICE)
               .addMethod(METHOD_SEND_PRICE)

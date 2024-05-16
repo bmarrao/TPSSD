@@ -4,24 +4,6 @@
 package kademlia;
 
 /**
- * <pre>
- *message initiateServiceRequest
- *{
- *Node owner = 1;
- *bytes serviceId = 2;
- *repeated Node nodes = 3;
- *uint32 time = 4;
- *string publicKey = 5;
- *bytes signature = 6;
- *}
- *message initiateServiceResponse
- *{
- *bool response = 1;
- *string publicKey = 2;
- *bytes signature = 3;
- *}
- * </pre>
- *
  * Protobuf type {@code kademlia.subscribeRequest}
  */
 public  final class subscribeRequest extends
@@ -34,7 +16,7 @@ public  final class subscribeRequest extends
   }
   private subscribeRequest() {
     serviceId_ = com.google.protobuf.ByteString.EMPTY;
-    publicKey_ = "";
+    publicKey_ = com.google.protobuf.ByteString.EMPTY;
     signature_ = com.google.protobuf.ByteString.EMPTY;
   }
 
@@ -82,9 +64,8 @@ public  final class subscribeRequest extends
             break;
           }
           case 26: {
-            java.lang.String s = input.readStringRequireUtf8();
 
-            publicKey_ = s;
+            publicKey_ = input.readBytes();
             break;
           }
           case 34: {
@@ -146,37 +127,12 @@ public  final class subscribeRequest extends
   }
 
   public static final int PUBLICKEY_FIELD_NUMBER = 3;
-  private volatile java.lang.Object publicKey_;
+  private com.google.protobuf.ByteString publicKey_;
   /**
-   * <code>string publicKey = 3;</code>
+   * <code>bytes publicKey = 3;</code>
    */
-  public java.lang.String getPublicKey() {
-    java.lang.Object ref = publicKey_;
-    if (ref instanceof java.lang.String) {
-      return (java.lang.String) ref;
-    } else {
-      com.google.protobuf.ByteString bs = 
-          (com.google.protobuf.ByteString) ref;
-      java.lang.String s = bs.toStringUtf8();
-      publicKey_ = s;
-      return s;
-    }
-  }
-  /**
-   * <code>string publicKey = 3;</code>
-   */
-  public com.google.protobuf.ByteString
-      getPublicKeyBytes() {
-    java.lang.Object ref = publicKey_;
-    if (ref instanceof java.lang.String) {
-      com.google.protobuf.ByteString b = 
-          com.google.protobuf.ByteString.copyFromUtf8(
-              (java.lang.String) ref);
-      publicKey_ = b;
-      return b;
-    } else {
-      return (com.google.protobuf.ByteString) ref;
-    }
+  public com.google.protobuf.ByteString getPublicKey() {
+    return publicKey_;
   }
 
   public static final int SIGNATURE_FIELD_NUMBER = 4;
@@ -206,8 +162,8 @@ public  final class subscribeRequest extends
     if (!serviceId_.isEmpty()) {
       output.writeBytes(2, serviceId_);
     }
-    if (!getPublicKeyBytes().isEmpty()) {
-      com.google.protobuf.GeneratedMessageV3.writeString(output, 3, publicKey_);
+    if (!publicKey_.isEmpty()) {
+      output.writeBytes(3, publicKey_);
     }
     if (!signature_.isEmpty()) {
       output.writeBytes(4, signature_);
@@ -227,8 +183,9 @@ public  final class subscribeRequest extends
       size += com.google.protobuf.CodedOutputStream
         .computeBytesSize(2, serviceId_);
     }
-    if (!getPublicKeyBytes().isEmpty()) {
-      size += com.google.protobuf.GeneratedMessageV3.computeStringSize(3, publicKey_);
+    if (!publicKey_.isEmpty()) {
+      size += com.google.protobuf.CodedOutputStream
+        .computeBytesSize(3, publicKey_);
     }
     if (!signature_.isEmpty()) {
       size += com.google.protobuf.CodedOutputStream
@@ -375,24 +332,6 @@ public  final class subscribeRequest extends
     return builder;
   }
   /**
-   * <pre>
-   *message initiateServiceRequest
-   *{
-   *Node owner = 1;
-   *bytes serviceId = 2;
-   *repeated Node nodes = 3;
-   *uint32 time = 4;
-   *string publicKey = 5;
-   *bytes signature = 6;
-   *}
-   *message initiateServiceResponse
-   *{
-   *bool response = 1;
-   *string publicKey = 2;
-   *bytes signature = 3;
-   *}
-   * </pre>
-   *
    * Protobuf type {@code kademlia.subscribeRequest}
    */
   public static final class Builder extends
@@ -436,7 +375,7 @@ public  final class subscribeRequest extends
       }
       serviceId_ = com.google.protobuf.ByteString.EMPTY;
 
-      publicKey_ = "";
+      publicKey_ = com.google.protobuf.ByteString.EMPTY;
 
       signature_ = com.google.protobuf.ByteString.EMPTY;
 
@@ -517,9 +456,8 @@ public  final class subscribeRequest extends
       if (other.getServiceId() != com.google.protobuf.ByteString.EMPTY) {
         setServiceId(other.getServiceId());
       }
-      if (!other.getPublicKey().isEmpty()) {
-        publicKey_ = other.publicKey_;
-        onChanged();
+      if (other.getPublicKey() != com.google.protobuf.ByteString.EMPTY) {
+        setPublicKey(other.getPublicKey());
       }
       if (other.getSignature() != com.google.protobuf.ByteString.EMPTY) {
         setSignature(other.getSignature());
@@ -696,43 +634,17 @@ public  final class subscribeRequest extends
       return this;
     }
 
-    private java.lang.Object publicKey_ = "";
+    private com.google.protobuf.ByteString publicKey_ = com.google.protobuf.ByteString.EMPTY;
     /**
-     * <code>string publicKey = 3;</code>
+     * <code>bytes publicKey = 3;</code>
      */
-    public java.lang.String getPublicKey() {
-      java.lang.Object ref = publicKey_;
-      if (!(ref instanceof java.lang.String)) {
-        com.google.protobuf.ByteString bs =
-            (com.google.protobuf.ByteString) ref;
-        java.lang.String s = bs.toStringUtf8();
-        publicKey_ = s;
-        return s;
-      } else {
-        return (java.lang.String) ref;
-      }
+    public com.google.protobuf.ByteString getPublicKey() {
+      return publicKey_;
     }
     /**
-     * <code>string publicKey = 3;</code>
+     * <code>bytes publicKey = 3;</code>
      */
-    public com.google.protobuf.ByteString
-        getPublicKeyBytes() {
-      java.lang.Object ref = publicKey_;
-      if (ref instanceof String) {
-        com.google.protobuf.ByteString b = 
-            com.google.protobuf.ByteString.copyFromUtf8(
-                (java.lang.String) ref);
-        publicKey_ = b;
-        return b;
-      } else {
-        return (com.google.protobuf.ByteString) ref;
-      }
-    }
-    /**
-     * <code>string publicKey = 3;</code>
-     */
-    public Builder setPublicKey(
-        java.lang.String value) {
+    public Builder setPublicKey(com.google.protobuf.ByteString value) {
       if (value == null) {
     throw new NullPointerException();
   }
@@ -742,25 +654,11 @@ public  final class subscribeRequest extends
       return this;
     }
     /**
-     * <code>string publicKey = 3;</code>
+     * <code>bytes publicKey = 3;</code>
      */
     public Builder clearPublicKey() {
       
       publicKey_ = getDefaultInstance().getPublicKey();
-      onChanged();
-      return this;
-    }
-    /**
-     * <code>string publicKey = 3;</code>
-     */
-    public Builder setPublicKeyBytes(
-        com.google.protobuf.ByteString value) {
-      if (value == null) {
-    throw new NullPointerException();
-  }
-  checkByteStringIsUtf8(value);
-      
-      publicKey_ = value;
       onChanged();
       return this;
     }

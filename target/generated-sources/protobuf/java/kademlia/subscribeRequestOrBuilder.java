@@ -26,14 +26,9 @@ public interface subscribeRequestOrBuilder extends
   com.google.protobuf.ByteString getServiceId();
 
   /**
-   * <code>string publicKey = 3;</code>
+   * <code>bytes publicKey = 3;</code>
    */
-  java.lang.String getPublicKey();
-  /**
-   * <code>string publicKey = 3;</code>
-   */
-  com.google.protobuf.ByteString
-      getPublicKeyBytes();
+  com.google.protobuf.ByteString getPublicKey();
 
   /**
    * <code>bytes signature = 4;</code>

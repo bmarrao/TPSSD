@@ -21,8 +21,7 @@ public  final class FindNodeResponse extends
   private FindNodeResponse() {
     id_ = com.google.protobuf.ByteString.EMPTY;
     nodes_ = java.util.Collections.emptyList();
-    publicKey_ = "";
-    ns_ = java.util.Collections.emptyList();
+    publicKey_ = com.google.protobuf.ByteString.EMPTY;
     idSignature_ = com.google.protobuf.ByteString.EMPTY;
   }
 
@@ -66,21 +65,11 @@ public  final class FindNodeResponse extends
             break;
           }
           case 26: {
-            java.lang.String s = input.readStringRequireUtf8();
 
-            publicKey_ = s;
+            publicKey_ = input.readBytes();
             break;
           }
           case 34: {
-            if (!((mutable_bitField0_ & 0x00000008) == 0x00000008)) {
-              ns_ = new java.util.ArrayList<kademlia.NodeSignature>();
-              mutable_bitField0_ |= 0x00000008;
-            }
-            ns_.add(
-                input.readMessage(kademlia.NodeSignature.parser(), extensionRegistry));
-            break;
-          }
-          case 42: {
 
             idSignature_ = input.readBytes();
             break;
@@ -95,9 +84,6 @@ public  final class FindNodeResponse extends
     } finally {
       if (((mutable_bitField0_ & 0x00000002) == 0x00000002)) {
         nodes_ = java.util.Collections.unmodifiableList(nodes_);
-      }
-      if (((mutable_bitField0_ & 0x00000008) == 0x00000008)) {
-        ns_ = java.util.Collections.unmodifiableList(ns_);
       }
       makeExtensionsImmutable();
     }
@@ -160,78 +146,18 @@ public  final class FindNodeResponse extends
   }
 
   public static final int PUBLICKEY_FIELD_NUMBER = 3;
-  private volatile java.lang.Object publicKey_;
+  private com.google.protobuf.ByteString publicKey_;
   /**
-   * <code>string publicKey = 3;</code>
+   * <code>bytes publicKey = 3;</code>
    */
-  public java.lang.String getPublicKey() {
-    java.lang.Object ref = publicKey_;
-    if (ref instanceof java.lang.String) {
-      return (java.lang.String) ref;
-    } else {
-      com.google.protobuf.ByteString bs = 
-          (com.google.protobuf.ByteString) ref;
-      java.lang.String s = bs.toStringUtf8();
-      publicKey_ = s;
-      return s;
-    }
-  }
-  /**
-   * <code>string publicKey = 3;</code>
-   */
-  public com.google.protobuf.ByteString
-      getPublicKeyBytes() {
-    java.lang.Object ref = publicKey_;
-    if (ref instanceof java.lang.String) {
-      com.google.protobuf.ByteString b = 
-          com.google.protobuf.ByteString.copyFromUtf8(
-              (java.lang.String) ref);
-      publicKey_ = b;
-      return b;
-    } else {
-      return (com.google.protobuf.ByteString) ref;
-    }
+  public com.google.protobuf.ByteString getPublicKey() {
+    return publicKey_;
   }
 
-  public static final int NS_FIELD_NUMBER = 4;
-  private java.util.List<kademlia.NodeSignature> ns_;
-  /**
-   * <code>repeated .kademlia.NodeSignature ns = 4;</code>
-   */
-  public java.util.List<kademlia.NodeSignature> getNsList() {
-    return ns_;
-  }
-  /**
-   * <code>repeated .kademlia.NodeSignature ns = 4;</code>
-   */
-  public java.util.List<? extends kademlia.NodeSignatureOrBuilder> 
-      getNsOrBuilderList() {
-    return ns_;
-  }
-  /**
-   * <code>repeated .kademlia.NodeSignature ns = 4;</code>
-   */
-  public int getNsCount() {
-    return ns_.size();
-  }
-  /**
-   * <code>repeated .kademlia.NodeSignature ns = 4;</code>
-   */
-  public kademlia.NodeSignature getNs(int index) {
-    return ns_.get(index);
-  }
-  /**
-   * <code>repeated .kademlia.NodeSignature ns = 4;</code>
-   */
-  public kademlia.NodeSignatureOrBuilder getNsOrBuilder(
-      int index) {
-    return ns_.get(index);
-  }
-
-  public static final int IDSIGNATURE_FIELD_NUMBER = 5;
+  public static final int IDSIGNATURE_FIELD_NUMBER = 4;
   private com.google.protobuf.ByteString idSignature_;
   /**
-   * <code>bytes idSignature = 5;</code>
+   * <code>bytes idSignature = 4;</code>
    */
   public com.google.protobuf.ByteString getIdSignature() {
     return idSignature_;
@@ -255,14 +181,11 @@ public  final class FindNodeResponse extends
     for (int i = 0; i < nodes_.size(); i++) {
       output.writeMessage(2, nodes_.get(i));
     }
-    if (!getPublicKeyBytes().isEmpty()) {
-      com.google.protobuf.GeneratedMessageV3.writeString(output, 3, publicKey_);
-    }
-    for (int i = 0; i < ns_.size(); i++) {
-      output.writeMessage(4, ns_.get(i));
+    if (!publicKey_.isEmpty()) {
+      output.writeBytes(3, publicKey_);
     }
     if (!idSignature_.isEmpty()) {
-      output.writeBytes(5, idSignature_);
+      output.writeBytes(4, idSignature_);
     }
   }
 
@@ -279,16 +202,13 @@ public  final class FindNodeResponse extends
       size += com.google.protobuf.CodedOutputStream
         .computeMessageSize(2, nodes_.get(i));
     }
-    if (!getPublicKeyBytes().isEmpty()) {
-      size += com.google.protobuf.GeneratedMessageV3.computeStringSize(3, publicKey_);
-    }
-    for (int i = 0; i < ns_.size(); i++) {
+    if (!publicKey_.isEmpty()) {
       size += com.google.protobuf.CodedOutputStream
-        .computeMessageSize(4, ns_.get(i));
+        .computeBytesSize(3, publicKey_);
     }
     if (!idSignature_.isEmpty()) {
       size += com.google.protobuf.CodedOutputStream
-        .computeBytesSize(5, idSignature_);
+        .computeBytesSize(4, idSignature_);
     }
     memoizedSize = size;
     return size;
@@ -312,8 +232,6 @@ public  final class FindNodeResponse extends
         .equals(other.getNodesList());
     result = result && getPublicKey()
         .equals(other.getPublicKey());
-    result = result && getNsList()
-        .equals(other.getNsList());
     result = result && getIdSignature()
         .equals(other.getIdSignature());
     return result;
@@ -334,10 +252,6 @@ public  final class FindNodeResponse extends
     }
     hash = (37 * hash) + PUBLICKEY_FIELD_NUMBER;
     hash = (53 * hash) + getPublicKey().hashCode();
-    if (getNsCount() > 0) {
-      hash = (37 * hash) + NS_FIELD_NUMBER;
-      hash = (53 * hash) + getNsList().hashCode();
-    }
     hash = (37 * hash) + IDSIGNATURE_FIELD_NUMBER;
     hash = (53 * hash) + getIdSignature().hashCode();
     hash = (29 * hash) + unknownFields.hashCode();
@@ -470,7 +384,6 @@ public  final class FindNodeResponse extends
       if (com.google.protobuf.GeneratedMessageV3
               .alwaysUseFieldBuilders) {
         getNodesFieldBuilder();
-        getNsFieldBuilder();
       }
     }
     public Builder clear() {
@@ -483,14 +396,8 @@ public  final class FindNodeResponse extends
       } else {
         nodesBuilder_.clear();
       }
-      publicKey_ = "";
+      publicKey_ = com.google.protobuf.ByteString.EMPTY;
 
-      if (nsBuilder_ == null) {
-        ns_ = java.util.Collections.emptyList();
-        bitField0_ = (bitField0_ & ~0x00000008);
-      } else {
-        nsBuilder_.clear();
-      }
       idSignature_ = com.google.protobuf.ByteString.EMPTY;
 
       return this;
@@ -528,15 +435,6 @@ public  final class FindNodeResponse extends
         result.nodes_ = nodesBuilder_.build();
       }
       result.publicKey_ = publicKey_;
-      if (nsBuilder_ == null) {
-        if (((bitField0_ & 0x00000008) == 0x00000008)) {
-          ns_ = java.util.Collections.unmodifiableList(ns_);
-          bitField0_ = (bitField0_ & ~0x00000008);
-        }
-        result.ns_ = ns_;
-      } else {
-        result.ns_ = nsBuilder_.build();
-      }
       result.idSignature_ = idSignature_;
       result.bitField0_ = to_bitField0_;
       onBuilt();
@@ -609,35 +507,8 @@ public  final class FindNodeResponse extends
           }
         }
       }
-      if (!other.getPublicKey().isEmpty()) {
-        publicKey_ = other.publicKey_;
-        onChanged();
-      }
-      if (nsBuilder_ == null) {
-        if (!other.ns_.isEmpty()) {
-          if (ns_.isEmpty()) {
-            ns_ = other.ns_;
-            bitField0_ = (bitField0_ & ~0x00000008);
-          } else {
-            ensureNsIsMutable();
-            ns_.addAll(other.ns_);
-          }
-          onChanged();
-        }
-      } else {
-        if (!other.ns_.isEmpty()) {
-          if (nsBuilder_.isEmpty()) {
-            nsBuilder_.dispose();
-            nsBuilder_ = null;
-            ns_ = other.ns_;
-            bitField0_ = (bitField0_ & ~0x00000008);
-            nsBuilder_ = 
-              com.google.protobuf.GeneratedMessageV3.alwaysUseFieldBuilders ?
-                 getNsFieldBuilder() : null;
-          } else {
-            nsBuilder_.addAllMessages(other.ns_);
-          }
-        }
+      if (other.getPublicKey() != com.google.protobuf.ByteString.EMPTY) {
+        setPublicKey(other.getPublicKey());
       }
       if (other.getIdSignature() != com.google.protobuf.ByteString.EMPTY) {
         setIdSignature(other.getIdSignature());
@@ -938,43 +809,17 @@ public  final class FindNodeResponse extends
       return nodesBuilder_;
     }
 
-    private java.lang.Object publicKey_ = "";
+    private com.google.protobuf.ByteString publicKey_ = com.google.protobuf.ByteString.EMPTY;
     /**
-     * <code>string publicKey = 3;</code>
+     * <code>bytes publicKey = 3;</code>
      */
-    public java.lang.String getPublicKey() {
-      java.lang.Object ref = publicKey_;
-      if (!(ref instanceof java.lang.String)) {
-        com.google.protobuf.ByteString bs =
-            (com.google.protobuf.ByteString) ref;
-        java.lang.String s = bs.toStringUtf8();
-        publicKey_ = s;
-        return s;
-      } else {
-        return (java.lang.String) ref;
-      }
+    public com.google.protobuf.ByteString getPublicKey() {
+      return publicKey_;
     }
     /**
-     * <code>string publicKey = 3;</code>
+     * <code>bytes publicKey = 3;</code>
      */
-    public com.google.protobuf.ByteString
-        getPublicKeyBytes() {
-      java.lang.Object ref = publicKey_;
-      if (ref instanceof String) {
-        com.google.protobuf.ByteString b = 
-            com.google.protobuf.ByteString.copyFromUtf8(
-                (java.lang.String) ref);
-        publicKey_ = b;
-        return b;
-      } else {
-        return (com.google.protobuf.ByteString) ref;
-      }
-    }
-    /**
-     * <code>string publicKey = 3;</code>
-     */
-    public Builder setPublicKey(
-        java.lang.String value) {
+    public Builder setPublicKey(com.google.protobuf.ByteString value) {
       if (value == null) {
     throw new NullPointerException();
   }
@@ -984,7 +829,7 @@ public  final class FindNodeResponse extends
       return this;
     }
     /**
-     * <code>string publicKey = 3;</code>
+     * <code>bytes publicKey = 3;</code>
      */
     public Builder clearPublicKey() {
       
@@ -992,270 +837,16 @@ public  final class FindNodeResponse extends
       onChanged();
       return this;
     }
-    /**
-     * <code>string publicKey = 3;</code>
-     */
-    public Builder setPublicKeyBytes(
-        com.google.protobuf.ByteString value) {
-      if (value == null) {
-    throw new NullPointerException();
-  }
-  checkByteStringIsUtf8(value);
-      
-      publicKey_ = value;
-      onChanged();
-      return this;
-    }
-
-    private java.util.List<kademlia.NodeSignature> ns_ =
-      java.util.Collections.emptyList();
-    private void ensureNsIsMutable() {
-      if (!((bitField0_ & 0x00000008) == 0x00000008)) {
-        ns_ = new java.util.ArrayList<kademlia.NodeSignature>(ns_);
-        bitField0_ |= 0x00000008;
-       }
-    }
-
-    private com.google.protobuf.RepeatedFieldBuilderV3<
-        kademlia.NodeSignature, kademlia.NodeSignature.Builder, kademlia.NodeSignatureOrBuilder> nsBuilder_;
-
-    /**
-     * <code>repeated .kademlia.NodeSignature ns = 4;</code>
-     */
-    public java.util.List<kademlia.NodeSignature> getNsList() {
-      if (nsBuilder_ == null) {
-        return java.util.Collections.unmodifiableList(ns_);
-      } else {
-        return nsBuilder_.getMessageList();
-      }
-    }
-    /**
-     * <code>repeated .kademlia.NodeSignature ns = 4;</code>
-     */
-    public int getNsCount() {
-      if (nsBuilder_ == null) {
-        return ns_.size();
-      } else {
-        return nsBuilder_.getCount();
-      }
-    }
-    /**
-     * <code>repeated .kademlia.NodeSignature ns = 4;</code>
-     */
-    public kademlia.NodeSignature getNs(int index) {
-      if (nsBuilder_ == null) {
-        return ns_.get(index);
-      } else {
-        return nsBuilder_.getMessage(index);
-      }
-    }
-    /**
-     * <code>repeated .kademlia.NodeSignature ns = 4;</code>
-     */
-    public Builder setNs(
-        int index, kademlia.NodeSignature value) {
-      if (nsBuilder_ == null) {
-        if (value == null) {
-          throw new NullPointerException();
-        }
-        ensureNsIsMutable();
-        ns_.set(index, value);
-        onChanged();
-      } else {
-        nsBuilder_.setMessage(index, value);
-      }
-      return this;
-    }
-    /**
-     * <code>repeated .kademlia.NodeSignature ns = 4;</code>
-     */
-    public Builder setNs(
-        int index, kademlia.NodeSignature.Builder builderForValue) {
-      if (nsBuilder_ == null) {
-        ensureNsIsMutable();
-        ns_.set(index, builderForValue.build());
-        onChanged();
-      } else {
-        nsBuilder_.setMessage(index, builderForValue.build());
-      }
-      return this;
-    }
-    /**
-     * <code>repeated .kademlia.NodeSignature ns = 4;</code>
-     */
-    public Builder addNs(kademlia.NodeSignature value) {
-      if (nsBuilder_ == null) {
-        if (value == null) {
-          throw new NullPointerException();
-        }
-        ensureNsIsMutable();
-        ns_.add(value);
-        onChanged();
-      } else {
-        nsBuilder_.addMessage(value);
-      }
-      return this;
-    }
-    /**
-     * <code>repeated .kademlia.NodeSignature ns = 4;</code>
-     */
-    public Builder addNs(
-        int index, kademlia.NodeSignature value) {
-      if (nsBuilder_ == null) {
-        if (value == null) {
-          throw new NullPointerException();
-        }
-        ensureNsIsMutable();
-        ns_.add(index, value);
-        onChanged();
-      } else {
-        nsBuilder_.addMessage(index, value);
-      }
-      return this;
-    }
-    /**
-     * <code>repeated .kademlia.NodeSignature ns = 4;</code>
-     */
-    public Builder addNs(
-        kademlia.NodeSignature.Builder builderForValue) {
-      if (nsBuilder_ == null) {
-        ensureNsIsMutable();
-        ns_.add(builderForValue.build());
-        onChanged();
-      } else {
-        nsBuilder_.addMessage(builderForValue.build());
-      }
-      return this;
-    }
-    /**
-     * <code>repeated .kademlia.NodeSignature ns = 4;</code>
-     */
-    public Builder addNs(
-        int index, kademlia.NodeSignature.Builder builderForValue) {
-      if (nsBuilder_ == null) {
-        ensureNsIsMutable();
-        ns_.add(index, builderForValue.build());
-        onChanged();
-      } else {
-        nsBuilder_.addMessage(index, builderForValue.build());
-      }
-      return this;
-    }
-    /**
-     * <code>repeated .kademlia.NodeSignature ns = 4;</code>
-     */
-    public Builder addAllNs(
-        java.lang.Iterable<? extends kademlia.NodeSignature> values) {
-      if (nsBuilder_ == null) {
-        ensureNsIsMutable();
-        com.google.protobuf.AbstractMessageLite.Builder.addAll(
-            values, ns_);
-        onChanged();
-      } else {
-        nsBuilder_.addAllMessages(values);
-      }
-      return this;
-    }
-    /**
-     * <code>repeated .kademlia.NodeSignature ns = 4;</code>
-     */
-    public Builder clearNs() {
-      if (nsBuilder_ == null) {
-        ns_ = java.util.Collections.emptyList();
-        bitField0_ = (bitField0_ & ~0x00000008);
-        onChanged();
-      } else {
-        nsBuilder_.clear();
-      }
-      return this;
-    }
-    /**
-     * <code>repeated .kademlia.NodeSignature ns = 4;</code>
-     */
-    public Builder removeNs(int index) {
-      if (nsBuilder_ == null) {
-        ensureNsIsMutable();
-        ns_.remove(index);
-        onChanged();
-      } else {
-        nsBuilder_.remove(index);
-      }
-      return this;
-    }
-    /**
-     * <code>repeated .kademlia.NodeSignature ns = 4;</code>
-     */
-    public kademlia.NodeSignature.Builder getNsBuilder(
-        int index) {
-      return getNsFieldBuilder().getBuilder(index);
-    }
-    /**
-     * <code>repeated .kademlia.NodeSignature ns = 4;</code>
-     */
-    public kademlia.NodeSignatureOrBuilder getNsOrBuilder(
-        int index) {
-      if (nsBuilder_ == null) {
-        return ns_.get(index);  } else {
-        return nsBuilder_.getMessageOrBuilder(index);
-      }
-    }
-    /**
-     * <code>repeated .kademlia.NodeSignature ns = 4;</code>
-     */
-    public java.util.List<? extends kademlia.NodeSignatureOrBuilder> 
-         getNsOrBuilderList() {
-      if (nsBuilder_ != null) {
-        return nsBuilder_.getMessageOrBuilderList();
-      } else {
-        return java.util.Collections.unmodifiableList(ns_);
-      }
-    }
-    /**
-     * <code>repeated .kademlia.NodeSignature ns = 4;</code>
-     */
-    public kademlia.NodeSignature.Builder addNsBuilder() {
-      return getNsFieldBuilder().addBuilder(
-          kademlia.NodeSignature.getDefaultInstance());
-    }
-    /**
-     * <code>repeated .kademlia.NodeSignature ns = 4;</code>
-     */
-    public kademlia.NodeSignature.Builder addNsBuilder(
-        int index) {
-      return getNsFieldBuilder().addBuilder(
-          index, kademlia.NodeSignature.getDefaultInstance());
-    }
-    /**
-     * <code>repeated .kademlia.NodeSignature ns = 4;</code>
-     */
-    public java.util.List<kademlia.NodeSignature.Builder> 
-         getNsBuilderList() {
-      return getNsFieldBuilder().getBuilderList();
-    }
-    private com.google.protobuf.RepeatedFieldBuilderV3<
-        kademlia.NodeSignature, kademlia.NodeSignature.Builder, kademlia.NodeSignatureOrBuilder> 
-        getNsFieldBuilder() {
-      if (nsBuilder_ == null) {
-        nsBuilder_ = new com.google.protobuf.RepeatedFieldBuilderV3<
-            kademlia.NodeSignature, kademlia.NodeSignature.Builder, kademlia.NodeSignatureOrBuilder>(
-                ns_,
-                ((bitField0_ & 0x00000008) == 0x00000008),
-                getParentForChildren(),
-                isClean());
-        ns_ = null;
-      }
-      return nsBuilder_;
-    }
 
     private com.google.protobuf.ByteString idSignature_ = com.google.protobuf.ByteString.EMPTY;
     /**
-     * <code>bytes idSignature = 5;</code>
+     * <code>bytes idSignature = 4;</code>
      */
     public com.google.protobuf.ByteString getIdSignature() {
       return idSignature_;
     }
     /**
-     * <code>bytes idSignature = 5;</code>
+     * <code>bytes idSignature = 4;</code>
      */
     public Builder setIdSignature(com.google.protobuf.ByteString value) {
       if (value == null) {
@@ -1267,7 +858,7 @@ public  final class FindNodeResponse extends
       return this;
     }
     /**
-     * <code>bytes idSignature = 5;</code>
+     * <code>bytes idSignature = 4;</code>
      */
     public Builder clearIdSignature() {
       

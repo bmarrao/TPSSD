@@ -50,14 +50,9 @@ public interface FindValueResponseOrBuilder extends
       int index);
 
   /**
-   * <code>string publicKey = 4;</code>
+   * <code>bytes publicKey = 4;</code>
    */
-  java.lang.String getPublicKey();
-  /**
-   * <code>string publicKey = 4;</code>
-   */
-  com.google.protobuf.ByteString
-      getPublicKeyBytes();
+  com.google.protobuf.ByteString getPublicKey();
 
   /**
    * <code>bytes signature = 5;</code>

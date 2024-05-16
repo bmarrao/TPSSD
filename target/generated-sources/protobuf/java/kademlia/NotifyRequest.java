@@ -17,7 +17,7 @@ public  final class NotifyRequest extends
   private NotifyRequest() {
     serviceId_ = com.google.protobuf.ByteString.EMPTY;
     price_ = 0F;
-    publicKey_ = "";
+    publicKey_ = com.google.protobuf.ByteString.EMPTY;
     type_ = 0;
     signature_ = com.google.protobuf.ByteString.EMPTY;
   }
@@ -71,9 +71,8 @@ public  final class NotifyRequest extends
             break;
           }
           case 34: {
-            java.lang.String s = input.readStringRequireUtf8();
 
-            publicKey_ = s;
+            publicKey_ = input.readBytes();
             break;
           }
           case 40: {
@@ -149,37 +148,12 @@ public  final class NotifyRequest extends
   }
 
   public static final int PUBLICKEY_FIELD_NUMBER = 4;
-  private volatile java.lang.Object publicKey_;
+  private com.google.protobuf.ByteString publicKey_;
   /**
-   * <code>string publicKey = 4;</code>
+   * <code>bytes publicKey = 4;</code>
    */
-  public java.lang.String getPublicKey() {
-    java.lang.Object ref = publicKey_;
-    if (ref instanceof java.lang.String) {
-      return (java.lang.String) ref;
-    } else {
-      com.google.protobuf.ByteString bs = 
-          (com.google.protobuf.ByteString) ref;
-      java.lang.String s = bs.toStringUtf8();
-      publicKey_ = s;
-      return s;
-    }
-  }
-  /**
-   * <code>string publicKey = 4;</code>
-   */
-  public com.google.protobuf.ByteString
-      getPublicKeyBytes() {
-    java.lang.Object ref = publicKey_;
-    if (ref instanceof java.lang.String) {
-      com.google.protobuf.ByteString b = 
-          com.google.protobuf.ByteString.copyFromUtf8(
-              (java.lang.String) ref);
-      publicKey_ = b;
-      return b;
-    } else {
-      return (com.google.protobuf.ByteString) ref;
-    }
+  public com.google.protobuf.ByteString getPublicKey() {
+    return publicKey_;
   }
 
   public static final int TYPE_FIELD_NUMBER = 5;
@@ -221,8 +195,8 @@ public  final class NotifyRequest extends
     if (price_ != 0F) {
       output.writeFloat(3, price_);
     }
-    if (!getPublicKeyBytes().isEmpty()) {
-      com.google.protobuf.GeneratedMessageV3.writeString(output, 4, publicKey_);
+    if (!publicKey_.isEmpty()) {
+      output.writeBytes(4, publicKey_);
     }
     if (type_ != 0) {
       output.writeUInt32(5, type_);
@@ -249,8 +223,9 @@ public  final class NotifyRequest extends
       size += com.google.protobuf.CodedOutputStream
         .computeFloatSize(3, price_);
     }
-    if (!getPublicKeyBytes().isEmpty()) {
-      size += com.google.protobuf.GeneratedMessageV3.computeStringSize(4, publicKey_);
+    if (!publicKey_.isEmpty()) {
+      size += com.google.protobuf.CodedOutputStream
+        .computeBytesSize(4, publicKey_);
     }
     if (type_ != 0) {
       size += com.google.protobuf.CodedOutputStream
@@ -457,7 +432,7 @@ public  final class NotifyRequest extends
       }
       price_ = 0F;
 
-      publicKey_ = "";
+      publicKey_ = com.google.protobuf.ByteString.EMPTY;
 
       type_ = 0;
 
@@ -545,9 +520,8 @@ public  final class NotifyRequest extends
       if (other.getPrice() != 0F) {
         setPrice(other.getPrice());
       }
-      if (!other.getPublicKey().isEmpty()) {
-        publicKey_ = other.publicKey_;
-        onChanged();
+      if (other.getPublicKey() != com.google.protobuf.ByteString.EMPTY) {
+        setPublicKey(other.getPublicKey());
       }
       if (other.getType() != 0) {
         setType(other.getType());
@@ -753,43 +727,17 @@ public  final class NotifyRequest extends
       return this;
     }
 
-    private java.lang.Object publicKey_ = "";
+    private com.google.protobuf.ByteString publicKey_ = com.google.protobuf.ByteString.EMPTY;
     /**
-     * <code>string publicKey = 4;</code>
+     * <code>bytes publicKey = 4;</code>
      */
-    public java.lang.String getPublicKey() {
-      java.lang.Object ref = publicKey_;
-      if (!(ref instanceof java.lang.String)) {
-        com.google.protobuf.ByteString bs =
-            (com.google.protobuf.ByteString) ref;
-        java.lang.String s = bs.toStringUtf8();
-        publicKey_ = s;
-        return s;
-      } else {
-        return (java.lang.String) ref;
-      }
+    public com.google.protobuf.ByteString getPublicKey() {
+      return publicKey_;
     }
     /**
-     * <code>string publicKey = 4;</code>
+     * <code>bytes publicKey = 4;</code>
      */
-    public com.google.protobuf.ByteString
-        getPublicKeyBytes() {
-      java.lang.Object ref = publicKey_;
-      if (ref instanceof String) {
-        com.google.protobuf.ByteString b = 
-            com.google.protobuf.ByteString.copyFromUtf8(
-                (java.lang.String) ref);
-        publicKey_ = b;
-        return b;
-      } else {
-        return (com.google.protobuf.ByteString) ref;
-      }
-    }
-    /**
-     * <code>string publicKey = 4;</code>
-     */
-    public Builder setPublicKey(
-        java.lang.String value) {
+    public Builder setPublicKey(com.google.protobuf.ByteString value) {
       if (value == null) {
     throw new NullPointerException();
   }
@@ -799,25 +747,11 @@ public  final class NotifyRequest extends
       return this;
     }
     /**
-     * <code>string publicKey = 4;</code>
+     * <code>bytes publicKey = 4;</code>
      */
     public Builder clearPublicKey() {
       
       publicKey_ = getDefaultInstance().getPublicKey();
-      onChanged();
-      return this;
-    }
-    /**
-     * <code>string publicKey = 4;</code>
-     */
-    public Builder setPublicKeyBytes(
-        com.google.protobuf.ByteString value) {
-      if (value == null) {
-    throw new NullPointerException();
-  }
-  checkByteStringIsUtf8(value);
-      
-      publicKey_ = value;
       onChanged();
       return this;
     }

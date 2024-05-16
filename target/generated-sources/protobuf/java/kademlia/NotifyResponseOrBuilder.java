@@ -13,14 +13,9 @@ public interface NotifyResponseOrBuilder extends
   boolean getResponse();
 
   /**
-   * <code>string publicKey = 2;</code>
+   * <code>bytes publicKey = 2;</code>
    */
-  java.lang.String getPublicKey();
-  /**
-   * <code>string publicKey = 2;</code>
-   */
-  com.google.protobuf.ByteString
-      getPublicKeyBytes();
+  com.google.protobuf.ByteString getPublicKey();
 
   /**
    * <code>bytes signature = 3;</code>

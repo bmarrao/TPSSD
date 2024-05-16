@@ -415,6 +415,143 @@ public class KademliaProtocol
 
         return result ;
     }
+
+    public void newAuctionOp(byte[] serviceId, Node owner) {
+
+        ManagedChannel channel = ManagedChannelBuilder.forAddress(owner.getIp(), owner.getPort()).usePlaintext().build();
+
+        KademliaGrpc.KademliaBlockingStub stub = KademliaGrpc.newBlockingStub(channel);
+
+        Node node = Node.newBuilder()
+                .setId(ByteString.copyFrom(this.nodeId))
+                .setIp(ipAddress)
+                .setPort(port)
+                .setRandomX(ByteString.copyFrom(new byte[]{randomX}))
+                .build();
+
+        byte[] nodeInfoToSign = node.toByteArray();
+        ByteString bs= ByteString.copyFrom(serviceId);
+
+        int totalLength = nodeInfoToSign.length + bs.size();
+
+        // Add message content to byte[] for signature
+        byte[] infoToSign = new byte[totalLength];
+        System.arraycopy(nodeInfoToSign, 0, infoToSign, 0, nodeInfoToSign.length);
+        System.arraycopy(bs, 0, infoToSign, nodeInfoToSign.length, bs.size());
+
+        // Sign message content
+        byte[] signature = null;
+        try {
+            signature = SignatureClass.sign(infoToSign, privateKey);
+        }
+        catch(Exception e) {
+            e.printStackTrace();
+        }
+
+        // Send RPC request
+        NewAuctionRequest request = NewAuctionRequest.newBuilder()
+                .setSender(node)
+                .setOwner(owner)
+                .setServiceID(bs)
+                .setSignature(ByteString.copyFrom(signature)).build();
+
+        stub.newAuction(request);
+    }
+
+    public void closeAuctionOp(byte[] serviceId, Node owner, Node winner, float winningPrice) {
+
+        ManagedChannel channel = ManagedChannelBuilder.forAddress(owner.getIp(), owner.getPort()).usePlaintext().build();
+
+        KademliaGrpc.KademliaBlockingStub stub = KademliaGrpc.newBlockingStub(channel);
+
+        Node node = Node.newBuilder()
+                .setId(ByteString.copyFrom(this.nodeId))
+                .setIp(ipAddress)
+                .setPort(port)
+                .setRandomX(ByteString.copyFrom(new byte[]{randomX}))
+                .build();
+
+        Offer of = Offer.newBuilder().setNode(winner).setPrice(winningPrice).build();
+
+        byte[] nodeInfoToSign = node.toByteArray();
+        ByteString bs= ByteString.copyFrom(serviceId);
+        byte[] offerInfoToSign = of.toByteArray();
+
+        int totalLength = nodeInfoToSign.length + bs.size() + offerInfoToSign.length;
+
+        // Add message content to byte[] for signature
+        byte[] infoToSign = new byte[totalLength];
+        System.arraycopy(nodeInfoToSign, 0, infoToSign, 0, nodeInfoToSign.length);
+        System.arraycopy(bs, 0, infoToSign, nodeInfoToSign.length, bs.size());
+        System.arraycopy(offerInfoToSign, 0, infoToSign, 0, offerInfoToSign.length);
+
+        // Sign message content
+        byte[] signature = null;
+        try {
+            signature = SignatureClass.sign(infoToSign, privateKey);
+        }
+        catch(Exception e) {
+            e.printStackTrace();
+        }
+
+        // Send RPC request
+        CloseAuctionRequest request = CloseAuctionRequest.newBuilder()
+                .setServiceID(bs)
+                .setSender(node)
+                .setOwner(owner)
+                .setWinner(of)
+                .setSignature(ByteString.copyFrom(signature)).build();
+
+        stub.closeAuction(request);
+    }
+
+    public void placeBidOp(byte[] serviceId, Node owner, Node newBidder, float newBidPrice) {
+
+        ManagedChannel channel = ManagedChannelBuilder.forAddress(owner.getIp(), owner.getPort()).usePlaintext().build();
+
+        KademliaGrpc.KademliaBlockingStub stub = KademliaGrpc.newBlockingStub(channel);
+
+        Node node = Node.newBuilder()
+                .setId(ByteString.copyFrom(this.nodeId))
+                .setIp(ipAddress)
+                .setPort(port)
+                .setRandomX(ByteString.copyFrom(new byte[]{randomX}))
+                .build();
+
+        Offer of = Offer.newBuilder().setNode(newBidder).setPrice(newBidPrice).build();
+
+        byte[] nodeInfoToSign = node.toByteArray();
+        ByteString bs= ByteString.copyFrom(serviceId);
+        byte[] offerInfoToSign = of.toByteArray();
+
+        int totalLength = nodeInfoToSign.length + bs.size() + offerInfoToSign.length;
+
+        // Add message content to byte[] for signature
+        byte[] infoToSign = new byte[totalLength];
+        System.arraycopy(nodeInfoToSign, 0, infoToSign, 0, nodeInfoToSign.length);
+        System.arraycopy(bs, 0, infoToSign, nodeInfoToSign.length, bs.size());
+        System.arraycopy(offerInfoToSign, 0, infoToSign, 0, offerInfoToSign.length);
+
+        // Sign message content
+        byte[] signature = null;
+        try {
+            signature = SignatureClass.sign(infoToSign, privateKey);
+        }
+        catch(Exception e) {
+            e.printStackTrace();
+        }
+
+        // Send RPC request
+        PlaceBidRequest request = PlaceBidRequest.newBuilder()
+                .setServiceID(bs)
+                .setSender(node)
+                .setOwner(owner)
+                .setNewBid(of)
+                .setSignature(ByteString.copyFrom(signature)).build();
+
+        stub.placeBid(request);
+    }
+
     /*
     public boolean initiateService(Node owner, byte[] serviceId, ArrayList<Node> brokerlist, int time)
     {
