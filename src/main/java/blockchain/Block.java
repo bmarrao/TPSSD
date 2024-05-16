@@ -1,12 +1,12 @@
 
 package blockchain;
 
+import java.io.ByteArrayOutputStream;
+import java.nio.ByteBuffer;
 import java.security.*;
 import java.util.ArrayList;
-import java.util.Base64;
 import java.util.Date;
 
-import com.google.protobuf.ByteString;
 import kademlia.SignatureClass;
 import org.bouncycastle.jcajce.provider.digest.SHA256;
 import java.nio.charset.StandardCharsets;
@@ -98,18 +98,30 @@ public class Block
     }
 
 
-    private void signBlockContent() {
-        byte[] infoToSign = {
-                Byte.parseByte(previousHash),
-                (byte) timestamp,
-                (byte) nonce,
-                Byte.parseByte(transactionList.toString()),
-                Byte.parseByte(hash),
-                (byte) reputationScore
-        };
+    public static byte[] hexStringToByteArray(String hexString) {
+        int len = hexString.length();
+        byte[] data = new byte[len / 2];
+        for (int i = 0; i < len; i += 2) {
+            data[i / 2] = (byte) ((Character.digit(hexString.charAt(i), 16) << 4)
+                    + Character.digit(hexString.charAt(i + 1), 16));
+        }
+        return data;
+    }
 
+
+    private void signBlockContent() {
         try {
-            this.signature = SignatureClass.sign(infoToSign, this.privateKey);
+            ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
+
+            outputStream.write(previousHash.getBytes(StandardCharsets.UTF_8));
+            outputStream.write(transactionList.toString().getBytes(StandardCharsets.UTF_8));
+            outputStream.write(hexStringToByteArray(hash));
+            outputStream.write(ByteBuffer.allocate(8).putLong(timestamp).array());
+            outputStream.write(ByteBuffer.allocate(4).putInt(nonce).array());
+            outputStream.write(ByteBuffer.allocate(4).putInt(reputationScore).array());
+
+            this.signature = SignatureClass.sign(outputStream.toByteArray(), this.privateKey);
+            outputStream.close();
         }
         catch(Exception e) {
             e.printStackTrace();
@@ -140,7 +152,7 @@ public class Block
             previousHash +
                     timestamp +
                     nonce +
-                    Base64.getUrlEncoder().withoutPadding().encodeToString(publicKey.getEncoded()) +
+                    //Base64.getUrlEncoder().withoutPadding().encodeToString(publicKey.getEncoded()) +
                     reputationScore +
                     transactionList.toString()
         );

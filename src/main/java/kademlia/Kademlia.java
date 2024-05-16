@@ -100,8 +100,8 @@ public class Kademlia
                     Integer.parseInt(properties.getProperty("siblingList.size")));
             ks = new KademliaStore();
 
-            //Blockchain bc = new Blockchain(Integer.parseInt(properties.getProperty("blockchain.difficulty")));
-            Blockchain bc = null;
+            Blockchain bc = new Blockchain(Integer.parseInt(properties.getProperty("blockchain.difficulty")));
+
             KademliaServer server = new KademliaServer(Integer.parseInt(args[2]),  new Auction(new Kademlia(sKadNodeId,generatedPk,generatedSk,rt,protocol),bc),leadingZeros,generatedPk, generatedSk, ks);
 
             Thread serverThread = new Thread(server);
@@ -118,10 +118,7 @@ public class Kademlia
 
             ks= new KademliaStore();
 
-            //Blockchain bc = new Blockchain(Integer.parseInt(properties.getProperty("blockchain.difficulty")));
-            Blockchain bc = null;
-
-
+            Blockchain bc = new Blockchain(Integer.parseInt(properties.getProperty("blockchain.difficulty")));
 
             KademliaServer server = new KademliaServer(Integer.parseInt(args[2]),
                     new Auction(new Kademlia(sKadNodeId,generatedPk,generatedSk,rt,protocol),bc), leadingZeros,generatedPk, generatedSk, ks);
