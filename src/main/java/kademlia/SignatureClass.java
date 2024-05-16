@@ -21,8 +21,6 @@ public class SignatureClass {
         // Convert public key from String to PublicKey
         PublicKey publicKey = KeyFactory.getInstance("RSA").generatePublic(new X509EncodedKeySpec(publicKeyBytes));
 
-        System.out.println("publicKey in verify: " + publicKey);
-
         Signature sig = Signature.getInstance("SHA256withRSA");
         sig.initVerify(publicKey);
         sig.update(data);

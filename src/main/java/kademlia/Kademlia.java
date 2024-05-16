@@ -28,13 +28,6 @@ public class Kademlia
     public static Properties properties;
     public static String bootstrapFilePath = "src/main/java/kademlia/BootstrapNodes.txt";
     public static String configFilePath = "src/main/java/config.properties";
-    // Auction a;
-    // BlockChain b;
-
-    // TODO Public e private Key - Quando for implementar blockchain
-    // TODO Inicialização do no kademlia , contacto com boostrap node - Cristina
-    // TODO Criar bootstrap node - Breno
-
 
     public Kademlia(byte[] nodeId, PublicKey generatedPk, PrivateKey generatedSk, KademliaRoutingTable rt, KademliaProtocol protocol)
     {
@@ -144,6 +137,10 @@ public class Kademlia
             Thread joinNetThread = new Thread(new KademliaJoinNetwork(sKadNodeId, args[1], Integer.parseInt(args[2]), generatedPk, generatedSk, randomX, bootstrapIpPort[0], Integer.parseInt(bootstrapIpPort[1])));
             joinNetThread.start();
 
+            // FOR TESTING (DELETE LATER)
+            if (Integer.parseInt(args[2]) != 5002) {
+                callOps(protocol, bootstrapIpPort[0], Integer.parseInt(bootstrapIpPort[1]));
+            }
         }
     }
 
@@ -358,32 +355,39 @@ public class Kademlia
                 .build();
         return node;
     }
-    /*
-    public static void callOps(KademliaProtocol protocol, byte []nodeId, String ip, int port)
-    {
-        String key = "key123";
-        String val = "val123";
 
-        System.out.println("Response for ping: " + Arrays.toString(protocol.pingOp(nodeId)));
-        System.out.println("Response for store: " + protocol.storeOp(nodeId, key, val, ip, port));
+
+
+    public static void callOps(KademliaProtocol protocol, String receiverIp, int receiverPort)
+    {
+        byte[] key = {0x3A, 0x7F, (byte)0xA8, (byte)0xC2, 0x19, 0x5E, (byte)0xD4, (byte)0x8B, (byte)0xB6, 0x70};
+        Node val = Node.newBuilder()
+                .setId(ByteString.copyFrom(nodeId))
+                .setIp("127.0.0.1")
+                .setPort(5002)
+                .setRandomX(ByteString.copyFrom(new byte[]{0x01, 0x02, 0x03})).build();
+
+
+        System.out.println("Response for ping: " + protocol.pingOp(nodeId, receiverIp, receiverPort));
+        System.out.println("Response for store: " + protocol.storeOp(key, val, receiverIp, receiverPort));
 
         System.out.println("Response for find node:");
-        KademliaFindOpResult findNodeRes = protocol.findNodeOp(nodeId, ip, port, key);
-        System.out.println("   id: " + Arrays.toString(findNodeRes.getNodeId()));
+        List<Node> findNodeRes = protocol.findNodeOp(nodeId, key, receiverIp, receiverPort);
 
         System.out.println("   nodes: ");
-        for (Node n : findNodeRes.getNodesList()) {
-            System.out.println(n);
+        for (Node n : findNodeRes) {
+            System.out.println("      " + n);
         }
 
         System.out.println("Response for find value:");
-        KademliaFindOpResult findValueRes = protocol.findValueOp(nodeId, ip, port, key);
-        System.out.println("   id: " + Arrays.toString(findNodeRes.getNodeId()));
-        System.out.println("   value: " + findNodeRes.getVal());
-        System.out.println("   nodes: ");
-        for (Node n : findValueRes.getNodesList()) {
-            System.out.println(n);
+        FindValueResponse findValueRes = protocol.findValueOp(nodeId, key, receiverIp, receiverPort);
+        if (findValueRes != null) {
+            System.out.println("   id: " + findValueRes.getId());
+            System.out.println("   value: " + findValueRes.getValue());
+            System.out.println("   nodes: ");
+            for (Node n : findValueRes.getNodesList()) {
+                System.out.println(n);
+            }
         }
     }
-     */
 }

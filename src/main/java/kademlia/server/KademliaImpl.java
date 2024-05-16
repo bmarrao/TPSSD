@@ -123,8 +123,11 @@ public class KademliaImpl extends KademliaGrpc.KademliaImplBase
 
             // Notifies the customer that the call is completed.
             responseObserver.onCompleted();
-        } else {
+        } else if (!signVal) {
             System.out.println("Signature is invalid, discarding ping request...");
+        }
+        else {
+            System.out.println("Node didn't solve crypto puzzles, discarding find ping request...");
         }
     }
 
@@ -135,10 +138,19 @@ public class KademliaImpl extends KademliaGrpc.KademliaImplBase
         Node value = request.getValue();
         byte[] signature = request.getSignature().toByteArray();
 
+        // Build data byte array for signature verification
+        byte[] nodeBytes = request.getNode().toByteArray();
+        byte[] valueBytes = request.getValue().toByteArray();
+        byte[] infoToVerify = new byte[key.length + valueBytes.length + nodeBytes.length];
+        System.arraycopy(nodeBytes, 0, infoToVerify, 0, nodeBytes.length);
+        System.arraycopy(key, 0, infoToVerify, nodeBytes.length, key.length);
+        System.arraycopy(valueBytes, 0, infoToVerify, nodeBytes.length + key.length, valueBytes.length);
+
+
         // Verify signature from request RPC
         boolean signVal = false;
         try {
-            signVal = SignatureClass.verify(request.toByteArray(), signature, request.getPublicKey().toByteArray());
+            signVal = SignatureClass.verify(infoToVerify, signature, request.getPublicKey().toByteArray());
         }
         catch(Exception e) {
             e.printStackTrace();
@@ -170,8 +182,11 @@ public class KademliaImpl extends KademliaGrpc.KademliaImplBase
             responseObserver.onNext(response);
             responseObserver.onCompleted();
         }
-        else {
+        else if (!signVal) {
             System.out.println("Signature is invalid, discarding store request...");
+        }
+        else {
+            System.out.println("Node didn't solve crypto puzzles, discarding store request...");
         }
 
     }
@@ -190,8 +205,6 @@ public class KademliaImpl extends KademliaGrpc.KademliaImplBase
         catch(Exception e) {
             e.printStackTrace();
         }
-
-        System.out.println("Impl: Is signature valid? " + signVal);
 
         if (signVal && arePuzzlesValid(request.getNode().getId().toByteArray(), request.getNode().getRandomX().byteAt(0))) {
             // Get the closest node to the target ID from the routing table
@@ -216,10 +229,15 @@ public class KademliaImpl extends KademliaGrpc.KademliaImplBase
             responseObserver.onNext(response);
             responseObserver.onCompleted();
         }
-        else {
+        else if (!signVal) {
             System.out.println("Signature is invalid, discarding find node request...");
         }
+        else {
+            System.out.println("Node didn't solve crypto puzzles, discarding find node request...");
+        }
     }
+
+
     @Override
     public void findValue(FindValueRequest request, StreamObserver<FindValueResponse> responseObserver)
     {
@@ -229,8 +247,13 @@ public class KademliaImpl extends KademliaGrpc.KademliaImplBase
 
         // Verify signature
         boolean signVal = false;
+        byte[] nodeToVerify = request.getNode().toByteArray();
+        byte[] infoToVerify = new byte[nodeToVerify.length + key.length];
+        System.arraycopy(nodeToVerify, 0, infoToVerify, 0, nodeToVerify.length);;
+        System.arraycopy(key, 0, infoToVerify, nodeToVerify.length, key.length);
+
         try {
-            signVal = SignatureClass.verify(request.toByteArray(), signature, request.getPublicKey().toByteArray());
+            signVal = SignatureClass.verify(infoToVerify, signature, request.getPublicKey().toByteArray());
         }
         catch(Exception e) {
             e.printStackTrace();
@@ -252,13 +275,14 @@ public class KademliaImpl extends KademliaGrpc.KademliaImplBase
             }
             // Sign RPC response
             try {
-                byte[] infoToSign = new byte[request.getNode().getId().size() + 1];
-                int i;
-                for (i = 0; i < request.getNode().getId().size() - 1; i++) {
-                    infoToSign[i] = request.getNode().getId().byteAt(i);
-                }
-                infoToSign[request.getNode().getId().size()] = Byte.parseByte(String.valueOf(value));
-                signature = SignatureClass.sign(infoToSign, privateKey);
+                byte[] idToSign = request.getNode().getId().toByteArray();
+                byte[] valueToSign = value.toByteArray();
+                byte[] infoToSign = new byte[idToSign.length + valueToSign.length];
+
+                System.arraycopy(idToSign, 0, infoToSign, 0, idToSign.length);
+                System.arraycopy(valueToSign, 0, infoToSign, idToSign.length, valueToSign.length);
+
+                signature = SignatureClass.sign(request.getNode().getId().toByteArray(), privateKey);
             }
             catch(Exception e) {
                 e.printStackTrace();
@@ -273,8 +297,11 @@ public class KademliaImpl extends KademliaGrpc.KademliaImplBase
             responseObserver.onNext(response);
             responseObserver.onCompleted();
         }
-        else {
+        else if (!signVal) {
             System.out.println("Signature is invalid, discarding find value request...");
+        }
+        else {
+            System.out.println("Node didn't solve crypto puzzles, discarding find value request...");
         }
     }
 

@@ -84,8 +84,6 @@ message FindNodeResponse
   repeated Node nodes = 2;
   bytes publicKey = 3;
   bytes idSignature = 4;
-  //repeated NodeSignature ns = 4;
-  //bytes idSignature = 5;
 }
 
 message FindValueRequest

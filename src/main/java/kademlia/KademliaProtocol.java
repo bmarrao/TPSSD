@@ -82,6 +82,8 @@ public class KademliaProtocol
             e.printStackTrace();
         }
 
+        channel.shutdown();
+
         if (signVal) {
             return response.getOnline();
         }
@@ -101,16 +103,15 @@ public class KademliaProtocol
                 .build();
 
         byte[] nodeInfoToSign = node.toByteArray();
-        byte[] nodeToStore = val.toByteArray();
         byte[] valToStore = val.toByteArray();
 
-        int totalLength = nodeInfoToSign.length + nodeToStore.length + valToStore.length;
+        int totalLength = nodeInfoToSign.length + key.length + valToStore.length;
 
         // Add message content to byte[] for signature
         byte[] infoToSign = new byte[totalLength];
         System.arraycopy(nodeInfoToSign, 0, infoToSign, 0, nodeInfoToSign.length);
-        System.arraycopy(nodeToStore, 0, infoToSign, nodeInfoToSign.length, nodeToStore.length);
-        System.arraycopy(valToStore, 0, infoToSign, nodeInfoToSign.length + nodeToStore.length, valToStore.length);
+        System.arraycopy(key, 0, infoToSign, nodeInfoToSign.length, key.length);
+        System.arraycopy(valToStore, 0, infoToSign, nodeInfoToSign.length + key.length, valToStore.length);
 
         // Sign message content
         byte[] signature = null;
@@ -141,6 +142,8 @@ public class KademliaProtocol
             e.printStackTrace();
         }
 
+        channel.shutdown();
+
         if (signVal) {
             return response.getStored();
         }
@@ -170,9 +173,6 @@ public class KademliaProtocol
             e.printStackTrace();
         }
 
-        System.out.println("publickey in protocol: " + publicKey);
-
-        System.out.println("Signature: " + Arrays.toString(signature));
 
         // Send RPC request
         FindNodeRequest request = FindNodeRequest.newBuilder()
@@ -192,6 +192,7 @@ public class KademliaProtocol
             e.printStackTrace();
         }
 
+        channel.shutdown();
 
         if (idSignVal) {
             return response.getNodesList();
@@ -212,17 +213,12 @@ public class KademliaProtocol
                 .setPort(port).build();
 
 
-// TODO FIX THIS
+        // TODO FIX THIS
         byte[] nodeInfoToSign = node.toByteArray();
-        byte[] keyToSign = key;
-        byte[] publicKeyToSign = this.publicKey.getEncoded();
-        byte[] infoToSign = new byte[nodeInfoToSign.length + keyToSign.length + publicKeyToSign.length];
+        byte[] infoToSign = new byte[nodeInfoToSign.length + key.length];
 
         System.arraycopy(nodeInfoToSign, 0, infoToSign, 0, nodeInfoToSign.length);
-
-        System.arraycopy(keyToSign, 0, infoToSign, nodeInfoToSign.length, keyToSign.length);
-
-        System.arraycopy(publicKeyToSign, 0, infoToSign, nodeInfoToSign.length + keyToSign.length, publicKeyToSign.length);
+        System.arraycopy(key, 0, infoToSign, nodeInfoToSign.length, key.length);
 
 
 
@@ -246,12 +242,21 @@ public class KademliaProtocol
 
         // Check response's signature
         boolean signVal = false;
+        byte[] idToVerify = response.getId().toByteArray();
+        byte[] valueToVerify = response.getValue().toByteArray();
+        byte[] infoToVerify = new byte[idToVerify.length + valueToVerify.length];
+
+        System.arraycopy(idToVerify, 0, infoToVerify, 0, idToVerify.length);
+        System.arraycopy(valueToVerify,  0, infoToVerify, idToVerify.length, valueToVerify.length);
+
         try {
-            signVal = SignatureClass.verify(response.getValue().toByteArray(), response.getSignature().toByteArray(), response.getPublicKey().toByteArray());
+            signVal = SignatureClass.verify(infoToVerify, response.getSignature().toByteArray(), response.getPublicKey().toByteArray());
         }
         catch(Exception e) {
             e.printStackTrace();
         }
+
+        channel.shutdown();
 
         if (signVal) {
             return response;
@@ -291,13 +296,16 @@ public class KademliaProtocol
 
         subscribeResponse response = stub.subscribe(request);
 
+        channel.shutdown();
+
         return response.getResponse();
 
     }
 
     public void notifySubscribed(ArrayList<Node> subscribed, Offer highestOffer, byte[] serviceId, int type) {
+        ManagedChannel channel = null;
         for (Node n : subscribed) {
-            ManagedChannel channel = ManagedChannelBuilder.forAddress(n.getIp(), n.getPort())
+            channel = ManagedChannelBuilder.forAddress(n.getIp(), n.getPort())
                     .usePlaintext()
                     .build();
             KademliaGrpc.KademliaStub stub = KademliaGrpc.newStub(channel);
@@ -312,6 +320,7 @@ public class KademliaProtocol
 
             stub.notify(request, response);
         }
+        channel.shutdown();
     }
 
     public float getPrice(ArrayList<Node> selectedBrokers ,byte[] serviceId)
