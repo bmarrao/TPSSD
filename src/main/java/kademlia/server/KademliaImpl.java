@@ -18,15 +18,13 @@ public class KademliaImpl extends KademliaGrpc.KademliaImplBase
     private final int leadingZeros;
     private final PrivateKey privateKey;
     private final PublicKey publicKey;
-    private final KademliaStore ks;
 
-    KademliaImpl(Auction auc, int leadingZeros, PublicKey publicKey, PrivateKey privateKey, KademliaStore ks)
+    KademliaImpl(Auction auc, int leadingZeros, PublicKey publicKey, PrivateKey privateKey)
     {
         this.auc = auc;
         this.leadingZeros = leadingZeros;
         this.publicKey = publicKey;
         this.privateKey = privateKey;
-        this.ks = ks;
     }
 
     // Check crypto puzzle zero count
@@ -131,70 +129,9 @@ public class KademliaImpl extends KademliaGrpc.KademliaImplBase
         }
     }
 
-    @Override
-    public void store(StoreRequest request, StreamObserver<StoreResponse> responseObserver) {
-        // Retrieve the key, value and signature from the request
-        byte[] key = request.getKey().toByteArray();
-        Node value = request.getValue();
-        byte[] signature = request.getSignature().toByteArray();
-
-        // Build data byte array for signature verification
-        byte[] nodeBytes = request.getNode().toByteArray();
-        byte[] valueBytes = request.getValue().toByteArray();
-        byte[] infoToVerify = new byte[key.length + valueBytes.length + nodeBytes.length];
-        System.arraycopy(nodeBytes, 0, infoToVerify, 0, nodeBytes.length);
-        System.arraycopy(key, 0, infoToVerify, nodeBytes.length, key.length);
-        System.arraycopy(valueBytes, 0, infoToVerify, nodeBytes.length + key.length, valueBytes.length);
-
-
-        // Verify signature from request RPC
-        boolean signVal = false;
-        try {
-            signVal = SignatureClass.verify(infoToVerify, signature, request.getPublicKey().toByteArray());
-        }
-        catch(Exception e) {
-            e.printStackTrace();
-        }
-
-
-        if (signVal && arePuzzlesValid(request.getNode().getId().toByteArray(), request.getNode().getRandomX().byteAt(0))) {
-            rt.insert(request.getNode(), 1);
-
-            // Creates a new instance of storage. If already exists, use it.
-            ks.store(key,value);
-
-            // Sign RPC response
-            try {
-                signature = SignatureClass.sign(request.getNode().getId().toByteArray(), privateKey);
-            }
-            catch(Exception e) {
-                e.printStackTrace();
-            }
-
-            // if store successfull -> send true, else false
-            //TODO [ When it's false? ]
-            StoreResponse response = StoreResponse.newBuilder()
-                    .setId(request.getNode().getId())
-                    .setStored(true)
-                    .setPublicKey(ByteString.copyFrom(publicKey.getEncoded()))
-                    .setSignature(ByteString.copyFrom(signature)).build();
-
-            responseObserver.onNext(response);
-            responseObserver.onCompleted();
-        }
-        else if (!signVal) {
-            System.out.println("Signature is invalid, discarding store request...");
-        }
-        else {
-            System.out.println("Node didn't solve crypto puzzles, discarding store request...");
-        }
-
-    }
-
 
     @Override
     public void findNode(FindNodeRequest request, StreamObserver<FindNodeResponse> responseObserver) {
-        rt.insert(request.getNode(), 1);
 
         // Verify received signature
         byte[] signature = request.getSignature().toByteArray();
@@ -207,6 +144,8 @@ public class KademliaImpl extends KademliaGrpc.KademliaImplBase
         }
 
         if (signVal && arePuzzlesValid(request.getNode().getId().toByteArray(), request.getNode().getRandomX().byteAt(0))) {
+            rt.insert(request.getNode(), 1);
+
             // Get the closest node to the target ID from the routing table
             List<Node> closestNodes = rt.findClosestNode(request.getKey().toByteArray(), k_nodes);
 
@@ -238,6 +177,7 @@ public class KademliaImpl extends KademliaGrpc.KademliaImplBase
     }
 
 
+    /*
     @Override
     public void findValue(FindValueRequest request, StreamObserver<FindValueResponse> responseObserver)
     {
@@ -306,48 +246,8 @@ public class KademliaImpl extends KademliaGrpc.KademliaImplBase
     }
 
 
-    /*
-    @Override
-    public void notify(NotifyRequest request, StreamObserver<NotifyResponse> responseObserver)
-    {
-        System.out.println("Just received Notification from service " + request.getServiceId() + "With new price " + request.getPrice());
-
-        //TODO insert!
-        //rt.insert(request.getNode());
-
-        byte[] signature = request.getSignature().toByteArray();
-
-        boolean signVal = false;
-        try {
-            signVal = verify(request.toByteArray(), signature, request.getPublicKey());
-        }
-        catch(Exception e) {
-            e.printStackTrace();
-        }
-
-        if (signVal && arePuzzlesValid(request.getNode().getId().toByteArray(), request.getNode().getRandomX().byteAt(0))) {
-            // Get the value associated with the key from the data store
-            //TODO insert!
-            //rt.insert(request.getNode());
-
-            NotifyResponse response = NotifyResponse
-                    .newBuilder()
-                    .setResponse(true)
-                    .build();
-
-            // Send the response to the client.
-            responseObserver.onNext(response);
-
-            // Notifies the customer that the call is completed.
-            responseObserver.onCompleted();
-        }
-        else {
-            System.out.println("Signature is invalid, discarding find value request...");
-        }
-
-    }
-
      */
+
 
 
     @Override
@@ -368,125 +268,4 @@ public class KademliaImpl extends KademliaGrpc.KademliaImplBase
         responseObserver.onCompleted();
     }
 
-    @Override
-    public void sendPrice(sendPriceRequest request, StreamObserver<sendPriceResponse> responseObserver)
-    {
-        System.out.println("Receiving Price");
-        boolean res = auc.receiveOffer(request.getOffer(), request.getServiceId().toByteArray());
-
-        sendPriceResponse response = sendPriceResponse
-                .newBuilder()
-                .setResult(res)
-                .build();
-
-        // Send the response to the client.
-        responseObserver.onNext(response);
-
-        // Notifies the customer that the call is completed.
-        responseObserver.onCompleted();
-    }
-
-
-    @Override
-    public void subscribe(subscribeRequest request, StreamObserver<subscribeResponse> responseObserver)
-    {
-
-        System.out.println("Received Subscribed");
-        boolean res = auc.subscribe(request.getNode(),request.getServiceId().toByteArray());
-
-        subscribeResponse response = subscribeResponse
-                .newBuilder()
-                .setResponse(res)
-                .build();
-
-        // Send the response to the client.
-        responseObserver.onNext(response);
-
-        // Notifies the customer that the call is completed.
-        responseObserver.onCompleted();
-    }
-
-
-    /*
-@Override
-public void initiateService(initiateServiceRequest request, StreamObserver<initiateServiceResponse> responseObserver)
-{
-    System.out.println("In initiate Service");
-    auc.initiateService(request.getOwner(),request.getServiceId().toByteArray()
-                                    , request.getTime()
-                                    , new ArrayList<>(request.getNodesList()));
-
-    initiateServiceResponse response = initiateServiceResponse
-            .newBuilder()
-            .setResponse(true)
-            .build();
-
-    // Send the response to the client.
-    responseObserver.onNext(response);
-
-    // Notifies the customer that the call is completed.
-    responseObserver.onCompleted();
-}
-
-
-
-
-
-    @Override
-    public void endService(endServiceRequest request, StreamObserver<endServiceResponse> responseObserver)
-    {
-
-        System.out.println("End Service");
-        boolean resp = auc.endService(request.getServiceId().toByteArray(),request.getNode());
-
-        System.out.println(request.getOf().getPrice());
-        endServiceResponse response = endServiceResponse
-                .newBuilder()
-                .setResponse(resp)
-                .build();
-
-        // Send the response to the client.
-        responseObserver.onNext(response);
-
-        // Notifies the customer that the call is completed.
-        responseObserver.onCompleted();
-    }
-
-
-    @Override
-    public void communicateBiggest(communicateBiggestRequest request, StreamObserver<communicateBiggestResponse> responseObserver)
-    {
-        boolean resp = auc.communicateBiggest(request.getServiceId().toByteArray(),request.getOf());
-
-        communicateBiggestResponse response = communicateBiggestResponse
-                .newBuilder()
-                .setResponse(resp)
-                .build();
-
-        // Send the response to the client.
-        responseObserver.onNext(response);
-
-        // Notifies the customer that the call is completed.
-        responseObserver.onCompleted();
-    }
-
-    @Override
-    public void timerOver(timerOverRequest request, StreamObserver<timerOverResponse> responseObserver)
-    {
-        Offer of = auc.timerOver(request.getServiceId().toByteArray(),request.getNode());
-
-        timerOverResponse response = timerOverResponse
-                .newBuilder()
-                .setResponse(true)
-                .setOf(of)
-                .build();
-
-        // Send the response to the client.
-        responseObserver.onNext(response);
-
-        // Notifies the customer that the call is completed.
-        responseObserver.onCompleted();
-    }
-
-     */
 }

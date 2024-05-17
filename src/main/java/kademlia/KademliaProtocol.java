@@ -270,65 +270,7 @@ public class KademliaProtocol
     }
 
 
-    public boolean subscribe(byte[] serviceId, Node n )
-    {
-        ManagedChannel channel = ManagedChannelBuilder.forAddress(n.getIp(), n.getPort()).usePlaintext().build();
-
-        Node node = Node.newBuilder()
-                .setId(ByteString.copyFrom(nodeId))
-                .setIp(ipAddress)
-                .setPort(port)
-                .setRandomX(ByteString.copyFrom(new byte[]{randomX}))
-                .build();
-
-        KademliaGrpc.KademliaBlockingStub stub = KademliaGrpc.newBlockingStub(channel);
-
-
-        byte[] signature = null;
-        try {
-            signature = SignatureClass.sign(node.toByteArray(), privateKey);
-        }
-        catch(Exception e) {
-            e.printStackTrace();
-        }
-
-
-        subscribeRequest request = subscribeRequest.newBuilder()
-                .setNode(node)
-                .setServiceId(ByteString.copyFrom(serviceId))
-                .setPublicKey(ByteString.copyFrom(publicKey.getEncoded()))
-                .setSignature(ByteString.copyFrom(signature)).build();
-
-        subscribeResponse response = stub.subscribe(request);
-
-        channel.shutdown();
-
-        return response.getResponse();
-
-    }
-
-    public void notifySubscribed(ArrayList<Node> subscribed, Offer highestOffer, byte[] serviceId, int type) {
-        ManagedChannel channel = null;
-        for (Node n : subscribed) {
-            channel = ManagedChannelBuilder.forAddress(n.getIp(), n.getPort())
-                    .usePlaintext()
-                    .build();
-            KademliaGrpc.KademliaStub stub = KademliaGrpc.newStub(channel);
-
-            NotifyRequest request = NotifyRequest.newBuilder()
-                    .setNode(n)
-                    .setPrice(highestOffer.getPrice())
-                    .setType(type)
-                    .setServiceId(ByteString.copyFrom(serviceId))
-                    .setPublicKey(ByteString.copyFrom(publicKey.getEncoded()))
-                    .build();
-
-            stub.notify(request, response);
-        }
-        channel.shutdown();
-    }
-
-    public float getPrice(ArrayList<Node> selectedBrokers ,byte[] serviceId)
+    public float getPrice(byte[] serviceId)
     {
         float price = -1;
         Node node = Node.newBuilder()
@@ -340,23 +282,7 @@ public class KademliaProtocol
 
         ManagedChannel channel;
         ByteString bs= ByteString.copyFrom(serviceId);
-        for (Node n: selectedBrokers)
-        {
-            channel = ManagedChannelBuilder.forAddress(n.getIp(), n.getPort()).usePlaintext().build();
-
-            KademliaGrpc.KademliaBlockingStub stub = KademliaGrpc.newBlockingStub(channel);
-
-            Offer of = Offer.newBuilder().setNode(node).setPrice(price).build();
-
-            getPriceRequest request = getPriceRequest.newBuilder().setServiceId(bs).build();
-
-            getPriceResponse  sr= stub.getPrice(request);
-            if(sr.getPrice() > price)
-            {
-                price = sr.getPrice();
-            }
-
-        }
+        getPriceRequest pr = getPriceRequest.newBuilder().setPublicKey()
 
         return price ;
     }

@@ -4,7 +4,6 @@ import auctions.Auction;
 import io.grpc.Server;
 import io.grpc.ServerBuilder;
 import kademlia.KademliaGrpc;
-import kademlia.KademliaStore;
 
 import java.security.PrivateKey;
 import java.security.PublicKey;
@@ -17,22 +16,20 @@ public class KademliaServer extends KademliaGrpc.KademliaImplBase implements Run
     public int leadingZeros;
     public PublicKey publicKey;
     public PrivateKey privateKey;
-    public KademliaStore ks;
-    public KademliaServer(int port, Auction auc, int leadingZeros, PublicKey publicKey, PrivateKey privateKey, KademliaStore ks)
+    public KademliaServer(int port, Auction auc, int leadingZeros, PublicKey publicKey, PrivateKey privateKey)
     {
         this.port = port;
         this.auc = auc;
         this.leadingZeros = leadingZeros;
         this.publicKey = publicKey;
         this.privateKey = privateKey;
-        this.ks = ks;
     }
 
     @Override
     public void run() {
         // Server is kept alive for the client to communicate.
         server = ServerBuilder.forPort(port)
-                .addService(new KademliaImpl(auc, leadingZeros, publicKey, privateKey, ks))
+                .addService(new KademliaImpl(auc, leadingZeros, publicKey, privateKey))
                 .build();
         try
         {

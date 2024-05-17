@@ -20,7 +20,6 @@ public class Kademlia
     public static PrivateKey generatedSk;
     public static byte[] cryptoPuzzleSol;
     public static int leadingZeros;
-    public static KademliaStore ks;
     public static KademliaRoutingTable rt;
 
     public static KademliaProtocol protocol;
@@ -63,9 +62,8 @@ public class Kademlia
             joinNetThread.start();
         }
 
-        ks = new KademliaStore();
         Blockchain bc = new Blockchain(Integer.parseInt(properties.getProperty("blockchain.difficulty")));
-        KademliaServer server = new KademliaServer(port, new Auction(this, bc), leadingZeros,generatedPk, generatedSk, ks);
+        KademliaServer server = new KademliaServer(port, new Auction(this, bc), leadingZeros,generatedPk, generatedSk);
         Thread serverThread = new Thread(server);
         serverThread.start();
     }
@@ -98,11 +96,10 @@ public class Kademlia
             rt = new KrtBootStrap(sKadNodeId,protocol,
                     Integer.parseInt(properties.getProperty("bucket.size")),
                     Integer.parseInt(properties.getProperty("siblingList.size")));
-            ks = new KademliaStore();
 
             Blockchain bc = new Blockchain(Integer.parseInt(properties.getProperty("blockchain.difficulty")));
 
-            KademliaServer server = new KademliaServer(Integer.parseInt(args[2]),  new Auction(new Kademlia(sKadNodeId,generatedPk,generatedSk,rt,protocol),bc),leadingZeros,generatedPk, generatedSk, ks);
+            KademliaServer server = new KademliaServer(Integer.parseInt(args[2]),  new Auction(new Kademlia(sKadNodeId,generatedPk,generatedSk,rt,protocol),bc),leadingZeros,generatedPk, generatedSk);
 
             Thread serverThread = new Thread(server);
             serverThread.start();
@@ -116,12 +113,11 @@ public class Kademlia
                     Integer.parseInt(properties.getProperty("bucket.size")),
                     Integer.parseInt(properties.getProperty("siblingList.size")));
 
-            ks= new KademliaStore();
 
             Blockchain bc = new Blockchain(Integer.parseInt(properties.getProperty("blockchain.difficulty")));
 
             KademliaServer server = new KademliaServer(Integer.parseInt(args[2]),
-                    new Auction(new Kademlia(sKadNodeId,generatedPk,generatedSk,rt,protocol),bc), leadingZeros,generatedPk, generatedSk, ks);
+                    new Auction(new Kademlia(sKadNodeId,generatedPk,generatedSk,rt,protocol),bc), leadingZeros,generatedPk, generatedSk);
             Thread serverThread = new Thread(server);
             serverThread.start();
 
@@ -366,7 +362,7 @@ public class Kademlia
 
 
         System.out.println("Response for ping: " + protocol.pingOp(nodeId, receiverIp, receiverPort));
-        System.out.println("Response for store: " + protocol.storeOp(key, val, receiverIp, receiverPort));
+        //System.out.println("Response for store: " + protocol.storeOp(key, val, receiverIp, receiverPort));
 
         System.out.println("Response for find node:");
         List<Node> findNodeRes = protocol.findNodeOp(nodeId, key, receiverIp, receiverPort);

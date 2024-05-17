@@ -30,29 +30,18 @@ public class Auction
 
 
 
-    public ArrayList<Node> createService (String service, int a, int time)
+    public void createService (String service, int a, int time)
     {
         try {
-            MessageDigest sha1 = MessageDigest.getInstance("SHA-1"); // Create a new SHA-1 digest
+            MessageDigest sha1 = MessageDigest.getInstance("SHA-1");
 
-            byte[] serviceId = sha1.digest(service.getBytes(StandardCharsets.UTF_8)); // Compute the hash
-            //Get closest nodes to serviceID
-            ArrayList<Node> nodes = k.skadLookup(serviceId,a);
-            for (Node n : nodes)
-            {
-                //k.protocol.storeOp(serviceId, /*TODO COLOCAR MEU PROPRIONODE*/,n.getIp(),n.getPort());
-
-            }
-
+            byte[] serviceId = sha1.digest(service.getBytes(StandardCharsets.UTF_8));
             this.initiateService(serviceId, time );
-            //TODO UNCOMMENT
-            // bc.newAuction(serviceId);
-            return nodes;
+            bc.newAuction(serviceId, k.getOwnNode());
         }
         catch (NoSuchAlgorithmException e)
         {
             e.printStackTrace();
-            return null;
         }
 
     }
@@ -134,11 +123,7 @@ public class Auction
             services.remove(bs);
         }
         l.unlock();
-
-        //TODO UNCOMMENT
-            bc.closeAuction(bs.serviceId,bs.highestOffer , k.getOwnNode());
-
-
+        bc.closeAuction(bs.serviceId,bs.highestOffer , k.getOwnNode());
     }
 
 

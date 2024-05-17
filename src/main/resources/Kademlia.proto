@@ -136,12 +136,12 @@ message PlaceBidRequest
   Offer newBid = 5;
 }
 
-//FIX REQUEST
 message getPriceRequest
 {
   bytes serviceId = 1;
-  bytes publicKey = 2;
-  bytes signature = 3;
+  Node sender = 2;
+  bytes publicKey = 3;
+  bytes signature = 4;
 
 }
 
