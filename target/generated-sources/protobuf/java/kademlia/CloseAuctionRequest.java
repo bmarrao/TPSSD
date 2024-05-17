@@ -119,6 +119,10 @@ public  final class CloseAuctionRequest extends
   public static final int SERVICEID_FIELD_NUMBER = 1;
   private com.google.protobuf.ByteString serviceID_;
   /**
+   * <pre>
+   * TODO THE SIGNATURE AND THE HEAD OF THE MESSAGE SHOULD STILL BE THE SIGNATURE OF THE WINNER OF THE AUCTION
+   * </pre>
+   *
    * <code>bytes serviceID = 1;</code>
    */
   public com.google.protobuf.ByteString getServiceID() {
@@ -586,12 +590,20 @@ public  final class CloseAuctionRequest extends
 
     private com.google.protobuf.ByteString serviceID_ = com.google.protobuf.ByteString.EMPTY;
     /**
+     * <pre>
+     * TODO THE SIGNATURE AND THE HEAD OF THE MESSAGE SHOULD STILL BE THE SIGNATURE OF THE WINNER OF THE AUCTION
+     * </pre>
+     *
      * <code>bytes serviceID = 1;</code>
      */
     public com.google.protobuf.ByteString getServiceID() {
       return serviceID_;
     }
     /**
+     * <pre>
+     * TODO THE SIGNATURE AND THE HEAD OF THE MESSAGE SHOULD STILL BE THE SIGNATURE OF THE WINNER OF THE AUCTION
+     * </pre>
+     *
      * <code>bytes serviceID = 1;</code>
      */
     public Builder setServiceID(com.google.protobuf.ByteString value) {
@@ -604,6 +616,10 @@ public  final class CloseAuctionRequest extends
       return this;
     }
     /**
+     * <pre>
+     * TODO THE SIGNATURE AND THE HEAD OF THE MESSAGE SHOULD STILL BE THE SIGNATURE OF THE WINNER OF THE AUCTION
+     * </pre>
+     *
      * <code>bytes serviceID = 1;</code>
      */
     public Builder clearServiceID() {

@@ -176,6 +176,84 @@ public class KademliaImpl extends KademliaGrpc.KademliaImplBase
         }
     }
 
+    @Override
+    public void store(StoreRequest request, StreamObserver<StoreResponse> responseObserver)
+    {
+        // Retrieve the key, value and signature from the request
+        byte[] key = request.getKey().toByteArray();
+        Node value = request.getValue();
+        byte[] signature = request.getSignature().toByteArray();
+
+        // Build data byte array for signature verification
+        byte[] nodeBytes = request.getNode().toByteArray();
+        byte[] valueBytes = request.getValue().toByteArray();
+        byte[] infoToVerify = new byte[key.length + valueBytes.length + nodeBytes.length];
+        System.arraycopy(nodeBytes, 0, infoToVerify, 0, nodeBytes.length);
+        System.arraycopy(key, 0, infoToVerify, nodeBytes.length, key.length);
+        System.arraycopy(valueBytes, 0, infoToVerify, nodeBytes.length + key.length, valueBytes.length);
+
+
+        // Verify signature from request RPC
+        boolean signVal = false;
+        try {
+            signVal = SignatureClass.verify(infoToVerify, signature, request.getPublicKey().toByteArray());
+        }
+        catch(Exception e) {
+            e.printStackTrace();
+        }
+
+
+        if (signVal && arePuzzlesValid(request.getNode().getId().toByteArray(), request.getNode().getRandomX().byteAt(0))) {
+            rt.insert(request.getNode(), 1);
+
+            // Creates a new instance of storage. If already exists, use it.
+            // TODO PUT IN BLOCKCHAIN
+            // Hash <HashTransaction,Transaction> ?
+            if (request.getTransaction() == null)
+            {
+                // Recebi um bloco
+            }
+            else
+            {
+                // recebi uma transação
+            }
+            boolean isInBlockChain = bc.addTransaction(request.getTransaction);
+            if (isInBlockChain)
+            {
+                // Não precisa propagar
+            }
+            else
+            {
+                // RANDOM - PROPAGA OU NÃO?
+                // VARIAVEL PROBABILIDADE CONFIGURAVEL
+            }
+            // Sign RPC response
+            try {
+                signature = SignatureClass.sign(request.getNode().getId().toByteArray(), privateKey);
+            }
+            catch(Exception e) {
+                e.printStackTrace();
+            }
+
+            // if store successfull -> send true, else false
+            //TODO [ When it's false? ]
+            StoreResponse response = StoreResponse.newBuilder()
+                    .setId(request.getNode().getId())
+                    .setStored(true)
+                    .setPublicKey(ByteString.copyFrom(publicKey.getEncoded()))
+                    .setSignature(ByteString.copyFrom(signature)).build();
+
+            responseObserver.onNext(response);
+            responseObserver.onCompleted();
+        }
+        else if (!signVal) {
+            System.out.println("Signature is invalid, discarding store request...");
+        }
+        else {
+            System.out.println("Node didn't solve crypto puzzles, discarding store request...");
+        }
+
+    }
 
     /*
     @Override
@@ -249,23 +327,5 @@ public class KademliaImpl extends KademliaGrpc.KademliaImplBase
      */
 
 
-
-    @Override
-    public void getPrice(getPriceRequest request, StreamObserver<getPriceResponse> responseObserver)
-    {
-        System.out.println("Sending Biggest Price");
-        float price = auc.getPrice(request.getServiceId().toByteArray());
-
-        getPriceResponse response = getPriceResponse
-                .newBuilder()
-                .setPrice(price)
-                .build();
-
-        // Send the response to the client.
-        responseObserver.onNext(response);
-
-        // Notifies the customer that the call is completed.
-        responseObserver.onCompleted();
-    }
 
 }

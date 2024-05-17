@@ -51,11 +51,24 @@ public  final class getPriceRequest extends
             break;
           }
           case 18: {
+            kademlia.Node.Builder subBuilder = null;
+            if (sender_ != null) {
+              subBuilder = sender_.toBuilder();
+            }
+            sender_ = input.readMessage(kademlia.Node.parser(), extensionRegistry);
+            if (subBuilder != null) {
+              subBuilder.mergeFrom(sender_);
+              sender_ = subBuilder.buildPartial();
+            }
+
+            break;
+          }
+          case 26: {
 
             publicKey_ = input.readBytes();
             break;
           }
-          case 26: {
+          case 34: {
 
             signature_ = input.readBytes();
             break;
@@ -92,19 +105,40 @@ public  final class getPriceRequest extends
     return serviceId_;
   }
 
-  public static final int PUBLICKEY_FIELD_NUMBER = 2;
+  public static final int SENDER_FIELD_NUMBER = 2;
+  private kademlia.Node sender_;
+  /**
+   * <code>.kademlia.Node sender = 2;</code>
+   */
+  public boolean hasSender() {
+    return sender_ != null;
+  }
+  /**
+   * <code>.kademlia.Node sender = 2;</code>
+   */
+  public kademlia.Node getSender() {
+    return sender_ == null ? kademlia.Node.getDefaultInstance() : sender_;
+  }
+  /**
+   * <code>.kademlia.Node sender = 2;</code>
+   */
+  public kademlia.NodeOrBuilder getSenderOrBuilder() {
+    return getSender();
+  }
+
+  public static final int PUBLICKEY_FIELD_NUMBER = 3;
   private com.google.protobuf.ByteString publicKey_;
   /**
-   * <code>bytes publicKey = 2;</code>
+   * <code>bytes publicKey = 3;</code>
    */
   public com.google.protobuf.ByteString getPublicKey() {
     return publicKey_;
   }
 
-  public static final int SIGNATURE_FIELD_NUMBER = 3;
+  public static final int SIGNATURE_FIELD_NUMBER = 4;
   private com.google.protobuf.ByteString signature_;
   /**
-   * <code>bytes signature = 3;</code>
+   * <code>bytes signature = 4;</code>
    */
   public com.google.protobuf.ByteString getSignature() {
     return signature_;
@@ -125,11 +159,14 @@ public  final class getPriceRequest extends
     if (!serviceId_.isEmpty()) {
       output.writeBytes(1, serviceId_);
     }
+    if (sender_ != null) {
+      output.writeMessage(2, getSender());
+    }
     if (!publicKey_.isEmpty()) {
-      output.writeBytes(2, publicKey_);
+      output.writeBytes(3, publicKey_);
     }
     if (!signature_.isEmpty()) {
-      output.writeBytes(3, signature_);
+      output.writeBytes(4, signature_);
     }
   }
 
@@ -142,13 +179,17 @@ public  final class getPriceRequest extends
       size += com.google.protobuf.CodedOutputStream
         .computeBytesSize(1, serviceId_);
     }
+    if (sender_ != null) {
+      size += com.google.protobuf.CodedOutputStream
+        .computeMessageSize(2, getSender());
+    }
     if (!publicKey_.isEmpty()) {
       size += com.google.protobuf.CodedOutputStream
-        .computeBytesSize(2, publicKey_);
+        .computeBytesSize(3, publicKey_);
     }
     if (!signature_.isEmpty()) {
       size += com.google.protobuf.CodedOutputStream
-        .computeBytesSize(3, signature_);
+        .computeBytesSize(4, signature_);
     }
     memoizedSize = size;
     return size;
@@ -168,6 +209,11 @@ public  final class getPriceRequest extends
     boolean result = true;
     result = result && getServiceId()
         .equals(other.getServiceId());
+    result = result && (hasSender() == other.hasSender());
+    if (hasSender()) {
+      result = result && getSender()
+          .equals(other.getSender());
+    }
     result = result && getPublicKey()
         .equals(other.getPublicKey());
     result = result && getSignature()
@@ -184,6 +230,10 @@ public  final class getPriceRequest extends
     hash = (19 * hash) + getDescriptor().hashCode();
     hash = (37 * hash) + SERVICEID_FIELD_NUMBER;
     hash = (53 * hash) + getServiceId().hashCode();
+    if (hasSender()) {
+      hash = (37 * hash) + SENDER_FIELD_NUMBER;
+      hash = (53 * hash) + getSender().hashCode();
+    }
     hash = (37 * hash) + PUBLICKEY_FIELD_NUMBER;
     hash = (53 * hash) + getPublicKey().hashCode();
     hash = (37 * hash) + SIGNATURE_FIELD_NUMBER;
@@ -319,6 +369,12 @@ public  final class getPriceRequest extends
       super.clear();
       serviceId_ = com.google.protobuf.ByteString.EMPTY;
 
+      if (senderBuilder_ == null) {
+        sender_ = null;
+      } else {
+        sender_ = null;
+        senderBuilder_ = null;
+      }
       publicKey_ = com.google.protobuf.ByteString.EMPTY;
 
       signature_ = com.google.protobuf.ByteString.EMPTY;
@@ -346,6 +402,11 @@ public  final class getPriceRequest extends
     public kademlia.getPriceRequest buildPartial() {
       kademlia.getPriceRequest result = new kademlia.getPriceRequest(this);
       result.serviceId_ = serviceId_;
+      if (senderBuilder_ == null) {
+        result.sender_ = sender_;
+      } else {
+        result.sender_ = senderBuilder_.build();
+      }
       result.publicKey_ = publicKey_;
       result.signature_ = signature_;
       onBuilt();
@@ -391,6 +452,9 @@ public  final class getPriceRequest extends
       if (other == kademlia.getPriceRequest.getDefaultInstance()) return this;
       if (other.getServiceId() != com.google.protobuf.ByteString.EMPTY) {
         setServiceId(other.getServiceId());
+      }
+      if (other.hasSender()) {
+        mergeSender(other.getSender());
       }
       if (other.getPublicKey() != com.google.protobuf.ByteString.EMPTY) {
         setPublicKey(other.getPublicKey());
@@ -453,15 +517,132 @@ public  final class getPriceRequest extends
       return this;
     }
 
+    private kademlia.Node sender_ = null;
+    private com.google.protobuf.SingleFieldBuilderV3<
+        kademlia.Node, kademlia.Node.Builder, kademlia.NodeOrBuilder> senderBuilder_;
+    /**
+     * <code>.kademlia.Node sender = 2;</code>
+     */
+    public boolean hasSender() {
+      return senderBuilder_ != null || sender_ != null;
+    }
+    /**
+     * <code>.kademlia.Node sender = 2;</code>
+     */
+    public kademlia.Node getSender() {
+      if (senderBuilder_ == null) {
+        return sender_ == null ? kademlia.Node.getDefaultInstance() : sender_;
+      } else {
+        return senderBuilder_.getMessage();
+      }
+    }
+    /**
+     * <code>.kademlia.Node sender = 2;</code>
+     */
+    public Builder setSender(kademlia.Node value) {
+      if (senderBuilder_ == null) {
+        if (value == null) {
+          throw new NullPointerException();
+        }
+        sender_ = value;
+        onChanged();
+      } else {
+        senderBuilder_.setMessage(value);
+      }
+
+      return this;
+    }
+    /**
+     * <code>.kademlia.Node sender = 2;</code>
+     */
+    public Builder setSender(
+        kademlia.Node.Builder builderForValue) {
+      if (senderBuilder_ == null) {
+        sender_ = builderForValue.build();
+        onChanged();
+      } else {
+        senderBuilder_.setMessage(builderForValue.build());
+      }
+
+      return this;
+    }
+    /**
+     * <code>.kademlia.Node sender = 2;</code>
+     */
+    public Builder mergeSender(kademlia.Node value) {
+      if (senderBuilder_ == null) {
+        if (sender_ != null) {
+          sender_ =
+            kademlia.Node.newBuilder(sender_).mergeFrom(value).buildPartial();
+        } else {
+          sender_ = value;
+        }
+        onChanged();
+      } else {
+        senderBuilder_.mergeFrom(value);
+      }
+
+      return this;
+    }
+    /**
+     * <code>.kademlia.Node sender = 2;</code>
+     */
+    public Builder clearSender() {
+      if (senderBuilder_ == null) {
+        sender_ = null;
+        onChanged();
+      } else {
+        sender_ = null;
+        senderBuilder_ = null;
+      }
+
+      return this;
+    }
+    /**
+     * <code>.kademlia.Node sender = 2;</code>
+     */
+    public kademlia.Node.Builder getSenderBuilder() {
+      
+      onChanged();
+      return getSenderFieldBuilder().getBuilder();
+    }
+    /**
+     * <code>.kademlia.Node sender = 2;</code>
+     */
+    public kademlia.NodeOrBuilder getSenderOrBuilder() {
+      if (senderBuilder_ != null) {
+        return senderBuilder_.getMessageOrBuilder();
+      } else {
+        return sender_ == null ?
+            kademlia.Node.getDefaultInstance() : sender_;
+      }
+    }
+    /**
+     * <code>.kademlia.Node sender = 2;</code>
+     */
+    private com.google.protobuf.SingleFieldBuilderV3<
+        kademlia.Node, kademlia.Node.Builder, kademlia.NodeOrBuilder> 
+        getSenderFieldBuilder() {
+      if (senderBuilder_ == null) {
+        senderBuilder_ = new com.google.protobuf.SingleFieldBuilderV3<
+            kademlia.Node, kademlia.Node.Builder, kademlia.NodeOrBuilder>(
+                getSender(),
+                getParentForChildren(),
+                isClean());
+        sender_ = null;
+      }
+      return senderBuilder_;
+    }
+
     private com.google.protobuf.ByteString publicKey_ = com.google.protobuf.ByteString.EMPTY;
     /**
-     * <code>bytes publicKey = 2;</code>
+     * <code>bytes publicKey = 3;</code>
      */
     public com.google.protobuf.ByteString getPublicKey() {
       return publicKey_;
     }
     /**
-     * <code>bytes publicKey = 2;</code>
+     * <code>bytes publicKey = 3;</code>
      */
     public Builder setPublicKey(com.google.protobuf.ByteString value) {
       if (value == null) {
@@ -473,7 +654,7 @@ public  final class getPriceRequest extends
       return this;
     }
     /**
-     * <code>bytes publicKey = 2;</code>
+     * <code>bytes publicKey = 3;</code>
      */
     public Builder clearPublicKey() {
       
@@ -484,13 +665,13 @@ public  final class getPriceRequest extends
 
     private com.google.protobuf.ByteString signature_ = com.google.protobuf.ByteString.EMPTY;
     /**
-     * <code>bytes signature = 3;</code>
+     * <code>bytes signature = 4;</code>
      */
     public com.google.protobuf.ByteString getSignature() {
       return signature_;
     }
     /**
-     * <code>bytes signature = 3;</code>
+     * <code>bytes signature = 4;</code>
      */
     public Builder setSignature(com.google.protobuf.ByteString value) {
       if (value == null) {
@@ -502,7 +683,7 @@ public  final class getPriceRequest extends
       return this;
     }
     /**
-     * <code>bytes signature = 3;</code>
+     * <code>bytes signature = 4;</code>
      */
     public Builder clearSignature() {
       

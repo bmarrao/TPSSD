@@ -6,7 +6,7 @@ import kademlia.Node;
 import java.security.MessageDigest;
 import java.security.SecureRandom;
 import java.util.ArrayList;
-
+/*
 public class AuctionTest
 {
     public static void main(String[] args)
@@ -55,7 +55,6 @@ public class AuctionTest
         }
         kd1.rt.printTree();
 
-         */
     }
 
     public static byte[] generateNodeId()
@@ -139,4 +138,4 @@ class Subscriber implements Runnable
         x.protocol.subscribe(serviceId, brokers.get(0));
     }
 
-}
+}         */

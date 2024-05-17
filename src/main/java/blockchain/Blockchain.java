@@ -10,9 +10,10 @@ public class Blockchain
 {
     private List<Block> chain;
     private final int difficulty;
-
+    HashMap<byte[] ,Transaction > transactions;
     // Constructor
-    public Blockchain(int initialDifficulty) {
+    public Blockchain(int initialDifficulty)
+    {
         this.chain = new ArrayList<>();
         this.difficulty = initialDifficulty;
         Block genesis = createGenesisBlock();

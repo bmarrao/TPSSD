@@ -1,11 +1,7 @@
 package auctions;
 
 import blockchain.Blockchain;
-import kademlia.KademliaProtocol;
-
-import kademlia.Kademlia;
-import kademlia.Node;
-import kademlia.Offer;
+import kademlia.*;
 
 import java.io.IOException;
 import java.util.ArrayList;

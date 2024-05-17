@@ -4,6 +4,10 @@
 package kademlia;
 
 /**
+ * <pre>
+ * TODO THE SIGNATURE AND THE HEAD OF THE MESSAGE SHOULD STILL BE THE SIGNATURE OF THE WINNER OF THE AUCTION
+ * </pre>
+ *
  * Protobuf type {@code kademlia.PlaceBidRequest}
  */
 public  final class PlaceBidRequest extends
@@ -406,6 +410,10 @@ public  final class PlaceBidRequest extends
     return builder;
   }
   /**
+   * <pre>
+   * TODO THE SIGNATURE AND THE HEAD OF THE MESSAGE SHOULD STILL BE THE SIGNATURE OF THE WINNER OF THE AUCTION
+   * </pre>
+   *
    * Protobuf type {@code kademlia.PlaceBidRequest}
    */
   public static final class Builder extends

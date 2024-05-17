@@ -51,16 +51,33 @@ message Transaction
   Offer sender = 6;
 }
 
-message StoreRequest
+message StoreTransactionRequest
 {
   Node node = 1;
-  bytes key = 2;
-  Node value = 3;
+  Transaction transaction = 2;
+  Block block = 3 ;
   bytes publicKey = 4;
   bytes signature = 5;
 }
 
-message StoreResponse
+message StoreTransactionResponse
+{
+  bytes id = 1;
+  bool stored = 2;
+  bytes publicKey = 3;
+  bytes signature = 4;
+}
+
+message StoreBlockRequest
+{
+  Node node = 1;
+  Transaction transaction = 2;
+  Block block = 3 ;
+  bytes publicKey = 4;
+  bytes signature = 5;
+}
+
+message StoreBlockResponse
 {
   bytes id = 1;
   bool stored = 2;
@@ -104,54 +121,7 @@ message FindValueResponse
 }
 
 
-message NewAuctionRequest
-{
-  // TODO THE SIGNATURE AND THE HEAD OF THE MESSAGE SHOULD STILL BE THE SIGNATURE OF THE WINNER OF THE AUCTION
 
-  bytes serviceID = 1;
-  Node sender = 2;
-  Node owner = 3;
-  bytes signature = 4;
-
-}
-
-message CloseAuctionRequest
-{
-  // TODO THE SIGNATURE AND THE HEAD OF THE MESSAGE SHOULD STILL BE THE SIGNATURE OF THE WINNER OF THE AUCTION
-  bytes serviceID = 1;
-  Node sender = 2;
-  Node owner = 3;
-  bytes signature = 4;
-  Offer winner = 5;
-}
-
-message PlaceBidRequest
-{
-  // TODO THE SIGNATURE AND THE HEAD OF THE MESSAGE SHOULD STILL BE THE SIGNATURE OF THE WINNER OF THE AUCTION
-
-  bytes serviceID = 1;
-  Node sender = 2;
-  Node owner = 3;
-  bytes signature = 4;
-  Offer newBid = 5;
-}
-
-message getPriceRequest
-{
-  bytes serviceId = 1;
-  Node sender = 2;
-  bytes publicKey = 3;
-  bytes signature = 4;
-
-}
-
-message getPriceResponse
-{
-  float price = 1;
-  bytes publicKey = 2;
-  bytes signature = 3;
-
-}
 
 
 service Kademlia
@@ -167,14 +137,6 @@ service Kademlia
 
   // similar to findNode + if RPC recipient received a STORE for the given key then it returns the stored value
   rpc findValue(FindValueRequest) returns (FindValueResponse);
-
-  rpc NewAuction(NewAuctionRequest) returns (google.protobuf.Empty);
-
-  rpc PlaceBid(PlaceBidRequest) returns (google.protobuf.Empty);
-
-  rpc CloseAuction(CloseAuctionRequest) returns (google.protobuf.Empty);
-
-  rpc getPrice(getPriceRequest) returns (getPriceResponse);
 
 
 }

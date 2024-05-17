@@ -8,6 +8,10 @@ public interface CloseAuctionRequestOrBuilder extends
     com.google.protobuf.MessageOrBuilder {
 
   /**
+   * <pre>
+   * TODO THE SIGNATURE AND THE HEAD OF THE MESSAGE SHOULD STILL BE THE SIGNATURE OF THE WINNER OF THE AUCTION
+   * </pre>
+   *
    * <code>bytes serviceID = 1;</code>
    */
   com.google.protobuf.ByteString getServiceID();
