@@ -1,3 +1,4 @@
+/* TODO : REMOVE ?
 package kademlia;
 
 import com.google.protobuf.ByteString;
@@ -128,3 +129,5 @@ public class KrtNormal extends KademliaRoutingTable
 
 
 }
+
+ */

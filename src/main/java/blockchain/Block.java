@@ -26,7 +26,8 @@ public class Block
     private PrivateKey privateKey;
     private byte[] signature;
 
-    public Block(String previousHash, ArrayList<Transaction> transactionList, int reputationScore) {
+    public Block(String previousHash, ArrayList<Transaction> transactionList, int reputationScore)
+    {
         this.previousHash = previousHash;
         this.timestamp = new Date().getTime();
         this.nonce = 0;

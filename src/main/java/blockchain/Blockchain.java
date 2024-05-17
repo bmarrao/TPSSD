@@ -1,6 +1,9 @@
 
 package blockchain;
 
+import kademlia.Node;
+import kademlia.Offer;
+
 import java.util.*;
 
 public class Blockchain
@@ -41,20 +44,20 @@ public class Blockchain
         return difficulty;
     }
 
-    public void newBid()
+    public void newBid(byte[] serviceId, Offer of)
     {
         // Adicionar no bloco
         // criar uma instancia de uma transaction
         // disseminar transaction
     }
-    public void newAuction()
+    public void newAuction(byte[] serviceId, Node owner)
     {
         // Adicionar no bloco
         // criar uma instancia de uma transaction
         // disseminar transaction
     }
 
-    public void closeAuction()
+    public void closeAuction(byte[] serviceId, Offer highestOffer, Node owner)
     {
         // Adicionar no bloco
         // criar uma instancia de uma transaction

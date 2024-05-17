@@ -90,6 +90,9 @@ public class KademliaProtocol
         return false;
     }
 
+
+    //TODO : Remove ?
+    /*
     public boolean storeOp(byte[] key, Node val, String receiverIp, int receiverPort) {
         ManagedChannel channel = ManagedChannelBuilder.forAddress(receiverIp, receiverPort).usePlaintext().build();
 
@@ -150,6 +153,8 @@ public class KademliaProtocol
         return false;
     }
 
+
+     */
 
 
 
@@ -416,7 +421,8 @@ public class KademliaProtocol
         return result ;
     }
 
-    public void newAuctionOp(byte[] serviceId, Node owner) {
+    public void newAuctionOp(byte[] serviceId, Node owner)
+    {
 
         ManagedChannel channel = ManagedChannelBuilder.forAddress(owner.getIp(), owner.getPort()).usePlaintext().build();
 
@@ -457,6 +463,7 @@ public class KademliaProtocol
 
         stub.newAuction(request);
     }
+
 
     public void closeAuctionOp(byte[] serviceId, Node owner, Node winner, float winningPrice) {
 
@@ -505,6 +512,8 @@ public class KademliaProtocol
         stub.closeAuction(request);
     }
 
+    // TODO NEW BIDDER + NEWBIDPRICE  = OFFER
+    //  public void placeBidOp(byte[] serviceId, Node owner, Offer NewOffer)
     public void placeBidOp(byte[] serviceId, Node owner, Node newBidder, float newBidPrice) {
 
         ManagedChannel channel = ManagedChannelBuilder.forAddress(owner.getIp(), owner.getPort()).usePlaintext().build();
@@ -552,67 +561,4 @@ public class KademliaProtocol
         stub.placeBid(request);
     }
 
-    /*
-    public boolean initiateService(Node owner, byte[] serviceId, ArrayList<Node> brokerlist, int time)
-    {
-
-        boolean result = false;
-        Node node = Node.newBuilder()
-                .setId(ByteString.copyFrom(nodeId))
-                .setIp(ipAddress)
-                .setPort(port)
-                .setRandomX(ByteString.copyFrom(new byte[]{randomX}))
-                .build();
-        ManagedChannel channel;
-        ByteString bs= ByteString.copyFrom(serviceId);
-        List<Node> allNodes = new ArrayList<>(brokerlist);
-
-        for (Node n: brokerlist)
-        {
-            channel = ManagedChannelBuilder.forAddress(n.getIp(), n.getPort()).usePlaintext().build();
-
-            KademliaGrpc.KademliaBlockingStub stub = KademliaGrpc.newBlockingStub(channel);
-
-
-            initiateServiceRequest request = initiateServiceRequest.newBuilder()
-                    .setOwner(owner).setServiceId(bs).setTime(time)
-                    .addAllNodes(allNodes).build();
-
-            initiateServiceResponse  sr= stub.initiateService(request);
-            // TODO fix this
-            if(sr.getResponse())
-            {
-                result = true;
-            }
-
-        }
-        return result;
-    }
-
-
-    public boolean endService (Node n, byte[] serviceId,Offer of)
-    {
-        ManagedChannel channel = ManagedChannelBuilder.forAddress(n.getIp(), n.getPort()).usePlaintext().build();
-
-        KademliaGrpc.KademliaBlockingStub stub = KademliaGrpc.newBlockingStub(channel);
-
-
-        Node node = Node.newBuilder()
-                .setId(ByteString.copyFrom(nodeId))
-                .setIp(ipAddress)
-                .setPort(port)
-                .setRandomX(ByteString.copyFrom(new byte[]{randomX}))
-                .build();
-
-        endServiceRequest request = endServiceRequest.newBuilder()
-                .setNode(node)
-                .setOf(of)
-                .setServiceId(ByteString.copyFrom(serviceId)).build();
-
-        endServiceResponse response = stub.endService(request);
-
-        return response.getResponse();
-    }
-
-     */
 }

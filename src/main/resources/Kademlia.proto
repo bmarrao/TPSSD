@@ -103,27 +103,10 @@ message FindValueResponse
   bytes signature = 5;
 }
 
-message NotifyRequest
-{
-  bytes serviceId = 1;
-  Node node = 2;
-  float price = 3;
-  bytes publicKey = 4;
-  uint32 type = 5;
-  bytes signature = 6;
-
-}
-
-message NotifyResponse
-{
-  bool response = 1;
-  bytes publicKey = 2;
-  bytes signature = 3;
-
-}
 
 message NewAuctionRequest
 {
+  // TODO THE SIGNATURE AND THE HEAD OF THE MESSAGE SHOULD STILL BE THE SIGNATURE OF THE WINNER OF THE AUCTION
 
   bytes serviceID = 1;
   Node sender = 2;
@@ -134,6 +117,7 @@ message NewAuctionRequest
 
 message CloseAuctionRequest
 {
+  // TODO THE SIGNATURE AND THE HEAD OF THE MESSAGE SHOULD STILL BE THE SIGNATURE OF THE WINNER OF THE AUCTION
   bytes serviceID = 1;
   Node sender = 2;
   Node owner = 3;
@@ -143,6 +127,8 @@ message CloseAuctionRequest
 
 message PlaceBidRequest
 {
+  // TODO THE SIGNATURE AND THE HEAD OF THE MESSAGE SHOULD STILL BE THE SIGNATURE OF THE WINNER OF THE AUCTION
+
   bytes serviceID = 1;
   Node sender = 2;
   Node owner = 3;
@@ -150,6 +136,7 @@ message PlaceBidRequest
   Offer newBid = 5;
 }
 
+//FIX REQUEST
 message getPriceRequest
 {
   bytes serviceId = 1;
@@ -164,38 +151,6 @@ message getPriceResponse
   bytes publicKey = 2;
   bytes signature = 3;
 
-}
-
-message sendPriceRequest
-{
-  bytes serviceId = 1;
-  Offer offer = 2;
-  bytes publicKey = 3;
-  bytes signature = 4;
-
-}
-
-message sendPriceResponse
-{
-  bool result = 1;
-  bytes publicKey = 2;
-  bytes signature = 3;
-
-}
-
-message subscribeRequest
-{
-  Node node = 1;
-  bytes serviceId = 2;
-  bytes publicKey = 3;
-  bytes signature = 4;
-}
-
-message subscribeResponse
-{
-  bool response = 1;
-  bytes publicKey = 2;
-  bytes signature = 3;
 }
 
 
@@ -219,13 +174,8 @@ service Kademlia
 
   rpc CloseAuction(CloseAuctionRequest) returns (google.protobuf.Empty);
 
-  rpc notify(NotifyRequest) returns (NotifyResponse);
-
   rpc getPrice(getPriceRequest) returns (getPriceResponse);
 
-  rpc sendPrice(sendPriceRequest) returns (sendPriceResponse);
-
-  rpc subscribe(subscribeRequest) returns (subscribeResponse);
 
 }
 

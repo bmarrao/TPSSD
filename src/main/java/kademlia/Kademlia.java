@@ -51,7 +51,7 @@ public class Kademlia
         }
         else
         {
-            rt = new KrtNormal(nodeId, protocol, k, s);
+            rt = new KrtBootStrap(nodeId, protocol, k, s);
 
             // Randomly select one bootstrap node from BootstrapNodes.txt to contact
             List<String> bootstrapNodesInfo = getBootstrapNodesInfo(bootstrapFilePath);
@@ -112,7 +112,7 @@ public class Kademlia
         else {
             protocol = new KademliaProtocol(sKadNodeId, args[1], Integer.parseInt(args[2]), generatedPk, generatedSk,randomX);
 
-            rt = new KrtNormal(sKadNodeId, protocol,
+            rt = new KrtBootStrap(sKadNodeId, protocol,
                     Integer.parseInt(properties.getProperty("bucket.size")),
                     Integer.parseInt(properties.getProperty("siblingList.size")));
 

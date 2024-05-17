@@ -28,12 +28,10 @@ public class RunService implements Runnable {
 
         Map<Node,Offer> offers  = new HashMap<>();
         Offer of = clone(bs.highestOffer);
-        Sleeper sleeper = new Sleeper(bs);
 
         while (true)
         {
 
-            //sleeper.run();
 
             try
             {
@@ -69,30 +67,3 @@ public class RunService implements Runnable {
 
 }
 
-class Sleeper implements Runnable
-{
-    BrokerService bs;
-    Sleeper(BrokerService bs)
-    {
-        this.bs = bs;
-
-    }
-
-    @Override
-    public void run()
-    {
-        try
-        {
-            Thread.sleep(bs.time);
-            //bs.endTimer.signalAll();
-            bs.sleep = true;
-            // condition
-        }
-        catch (InterruptedException e)
-        {
-            throw new RuntimeException(e);
-        }
-
-    }
-
-}
