@@ -48,20 +48,20 @@ public interface TransactionOrBuilder extends
   kademlia.NodeOrBuilder getBrokerOrBuilder();
 
   /**
-   * <code>bytes signature = 5;</code>
-   */
-  com.google.protobuf.ByteString getSignature();
-
-  /**
-   * <code>.kademlia.Offer sender = 6;</code>
+   * <code>.kademlia.Offer sender = 5;</code>
    */
   boolean hasSender();
   /**
-   * <code>.kademlia.Offer sender = 6;</code>
+   * <code>.kademlia.Offer sender = 5;</code>
    */
   kademlia.Offer getSender();
   /**
-   * <code>.kademlia.Offer sender = 6;</code>
+   * <code>.kademlia.Offer sender = 5;</code>
    */
   kademlia.OfferOrBuilder getSenderOrBuilder();
+
+  /**
+   * <code>bytes signature = 6;</code>
+   */
+  com.google.protobuf.ByteString getSignature();
 }

@@ -47,8 +47,8 @@ message Transaction
   uint32 type = 2;
   Node owner = 3;
   Node broker = 4;
-  bytes signature = 5;
-  Offer sender = 6;
+  Offer sender = 5;
+  bytes signature = 6;
 }
 
 message StoreTransactionRequest
@@ -153,7 +153,8 @@ service Kademlia
   // store a [key, value] pair for later retrieval
   //rpc storeBlock(StoreBlcokRequest) returns (StoreBlockResponse);
 
-  //rpc storeTransaction(StoreTransactionRequest) returns (StoreTransactionResponse);
+  rpc storeTransaction(StoreTransactionRequest) returns (StoreTransactionResponse);
+
   // 160-bit key as an argument, returns (IP address, UDP port, Node ID) for each k closest nodes to target id
   rpc findNode(FindNodeRequest) returns (FindNodeResponse);
 

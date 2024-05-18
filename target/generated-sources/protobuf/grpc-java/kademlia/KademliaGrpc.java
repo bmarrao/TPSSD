@@ -40,6 +40,18 @@ public final class KademliaGrpc {
               kademlia.PingResponse.getDefaultInstance()))
           .build();
   @io.grpc.ExperimentalApi("https://github.com/grpc/grpc-java/issues/1901")
+  public static final io.grpc.MethodDescriptor<kademlia.StoreTransactionRequest,
+      kademlia.StoreTransactionResponse> METHOD_STORE_TRANSACTION =
+      io.grpc.MethodDescriptor.<kademlia.StoreTransactionRequest, kademlia.StoreTransactionResponse>newBuilder()
+          .setType(io.grpc.MethodDescriptor.MethodType.UNARY)
+          .setFullMethodName(generateFullMethodName(
+              "kademlia.Kademlia", "storeTransaction"))
+          .setRequestMarshaller(io.grpc.protobuf.ProtoUtils.marshaller(
+              kademlia.StoreTransactionRequest.getDefaultInstance()))
+          .setResponseMarshaller(io.grpc.protobuf.ProtoUtils.marshaller(
+              kademlia.StoreTransactionResponse.getDefaultInstance()))
+          .build();
+  @io.grpc.ExperimentalApi("https://github.com/grpc/grpc-java/issues/1901")
   public static final io.grpc.MethodDescriptor<kademlia.FindNodeRequest,
       kademlia.FindNodeResponse> METHOD_FIND_NODE =
       io.grpc.MethodDescriptor.<kademlia.FindNodeRequest, kademlia.FindNodeResponse>newBuilder()
@@ -102,8 +114,14 @@ public final class KademliaGrpc {
     }
 
     /**
+     */
+    public void storeTransaction(kademlia.StoreTransactionRequest request,
+        io.grpc.stub.StreamObserver<kademlia.StoreTransactionResponse> responseObserver) {
+      asyncUnimplementedUnaryCall(METHOD_STORE_TRANSACTION, responseObserver);
+    }
+
+    /**
      * <pre>
-     *rpc storeTransaction(StoreTransactionRequest) returns (StoreTransactionResponse);
      * 160-bit key as an argument, returns (IP address, UDP port, Node ID) for each k closest nodes to target id
      * </pre>
      */
@@ -128,6 +146,13 @@ public final class KademliaGrpc {
                 kademlia.PingRequest,
                 kademlia.PingResponse>(
                   this, METHODID_PING)))
+          .addMethod(
+            METHOD_STORE_TRANSACTION,
+            asyncUnaryCall(
+              new MethodHandlers<
+                kademlia.StoreTransactionRequest,
+                kademlia.StoreTransactionResponse>(
+                  this, METHODID_STORE_TRANSACTION)))
           .addMethod(
             METHOD_FIND_NODE,
             asyncUnaryCall(
@@ -176,8 +201,15 @@ public final class KademliaGrpc {
     }
 
     /**
+     */
+    public void storeTransaction(kademlia.StoreTransactionRequest request,
+        io.grpc.stub.StreamObserver<kademlia.StoreTransactionResponse> responseObserver) {
+      asyncUnaryCall(
+          getChannel().newCall(METHOD_STORE_TRANSACTION, getCallOptions()), request, responseObserver);
+    }
+
+    /**
      * <pre>
-     *rpc storeTransaction(StoreTransactionRequest) returns (StoreTransactionResponse);
      * 160-bit key as an argument, returns (IP address, UDP port, Node ID) for each k closest nodes to target id
      * </pre>
      */
@@ -225,8 +257,14 @@ public final class KademliaGrpc {
     }
 
     /**
+     */
+    public kademlia.StoreTransactionResponse storeTransaction(kademlia.StoreTransactionRequest request) {
+      return blockingUnaryCall(
+          getChannel(), METHOD_STORE_TRANSACTION, getCallOptions(), request);
+    }
+
+    /**
      * <pre>
-     *rpc storeTransaction(StoreTransactionRequest) returns (StoreTransactionResponse);
      * 160-bit key as an argument, returns (IP address, UDP port, Node ID) for each k closest nodes to target id
      * </pre>
      */
@@ -273,8 +311,15 @@ public final class KademliaGrpc {
     }
 
     /**
+     */
+    public com.google.common.util.concurrent.ListenableFuture<kademlia.StoreTransactionResponse> storeTransaction(
+        kademlia.StoreTransactionRequest request) {
+      return futureUnaryCall(
+          getChannel().newCall(METHOD_STORE_TRANSACTION, getCallOptions()), request);
+    }
+
+    /**
      * <pre>
-     *rpc storeTransaction(StoreTransactionRequest) returns (StoreTransactionResponse);
      * 160-bit key as an argument, returns (IP address, UDP port, Node ID) for each k closest nodes to target id
      * </pre>
      */
@@ -294,8 +339,9 @@ public final class KademliaGrpc {
   }
 
   private static final int METHODID_PING = 0;
-  private static final int METHODID_FIND_NODE = 1;
-  private static final int METHODID_FIND_AUCTION = 2;
+  private static final int METHODID_STORE_TRANSACTION = 1;
+  private static final int METHODID_FIND_NODE = 2;
+  private static final int METHODID_FIND_AUCTION = 3;
 
   private static final class MethodHandlers<Req, Resp> implements
       io.grpc.stub.ServerCalls.UnaryMethod<Req, Resp>,
@@ -317,6 +363,10 @@ public final class KademliaGrpc {
         case METHODID_PING:
           serviceImpl.ping((kademlia.PingRequest) request,
               (io.grpc.stub.StreamObserver<kademlia.PingResponse>) responseObserver);
+          break;
+        case METHODID_STORE_TRANSACTION:
+          serviceImpl.storeTransaction((kademlia.StoreTransactionRequest) request,
+              (io.grpc.stub.StreamObserver<kademlia.StoreTransactionResponse>) responseObserver);
           break;
         case METHODID_FIND_NODE:
           serviceImpl.findNode((kademlia.FindNodeRequest) request,
@@ -360,6 +410,7 @@ public final class KademliaGrpc {
           serviceDescriptor = result = io.grpc.ServiceDescriptor.newBuilder(SERVICE_NAME)
               .setSchemaDescriptor(new KademliaDescriptorSupplier())
               .addMethod(METHOD_PING)
+              .addMethod(METHOD_STORE_TRANSACTION)
               .addMethod(METHOD_FIND_NODE)
               .addMethod(METHOD_FIND_AUCTION)
               .build();

@@ -82,11 +82,6 @@ public  final class Transaction extends
             break;
           }
           case 42: {
-
-            signature_ = input.readBytes();
-            break;
-          }
-          case 50: {
             kademlia.Offer.Builder subBuilder = null;
             if (sender_ != null) {
               subBuilder = sender_.toBuilder();
@@ -97,6 +92,11 @@ public  final class Transaction extends
               sender_ = subBuilder.buildPartial();
             }
 
+            break;
+          }
+          case 50: {
+
+            signature_ = input.readBytes();
             break;
           }
         }
@@ -186,34 +186,34 @@ public  final class Transaction extends
     return getBroker();
   }
 
-  public static final int SIGNATURE_FIELD_NUMBER = 5;
-  private com.google.protobuf.ByteString signature_;
-  /**
-   * <code>bytes signature = 5;</code>
-   */
-  public com.google.protobuf.ByteString getSignature() {
-    return signature_;
-  }
-
-  public static final int SENDER_FIELD_NUMBER = 6;
+  public static final int SENDER_FIELD_NUMBER = 5;
   private kademlia.Offer sender_;
   /**
-   * <code>.kademlia.Offer sender = 6;</code>
+   * <code>.kademlia.Offer sender = 5;</code>
    */
   public boolean hasSender() {
     return sender_ != null;
   }
   /**
-   * <code>.kademlia.Offer sender = 6;</code>
+   * <code>.kademlia.Offer sender = 5;</code>
    */
   public kademlia.Offer getSender() {
     return sender_ == null ? kademlia.Offer.getDefaultInstance() : sender_;
   }
   /**
-   * <code>.kademlia.Offer sender = 6;</code>
+   * <code>.kademlia.Offer sender = 5;</code>
    */
   public kademlia.OfferOrBuilder getSenderOrBuilder() {
     return getSender();
+  }
+
+  public static final int SIGNATURE_FIELD_NUMBER = 6;
+  private com.google.protobuf.ByteString signature_;
+  /**
+   * <code>bytes signature = 6;</code>
+   */
+  public com.google.protobuf.ByteString getSignature() {
+    return signature_;
   }
 
   private byte memoizedIsInitialized = -1;
@@ -240,11 +240,11 @@ public  final class Transaction extends
     if (broker_ != null) {
       output.writeMessage(4, getBroker());
     }
-    if (!signature_.isEmpty()) {
-      output.writeBytes(5, signature_);
-    }
     if (sender_ != null) {
-      output.writeMessage(6, getSender());
+      output.writeMessage(5, getSender());
+    }
+    if (!signature_.isEmpty()) {
+      output.writeBytes(6, signature_);
     }
   }
 
@@ -269,13 +269,13 @@ public  final class Transaction extends
       size += com.google.protobuf.CodedOutputStream
         .computeMessageSize(4, getBroker());
     }
-    if (!signature_.isEmpty()) {
-      size += com.google.protobuf.CodedOutputStream
-        .computeBytesSize(5, signature_);
-    }
     if (sender_ != null) {
       size += com.google.protobuf.CodedOutputStream
-        .computeMessageSize(6, getSender());
+        .computeMessageSize(5, getSender());
+    }
+    if (!signature_.isEmpty()) {
+      size += com.google.protobuf.CodedOutputStream
+        .computeBytesSize(6, signature_);
     }
     memoizedSize = size;
     return size;
@@ -307,13 +307,13 @@ public  final class Transaction extends
       result = result && getBroker()
           .equals(other.getBroker());
     }
-    result = result && getSignature()
-        .equals(other.getSignature());
     result = result && (hasSender() == other.hasSender());
     if (hasSender()) {
       result = result && getSender()
           .equals(other.getSender());
     }
+    result = result && getSignature()
+        .equals(other.getSignature());
     return result;
   }
 
@@ -336,12 +336,12 @@ public  final class Transaction extends
       hash = (37 * hash) + BROKER_FIELD_NUMBER;
       hash = (53 * hash) + getBroker().hashCode();
     }
-    hash = (37 * hash) + SIGNATURE_FIELD_NUMBER;
-    hash = (53 * hash) + getSignature().hashCode();
     if (hasSender()) {
       hash = (37 * hash) + SENDER_FIELD_NUMBER;
       hash = (53 * hash) + getSender().hashCode();
     }
+    hash = (37 * hash) + SIGNATURE_FIELD_NUMBER;
+    hash = (53 * hash) + getSignature().hashCode();
     hash = (29 * hash) + unknownFields.hashCode();
     memoizedHashCode = hash;
     return hash;
@@ -487,14 +487,14 @@ public  final class Transaction extends
         broker_ = null;
         brokerBuilder_ = null;
       }
-      signature_ = com.google.protobuf.ByteString.EMPTY;
-
       if (senderBuilder_ == null) {
         sender_ = null;
       } else {
         sender_ = null;
         senderBuilder_ = null;
       }
+      signature_ = com.google.protobuf.ByteString.EMPTY;
+
       return this;
     }
 
@@ -529,12 +529,12 @@ public  final class Transaction extends
       } else {
         result.broker_ = brokerBuilder_.build();
       }
-      result.signature_ = signature_;
       if (senderBuilder_ == null) {
         result.sender_ = sender_;
       } else {
         result.sender_ = senderBuilder_.build();
       }
+      result.signature_ = signature_;
       onBuilt();
       return result;
     }
@@ -588,11 +588,11 @@ public  final class Transaction extends
       if (other.hasBroker()) {
         mergeBroker(other.getBroker());
       }
-      if (other.getSignature() != com.google.protobuf.ByteString.EMPTY) {
-        setSignature(other.getSignature());
-      }
       if (other.hasSender()) {
         mergeSender(other.getSender());
+      }
+      if (other.getSignature() != com.google.protobuf.ByteString.EMPTY) {
+        setSignature(other.getSignature());
       }
       onChanged();
       return this;
@@ -921,46 +921,17 @@ public  final class Transaction extends
       return brokerBuilder_;
     }
 
-    private com.google.protobuf.ByteString signature_ = com.google.protobuf.ByteString.EMPTY;
-    /**
-     * <code>bytes signature = 5;</code>
-     */
-    public com.google.protobuf.ByteString getSignature() {
-      return signature_;
-    }
-    /**
-     * <code>bytes signature = 5;</code>
-     */
-    public Builder setSignature(com.google.protobuf.ByteString value) {
-      if (value == null) {
-    throw new NullPointerException();
-  }
-  
-      signature_ = value;
-      onChanged();
-      return this;
-    }
-    /**
-     * <code>bytes signature = 5;</code>
-     */
-    public Builder clearSignature() {
-      
-      signature_ = getDefaultInstance().getSignature();
-      onChanged();
-      return this;
-    }
-
     private kademlia.Offer sender_ = null;
     private com.google.protobuf.SingleFieldBuilderV3<
         kademlia.Offer, kademlia.Offer.Builder, kademlia.OfferOrBuilder> senderBuilder_;
     /**
-     * <code>.kademlia.Offer sender = 6;</code>
+     * <code>.kademlia.Offer sender = 5;</code>
      */
     public boolean hasSender() {
       return senderBuilder_ != null || sender_ != null;
     }
     /**
-     * <code>.kademlia.Offer sender = 6;</code>
+     * <code>.kademlia.Offer sender = 5;</code>
      */
     public kademlia.Offer getSender() {
       if (senderBuilder_ == null) {
@@ -970,7 +941,7 @@ public  final class Transaction extends
       }
     }
     /**
-     * <code>.kademlia.Offer sender = 6;</code>
+     * <code>.kademlia.Offer sender = 5;</code>
      */
     public Builder setSender(kademlia.Offer value) {
       if (senderBuilder_ == null) {
@@ -986,7 +957,7 @@ public  final class Transaction extends
       return this;
     }
     /**
-     * <code>.kademlia.Offer sender = 6;</code>
+     * <code>.kademlia.Offer sender = 5;</code>
      */
     public Builder setSender(
         kademlia.Offer.Builder builderForValue) {
@@ -1000,7 +971,7 @@ public  final class Transaction extends
       return this;
     }
     /**
-     * <code>.kademlia.Offer sender = 6;</code>
+     * <code>.kademlia.Offer sender = 5;</code>
      */
     public Builder mergeSender(kademlia.Offer value) {
       if (senderBuilder_ == null) {
@@ -1018,7 +989,7 @@ public  final class Transaction extends
       return this;
     }
     /**
-     * <code>.kademlia.Offer sender = 6;</code>
+     * <code>.kademlia.Offer sender = 5;</code>
      */
     public Builder clearSender() {
       if (senderBuilder_ == null) {
@@ -1032,7 +1003,7 @@ public  final class Transaction extends
       return this;
     }
     /**
-     * <code>.kademlia.Offer sender = 6;</code>
+     * <code>.kademlia.Offer sender = 5;</code>
      */
     public kademlia.Offer.Builder getSenderBuilder() {
       
@@ -1040,7 +1011,7 @@ public  final class Transaction extends
       return getSenderFieldBuilder().getBuilder();
     }
     /**
-     * <code>.kademlia.Offer sender = 6;</code>
+     * <code>.kademlia.Offer sender = 5;</code>
      */
     public kademlia.OfferOrBuilder getSenderOrBuilder() {
       if (senderBuilder_ != null) {
@@ -1051,7 +1022,7 @@ public  final class Transaction extends
       }
     }
     /**
-     * <code>.kademlia.Offer sender = 6;</code>
+     * <code>.kademlia.Offer sender = 5;</code>
      */
     private com.google.protobuf.SingleFieldBuilderV3<
         kademlia.Offer, kademlia.Offer.Builder, kademlia.OfferOrBuilder> 
@@ -1065,6 +1036,35 @@ public  final class Transaction extends
         sender_ = null;
       }
       return senderBuilder_;
+    }
+
+    private com.google.protobuf.ByteString signature_ = com.google.protobuf.ByteString.EMPTY;
+    /**
+     * <code>bytes signature = 6;</code>
+     */
+    public com.google.protobuf.ByteString getSignature() {
+      return signature_;
+    }
+    /**
+     * <code>bytes signature = 6;</code>
+     */
+    public Builder setSignature(com.google.protobuf.ByteString value) {
+      if (value == null) {
+    throw new NullPointerException();
+  }
+  
+      signature_ = value;
+      onChanged();
+      return this;
+    }
+    /**
+     * <code>bytes signature = 6;</code>
+     */
+    public Builder clearSignature() {
+      
+      signature_ = getDefaultInstance().getSignature();
+      onChanged();
+      return this;
     }
     public final Builder setUnknownFields(
         final com.google.protobuf.UnknownFieldSet unknownFields) {

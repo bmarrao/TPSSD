@@ -124,6 +124,84 @@ public class KademliaProtocol
         }
         return new ArrayList<>();
     }
+
+
+    public boolean storeTransactionOp(byte[] nodeId, String receiverIp, int receiverPort,
+                                      byte[] ownerNodeID, String ownerIP, int ownerPort,
+                                      byte[] brokerNodeID, String brokerIP, int brokerPort,
+                                      byte[] transactionID, int transactionType, float price) {
+        ManagedChannel channel = ManagedChannelBuilder.forAddress(receiverIp, receiverPort).usePlaintext().build();
+
+        Node ownerNode = Node.newBuilder()
+                .setId(ByteString.copyFrom(ownerNodeID))
+                .setIp(ownerIP)
+                .setPort(ownerPort)
+                .setRandomX(ByteString.copyFrom(new byte[]{randomX})).build();
+
+        Node brokerNode = Node.newBuilder()
+                .setId(ByteString.copyFrom(brokerNodeID))
+                .setIp(brokerIP)
+                .setPort(brokerPort)
+                .setRandomX(ByteString.copyFrom(new byte[]{randomX})).build();
+
+        Node senderNode = Node.newBuilder()
+                .setId(ByteString.copyFrom(nodeId))
+                .setIp(ipAddress)
+                .setPort(port)
+                .setRandomX(ByteString.copyFrom(new byte[]{randomX})).build();
+
+        Offer senderOffer = Offer.newBuilder().setNode(senderNode).setPrice(price).build();
+
+        //TODO O que é o ID? Transaction ID? || FALTA OFFER
+        Transaction transaction = Transaction.newBuilder()
+                                .setId(ByteString.copyFrom(transactionID))
+                                .setType(transactionType)
+                                .setOwner(ownerNode)
+                                .setBroker(brokerNode)
+                                //.setOffer(senderOffer)
+                                .build();
+
+
+        // Sign node content
+        byte[] signature = null;
+        try {
+            //TODO signature = SignatureClass.sign(node.toByteArray(), privateKey);
+        }
+        catch(Exception e) {
+            e.printStackTrace();
+        }
+
+
+        KademliaGrpc.KademliaBlockingStub stub = KademliaGrpc.newBlockingStub(channel);
+
+        StoreTransactionRequest request = StoreTransactionRequest.newBuilder()
+                .setNode(senderNode)
+                .setTransaction(transaction)
+                .setSignature(ByteString.copyFrom(signature))
+                .setPublicKey(ByteString.copyFrom(publicKey.getEncoded())).build();
+
+        // Receive response
+        StoreTransactionResponse response = stub.storeTransaction(request);
+
+        // Check signature
+        boolean signVal = false;
+
+        try {
+            signVal = SignatureClass.verify(response.getId().toByteArray(), response.getSignature().toByteArray(), response.getPublicKey().toByteArray());
+        }
+        catch(Exception e) {
+            e.printStackTrace();
+        }
+
+        channel.shutdown();
+
+        if (signVal) {
+            return response.getStored();
+        }
+        return false;
+    }
+
+
     /*
 
     public boolean storeOp(byte[] key, Node val, String receiverIp, int receiverPort) {
