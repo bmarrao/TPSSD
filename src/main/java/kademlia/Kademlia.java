@@ -295,7 +295,7 @@ public class Kademlia
         for (Node n : closestNodes)
         {
             final Transaction currentResults = results[i]; // Final variable capturing the current results
-            KademliaValueLookUp lk = new KademliaValueLookUp(protocol, rt, currentResults, nodeId, d_closest_nodes, n);
+            KademliaAuctionLookUp lk = new KademliaAuctionLookUp(protocol, rt, currentResults, nodeId, d_closest_nodes, n);
             threads[i] = new Thread(() -> {
                 lk.run();
                 synchronized (allResults) {
@@ -324,6 +324,52 @@ public class Kademlia
 
         return allResults.get(0);
     }
+
+    /*
+    TODO UNCOMMENT THIS
+    public Transaction sKadBlockLookup(byte[] nodeId, int d_closest_nodes)
+    {
+        // get closest nodes to destinationKey (non recursive)
+        ArrayList<Node> closestNodes = rt.findClosestNode(nodeId, d_closest_nodes);
+        Block[] results = new Transaction[closestNodes.size()];
+        ArrayList<Transaction> allResults = new ArrayList<>();
+
+        Thread[] threads = new Thread[closestNodes.size()];
+
+        int i = 0;
+        for (Node n : closestNodes)
+        {
+            final Block currentResults = results[i]; // Final variable capturing the current results
+            KademliaBlockLookUp lk = new KademliaBlockLookUp(protocol, rt, currentResults, nodeId, d_closest_nodes, n);
+            threads[i] = new Thread(() -> {
+                lk.run();
+                synchronized (allResults) {
+                    allResults.add(currentResults);
+                }
+            });
+            threads[i].start();
+            i++;
+        }
+
+        // Wait for all threads to finish
+        for (Thread thread : threads) {
+            try {
+                thread.join();
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            }
+        }
+        //TODO ALTER THIS TO SORT BY REPUTATION/TRUST
+        Collections.sort(allResults, (node1, node2) -> {
+            BigInteger distance1 = rt.calculateDistance(node1.getId().toByteArray(), nodeId);
+            BigInteger distance2 = rt.calculateDistance(node2.getId().toByteArray(), nodeId);
+            return distance1.compareTo(distance2);
+        });
+
+
+        return allResults.get(0);
+    }
+         */
 
     /*
     // node id generation without crypto puzzles

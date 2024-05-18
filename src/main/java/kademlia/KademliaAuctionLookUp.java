@@ -3,7 +3,7 @@ package kademlia;
 import java.math.BigInteger;
 import java.util.*;
 
-public class KademliaValueLookUp implements Runnable
+public class KademliaAuctionLookUp implements Runnable
 {
 
     public static KademliaRoutingTable rt;
@@ -12,7 +12,7 @@ public class KademliaValueLookUp implements Runnable
     byte[] key ;
     int a ;
     Node n;
-    KademliaValueLookUp(KademliaProtocol protocol, KademliaRoutingTable rt, Transaction t,byte[] key, int a, Node n)
+    KademliaAuctionLookUp(KademliaProtocol protocol, KademliaRoutingTable rt, Transaction t, byte[] key, int a, Node n)
     {
         this.rt = rt;
         this.protocol = protocol;

@@ -331,7 +331,76 @@ public class KademliaProtocol
         }
         return null;
     }
+    /*
+    public FindBlockResponse findAuctionOp(byte[] key, String receiverIp, int receiverPort)
+    {
+        ManagedChannel channel = ManagedChannelBuilder.forAddress(receiverIp, receiverPort).usePlaintext().build();
 
+        KademliaGrpc.KademliaBlockingStub stub = KademliaGrpc.newBlockingStub(channel);
+
+
+        Node node = Node.newBuilder()
+                .setId(ByteString.copyFrom(nodeId))
+                .setIp(ipAddress)
+                .setRandomX(ByteString.copyFrom(new byte[]{randomX}))
+                .setPort(port).build();
+
+
+        // TODO FIX THIS
+        byte[] nodeInfoToSign = node.toByteArray();
+        byte[] infoToSign = new byte[nodeInfoToSign.length + key.length];
+
+        System.arraycopy(nodeInfoToSign, 0, infoToSign, 0, nodeInfoToSign.length);
+        System.arraycopy(key, 0, infoToSign, nodeInfoToSign.length, key.length);
+
+
+
+        // Sign message content
+        byte[] signature = null;
+        try {
+            signature = SignatureClass.sign(infoToSign, privateKey);
+        }
+        catch(Exception e) {
+            e.printStackTrace();
+        }
+
+        // Send RPC request
+        FindBlockRequest request = FindBlockRequest.newBuilder()
+                .setNode(node)
+                .setKey(ByteString.copyFrom(key))
+                .setPublicKey(ByteString.copyFrom(publicKey.getEncoded()))
+                .setSignature(ByteString.copyFrom(signature)).build();
+
+        FindAuctionResponse response = stub.findBlock(request);
+
+        // Check response's signature
+        boolean signVal = false;
+        byte[] idToVerify = response.getId().toByteArray();
+        byte[] valueToVerify = response.getT().toByteArray();
+        byte[] infoToVerify = new byte[idToVerify.length + valueToVerify.length];
+        // TODO assinar novos nos ?
+        System.arraycopy(idToVerify, 0, infoToVerify, 0, idToVerify.length);
+        System.arraycopy(valueToVerify,  0, infoToVerify, idToVerify.length, valueToVerify.length);
+
+        try {
+            signVal = SignatureClass.verify(infoToVerify, response.getSignature().toByteArray(), response.getPublicKey().toByteArray());
+        }
+        catch(Exception e) {
+            e.printStackTrace();
+        }
+
+        channel.shutdown();
+
+        if (signVal)
+        {
+            // TODO NEED TO INSERT IN THESE CASES
+            return response;
+        }
+        return null;
+    }
+
+
+     */
     /*
     public void newAuctionOp(byte[] serviceId, Node owner)
     {
