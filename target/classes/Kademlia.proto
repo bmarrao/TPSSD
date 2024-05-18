@@ -51,22 +51,41 @@ message Transaction
   Offer sender = 6;
 }
 
-message StoreRequest
+message StoreTransactionRequest
 {
   Node node = 1;
-  bytes key = 2;
-  Node value = 3;
+  Transaction transaction = 2;
   bytes publicKey = 4;
   bytes signature = 5;
 }
 
-message StoreResponse
+message StoreTransactionResponse
 {
   bytes id = 1;
   bool stored = 2;
   bytes publicKey = 3;
   bytes signature = 4;
 }
+
+/*
+message StoreBlockRequest
+{
+  Node node = 1;
+  Transaction transaction = 2;
+  Block block = 3 ;
+  bytes publicKey = 4;
+  bytes signature = 5;
+}
+
+message StoreBlockResponse
+{
+  bytes id = 1;
+  bool stored = 2;
+  bytes publicKey = 3;
+  bytes signature = 4;
+}
+
+ */
 
 message FindNodeRequest
 {
@@ -86,7 +105,8 @@ message FindNodeResponse
   bytes idSignature = 4;
 }
 
-message FindValueRequest
+/*
+message FindBlockRequest
 {
   Node node = 1;
   bytes key = 2;
@@ -94,64 +114,34 @@ message FindValueRequest
   bytes signature = 4;
 }
 
-message FindValueResponse
+message FindBlockResponse
 {
   bytes id = 1;
-  Node value = 2;
+  Block value = 2;
   repeated Node nodes = 3;
   bytes publicKey = 4;
   bytes signature = 5;
 }
 
 
-message NewAuctionRequest
+ */
+message FindAuctionRequest
 {
-  // TODO THE SIGNATURE AND THE HEAD OF THE MESSAGE SHOULD STILL BE THE SIGNATURE OF THE WINNER OF THE AUCTION
-
-  bytes serviceID = 1;
-  Node sender = 2;
-  Node owner = 3;
-  bytes signature = 4;
-
-}
-
-message CloseAuctionRequest
-{
-  // TODO THE SIGNATURE AND THE HEAD OF THE MESSAGE SHOULD STILL BE THE SIGNATURE OF THE WINNER OF THE AUCTION
-  bytes serviceID = 1;
-  Node sender = 2;
-  Node owner = 3;
-  bytes signature = 4;
-  Offer winner = 5;
-}
-
-message PlaceBidRequest
-{
-  // TODO THE SIGNATURE AND THE HEAD OF THE MESSAGE SHOULD STILL BE THE SIGNATURE OF THE WINNER OF THE AUCTION
-
-  bytes serviceID = 1;
-  Node sender = 2;
-  Node owner = 3;
-  bytes signature = 4;
-  Offer newBid = 5;
-}
-
-message getPriceRequest
-{
-  bytes serviceId = 1;
-  Node sender = 2;
+  Node node = 1;
+  bytes key = 2;
   bytes publicKey = 3;
   bytes signature = 4;
-
 }
 
-message getPriceResponse
+message FindAuctionResponse
 {
-  float price = 1;
-  bytes publicKey = 2;
-  bytes signature = 3;
-
+  bytes id = 1;
+  Transaction value = 2;
+  repeated Node nodes = 3;
+  bytes publicKey = 4;
+  bytes signature = 5;
 }
+
 
 
 service Kademlia
@@ -160,21 +150,16 @@ service Kademlia
   rpc ping(PingRequest) returns (PingResponse);
 
   // store a [key, value] pair for later retrieval
-  rpc store(StoreRequest) returns (StoreResponse);
+  //rpc storeBlock(StoreBlcokRequest) returns (StoreBlockResponse);
 
+  //rpc storeTransaction(StoreTransactionRequest) returns (StoreTransactionResponse);
   // 160-bit key as an argument, returns (IP address, UDP port, Node ID) for each k closest nodes to target id
   rpc findNode(FindNodeRequest) returns (FindNodeResponse);
 
   // similar to findNode + if RPC recipient received a STORE for the given key then it returns the stored value
-  rpc findValue(FindValueRequest) returns (FindValueResponse);
+  //rpc findBlockValue(FindBlockRequest) returns (FindBlockResponse);
 
-  rpc NewAuction(NewAuctionRequest) returns (google.protobuf.Empty);
-
-  rpc PlaceBid(PlaceBidRequest) returns (google.protobuf.Empty);
-
-  rpc CloseAuction(CloseAuctionRequest) returns (google.protobuf.Empty);
-
-  rpc getPrice(getPriceRequest) returns (getPriceResponse);
+  rpc findAuction(FindAuctionRequest) returns (FindAuctionResponse);
 
 
 }

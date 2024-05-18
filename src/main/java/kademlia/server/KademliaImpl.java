@@ -176,6 +176,8 @@ public class KademliaImpl extends KademliaGrpc.KademliaImplBase
         }
     }
 
+        /*
+
     @Override
     public void store(StoreRequest request, StreamObserver<StoreResponse> responseObserver)
     {
@@ -255,7 +257,6 @@ public class KademliaImpl extends KademliaGrpc.KademliaImplBase
 
     }
 
-    /*
     @Override
     public void findValue(FindValueRequest request, StreamObserver<FindValueResponse> responseObserver)
     {

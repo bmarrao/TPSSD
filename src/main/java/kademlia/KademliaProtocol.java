@@ -77,6 +77,55 @@ public class KademliaProtocol
         return false;
     }
 
+
+    public List<Node> findNodeOp(byte[] nodeId, byte[] key, String receiverIp, int receiverPort)
+    {
+        ManagedChannel channel = ManagedChannelBuilder.forAddress(receiverIp, receiverPort).usePlaintext().build();
+        KademliaGrpc.KademliaBlockingStub stub = KademliaGrpc.newBlockingStub(channel);
+
+        Node node = Node.newBuilder()
+                .setId(ByteString.copyFrom(nodeId))
+                .setIp(ipAddress)
+                .setPort(port)
+                .setRandomX(ByteString.copyFrom(new byte[]{randomX})).build();
+
+        // Sign message content
+        byte[] signature = null;
+        try {
+            signature = SignatureClass.sign(node.toByteArray(), privateKey);
+        }
+        catch(Exception e) {
+            e.printStackTrace();
+        }
+
+
+        // Send RPC request
+        FindNodeRequest request = FindNodeRequest.newBuilder()
+                .setNode(node)
+                .setKey(ByteString.copyFrom(key))
+                .setPublicKey(ByteString.copyFrom(publicKey.getEncoded()))
+                .setSignature(ByteString.copyFrom(signature)).build();
+
+        FindNodeResponse response = stub.findNode(request);
+
+        // Check id signature
+        boolean idSignVal = false;
+        try {
+            idSignVal = SignatureClass.verify(response.getId().toByteArray(), response.getIdSignature().toByteArray(), response.getPublicKey().toByteArray());
+        }
+        catch(Exception e) {
+            e.printStackTrace();
+        }
+
+        channel.shutdown();
+
+        if (idSignVal) {
+            return response.getNodesList();
+        }
+        return new ArrayList<>();
+    }
+    /*
+
     public boolean storeOp(byte[] key, Node val, String receiverIp, int receiverPort) {
         ManagedChannel channel = ManagedChannelBuilder.forAddress(receiverIp, receiverPort).usePlaintext().build();
 
@@ -136,58 +185,10 @@ public class KademliaProtocol
         }
         return false;
     }
+    */
 
-
-
-
-    public List<Node> findNodeOp(byte[] nodeId, byte[] key, String receiverIp, int receiverPort)
+    public FindAuctionResponse findAuctionOp(byte[] key, String receiverIp, int receiverPort)
     {
-        ManagedChannel channel = ManagedChannelBuilder.forAddress(receiverIp, receiverPort).usePlaintext().build();
-        KademliaGrpc.KademliaBlockingStub stub = KademliaGrpc.newBlockingStub(channel);
-
-        Node node = Node.newBuilder()
-                .setId(ByteString.copyFrom(nodeId))
-                .setIp(ipAddress)
-                .setPort(port)
-                .setRandomX(ByteString.copyFrom(new byte[]{randomX})).build();
-
-        // Sign message content
-        byte[] signature = null;
-        try {
-            signature = SignatureClass.sign(node.toByteArray(), privateKey);
-        }
-        catch(Exception e) {
-            e.printStackTrace();
-        }
-
-
-        // Send RPC request
-        FindNodeRequest request = FindNodeRequest.newBuilder()
-                .setNode(node)
-                .setKey(ByteString.copyFrom(key))
-                .setPublicKey(ByteString.copyFrom(publicKey.getEncoded()))
-                .setSignature(ByteString.copyFrom(signature)).build();
-
-        FindNodeResponse response = stub.findNode(request);
-
-        // Check id signature
-        boolean idSignVal = false;
-        try {
-            idSignVal = SignatureClass.verify(response.getId().toByteArray(), response.getIdSignature().toByteArray(), response.getPublicKey().toByteArray());
-        }
-        catch(Exception e) {
-            e.printStackTrace();
-        }
-
-        channel.shutdown();
-
-        if (idSignVal) {
-            return response.getNodesList();
-        }
-        return new ArrayList<>();
-    }
-
-    public FindValueResponse findValueOp(byte[] nodeId, byte[] key, String receiverIp, int receiverPort) {
         ManagedChannel channel = ManagedChannelBuilder.forAddress(receiverIp, receiverPort).usePlaintext().build();
 
         KademliaGrpc.KademliaBlockingStub stub = KademliaGrpc.newBlockingStub(channel);
@@ -219,20 +220,20 @@ public class KademliaProtocol
         }
 
         // Send RPC request
-        FindValueRequest request = FindValueRequest.newBuilder()
+        FindAuctionRequest request = FindAuctionRequest.newBuilder()
                 .setNode(node)
                 .setKey(ByteString.copyFrom(key))
                 .setPublicKey(ByteString.copyFrom(publicKey.getEncoded()))
                 .setSignature(ByteString.copyFrom(signature)).build();
 
-        FindValueResponse response = stub.findValue(request);
+        FindAuctionResponse response = stub.findAuction(request);
 
         // Check response's signature
         boolean signVal = false;
         byte[] idToVerify = response.getId().toByteArray();
         byte[] valueToVerify = response.getValue().toByteArray();
         byte[] infoToVerify = new byte[idToVerify.length + valueToVerify.length];
-
+        // TODO assinar novos nos ?
         System.arraycopy(idToVerify, 0, infoToVerify, 0, idToVerify.length);
         System.arraycopy(valueToVerify,  0, infoToVerify, idToVerify.length, valueToVerify.length);
 
@@ -245,12 +246,15 @@ public class KademliaProtocol
 
         channel.shutdown();
 
-        if (signVal) {
+        if (signVal)
+        {
+            // TODO NEED TO INSERT IN THESE CASES
             return response;
         }
         return null;
     }
 
+    /*
     public void newAuctionOp(byte[] serviceId, Node owner)
     {
 
@@ -343,4 +347,6 @@ public class KademliaProtocol
     }
 
 
+
+     */
 }

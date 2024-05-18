@@ -55,7 +55,6 @@ message StoreTransactionRequest
 {
   Node node = 1;
   Transaction transaction = 2;
-  Block block = 3 ;
   bytes publicKey = 4;
   bytes signature = 5;
 }
@@ -68,6 +67,7 @@ message StoreTransactionResponse
   bytes signature = 4;
 }
 
+/*
 message StoreBlockRequest
 {
   Node node = 1;
@@ -84,6 +84,8 @@ message StoreBlockResponse
   bytes publicKey = 3;
   bytes signature = 4;
 }
+
+ */
 
 message FindNodeRequest
 {
@@ -103,7 +105,8 @@ message FindNodeResponse
   bytes idSignature = 4;
 }
 
-message FindValueRequest
+/*
+message FindBlockRequest
 {
   Node node = 1;
   bytes key = 2;
@@ -111,16 +114,33 @@ message FindValueRequest
   bytes signature = 4;
 }
 
-message FindValueResponse
+message FindBlockResponse
 {
   bytes id = 1;
-  Node value = 2;
+  Block value = 2;
   repeated Node nodes = 3;
   bytes publicKey = 4;
   bytes signature = 5;
 }
 
 
+ */
+message FindAuctionRequest
+{
+  Node node = 1;
+  bytes key = 2;
+  bytes publicKey = 3;
+  bytes signature = 4;
+}
+
+message FindAuctionResponse
+{
+  bytes id = 1;
+  Transaction value = 2;
+  repeated Node nodes = 3;
+  bytes publicKey = 4;
+  bytes signature = 5;
+}
 
 
 
@@ -130,13 +150,16 @@ service Kademlia
   rpc ping(PingRequest) returns (PingResponse);
 
   // store a [key, value] pair for later retrieval
-  rpc store(StoreRequest) returns (StoreResponse);
+  //rpc storeBlock(StoreBlcokRequest) returns (StoreBlockResponse);
 
+  //rpc storeTransaction(StoreTransactionRequest) returns (StoreTransactionResponse);
   // 160-bit key as an argument, returns (IP address, UDP port, Node ID) for each k closest nodes to target id
   rpc findNode(FindNodeRequest) returns (FindNodeResponse);
 
   // similar to findNode + if RPC recipient received a STORE for the given key then it returns the stored value
-  rpc findValue(FindValueRequest) returns (FindValueResponse);
+  //rpc findBlockValue(FindBlockRequest) returns (FindBlockResponse);
+
+  rpc findAuction(FindAuctionRequest) returns (FindAuctionResponse);
 
 
 }

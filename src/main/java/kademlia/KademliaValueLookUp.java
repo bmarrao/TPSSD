@@ -9,7 +9,7 @@ public class KademliaValueLookUp implements Runnable
     public static KademliaRoutingTable rt;
     public static KademliaProtocol protocol;
     ArrayList<Node> nodes ;
-    byte[] nodeId ;
+    byte[] key ;
     int a ;
     Node n;
     KademliaValueLookUp(KademliaProtocol protocol, KademliaRoutingTable rt, ArrayList<Node> nodes,byte[] key, int a, Node n)
@@ -17,7 +17,7 @@ public class KademliaValueLookUp implements Runnable
         this.rt = rt;
         this.protocol = protocol;
         this.nodes = nodes;
-        this.nodeId = key ;
+        this.key = key ;
         this.a = a ;
         this.n = n;
     }
@@ -29,14 +29,13 @@ public class KademliaValueLookUp implements Runnable
         Set<Node> visitedNodes = new HashSet<>();
         // TODO FIX THIS COMPARATOR
         PriorityQueue<Node> closestNodesQueue = new PriorityQueue<>((node1, node2) -> {
-            BigInteger distance1 = rt.calculateDistance(node1.getId().toByteArray(), nodeId);
-            BigInteger distance2 = rt.calculateDistance(node2.getId().toByteArray(), nodeId);
+            BigInteger distance1 = rt.calculateDistance(node1.getId().toByteArray(), key);
+            BigInteger distance2 = rt.calculateDistance(node2.getId().toByteArray(), key);
             return distance1.compareTo(distance2);
         });
         // Start by finding the closest nodes in the routing table to the target key
-        //FindValueResponse response = protocol.findValueOp(key, n.getIp(),n.getPort());
+        FindAuctionResponse response = protocol.findAuctionOp(key, n.getIp(),n.getPort());
 
-        /*
         if (response.getValue() != null)
         {
             //ADD CODE TO ADD TO RESULT
