@@ -8,23 +8,22 @@ public class KademliaValueLookUp implements Runnable
 
     public static KademliaRoutingTable rt;
     public static KademliaProtocol protocol;
-    ArrayList<Node> nodes ;
+    Transaction t; ;
     byte[] key ;
     int a ;
     Node n;
-    KademliaValueLookUp(KademliaProtocol protocol, KademliaRoutingTable rt, ArrayList<Node> nodes,byte[] key, int a, Node n)
+    KademliaValueLookUp(KademliaProtocol protocol, KademliaRoutingTable rt, Transaction t,byte[] key, int a, Node n)
     {
         this.rt = rt;
         this.protocol = protocol;
-        this.nodes = nodes;
+        this.t= t;
         this.key = key ;
         this.a = a ;
         this.n = n;
     }
 
     @Override
-    public void run()
-    {
+    public void run() {
         // Initialize a set to keep track of visited nodes to avoid loops
         Set<Node> visitedNodes = new HashSet<>();
         // TODO FIX THIS COMPARATOR
@@ -34,13 +33,12 @@ public class KademliaValueLookUp implements Runnable
             return distance1.compareTo(distance2);
         });
         // Start by finding the closest nodes in the routing table to the target key
-        FindAuctionResponse response = protocol.findAuctionOp(key, n.getIp(),n.getPort());
+        FindAuctionResponse response = protocol.findAuctionOp(key, n.getIp(), n.getPort());
 
-        if (response.getValue() != null)
+        if (response.getHasTransaction())
         {
-            //ADD CODE TO ADD TO RESULT
-        }
-        else
+            this.t = response.getT();
+        } else
         {
             closestNodesQueue.addAll(response.getNodesList());
             while (!closestNodesQueue.isEmpty()) {
@@ -48,16 +46,15 @@ public class KademliaValueLookUp implements Runnable
                 Node currentNode = closestNodesQueue.poll();
 
                 // Check if the current node has already been visited
-                if (!visitedNodes.contains(currentNode))
-                {
+                if (!visitedNodes.contains(currentNode)) {
                     // Mark the current node as visited
                     visitedNodes.add(currentNode);
 
-                    //response = protocol.findValueOp(key, currentNode.getIp(),currentNode.getPort());
+                    response = protocol.findAuctionOp(key, currentNode.getIp(),currentNode.getPort());
 
-                    if (response.getValue() != null)
+                    if (response.getHasTransaction())
                     {
-                        // TODO ADD CODE TO ADD TO RESULT
+                        this.t = response.getT();
                         break;
                     }
                     List<Node> additionalClosestNodes = response.getNodesList();
@@ -74,23 +71,9 @@ public class KademliaValueLookUp implements Runnable
 
                 }
             }
-         */
-
-            // Initialize a list to store the result nodes
-            ArrayList<Node> resultNodes = new ArrayList<>();
-
-            // Transfer elements from priority queue to resultNodes list
-            while (resultNodes.size() < a || !closestNodesQueue.isEmpty()) {
-                resultNodes.add(closestNodesQueue.poll());
-            }
-
-            resultNodes.sort((node1, node2) -> {
-                BigInteger distance1 = rt.calculateDistance(node1.getId().toByteArray(), nodeId);
-                BigInteger distance2 = rt.calculateDistance(node2.getId().toByteArray(), nodeId);
-                return distance1.compareTo(distance2);
-            });
-            this.nodes = resultNodes;
         }
 
 
     }
+
+}

@@ -110,16 +110,16 @@ public final class KademliaOuterClass {
       "\013idSignature\030\004 \001(\014\"e\n\022FindAuctionRequest" +
       "\022\034\n\004node\030\001 \001(\0132\016.kademlia.Node\022\013\n\003key\030\002 " +
       "\001(\014\022\021\n\tpublicKey\030\003 \001(\014\022\021\n\tsignature\030\004 \001(" +
-      "\014\"\214\001\n\023FindAuctionResponse\022\n\n\002id\030\001 \001(\014\022$\n" +
-      "\005value\030\002 \001(\0132\025.kademlia.Transaction\022\035\n\005n" +
-      "odes\030\003 \003(\0132\016.kademlia.Node\022\021\n\tpublicKey\030",
-      "\004 \001(\014\022\021\n\tsignature\030\005 \001(\0142\320\001\n\010Kademlia\0225\n" +
-      "\004ping\022\025.kademlia.PingRequest\032\026.kademlia." +
-      "PingResponse\022A\n\010findNode\022\031.kademlia.Find" +
-      "NodeRequest\032\032.kademlia.FindNodeResponse\022" +
-      "J\n\013findAuction\022\034.kademlia.FindAuctionReq" +
-      "uest\032\035.kademlia.FindAuctionResponseB\002P\001b" +
-      "\006proto3"
+      "\014\"\240\001\n\023FindAuctionResponse\022\n\n\002id\030\001 \001(\014\022\026\n" +
+      "\016hasTransaction\030\002 \001(\010\022 \n\001t\030\003 \001(\0132\025.kadem" +
+      "lia.Transaction\022\035\n\005nodes\030\004 \003(\0132\016.kademli",
+      "a.Node\022\021\n\tpublicKey\030\005 \001(\014\022\021\n\tsignature\030\006" +
+      " \001(\0142\320\001\n\010Kademlia\0225\n\004ping\022\025.kademlia.Pin" +
+      "gRequest\032\026.kademlia.PingResponse\022A\n\010find" +
+      "Node\022\031.kademlia.FindNodeRequest\032\032.kademl" +
+      "ia.FindNodeResponse\022J\n\013findAuction\022\034.kad" +
+      "emlia.FindAuctionRequest\032\035.kademlia.Find" +
+      "AuctionResponseB\002P\001b\006proto3"
     };
     com.google.protobuf.Descriptors.FileDescriptor.InternalDescriptorAssigner assigner =
         new com.google.protobuf.Descriptors.FileDescriptor.    InternalDescriptorAssigner() {
@@ -205,7 +205,7 @@ public final class KademliaOuterClass {
     internal_static_kademlia_FindAuctionResponse_fieldAccessorTable = new
       com.google.protobuf.GeneratedMessageV3.FieldAccessorTable(
         internal_static_kademlia_FindAuctionResponse_descriptor,
-        new java.lang.String[] { "Id", "Value", "Nodes", "PublicKey", "Signature", });
+        new java.lang.String[] { "Id", "HasTransaction", "T", "Nodes", "PublicKey", "Signature", });
     com.google.protobuf.EmptyProto.getDescriptor();
   }
 

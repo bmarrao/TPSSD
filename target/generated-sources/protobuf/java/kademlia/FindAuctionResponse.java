@@ -16,6 +16,7 @@ public  final class FindAuctionResponse extends
   }
   private FindAuctionResponse() {
     id_ = com.google.protobuf.ByteString.EMPTY;
+    hasTransaction_ = false;
     nodes_ = java.util.Collections.emptyList();
     publicKey_ = com.google.protobuf.ByteString.EMPTY;
     signature_ = com.google.protobuf.ByteString.EMPTY;
@@ -51,34 +52,39 @@ public  final class FindAuctionResponse extends
             id_ = input.readBytes();
             break;
           }
-          case 18: {
+          case 16: {
+
+            hasTransaction_ = input.readBool();
+            break;
+          }
+          case 26: {
             kademlia.Transaction.Builder subBuilder = null;
-            if (value_ != null) {
-              subBuilder = value_.toBuilder();
+            if (t_ != null) {
+              subBuilder = t_.toBuilder();
             }
-            value_ = input.readMessage(kademlia.Transaction.parser(), extensionRegistry);
+            t_ = input.readMessage(kademlia.Transaction.parser(), extensionRegistry);
             if (subBuilder != null) {
-              subBuilder.mergeFrom(value_);
-              value_ = subBuilder.buildPartial();
+              subBuilder.mergeFrom(t_);
+              t_ = subBuilder.buildPartial();
             }
 
             break;
           }
-          case 26: {
-            if (!((mutable_bitField0_ & 0x00000004) == 0x00000004)) {
+          case 34: {
+            if (!((mutable_bitField0_ & 0x00000008) == 0x00000008)) {
               nodes_ = new java.util.ArrayList<kademlia.Node>();
-              mutable_bitField0_ |= 0x00000004;
+              mutable_bitField0_ |= 0x00000008;
             }
             nodes_.add(
                 input.readMessage(kademlia.Node.parser(), extensionRegistry));
             break;
           }
-          case 34: {
+          case 42: {
 
             publicKey_ = input.readBytes();
             break;
           }
-          case 42: {
+          case 50: {
 
             signature_ = input.readBytes();
             break;
@@ -91,7 +97,7 @@ public  final class FindAuctionResponse extends
       throw new com.google.protobuf.InvalidProtocolBufferException(
           e).setUnfinishedMessage(this);
     } finally {
-      if (((mutable_bitField0_ & 0x00000004) == 0x00000004)) {
+      if (((mutable_bitField0_ & 0x00000008) == 0x00000008)) {
         nodes_ = java.util.Collections.unmodifiableList(nodes_);
       }
       makeExtensionsImmutable();
@@ -119,75 +125,84 @@ public  final class FindAuctionResponse extends
     return id_;
   }
 
-  public static final int VALUE_FIELD_NUMBER = 2;
-  private kademlia.Transaction value_;
+  public static final int HASTRANSACTION_FIELD_NUMBER = 2;
+  private boolean hasTransaction_;
   /**
-   * <code>.kademlia.Transaction value = 2;</code>
+   * <code>bool hasTransaction = 2;</code>
    */
-  public boolean hasValue() {
-    return value_ != null;
-  }
-  /**
-   * <code>.kademlia.Transaction value = 2;</code>
-   */
-  public kademlia.Transaction getValue() {
-    return value_ == null ? kademlia.Transaction.getDefaultInstance() : value_;
-  }
-  /**
-   * <code>.kademlia.Transaction value = 2;</code>
-   */
-  public kademlia.TransactionOrBuilder getValueOrBuilder() {
-    return getValue();
+  public boolean getHasTransaction() {
+    return hasTransaction_;
   }
 
-  public static final int NODES_FIELD_NUMBER = 3;
+  public static final int T_FIELD_NUMBER = 3;
+  private kademlia.Transaction t_;
+  /**
+   * <code>.kademlia.Transaction t = 3;</code>
+   */
+  public boolean hasT() {
+    return t_ != null;
+  }
+  /**
+   * <code>.kademlia.Transaction t = 3;</code>
+   */
+  public kademlia.Transaction getT() {
+    return t_ == null ? kademlia.Transaction.getDefaultInstance() : t_;
+  }
+  /**
+   * <code>.kademlia.Transaction t = 3;</code>
+   */
+  public kademlia.TransactionOrBuilder getTOrBuilder() {
+    return getT();
+  }
+
+  public static final int NODES_FIELD_NUMBER = 4;
   private java.util.List<kademlia.Node> nodes_;
   /**
-   * <code>repeated .kademlia.Node nodes = 3;</code>
+   * <code>repeated .kademlia.Node nodes = 4;</code>
    */
   public java.util.List<kademlia.Node> getNodesList() {
     return nodes_;
   }
   /**
-   * <code>repeated .kademlia.Node nodes = 3;</code>
+   * <code>repeated .kademlia.Node nodes = 4;</code>
    */
   public java.util.List<? extends kademlia.NodeOrBuilder> 
       getNodesOrBuilderList() {
     return nodes_;
   }
   /**
-   * <code>repeated .kademlia.Node nodes = 3;</code>
+   * <code>repeated .kademlia.Node nodes = 4;</code>
    */
   public int getNodesCount() {
     return nodes_.size();
   }
   /**
-   * <code>repeated .kademlia.Node nodes = 3;</code>
+   * <code>repeated .kademlia.Node nodes = 4;</code>
    */
   public kademlia.Node getNodes(int index) {
     return nodes_.get(index);
   }
   /**
-   * <code>repeated .kademlia.Node nodes = 3;</code>
+   * <code>repeated .kademlia.Node nodes = 4;</code>
    */
   public kademlia.NodeOrBuilder getNodesOrBuilder(
       int index) {
     return nodes_.get(index);
   }
 
-  public static final int PUBLICKEY_FIELD_NUMBER = 4;
+  public static final int PUBLICKEY_FIELD_NUMBER = 5;
   private com.google.protobuf.ByteString publicKey_;
   /**
-   * <code>bytes publicKey = 4;</code>
+   * <code>bytes publicKey = 5;</code>
    */
   public com.google.protobuf.ByteString getPublicKey() {
     return publicKey_;
   }
 
-  public static final int SIGNATURE_FIELD_NUMBER = 5;
+  public static final int SIGNATURE_FIELD_NUMBER = 6;
   private com.google.protobuf.ByteString signature_;
   /**
-   * <code>bytes signature = 5;</code>
+   * <code>bytes signature = 6;</code>
    */
   public com.google.protobuf.ByteString getSignature() {
     return signature_;
@@ -208,17 +223,20 @@ public  final class FindAuctionResponse extends
     if (!id_.isEmpty()) {
       output.writeBytes(1, id_);
     }
-    if (value_ != null) {
-      output.writeMessage(2, getValue());
+    if (hasTransaction_ != false) {
+      output.writeBool(2, hasTransaction_);
+    }
+    if (t_ != null) {
+      output.writeMessage(3, getT());
     }
     for (int i = 0; i < nodes_.size(); i++) {
-      output.writeMessage(3, nodes_.get(i));
+      output.writeMessage(4, nodes_.get(i));
     }
     if (!publicKey_.isEmpty()) {
-      output.writeBytes(4, publicKey_);
+      output.writeBytes(5, publicKey_);
     }
     if (!signature_.isEmpty()) {
-      output.writeBytes(5, signature_);
+      output.writeBytes(6, signature_);
     }
   }
 
@@ -231,21 +249,25 @@ public  final class FindAuctionResponse extends
       size += com.google.protobuf.CodedOutputStream
         .computeBytesSize(1, id_);
     }
-    if (value_ != null) {
+    if (hasTransaction_ != false) {
       size += com.google.protobuf.CodedOutputStream
-        .computeMessageSize(2, getValue());
+        .computeBoolSize(2, hasTransaction_);
+    }
+    if (t_ != null) {
+      size += com.google.protobuf.CodedOutputStream
+        .computeMessageSize(3, getT());
     }
     for (int i = 0; i < nodes_.size(); i++) {
       size += com.google.protobuf.CodedOutputStream
-        .computeMessageSize(3, nodes_.get(i));
+        .computeMessageSize(4, nodes_.get(i));
     }
     if (!publicKey_.isEmpty()) {
       size += com.google.protobuf.CodedOutputStream
-        .computeBytesSize(4, publicKey_);
+        .computeBytesSize(5, publicKey_);
     }
     if (!signature_.isEmpty()) {
       size += com.google.protobuf.CodedOutputStream
-        .computeBytesSize(5, signature_);
+        .computeBytesSize(6, signature_);
     }
     memoizedSize = size;
     return size;
@@ -265,10 +287,12 @@ public  final class FindAuctionResponse extends
     boolean result = true;
     result = result && getId()
         .equals(other.getId());
-    result = result && (hasValue() == other.hasValue());
-    if (hasValue()) {
-      result = result && getValue()
-          .equals(other.getValue());
+    result = result && (getHasTransaction()
+        == other.getHasTransaction());
+    result = result && (hasT() == other.hasT());
+    if (hasT()) {
+      result = result && getT()
+          .equals(other.getT());
     }
     result = result && getNodesList()
         .equals(other.getNodesList());
@@ -288,9 +312,12 @@ public  final class FindAuctionResponse extends
     hash = (19 * hash) + getDescriptor().hashCode();
     hash = (37 * hash) + ID_FIELD_NUMBER;
     hash = (53 * hash) + getId().hashCode();
-    if (hasValue()) {
-      hash = (37 * hash) + VALUE_FIELD_NUMBER;
-      hash = (53 * hash) + getValue().hashCode();
+    hash = (37 * hash) + HASTRANSACTION_FIELD_NUMBER;
+    hash = (53 * hash) + com.google.protobuf.Internal.hashBoolean(
+        getHasTransaction());
+    if (hasT()) {
+      hash = (37 * hash) + T_FIELD_NUMBER;
+      hash = (53 * hash) + getT().hashCode();
     }
     if (getNodesCount() > 0) {
       hash = (37 * hash) + NODES_FIELD_NUMBER;
@@ -432,15 +459,17 @@ public  final class FindAuctionResponse extends
       super.clear();
       id_ = com.google.protobuf.ByteString.EMPTY;
 
-      if (valueBuilder_ == null) {
-        value_ = null;
+      hasTransaction_ = false;
+
+      if (tBuilder_ == null) {
+        t_ = null;
       } else {
-        value_ = null;
-        valueBuilder_ = null;
+        t_ = null;
+        tBuilder_ = null;
       }
       if (nodesBuilder_ == null) {
         nodes_ = java.util.Collections.emptyList();
-        bitField0_ = (bitField0_ & ~0x00000004);
+        bitField0_ = (bitField0_ & ~0x00000008);
       } else {
         nodesBuilder_.clear();
       }
@@ -473,15 +502,16 @@ public  final class FindAuctionResponse extends
       int from_bitField0_ = bitField0_;
       int to_bitField0_ = 0;
       result.id_ = id_;
-      if (valueBuilder_ == null) {
-        result.value_ = value_;
+      result.hasTransaction_ = hasTransaction_;
+      if (tBuilder_ == null) {
+        result.t_ = t_;
       } else {
-        result.value_ = valueBuilder_.build();
+        result.t_ = tBuilder_.build();
       }
       if (nodesBuilder_ == null) {
-        if (((bitField0_ & 0x00000004) == 0x00000004)) {
+        if (((bitField0_ & 0x00000008) == 0x00000008)) {
           nodes_ = java.util.Collections.unmodifiableList(nodes_);
-          bitField0_ = (bitField0_ & ~0x00000004);
+          bitField0_ = (bitField0_ & ~0x00000008);
         }
         result.nodes_ = nodes_;
       } else {
@@ -534,14 +564,17 @@ public  final class FindAuctionResponse extends
       if (other.getId() != com.google.protobuf.ByteString.EMPTY) {
         setId(other.getId());
       }
-      if (other.hasValue()) {
-        mergeValue(other.getValue());
+      if (other.getHasTransaction() != false) {
+        setHasTransaction(other.getHasTransaction());
+      }
+      if (other.hasT()) {
+        mergeT(other.getT());
       }
       if (nodesBuilder_ == null) {
         if (!other.nodes_.isEmpty()) {
           if (nodes_.isEmpty()) {
             nodes_ = other.nodes_;
-            bitField0_ = (bitField0_ & ~0x00000004);
+            bitField0_ = (bitField0_ & ~0x00000008);
           } else {
             ensureNodesIsMutable();
             nodes_.addAll(other.nodes_);
@@ -554,7 +587,7 @@ public  final class FindAuctionResponse extends
             nodesBuilder_.dispose();
             nodesBuilder_ = null;
             nodes_ = other.nodes_;
-            bitField0_ = (bitField0_ & ~0x00000004);
+            bitField0_ = (bitField0_ & ~0x00000008);
             nodesBuilder_ = 
               com.google.protobuf.GeneratedMessageV3.alwaysUseFieldBuilders ?
                  getNodesFieldBuilder() : null;
@@ -625,129 +658,155 @@ public  final class FindAuctionResponse extends
       return this;
     }
 
-    private kademlia.Transaction value_ = null;
-    private com.google.protobuf.SingleFieldBuilderV3<
-        kademlia.Transaction, kademlia.Transaction.Builder, kademlia.TransactionOrBuilder> valueBuilder_;
+    private boolean hasTransaction_ ;
     /**
-     * <code>.kademlia.Transaction value = 2;</code>
+     * <code>bool hasTransaction = 2;</code>
      */
-    public boolean hasValue() {
-      return valueBuilder_ != null || value_ != null;
+    public boolean getHasTransaction() {
+      return hasTransaction_;
     }
     /**
-     * <code>.kademlia.Transaction value = 2;</code>
+     * <code>bool hasTransaction = 2;</code>
      */
-    public kademlia.Transaction getValue() {
-      if (valueBuilder_ == null) {
-        return value_ == null ? kademlia.Transaction.getDefaultInstance() : value_;
+    public Builder setHasTransaction(boolean value) {
+      
+      hasTransaction_ = value;
+      onChanged();
+      return this;
+    }
+    /**
+     * <code>bool hasTransaction = 2;</code>
+     */
+    public Builder clearHasTransaction() {
+      
+      hasTransaction_ = false;
+      onChanged();
+      return this;
+    }
+
+    private kademlia.Transaction t_ = null;
+    private com.google.protobuf.SingleFieldBuilderV3<
+        kademlia.Transaction, kademlia.Transaction.Builder, kademlia.TransactionOrBuilder> tBuilder_;
+    /**
+     * <code>.kademlia.Transaction t = 3;</code>
+     */
+    public boolean hasT() {
+      return tBuilder_ != null || t_ != null;
+    }
+    /**
+     * <code>.kademlia.Transaction t = 3;</code>
+     */
+    public kademlia.Transaction getT() {
+      if (tBuilder_ == null) {
+        return t_ == null ? kademlia.Transaction.getDefaultInstance() : t_;
       } else {
-        return valueBuilder_.getMessage();
+        return tBuilder_.getMessage();
       }
     }
     /**
-     * <code>.kademlia.Transaction value = 2;</code>
+     * <code>.kademlia.Transaction t = 3;</code>
      */
-    public Builder setValue(kademlia.Transaction value) {
-      if (valueBuilder_ == null) {
+    public Builder setT(kademlia.Transaction value) {
+      if (tBuilder_ == null) {
         if (value == null) {
           throw new NullPointerException();
         }
-        value_ = value;
+        t_ = value;
         onChanged();
       } else {
-        valueBuilder_.setMessage(value);
+        tBuilder_.setMessage(value);
       }
 
       return this;
     }
     /**
-     * <code>.kademlia.Transaction value = 2;</code>
+     * <code>.kademlia.Transaction t = 3;</code>
      */
-    public Builder setValue(
+    public Builder setT(
         kademlia.Transaction.Builder builderForValue) {
-      if (valueBuilder_ == null) {
-        value_ = builderForValue.build();
+      if (tBuilder_ == null) {
+        t_ = builderForValue.build();
         onChanged();
       } else {
-        valueBuilder_.setMessage(builderForValue.build());
+        tBuilder_.setMessage(builderForValue.build());
       }
 
       return this;
     }
     /**
-     * <code>.kademlia.Transaction value = 2;</code>
+     * <code>.kademlia.Transaction t = 3;</code>
      */
-    public Builder mergeValue(kademlia.Transaction value) {
-      if (valueBuilder_ == null) {
-        if (value_ != null) {
-          value_ =
-            kademlia.Transaction.newBuilder(value_).mergeFrom(value).buildPartial();
+    public Builder mergeT(kademlia.Transaction value) {
+      if (tBuilder_ == null) {
+        if (t_ != null) {
+          t_ =
+            kademlia.Transaction.newBuilder(t_).mergeFrom(value).buildPartial();
         } else {
-          value_ = value;
+          t_ = value;
         }
         onChanged();
       } else {
-        valueBuilder_.mergeFrom(value);
+        tBuilder_.mergeFrom(value);
       }
 
       return this;
     }
     /**
-     * <code>.kademlia.Transaction value = 2;</code>
+     * <code>.kademlia.Transaction t = 3;</code>
      */
-    public Builder clearValue() {
-      if (valueBuilder_ == null) {
-        value_ = null;
+    public Builder clearT() {
+      if (tBuilder_ == null) {
+        t_ = null;
         onChanged();
       } else {
-        value_ = null;
-        valueBuilder_ = null;
+        t_ = null;
+        tBuilder_ = null;
       }
 
       return this;
     }
     /**
-     * <code>.kademlia.Transaction value = 2;</code>
+     * <code>.kademlia.Transaction t = 3;</code>
      */
-    public kademlia.Transaction.Builder getValueBuilder() {
+    public kademlia.Transaction.Builder getTBuilder() {
       
       onChanged();
-      return getValueFieldBuilder().getBuilder();
+      return getTFieldBuilder().getBuilder();
     }
     /**
-     * <code>.kademlia.Transaction value = 2;</code>
+     * <code>.kademlia.Transaction t = 3;</code>
      */
-    public kademlia.TransactionOrBuilder getValueOrBuilder() {
-      if (valueBuilder_ != null) {
-        return valueBuilder_.getMessageOrBuilder();
+    public kademlia.TransactionOrBuilder getTOrBuilder() {
+      if (tBuilder_ != null) {
+        return tBuilder_.getMessageOrBuilder();
       } else {
-        return value_ == null ?
-            kademlia.Transaction.getDefaultInstance() : value_;
+        return t_ == null ?
+            kademlia.Transaction.getDefaultInstance() : t_;
       }
     }
     /**
-     * <code>.kademlia.Transaction value = 2;</code>
+     * <code>.kademlia.Transaction t = 3;</code>
      */
     private com.google.protobuf.SingleFieldBuilderV3<
         kademlia.Transaction, kademlia.Transaction.Builder, kademlia.TransactionOrBuilder> 
-        getValueFieldBuilder() {
-      if (valueBuilder_ == null) {
-        valueBuilder_ = new com.google.protobuf.SingleFieldBuilderV3<
+        getTFieldBuilder() {
+      if (tBuilder_ == null) {
+        tBuilder_ = new com.google.protobuf.SingleFieldBuilderV3<
             kademlia.Transaction, kademlia.Transaction.Builder, kademlia.TransactionOrBuilder>(
-                getValue(),
+                getT(),
                 getParentForChildren(),
                 isClean());
-        value_ = null;
+        t_ = null;
       }
-      return valueBuilder_;
+      return tBuilder_;
     }
 
     private java.util.List<kademlia.Node> nodes_ =
       java.util.Collections.emptyList();
     private void ensureNodesIsMutable() {
-      if (!((bitField0_ & 0x00000004) == 0x00000004)) {
+      if (!((bitField0_ & 0x00000008) == 0x00000008)) {
         nodes_ = new java.util.ArrayList<kademlia.Node>(nodes_);
-        bitField0_ |= 0x00000004;
+        bitField0_ |= 0x00000008;
        }
     }
 
@@ -755,7 +814,7 @@ public  final class FindAuctionResponse extends
         kademlia.Node, kademlia.Node.Builder, kademlia.NodeOrBuilder> nodesBuilder_;
 
     /**
-     * <code>repeated .kademlia.Node nodes = 3;</code>
+     * <code>repeated .kademlia.Node nodes = 4;</code>
      */
     public java.util.List<kademlia.Node> getNodesList() {
       if (nodesBuilder_ == null) {
@@ -765,7 +824,7 @@ public  final class FindAuctionResponse extends
       }
     }
     /**
-     * <code>repeated .kademlia.Node nodes = 3;</code>
+     * <code>repeated .kademlia.Node nodes = 4;</code>
      */
     public int getNodesCount() {
       if (nodesBuilder_ == null) {
@@ -775,7 +834,7 @@ public  final class FindAuctionResponse extends
       }
     }
     /**
-     * <code>repeated .kademlia.Node nodes = 3;</code>
+     * <code>repeated .kademlia.Node nodes = 4;</code>
      */
     public kademlia.Node getNodes(int index) {
       if (nodesBuilder_ == null) {
@@ -785,7 +844,7 @@ public  final class FindAuctionResponse extends
       }
     }
     /**
-     * <code>repeated .kademlia.Node nodes = 3;</code>
+     * <code>repeated .kademlia.Node nodes = 4;</code>
      */
     public Builder setNodes(
         int index, kademlia.Node value) {
@@ -802,7 +861,7 @@ public  final class FindAuctionResponse extends
       return this;
     }
     /**
-     * <code>repeated .kademlia.Node nodes = 3;</code>
+     * <code>repeated .kademlia.Node nodes = 4;</code>
      */
     public Builder setNodes(
         int index, kademlia.Node.Builder builderForValue) {
@@ -816,7 +875,7 @@ public  final class FindAuctionResponse extends
       return this;
     }
     /**
-     * <code>repeated .kademlia.Node nodes = 3;</code>
+     * <code>repeated .kademlia.Node nodes = 4;</code>
      */
     public Builder addNodes(kademlia.Node value) {
       if (nodesBuilder_ == null) {
@@ -832,7 +891,7 @@ public  final class FindAuctionResponse extends
       return this;
     }
     /**
-     * <code>repeated .kademlia.Node nodes = 3;</code>
+     * <code>repeated .kademlia.Node nodes = 4;</code>
      */
     public Builder addNodes(
         int index, kademlia.Node value) {
@@ -849,7 +908,7 @@ public  final class FindAuctionResponse extends
       return this;
     }
     /**
-     * <code>repeated .kademlia.Node nodes = 3;</code>
+     * <code>repeated .kademlia.Node nodes = 4;</code>
      */
     public Builder addNodes(
         kademlia.Node.Builder builderForValue) {
@@ -863,7 +922,7 @@ public  final class FindAuctionResponse extends
       return this;
     }
     /**
-     * <code>repeated .kademlia.Node nodes = 3;</code>
+     * <code>repeated .kademlia.Node nodes = 4;</code>
      */
     public Builder addNodes(
         int index, kademlia.Node.Builder builderForValue) {
@@ -877,7 +936,7 @@ public  final class FindAuctionResponse extends
       return this;
     }
     /**
-     * <code>repeated .kademlia.Node nodes = 3;</code>
+     * <code>repeated .kademlia.Node nodes = 4;</code>
      */
     public Builder addAllNodes(
         java.lang.Iterable<? extends kademlia.Node> values) {
@@ -892,12 +951,12 @@ public  final class FindAuctionResponse extends
       return this;
     }
     /**
-     * <code>repeated .kademlia.Node nodes = 3;</code>
+     * <code>repeated .kademlia.Node nodes = 4;</code>
      */
     public Builder clearNodes() {
       if (nodesBuilder_ == null) {
         nodes_ = java.util.Collections.emptyList();
-        bitField0_ = (bitField0_ & ~0x00000004);
+        bitField0_ = (bitField0_ & ~0x00000008);
         onChanged();
       } else {
         nodesBuilder_.clear();
@@ -905,7 +964,7 @@ public  final class FindAuctionResponse extends
       return this;
     }
     /**
-     * <code>repeated .kademlia.Node nodes = 3;</code>
+     * <code>repeated .kademlia.Node nodes = 4;</code>
      */
     public Builder removeNodes(int index) {
       if (nodesBuilder_ == null) {
@@ -918,14 +977,14 @@ public  final class FindAuctionResponse extends
       return this;
     }
     /**
-     * <code>repeated .kademlia.Node nodes = 3;</code>
+     * <code>repeated .kademlia.Node nodes = 4;</code>
      */
     public kademlia.Node.Builder getNodesBuilder(
         int index) {
       return getNodesFieldBuilder().getBuilder(index);
     }
     /**
-     * <code>repeated .kademlia.Node nodes = 3;</code>
+     * <code>repeated .kademlia.Node nodes = 4;</code>
      */
     public kademlia.NodeOrBuilder getNodesOrBuilder(
         int index) {
@@ -935,7 +994,7 @@ public  final class FindAuctionResponse extends
       }
     }
     /**
-     * <code>repeated .kademlia.Node nodes = 3;</code>
+     * <code>repeated .kademlia.Node nodes = 4;</code>
      */
     public java.util.List<? extends kademlia.NodeOrBuilder> 
          getNodesOrBuilderList() {
@@ -946,14 +1005,14 @@ public  final class FindAuctionResponse extends
       }
     }
     /**
-     * <code>repeated .kademlia.Node nodes = 3;</code>
+     * <code>repeated .kademlia.Node nodes = 4;</code>
      */
     public kademlia.Node.Builder addNodesBuilder() {
       return getNodesFieldBuilder().addBuilder(
           kademlia.Node.getDefaultInstance());
     }
     /**
-     * <code>repeated .kademlia.Node nodes = 3;</code>
+     * <code>repeated .kademlia.Node nodes = 4;</code>
      */
     public kademlia.Node.Builder addNodesBuilder(
         int index) {
@@ -961,7 +1020,7 @@ public  final class FindAuctionResponse extends
           index, kademlia.Node.getDefaultInstance());
     }
     /**
-     * <code>repeated .kademlia.Node nodes = 3;</code>
+     * <code>repeated .kademlia.Node nodes = 4;</code>
      */
     public java.util.List<kademlia.Node.Builder> 
          getNodesBuilderList() {
@@ -974,7 +1033,7 @@ public  final class FindAuctionResponse extends
         nodesBuilder_ = new com.google.protobuf.RepeatedFieldBuilderV3<
             kademlia.Node, kademlia.Node.Builder, kademlia.NodeOrBuilder>(
                 nodes_,
-                ((bitField0_ & 0x00000004) == 0x00000004),
+                ((bitField0_ & 0x00000008) == 0x00000008),
                 getParentForChildren(),
                 isClean());
         nodes_ = null;
@@ -984,13 +1043,13 @@ public  final class FindAuctionResponse extends
 
     private com.google.protobuf.ByteString publicKey_ = com.google.protobuf.ByteString.EMPTY;
     /**
-     * <code>bytes publicKey = 4;</code>
+     * <code>bytes publicKey = 5;</code>
      */
     public com.google.protobuf.ByteString getPublicKey() {
       return publicKey_;
     }
     /**
-     * <code>bytes publicKey = 4;</code>
+     * <code>bytes publicKey = 5;</code>
      */
     public Builder setPublicKey(com.google.protobuf.ByteString value) {
       if (value == null) {
@@ -1002,7 +1061,7 @@ public  final class FindAuctionResponse extends
       return this;
     }
     /**
-     * <code>bytes publicKey = 4;</code>
+     * <code>bytes publicKey = 5;</code>
      */
     public Builder clearPublicKey() {
       
@@ -1013,13 +1072,13 @@ public  final class FindAuctionResponse extends
 
     private com.google.protobuf.ByteString signature_ = com.google.protobuf.ByteString.EMPTY;
     /**
-     * <code>bytes signature = 5;</code>
+     * <code>bytes signature = 6;</code>
      */
     public com.google.protobuf.ByteString getSignature() {
       return signature_;
     }
     /**
-     * <code>bytes signature = 5;</code>
+     * <code>bytes signature = 6;</code>
      */
     public Builder setSignature(com.google.protobuf.ByteString value) {
       if (value == null) {
@@ -1031,7 +1090,7 @@ public  final class FindAuctionResponse extends
       return this;
     }
     /**
-     * <code>bytes signature = 5;</code>
+     * <code>bytes signature = 6;</code>
      */
     public Builder clearSignature() {
       

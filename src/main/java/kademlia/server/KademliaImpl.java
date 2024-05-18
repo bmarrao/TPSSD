@@ -6,6 +6,7 @@ import io.grpc.stub.StreamObserver;
 import kademlia.*;
 
 import java.security.*;
+import java.util.ArrayList;
 import java.util.List;
 
 import static kademlia.Kademlia.rt;
@@ -176,7 +177,78 @@ public class KademliaImpl extends KademliaGrpc.KademliaImplBase
         }
     }
 
-        /*
+
+    @Override
+    public void findAuction(FindAuctionRequest request, StreamObserver<FindAuctionResponse> responseObserver)
+    {
+        // Retrieve the key from the request
+        byte[] key = request.getKey().toByteArray();
+        byte[] signature = request.getSignature().toByteArray();
+
+        // Verify signature
+        boolean signVal = false;
+        byte[] nodeToVerify = request.getNode().toByteArray();
+        byte[] infoToVerify = new byte[nodeToVerify.length + key.length];
+        System.arraycopy(nodeToVerify, 0, infoToVerify, 0, nodeToVerify.length);;
+        System.arraycopy(key, 0, infoToVerify, nodeToVerify.length, key.length);
+
+        try {
+            signVal = SignatureClass.verify(infoToVerify, signature, request.getPublicKey().toByteArray());
+        }
+        catch(Exception e) {
+            e.printStackTrace();
+        }
+
+
+        if (signVal && arePuzzlesValid(request.getNode().getId().toByteArray(), request.getNode().getRandomX().byteAt(0))) {
+            //Creates a new instance of storage. If already exists, use it.
+
+            rt.insert(request.getNode(), 1);
+
+            // Get the value associated with the key from the data store
+            // TODO GET A COPY OF BLOCKCHAIN
+            Transaction value = bc.findTransaction(key);
+            boolean hasTransaction = true;
+            List<Node> closestNodes = new ArrayList<>();
+            if (value == null)
+            {
+                closestNodes = rt.findClosestNode(key, k_nodes);
+                hasTransaction = false;
+            }
+            // Sign RPC response
+            try {
+                byte[] idToSign = request.getNode().getId().toByteArray();
+                byte[] valueToSign = value.toByteArray();
+                byte[] infoToSign = new byte[idToSign.length + valueToSign.length];
+
+                System.arraycopy(idToSign, 0, infoToSign, 0, idToSign.length);
+                System.arraycopy(valueToSign, 0, infoToSign, idToSign.length, valueToSign.length);
+
+                signature = SignatureClass.sign(request.getNode().getId().toByteArray(), privateKey);
+            }
+            catch(Exception e) {
+                e.printStackTrace();
+            }
+
+            FindAuctionResponse response = FindAuctionResponse.newBuilder()
+                    .setId(request.getNode().getId())
+                    .setT(value)
+                    .addAllNodes(closestNodes)
+                    .setHasTransaction(hasTransaction)
+                    .setPublicKey(ByteString.copyFrom(publicKey.getEncoded()))
+                    .setSignature(ByteString.copyFrom(signature)).build();
+
+            responseObserver.onNext(response);
+            responseObserver.onCompleted();
+        }
+        else if (!signVal) {
+            System.out.println("Signature is invalid, discarding find value request...");
+        }
+        else {
+            System.out.println("Node didn't solve crypto puzzles, discarding find value request...");
+        }
+    }
+    /*
 
     @Override
     public void store(StoreRequest request, StreamObserver<StoreResponse> responseObserver)
@@ -257,72 +329,6 @@ public class KademliaImpl extends KademliaGrpc.KademliaImplBase
 
     }
 
-    @Override
-    public void findValue(FindValueRequest request, StreamObserver<FindValueResponse> responseObserver)
-    {
-        // Retrieve the key from the request
-        byte[] key = request.getKey().toByteArray();
-        byte[] signature = request.getSignature().toByteArray();
-
-        // Verify signature
-        boolean signVal = false;
-        byte[] nodeToVerify = request.getNode().toByteArray();
-        byte[] infoToVerify = new byte[nodeToVerify.length + key.length];
-        System.arraycopy(nodeToVerify, 0, infoToVerify, 0, nodeToVerify.length);;
-        System.arraycopy(key, 0, infoToVerify, nodeToVerify.length, key.length);
-
-        try {
-            signVal = SignatureClass.verify(infoToVerify, signature, request.getPublicKey().toByteArray());
-        }
-        catch(Exception e) {
-            e.printStackTrace();
-        }
-
-
-        if (signVal && arePuzzlesValid(request.getNode().getId().toByteArray(), request.getNode().getRandomX().byteAt(0))) {
-            //Creates a new instance of storage. If already exists, use it.
-
-            rt.insert(request.getNode(), 1);
-
-            // Get the value associated with the key from the data store
-            Node value = ks.findValue(key);
-
-            if (value != null)
-            {
-                List<Node> closestNodes = rt.findClosestNode(key, k_nodes);
-
-            }
-            // Sign RPC response
-            try {
-                byte[] idToSign = request.getNode().getId().toByteArray();
-                byte[] valueToSign = value.toByteArray();
-                byte[] infoToSign = new byte[idToSign.length + valueToSign.length];
-
-                System.arraycopy(idToSign, 0, infoToSign, 0, idToSign.length);
-                System.arraycopy(valueToSign, 0, infoToSign, idToSign.length, valueToSign.length);
-
-                signature = SignatureClass.sign(request.getNode().getId().toByteArray(), privateKey);
-            }
-            catch(Exception e) {
-                e.printStackTrace();
-            }
-
-            FindValueResponse response = FindValueResponse.newBuilder()
-                    .setId(request.getNode().getId())
-                    .setValue(value)
-                    .setPublicKey(ByteString.copyFrom(publicKey.getEncoded()))
-                    .setSignature(ByteString.copyFrom(signature)).build();
-
-            responseObserver.onNext(response);
-            responseObserver.onCompleted();
-        }
-        else if (!signVal) {
-            System.out.println("Signature is invalid, discarding find value request...");
-        }
-        else {
-            System.out.println("Node didn't solve crypto puzzles, discarding find value request...");
-        }
-    }
 
 
      */

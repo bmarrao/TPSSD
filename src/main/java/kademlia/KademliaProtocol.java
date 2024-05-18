@@ -231,7 +231,7 @@ public class KademliaProtocol
         // Check response's signature
         boolean signVal = false;
         byte[] idToVerify = response.getId().toByteArray();
-        byte[] valueToVerify = response.getValue().toByteArray();
+        byte[] valueToVerify = response.getT().toByteArray();
         byte[] infoToVerify = new byte[idToVerify.length + valueToVerify.length];
         // TODO assinar novos nos ?
         System.arraycopy(idToVerify, 0, infoToVerify, 0, idToVerify.length);

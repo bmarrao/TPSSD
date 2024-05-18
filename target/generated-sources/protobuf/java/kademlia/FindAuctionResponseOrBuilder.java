@@ -13,49 +13,54 @@ public interface FindAuctionResponseOrBuilder extends
   com.google.protobuf.ByteString getId();
 
   /**
-   * <code>.kademlia.Transaction value = 2;</code>
+   * <code>bool hasTransaction = 2;</code>
    */
-  boolean hasValue();
-  /**
-   * <code>.kademlia.Transaction value = 2;</code>
-   */
-  kademlia.Transaction getValue();
-  /**
-   * <code>.kademlia.Transaction value = 2;</code>
-   */
-  kademlia.TransactionOrBuilder getValueOrBuilder();
+  boolean getHasTransaction();
 
   /**
-   * <code>repeated .kademlia.Node nodes = 3;</code>
+   * <code>.kademlia.Transaction t = 3;</code>
+   */
+  boolean hasT();
+  /**
+   * <code>.kademlia.Transaction t = 3;</code>
+   */
+  kademlia.Transaction getT();
+  /**
+   * <code>.kademlia.Transaction t = 3;</code>
+   */
+  kademlia.TransactionOrBuilder getTOrBuilder();
+
+  /**
+   * <code>repeated .kademlia.Node nodes = 4;</code>
    */
   java.util.List<kademlia.Node> 
       getNodesList();
   /**
-   * <code>repeated .kademlia.Node nodes = 3;</code>
+   * <code>repeated .kademlia.Node nodes = 4;</code>
    */
   kademlia.Node getNodes(int index);
   /**
-   * <code>repeated .kademlia.Node nodes = 3;</code>
+   * <code>repeated .kademlia.Node nodes = 4;</code>
    */
   int getNodesCount();
   /**
-   * <code>repeated .kademlia.Node nodes = 3;</code>
+   * <code>repeated .kademlia.Node nodes = 4;</code>
    */
   java.util.List<? extends kademlia.NodeOrBuilder> 
       getNodesOrBuilderList();
   /**
-   * <code>repeated .kademlia.Node nodes = 3;</code>
+   * <code>repeated .kademlia.Node nodes = 4;</code>
    */
   kademlia.NodeOrBuilder getNodesOrBuilder(
       int index);
 
   /**
-   * <code>bytes publicKey = 4;</code>
+   * <code>bytes publicKey = 5;</code>
    */
   com.google.protobuf.ByteString getPublicKey();
 
   /**
-   * <code>bytes signature = 5;</code>
+   * <code>bytes signature = 6;</code>
    */
   com.google.protobuf.ByteString getSignature();
 }

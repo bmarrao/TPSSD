@@ -286,7 +286,7 @@ public class Kademlia
     {
         // get closest nodes to destinationKey (non recursive)
         ArrayList<Node> closestNodes = rt.findClosestNode(nodeId, d_closest_nodes);
-        ArrayList<Transaction>[] results = new ArrayList[closestNodes.size()];
+        Transaction[] results = new Transaction[closestNodes.size()];
         ArrayList<Transaction> allResults = new ArrayList<>();
 
         Thread[] threads = new Thread[closestNodes.size()];
@@ -294,12 +294,12 @@ public class Kademlia
         int i = 0;
         for (Node n : closestNodes)
         {
-            final ArrayList<Transaction> currentResults = results[i]; // Final variable capturing the current results
-            KademliaLookUp lk = new KademliaValueLookUp(protocol, rt, currentResults, nodeId, d_closest_nodes, n);
+            final Transaction currentResults = results[i]; // Final variable capturing the current results
+            KademliaValueLookUp lk = new KademliaValueLookUp(protocol, rt, currentResults, nodeId, d_closest_nodes, n);
             threads[i] = new Thread(() -> {
                 lk.run();
                 synchronized (allResults) {
-                    allResults.addAll(currentResults);
+                    allResults.add(currentResults);
                 }
             });
             threads[i].start();
