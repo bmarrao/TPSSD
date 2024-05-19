@@ -11,6 +11,8 @@ import kademlia.SignatureClass;
 import org.bouncycastle.jcajce.provider.digest.SHA256;
 import java.nio.charset.StandardCharsets;
 
+import static kademlia.KademliaNode.reputation;
+
 public class Block
 {
     //TODO Needed?
@@ -26,14 +28,13 @@ public class Block
     private PrivateKey privateKey;
     private byte[] signature;
 
-    public Block(String previousHash, ArrayList<Transaction> transactionList, int reputationScore)
+    public Block(String previousHash, ArrayList<Transaction> transactionList)
     {
         this.previousHash = previousHash;
         this.timestamp = new Date().getTime();
         this.nonce = 0;
         this.transactionList = transactionList;
         this.hash = calculateHash();
-        this.reputationScore = reputationScore;
 
         try {
             generateKeyPair();
@@ -49,6 +50,9 @@ public class Block
         return hash;
     }
 
+    public int getReputation() { return reputation; }
+    public void setReputation(int reputationScore) { reputation = reputationScore; }
+
     public String getPreviousHash() {
         return previousHash;
     }
@@ -63,14 +67,6 @@ public class Block
 
     public int getNonce() {
         return nonce;
-    }
-
-    public int getReputationScore() {
-        return reputationScore;
-    }
-
-    public void setReputationScore(int score) {
-        reputationScore = score;
     }
 
     public void setNonce(int nonce) {
@@ -181,62 +177,4 @@ public class Block
 
         System.out.println("Block mined: " + hash); // Block successfully mined
     }
-
-
-    // TODO: why would a miner want to have higher reputation in our case
-    /*public boolean isBlockValid(Block block, int difficulty, float repIncreasePercentage) {
-        int currRepScore = block.getReputationScore();
-
-        // Verify previous block reference and that POW was done
-        String target = new String(new char[difficulty]).replace('\0', '0');
-        String bcLatestBlockHash = chain.get(chain.size() - 1).getHash();
-        String previousBlockHash = block.getPreviousHash();
-        if (!bcLatestBlockHash.equals(previousBlockHash) || !block.getHash().startsWith(target)) {
-            block.setReputationScore(0);
-            return false;
-        }
-
-        // Verify block signature
-        // No RepuCoin:
-        //   - keyblock sig_m = H(prev_KB_hash, nonce, PK, reputation=
-        //   - sig microblock = Sign(H(KB_hash, prev_MB_hash, TXs))
-        // Neste caso inclui assinatura do bloco completo
-        byte[] infoToVerify = {
-                Byte.parseByte(block.getPreviousHash()),
-                (byte) block.getTimestamp(),
-                (byte) block.getNonce(),
-                //TODO como fica agora?
-                //Byte.parseByte(block.getTransactionList()),
-                Byte.parseByte(block.getHash()),
-                (byte) block.getReputationScore()
-        };
-
-        try {
-            if (!SignatureClass.verify(infoToVerify, block.getSignature(), publicKey.getEncoded())) {
-                block.setReputationScore(0);
-                return false;
-            }
-        }
-        catch(Exception e) {
-            e.printStackTrace();
-        }
-
-
-        // TODO:
-        //  - decrease reputation and return false if:
-        //     - transaction is null or transaction amount <= 0
-        //     - sender/receiver/hash is null or empty
-        //     - transaction amount > sender's funds
-        ArrayList<Transaction> transactions = block.getTransactionList();
-
-
-        // increases reputation based on defined percentage
-        if (block.getReputationScore() != 0) {
-            block.setReputationScore((int) ((currRepScore * repIncreasePercentage) + currRepScore));
-        }
-        else {
-            block.setReputationScore((int) (0.01 + currRepScore));
-        }
-        return true;
-    }*/
 }
