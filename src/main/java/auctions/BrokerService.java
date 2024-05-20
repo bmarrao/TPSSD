@@ -42,6 +42,7 @@ public class BrokerService
         return highestOffer.getPrice();
     }
 
+    public byte[] getServiceId() { return this.serviceId; }
 
     public boolean receiveOffer(Offer of)
     {

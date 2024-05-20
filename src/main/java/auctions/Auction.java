@@ -3,7 +3,6 @@ package auctions;
 import blockchain.Blockchain;
 import kademlia.*;
 
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.concurrent.locks.ReentrantLock;
 
@@ -16,6 +15,8 @@ public class Auction
     private ReentrantLock l ;
     ArrayList<BrokerService> services;
     Blockchain bc ;
+    int startingPrice;
+    byte[] serviceId;
     public Auction(Kademlia k, Blockchain bc)
     {
         l = new ReentrantLock();
@@ -25,13 +26,21 @@ public class Auction
     }
 
 
+    public boolean hasService(byte[] serviceId) {
+        for (BrokerService service : services) {
+            if (service.getServiceId() == serviceId) {
+                return true;
+            }
+        }
+        return false;
+    }
 
     public void createService (String service, int a, int time)
     {
         try {
             MessageDigest sha1 = MessageDigest.getInstance("SHA-1");
 
-            byte[] serviceId = sha1.digest(service.getBytes(StandardCharsets.UTF_8));
+            serviceId = sha1.digest(service.getBytes(StandardCharsets.UTF_8));
             this.initiateService(serviceId, time );
             bc.newAuction(serviceId, k.getOwnNode());
         }
@@ -42,6 +51,9 @@ public class Auction
 
     }
 
+    public byte[] getServiceId(String service) {
+        return serviceId;
+    }
 
     public void initiateService(byte[] serviceId, int time)
     {
@@ -122,6 +134,9 @@ public class Auction
         bc.closeAuction(bs.serviceId,bs.highestOffer , k.getOwnNode());
     }
 
+    public ArrayList<BrokerService> getServices() {
+        return services;
+    }
 
 }
 
