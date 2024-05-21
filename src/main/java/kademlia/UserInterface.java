@@ -22,7 +22,7 @@ public class UserInterface {
         while (true) {
             System.out.println("================== MAIN MENU =================");
             System.out.println("Select one of the following options:");
-            System.out.println("1) View auctions");
+            System.out.println("1) Subscribe/unsubscribe to auctions");
             System.out.println("2) Place bid");
             System.out.println("3) Create auction");
             System.out.println("4) View account");
@@ -58,27 +58,26 @@ public class UserInterface {
         while (true) {
             System.out.println("=========== VIEW AUCTIONS SUB-MENU ===========");
             System.out.println("Select one of the following options:");
-            System.out.println("1. Receive information about specific auction");
-            System.out.println("2. Ongoing auctions");
-            System.out.println("3. Closed auctions");
-            System.out.println("4. Back to main menu");
+            System.out.println("1. Subscribe to an auctionId");
+            System.out.println("2. Unsubscribe to an auctionId");
+
+            System.out.println("3   . Back to main menu");
 
             int option = Integer.parseInt(sc.nextLine());
+            String serviceId = sc.nextLine();
 
             switch (option) {
                 case 1:
                     System.out.print("Enter auction ID\n-> ");
-                    String serviceId = sc.nextLine();
+                    serviceId = sc.nextLine();
                     System.out.println("  - Current highest bid: " + auction.getPrice(serviceId.getBytes()));
                     //System.out.println("  - Auction status: " + auction.); // if it's open or closed
                     break;
                 case 2:
-                    if (auction.getServices().isEmpty()) {
-                        System.out.println("No ongoing auctions");
-                    }
-                    for (BrokerService service : auction.getServices()) {
-                        System.out.println(Arrays.toString(service.getServiceId()));
-                    }
+                    System.out.print("Enter auction ID\n-> ");
+                    serviceId = sc.nextLine();
+                    System.out.println("  - Current highest bid: " + auction.getPrice(serviceId.getBytes()));
+                    //System.out.println("  - Auction status: " + auction.); // if it's open or closed
                     break;
                 case 3:
                     break;
@@ -98,9 +97,13 @@ public class UserInterface {
         System.out.print("Enter bid amount\n-> ");
         double bidAmount = Double.parseDouble(sc.nextLine());
 
-        // TODO: if auction ID is valid call place bid function
-        if (auction.hasService(serviceID.getBytes())) {
-            // p.storeTransactionOp(new Transaction(sender, receiver, bidAmount, blockchain.Transaction.TransactionType.BID));
+        //TODO : GET RECEIVER SEARCH RECEIVER WITH THE AUCTION THAT HAS THE MOST CHEAP AUCTION FOR THIS SERVICE  FALTA METODO
+        //
+        boolean didTransactionGoThrough = k.protocol.storeTransactionOp(new Transaction(k.getOwnNode(), receiver, bidAmount, blockchain.Transaction.TransactionType.BID));
+
+        if (didTransactionGoThrough)
+        {
+            System.out.println("Bid done successfully");
         }
         else {
             System.out.println("Error: Invalid auction ID");
@@ -112,12 +115,10 @@ public class UserInterface {
 
         System.out.print("Enter item\n-> ");
         String item = sc.nextLine();
-        System.out.print("Enter starting price\n-> ");
-        int startingPrice = Integer.parseInt(sc.nextLine());
-        System.out.print("Enter auction duration\n-> ");
+        System.out.print("Enter maximum time between bids\n-> ");
         int auctionDuration = Integer.parseInt(sc.nextLine());
-        auction.createService(item,startingPrice,auctionDuration); // TODO: o que é o "a" do createService?
-        System.out.println("Auction service created with ID: " + Arrays.toString(auction.getServiceId(item)));
+        byte[] serviceId = auction.initiateService(item,auctionDuration);
+        System.out.println("Auction service created with ID: " + Arrays.toString(serviceId));
     }
 
     public static void main(String[] args) {

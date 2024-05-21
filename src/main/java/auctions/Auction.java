@@ -15,8 +15,6 @@ public class Auction
     private ReentrantLock l ;
     ArrayList<BrokerService> services;
     Blockchain bc ;
-    int startingPrice;
-    byte[] serviceId;
     public Auction(Kademlia k, Blockchain bc)
     {
         l = new ReentrantLock();
@@ -35,28 +33,17 @@ public class Auction
         return false;
     }
 
-    public void createService (String service, int a, int time)
+    public byte[] initiateService(String service, int time)
     {
+        byte[] serviceId  = null;
         try {
             MessageDigest sha1 = MessageDigest.getInstance("SHA-1");
-
             serviceId = sha1.digest(service.getBytes(StandardCharsets.UTF_8));
-            this.initiateService(serviceId, time );
-            bc.newAuction(serviceId, k.getOwnNode());
         }
         catch (NoSuchAlgorithmException e)
         {
             e.printStackTrace();
         }
-
-    }
-
-    public byte[] getServiceId(String service) {
-        return serviceId;
-    }
-
-    public void initiateService(byte[] serviceId, int time)
-    {
         l.lock();
         BrokerService bs = new BrokerService(serviceId,null, time,null);
         services.add(bs);
@@ -67,6 +54,7 @@ public class Auction
         rsThread.start();
         bc.newAuction(serviceId, k.getOwnNode());
         l.unlock();
+        return serviceId;
     }
 
 
