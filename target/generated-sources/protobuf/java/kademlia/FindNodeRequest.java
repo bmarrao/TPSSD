@@ -15,7 +15,7 @@ public  final class FindNodeRequest extends
     super(builder);
   }
   private FindNodeRequest() {
-    key_ = com.google.protobuf.ByteString.EMPTY;
+    nodeID_ = com.google.protobuf.ByteString.EMPTY;
     k_ = 0;
     publicKey_ = com.google.protobuf.ByteString.EMPTY;
     signature_ = com.google.protobuf.ByteString.EMPTY;
@@ -61,7 +61,7 @@ public  final class FindNodeRequest extends
           }
           case 18: {
 
-            key_ = input.readBytes();
+            nodeID_ = input.readBytes();
             break;
           }
           case 24: {
@@ -123,13 +123,13 @@ public  final class FindNodeRequest extends
     return getNode();
   }
 
-  public static final int KEY_FIELD_NUMBER = 2;
-  private com.google.protobuf.ByteString key_;
+  public static final int NODEID_FIELD_NUMBER = 2;
+  private com.google.protobuf.ByteString nodeID_;
   /**
-   * <code>bytes key = 2;</code>
+   * <code>bytes nodeID = 2;</code>
    */
-  public com.google.protobuf.ByteString getKey() {
-    return key_;
+  public com.google.protobuf.ByteString getNodeID() {
+    return nodeID_;
   }
 
   public static final int K_FIELD_NUMBER = 3;
@@ -174,8 +174,8 @@ public  final class FindNodeRequest extends
     if (node_ != null) {
       output.writeMessage(1, getNode());
     }
-    if (!key_.isEmpty()) {
-      output.writeBytes(2, key_);
+    if (!nodeID_.isEmpty()) {
+      output.writeBytes(2, nodeID_);
     }
     if (k_ != 0) {
       output.writeUInt32(3, k_);
@@ -197,9 +197,9 @@ public  final class FindNodeRequest extends
       size += com.google.protobuf.CodedOutputStream
         .computeMessageSize(1, getNode());
     }
-    if (!key_.isEmpty()) {
+    if (!nodeID_.isEmpty()) {
       size += com.google.protobuf.CodedOutputStream
-        .computeBytesSize(2, key_);
+        .computeBytesSize(2, nodeID_);
     }
     if (k_ != 0) {
       size += com.google.protobuf.CodedOutputStream
@@ -234,8 +234,8 @@ public  final class FindNodeRequest extends
       result = result && getNode()
           .equals(other.getNode());
     }
-    result = result && getKey()
-        .equals(other.getKey());
+    result = result && getNodeID()
+        .equals(other.getNodeID());
     result = result && (getK()
         == other.getK());
     result = result && getPublicKey()
@@ -256,8 +256,8 @@ public  final class FindNodeRequest extends
       hash = (37 * hash) + NODE_FIELD_NUMBER;
       hash = (53 * hash) + getNode().hashCode();
     }
-    hash = (37 * hash) + KEY_FIELD_NUMBER;
-    hash = (53 * hash) + getKey().hashCode();
+    hash = (37 * hash) + NODEID_FIELD_NUMBER;
+    hash = (53 * hash) + getNodeID().hashCode();
     hash = (37 * hash) + K_FIELD_NUMBER;
     hash = (53 * hash) + getK();
     hash = (37 * hash) + PUBLICKEY_FIELD_NUMBER;
@@ -399,7 +399,7 @@ public  final class FindNodeRequest extends
         node_ = null;
         nodeBuilder_ = null;
       }
-      key_ = com.google.protobuf.ByteString.EMPTY;
+      nodeID_ = com.google.protobuf.ByteString.EMPTY;
 
       k_ = 0;
 
@@ -434,7 +434,7 @@ public  final class FindNodeRequest extends
       } else {
         result.node_ = nodeBuilder_.build();
       }
-      result.key_ = key_;
+      result.nodeID_ = nodeID_;
       result.k_ = k_;
       result.publicKey_ = publicKey_;
       result.signature_ = signature_;
@@ -482,8 +482,8 @@ public  final class FindNodeRequest extends
       if (other.hasNode()) {
         mergeNode(other.getNode());
       }
-      if (other.getKey() != com.google.protobuf.ByteString.EMPTY) {
-        setKey(other.getKey());
+      if (other.getNodeID() != com.google.protobuf.ByteString.EMPTY) {
+        setNodeID(other.getNodeID());
       }
       if (other.getK() != 0) {
         setK(other.getK());
@@ -637,31 +637,31 @@ public  final class FindNodeRequest extends
       return nodeBuilder_;
     }
 
-    private com.google.protobuf.ByteString key_ = com.google.protobuf.ByteString.EMPTY;
+    private com.google.protobuf.ByteString nodeID_ = com.google.protobuf.ByteString.EMPTY;
     /**
-     * <code>bytes key = 2;</code>
+     * <code>bytes nodeID = 2;</code>
      */
-    public com.google.protobuf.ByteString getKey() {
-      return key_;
+    public com.google.protobuf.ByteString getNodeID() {
+      return nodeID_;
     }
     /**
-     * <code>bytes key = 2;</code>
+     * <code>bytes nodeID = 2;</code>
      */
-    public Builder setKey(com.google.protobuf.ByteString value) {
+    public Builder setNodeID(com.google.protobuf.ByteString value) {
       if (value == null) {
     throw new NullPointerException();
   }
   
-      key_ = value;
+      nodeID_ = value;
       onChanged();
       return this;
     }
     /**
-     * <code>bytes key = 2;</code>
+     * <code>bytes nodeID = 2;</code>
      */
-    public Builder clearKey() {
+    public Builder clearNodeID() {
       
-      key_ = getDefaultInstance().getKey();
+      nodeID_ = getDefaultInstance().getNodeID();
       onChanged();
       return this;
     }

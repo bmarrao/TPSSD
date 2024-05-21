@@ -21,9 +21,9 @@ public interface FindAuctionRequestOrBuilder extends
   kademlia.NodeOrBuilder getNodeOrBuilder();
 
   /**
-   * <code>bytes key = 2;</code>
+   * <code>bytes nodeID = 2;</code>
    */
-  com.google.protobuf.ByteString getKey();
+  com.google.protobuf.ByteString getNodeID();
 
   /**
    * <code>bytes publicKey = 3;</code>

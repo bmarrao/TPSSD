@@ -15,10 +15,11 @@ package kademlia;
  *message FindBlockResponse
  *{
  *bytes id = 1;
- *Block value = 2;
- *repeated Node nodes = 3;
- *bytes publicKey = 4;
- *bytes signature = 5;
+ *bool hasBlcok = 2;
+ *Block b = 3;
+ *repeated Node nodes = 4;
+ *bytes publicKey = 5;
+ *bytes signature = 6;
  *}
  * </pre>
  *
@@ -33,7 +34,7 @@ public  final class FindAuctionRequest extends
     super(builder);
   }
   private FindAuctionRequest() {
-    key_ = com.google.protobuf.ByteString.EMPTY;
+    nodeID_ = com.google.protobuf.ByteString.EMPTY;
     publicKey_ = com.google.protobuf.ByteString.EMPTY;
     signature_ = com.google.protobuf.ByteString.EMPTY;
   }
@@ -78,7 +79,7 @@ public  final class FindAuctionRequest extends
           }
           case 18: {
 
-            key_ = input.readBytes();
+            nodeID_ = input.readBytes();
             break;
           }
           case 26: {
@@ -135,13 +136,13 @@ public  final class FindAuctionRequest extends
     return getNode();
   }
 
-  public static final int KEY_FIELD_NUMBER = 2;
-  private com.google.protobuf.ByteString key_;
+  public static final int NODEID_FIELD_NUMBER = 2;
+  private com.google.protobuf.ByteString nodeID_;
   /**
-   * <code>bytes key = 2;</code>
+   * <code>bytes nodeID = 2;</code>
    */
-  public com.google.protobuf.ByteString getKey() {
-    return key_;
+  public com.google.protobuf.ByteString getNodeID() {
+    return nodeID_;
   }
 
   public static final int PUBLICKEY_FIELD_NUMBER = 3;
@@ -177,8 +178,8 @@ public  final class FindAuctionRequest extends
     if (node_ != null) {
       output.writeMessage(1, getNode());
     }
-    if (!key_.isEmpty()) {
-      output.writeBytes(2, key_);
+    if (!nodeID_.isEmpty()) {
+      output.writeBytes(2, nodeID_);
     }
     if (!publicKey_.isEmpty()) {
       output.writeBytes(3, publicKey_);
@@ -197,9 +198,9 @@ public  final class FindAuctionRequest extends
       size += com.google.protobuf.CodedOutputStream
         .computeMessageSize(1, getNode());
     }
-    if (!key_.isEmpty()) {
+    if (!nodeID_.isEmpty()) {
       size += com.google.protobuf.CodedOutputStream
-        .computeBytesSize(2, key_);
+        .computeBytesSize(2, nodeID_);
     }
     if (!publicKey_.isEmpty()) {
       size += com.google.protobuf.CodedOutputStream
@@ -230,8 +231,8 @@ public  final class FindAuctionRequest extends
       result = result && getNode()
           .equals(other.getNode());
     }
-    result = result && getKey()
-        .equals(other.getKey());
+    result = result && getNodeID()
+        .equals(other.getNodeID());
     result = result && getPublicKey()
         .equals(other.getPublicKey());
     result = result && getSignature()
@@ -250,8 +251,8 @@ public  final class FindAuctionRequest extends
       hash = (37 * hash) + NODE_FIELD_NUMBER;
       hash = (53 * hash) + getNode().hashCode();
     }
-    hash = (37 * hash) + KEY_FIELD_NUMBER;
-    hash = (53 * hash) + getKey().hashCode();
+    hash = (37 * hash) + NODEID_FIELD_NUMBER;
+    hash = (53 * hash) + getNodeID().hashCode();
     hash = (37 * hash) + PUBLICKEY_FIELD_NUMBER;
     hash = (53 * hash) + getPublicKey().hashCode();
     hash = (37 * hash) + SIGNATURE_FIELD_NUMBER;
@@ -361,10 +362,11 @@ public  final class FindAuctionRequest extends
    *message FindBlockResponse
    *{
    *bytes id = 1;
-   *Block value = 2;
-   *repeated Node nodes = 3;
-   *bytes publicKey = 4;
-   *bytes signature = 5;
+   *bool hasBlcok = 2;
+   *Block b = 3;
+   *repeated Node nodes = 4;
+   *bytes publicKey = 5;
+   *bytes signature = 6;
    *}
    * </pre>
    *
@@ -409,7 +411,7 @@ public  final class FindAuctionRequest extends
         node_ = null;
         nodeBuilder_ = null;
       }
-      key_ = com.google.protobuf.ByteString.EMPTY;
+      nodeID_ = com.google.protobuf.ByteString.EMPTY;
 
       publicKey_ = com.google.protobuf.ByteString.EMPTY;
 
@@ -442,7 +444,7 @@ public  final class FindAuctionRequest extends
       } else {
         result.node_ = nodeBuilder_.build();
       }
-      result.key_ = key_;
+      result.nodeID_ = nodeID_;
       result.publicKey_ = publicKey_;
       result.signature_ = signature_;
       onBuilt();
@@ -489,8 +491,8 @@ public  final class FindAuctionRequest extends
       if (other.hasNode()) {
         mergeNode(other.getNode());
       }
-      if (other.getKey() != com.google.protobuf.ByteString.EMPTY) {
-        setKey(other.getKey());
+      if (other.getNodeID() != com.google.protobuf.ByteString.EMPTY) {
+        setNodeID(other.getNodeID());
       }
       if (other.getPublicKey() != com.google.protobuf.ByteString.EMPTY) {
         setPublicKey(other.getPublicKey());
@@ -641,31 +643,31 @@ public  final class FindAuctionRequest extends
       return nodeBuilder_;
     }
 
-    private com.google.protobuf.ByteString key_ = com.google.protobuf.ByteString.EMPTY;
+    private com.google.protobuf.ByteString nodeID_ = com.google.protobuf.ByteString.EMPTY;
     /**
-     * <code>bytes key = 2;</code>
+     * <code>bytes nodeID = 2;</code>
      */
-    public com.google.protobuf.ByteString getKey() {
-      return key_;
+    public com.google.protobuf.ByteString getNodeID() {
+      return nodeID_;
     }
     /**
-     * <code>bytes key = 2;</code>
+     * <code>bytes nodeID = 2;</code>
      */
-    public Builder setKey(com.google.protobuf.ByteString value) {
+    public Builder setNodeID(com.google.protobuf.ByteString value) {
       if (value == null) {
     throw new NullPointerException();
   }
   
-      key_ = value;
+      nodeID_ = value;
       onChanged();
       return this;
     }
     /**
-     * <code>bytes key = 2;</code>
+     * <code>bytes nodeID = 2;</code>
      */
-    public Builder clearKey() {
+    public Builder clearNodeID() {
       
-      key_ = getDefaultInstance().getKey();
+      nodeID_ = getDefaultInstance().getNodeID();
       onChanged();
       return this;
     }

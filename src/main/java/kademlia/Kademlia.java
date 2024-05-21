@@ -399,11 +399,11 @@ public class Kademlia
                 .setRandomX(ByteString.copyFrom(new byte[]{0x01, 0x02, 0x03})).build();
 
 
-        System.out.println("Response for ping: " + protocol.pingOp(nodeId, receiverIp, receiverPort));
+        System.out.println("Response for ping: " + protocol.pingOp(receiverIp, receiverPort));
         //System.out.println("Response for store: " + protocol.storeOp(key, val, receiverIp, receiverPort));
 
         System.out.println("Response for find node:");
-        List<Node> findNodeRes = protocol.findNodeOp(nodeId, key, receiverIp, receiverPort);
+        List<Node> findNodeRes = protocol.findNodeOp(nodeId, receiverIp, receiverPort);
 
         System.out.println("   nodes: ");
         for (Node n : findNodeRes) {

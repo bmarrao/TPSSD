@@ -34,7 +34,7 @@ public class KademliaLookUp implements Runnable
             return distance1.compareTo(distance2);
         });
         // Start by finding the closest nodes in the routing table to the target key
-        List<Node> closestNodes = protocol.findNodeOp(nodeId,nodeId, n.getIp(),n.getPort());
+        List<Node> closestNodes = protocol.findNodeOp(nodeId, n.getIp(),n.getPort());
 
         closestNodesQueue.addAll(closestNodes);
 
@@ -49,7 +49,7 @@ public class KademliaLookUp implements Runnable
                 // Mark the current node as visited
                 visitedNodes.add(currentNode);
 
-                List<Node> additionalClosestNodes = protocol.findNodeOp(nodeId,nodeId, currentNode.getIp(),currentNode.getPort());
+                List<Node> additionalClosestNodes = protocol.findNodeOp(nodeId, currentNode.getIp(),currentNode.getPort());
 
                 for (Node node : additionalClosestNodes) {
                     if (!visitedNodes.contains(node)) {

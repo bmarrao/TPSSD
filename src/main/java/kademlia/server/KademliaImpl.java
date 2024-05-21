@@ -148,7 +148,7 @@ public class KademliaImpl extends KademliaGrpc.KademliaImplBase
             rt.insert(request.getNode(), 1);
 
             // Get the closest node to the target ID from the routing table
-            List<Node> closestNodes = rt.findClosestNode(request.getKey().toByteArray(), k_nodes);
+            List<Node> closestNodes = rt.findClosestNode(request.getNodeID().toByteArray(), k_nodes);
 
             // Sign id
             byte[] idSignature = null;
@@ -161,7 +161,7 @@ public class KademliaImpl extends KademliaGrpc.KademliaImplBase
 
             // send RPC response
             FindNodeResponse response = FindNodeResponse.newBuilder()
-                    .setId(request.getKey())
+                    .setId(request.getNodeID())
                     .setPublicKey(ByteString.copyFrom(publicKey.getEncoded()))
                     .addAllNodes(closestNodes)
                     .setIdSignature(ByteString.copyFrom(idSignature)).build();
@@ -182,7 +182,7 @@ public class KademliaImpl extends KademliaGrpc.KademliaImplBase
     public void findAuction(FindAuctionRequest request, StreamObserver<FindAuctionResponse> responseObserver)
     {
         // Retrieve the key from the request
-        byte[] key = request.getKey().toByteArray();
+        byte[] key = request.getNodeID().toByteArray();
         byte[] signature = request.getSignature().toByteArray();
 
         // Verify signature
