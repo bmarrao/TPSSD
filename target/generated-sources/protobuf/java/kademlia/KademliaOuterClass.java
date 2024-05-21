@@ -102,26 +102,27 @@ public final class KademliaOuterClass {
       "icKey\030\004 \001(\014\022\021\n\tsignature\030\005 \001(\014\"\\\n\030StoreT" +
       "ransactionResponse\022\n\n\002id\030\001 \001(\014\022\016\n\006stored" +
       "\030\002 \001(\010\022\021\n\tpublicKey\030\003 \001(\014\022\021\n\tsignature\030\004" +
-      " \001(\014\"m\n\017FindNodeRequest\022\034\n\004node\030\001 \001(\0132\016.",
-      "kademlia.Node\022\013\n\003key\030\002 \001(\014\022\t\n\001k\030\003 \001(\r\022\021\n" +
-      "\tpublicKey\030\004 \001(\014\022\021\n\tsignature\030\005 \001(\014\"e\n\020F" +
-      "indNodeResponse\022\n\n\002id\030\001 \001(\014\022\035\n\005nodes\030\002 \003" +
-      "(\0132\016.kademlia.Node\022\021\n\tpublicKey\030\003 \001(\014\022\023\n" +
-      "\013idSignature\030\004 \001(\014\"e\n\022FindAuctionRequest" +
-      "\022\034\n\004node\030\001 \001(\0132\016.kademlia.Node\022\013\n\003key\030\002 " +
-      "\001(\014\022\021\n\tpublicKey\030\003 \001(\014\022\021\n\tsignature\030\004 \001(" +
-      "\014\"\240\001\n\023FindAuctionResponse\022\n\n\002id\030\001 \001(\014\022\026\n" +
-      "\016hasTransaction\030\002 \001(\010\022 \n\001t\030\003 \001(\0132\025.kadem" +
-      "lia.Transaction\022\035\n\005nodes\030\004 \003(\0132\016.kademli",
-      "a.Node\022\021\n\tpublicKey\030\005 \001(\014\022\021\n\tsignature\030\006" +
-      " \001(\0142\253\002\n\010Kademlia\0225\n\004ping\022\025.kademlia.Pin" +
-      "gRequest\032\026.kademlia.PingResponse\022Y\n\020stor" +
-      "eTransaction\022!.kademlia.StoreTransaction" +
-      "Request\032\".kademlia.StoreTransactionRespo" +
-      "nse\022A\n\010findNode\022\031.kademlia.FindNodeReque" +
-      "st\032\032.kademlia.FindNodeResponse\022J\n\013findAu" +
-      "ction\022\034.kademlia.FindAuctionRequest\032\035.ka" +
-      "demlia.FindAuctionResponseB\002P\001b\006proto3"
+      " \001(\014\"p\n\017FindNodeRequest\022\034\n\004node\030\001 \001(\0132\016.",
+      "kademlia.Node\022\016\n\006nodeID\030\002 \001(\014\022\t\n\001k\030\003 \001(\r" +
+      "\022\021\n\tpublicKey\030\004 \001(\014\022\021\n\tsignature\030\005 \001(\014\"e" +
+      "\n\020FindNodeResponse\022\n\n\002id\030\001 \001(\014\022\035\n\005nodes\030" +
+      "\002 \003(\0132\016.kademlia.Node\022\021\n\tpublicKey\030\003 \001(\014" +
+      "\022\023\n\013idSignature\030\004 \001(\014\"h\n\022FindAuctionRequ" +
+      "est\022\034\n\004node\030\001 \001(\0132\016.kademlia.Node\022\016\n\006nod" +
+      "eID\030\002 \001(\014\022\021\n\tpublicKey\030\003 \001(\014\022\021\n\tsignatur" +
+      "e\030\004 \001(\014\"\240\001\n\023FindAuctionResponse\022\n\n\002id\030\001 " +
+      "\001(\014\022\026\n\016hasTransaction\030\002 \001(\010\022 \n\001t\030\003 \001(\0132\025" +
+      ".kademlia.Transaction\022\035\n\005nodes\030\004 \003(\0132\016.k",
+      "ademlia.Node\022\021\n\tpublicKey\030\005 \001(\014\022\021\n\tsigna" +
+      "ture\030\006 \001(\0142\253\002\n\010Kademlia\0225\n\004ping\022\025.kademl" +
+      "ia.PingRequest\032\026.kademlia.PingResponse\022Y" +
+      "\n\020storeTransaction\022!.kademlia.StoreTrans" +
+      "actionRequest\032\".kademlia.StoreTransactio" +
+      "nResponse\022A\n\010findNode\022\031.kademlia.FindNod" +
+      "eRequest\032\032.kademlia.FindNodeResponse\022J\n\013" +
+      "findAuction\022\034.kademlia.FindAuctionReques" +
+      "t\032\035.kademlia.FindAuctionResponseB\002P\001b\006pr" +
+      "oto3"
     };
     com.google.protobuf.Descriptors.FileDescriptor.InternalDescriptorAssigner assigner =
         new com.google.protobuf.Descriptors.FileDescriptor.    InternalDescriptorAssigner() {
@@ -189,7 +190,7 @@ public final class KademliaOuterClass {
     internal_static_kademlia_FindNodeRequest_fieldAccessorTable = new
       com.google.protobuf.GeneratedMessageV3.FieldAccessorTable(
         internal_static_kademlia_FindNodeRequest_descriptor,
-        new java.lang.String[] { "Node", "Key", "K", "PublicKey", "Signature", });
+        new java.lang.String[] { "Node", "NodeID", "K", "PublicKey", "Signature", });
     internal_static_kademlia_FindNodeResponse_descriptor =
       getDescriptor().getMessageTypes().get(9);
     internal_static_kademlia_FindNodeResponse_fieldAccessorTable = new
@@ -201,7 +202,7 @@ public final class KademliaOuterClass {
     internal_static_kademlia_FindAuctionRequest_fieldAccessorTable = new
       com.google.protobuf.GeneratedMessageV3.FieldAccessorTable(
         internal_static_kademlia_FindAuctionRequest_descriptor,
-        new java.lang.String[] { "Node", "Key", "PublicKey", "Signature", });
+        new java.lang.String[] { "Node", "NodeID", "PublicKey", "Signature", });
     internal_static_kademlia_FindAuctionResponse_descriptor =
       getDescriptor().getMessageTypes().get(11);
     internal_static_kademlia_FindAuctionResponse_fieldAccessorTable = new

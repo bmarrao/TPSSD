@@ -32,11 +32,11 @@ public class KademliaProtocol
     }
 
 
-    public boolean pingOp(byte[] nodeId, String receiverIp, int receiverPort) {
+    public boolean pingOp(String receiverIp, int receiverPort) {
         ManagedChannel channel = ManagedChannelBuilder.forAddress(receiverIp, receiverPort).usePlaintext().build();
 
         Node node = Node.newBuilder()
-            .setId(ByteString.copyFrom(nodeId))
+            .setId(ByteString.copyFrom(this.nodeId))
             .setIp(ipAddress)
             .setPort(port)
             .setRandomX(ByteString.copyFrom(new byte[]{randomX})).build();
@@ -79,13 +79,13 @@ public class KademliaProtocol
     }
 
 
-    public List<Node> findNodeOp(byte[] nodeId, byte[] key, String receiverIp, int receiverPort)
+    public List<Node> findNodeOp(byte[] nodeId, String receiverIp, int receiverPort)
     {
         ManagedChannel channel = ManagedChannelBuilder.forAddress(receiverIp, receiverPort).usePlaintext().build();
         KademliaGrpc.KademliaBlockingStub stub = KademliaGrpc.newBlockingStub(channel);
 
         Node node = Node.newBuilder()
-                .setId(ByteString.copyFrom(nodeId))
+                .setId(ByteString.copyFrom(this.nodeId))
                 .setIp(ipAddress)
                 .setPort(port)
                 .setRandomX(ByteString.copyFrom(new byte[]{randomX})).build();
@@ -103,7 +103,7 @@ public class KademliaProtocol
         // Send RPC request
         FindNodeRequest request = FindNodeRequest.newBuilder()
                 .setNode(node)
-                .setKey(ByteString.copyFrom(key))
+                .setNodeID(ByteString.copyFrom(nodeId))
                 .setPublicKey(ByteString.copyFrom(publicKey.getEncoded()))
                 .setSignature(ByteString.copyFrom(signature)).build();
 
@@ -131,6 +131,7 @@ public class KademliaProtocol
                                       byte[] ownerNodeID, String ownerIP, int ownerPort,
                                       byte[] brokerNodeID, String brokerIP, int brokerPort,
                                       byte[] auctionID, int transactionType, float price) {
+
         ManagedChannel channel = ManagedChannelBuilder.forAddress(receiverIp, receiverPort).usePlaintext().build();
 
         Node ownerNode = Node.newBuilder()
@@ -371,7 +372,7 @@ public class KademliaProtocol
     }
     */
 
-    public FindAuctionResponse findAuctionOp(byte[] key, String receiverIp, int receiverPort)
+    public FindAuctionResponse findAuctionOp(byte[] nodeID, String receiverIp, int receiverPort)
     {
         ManagedChannel channel = ManagedChannelBuilder.forAddress(receiverIp, receiverPort).usePlaintext().build();
 
@@ -379,7 +380,7 @@ public class KademliaProtocol
 
 
         Node node = Node.newBuilder()
-                .setId(ByteString.copyFrom(nodeId))
+                .setId(ByteString.copyFrom(this.nodeId))
                 .setIp(ipAddress)
                 .setRandomX(ByteString.copyFrom(new byte[]{randomX}))
                 .setPort(port).build();
@@ -387,10 +388,10 @@ public class KademliaProtocol
 
         // TODO FIX THIS
         byte[] nodeInfoToSign = node.toByteArray();
-        byte[] infoToSign = new byte[nodeInfoToSign.length + key.length];
+        byte[] infoToSign = new byte[nodeInfoToSign.length + nodeID.length];
 
         System.arraycopy(nodeInfoToSign, 0, infoToSign, 0, nodeInfoToSign.length);
-        System.arraycopy(key, 0, infoToSign, nodeInfoToSign.length, key.length);
+        System.arraycopy(nodeID, 0, infoToSign, nodeInfoToSign.length, nodeID.length);
 
 
 
@@ -406,7 +407,7 @@ public class KademliaProtocol
         // Send RPC request
         FindAuctionRequest request = FindAuctionRequest.newBuilder()
                 .setNode(node)
-                .setKey(ByteString.copyFrom(key))
+                .setNodeID(ByteString.copyFrom(nodeID))
                 .setPublicKey(ByteString.copyFrom(publicKey.getEncoded()))
                 .setSignature(ByteString.copyFrom(signature)).build();
 
