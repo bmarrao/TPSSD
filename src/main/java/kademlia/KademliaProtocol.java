@@ -129,7 +129,7 @@ public class KademliaProtocol
     public boolean storeTransactionOp(byte[] nodeId, String receiverIp, int receiverPort,
                                       byte[] ownerNodeID, String ownerIP, int ownerPort,
                                       byte[] brokerNodeID, String brokerIP, int brokerPort,
-                                      byte[] transactionID, int transactionType, float price) {
+                                      byte[] auctionID, int transactionType, float price) {
         ManagedChannel channel = ManagedChannelBuilder.forAddress(receiverIp, receiverPort).usePlaintext().build();
 
         Node ownerNode = Node.newBuilder()
@@ -152,13 +152,12 @@ public class KademliaProtocol
 
         Offer senderOffer = Offer.newBuilder().setNode(senderNode).setPrice(price).build();
 
-        //TODO O que é o ID? Transaction ID? || FALTA OFFER
         Transaction transaction = Transaction.newBuilder()
-                                .setId(ByteString.copyFrom(transactionID))
+                                .setId(ByteString.copyFrom(auctionID))
                                 .setType(transactionType)
                                 .setOwner(ownerNode)
                                 .setBroker(brokerNode)
-                                //.setOffer(senderOffer)
+                                .setSender(senderOffer)
                                 .build();
 
 
