@@ -1,10 +1,14 @@
 
 package blockchain;
 
+import auctions.BrokerService;
 import kademlia.Node;
 import kademlia.Offer;
 import kademlia.SignatureClass;
 
+import java.nio.charset.StandardCharsets;
+import java.security.MessageDigest;
+import java.security.NoSuchAlgorithmException;
 import java.util.*;
 
 public class Blockchain
@@ -12,13 +16,16 @@ public class Blockchain
     private final List<Block> chain;
     private final int difficulty;
     HashMap<byte[] ,Transaction > transactions;
+    ArrayList<byte[]> topicsSubscribed;
     // Constructor
     public Blockchain(int initialDifficulty)
     {
         this.chain = new ArrayList<>();
+        this.topicsSubscribed = new ArrayList<>();
         this.difficulty = initialDifficulty;
         Block genesis = createGenesisBlock();
         this.chain.add(genesis);
+
     }
 
     // Create the genesis block
@@ -71,6 +78,68 @@ public class Blockchain
         // Set the previous hash to the hash of the latest block
         newBlock.mineBlock(difficulty); // Ensure the block has valid proof-of-work
         chain.add(newBlock);
+    }
+
+
+    public Transaction getInformation(String service)
+    {
+        byte[] serviceId = encryptService(service);
+        //TODO : FINISH THIS METHOD
+        return null;
+    }
+    public byte[] addSubscribe(String service)
+    {
+        byte[] serviceId = encryptService(service);
+        this.topicsSubscribed.add(serviceId);
+        return serviceId;
+    }
+
+    public boolean removeSubscribe(String service)
+    {
+        byte[] serviceId = encryptService(service);
+        byte[] toRemove = this.getSubscription(serviceId);
+        return topicsSubscribed.remove(toRemove);
+    }
+    public byte[] encryptService(String service)
+    {
+        byte[] serviceId  = null;
+        try {
+            MessageDigest sha1 = MessageDigest.getInstance("SHA-1");
+            serviceId = sha1.digest(service.getBytes(StandardCharsets.UTF_8));
+        }
+        catch (NoSuchAlgorithmException e)
+        {
+            e.printStackTrace();
+        }
+        return serviceId;
+    }
+
+    private boolean compareId(byte[] id1, byte[] id2)
+    {
+
+        // Iterate through each byte and compare them
+        for (int i = 0; i < id1.length; i++)
+        {
+            if (id1[i] != id2[i])
+            {
+                return false; // If any byte differs, return false
+            }
+        }
+
+
+        // If all bytes are the same, return true
+        return true;
+    }
+    public byte[] getSubscription(byte[] serviceId)
+    {
+        for(byte[] bs : this.topicsSubscribed)
+        {
+            if (compareId(bs,serviceId))
+            {
+                return bs;
+            }
+        }
+        return null;
     }
 
     // Method to validate the blockchain

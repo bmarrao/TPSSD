@@ -23,7 +23,7 @@ public class UserInterface {
         while (true) {
             System.out.println("================== MAIN MENU =================");
             System.out.println("Select one of the following options:");
-            System.out.println("1) Subscribe/unsubscribe to auctions");
+            System.out.println("1) Subscribe/unsubscribe to auctions or get information");
             System.out.println("2) Place bid");
             System.out.println("3) Create auction");
             System.out.println("4) View account");
@@ -61,29 +61,39 @@ public class UserInterface {
             System.out.println("Select one of the following options:");
             System.out.println("1. Subscribe to an auctionId");
             System.out.println("2. Unsubscribe to an auctionId");
-
+            System.out.println("3. Get Information");
             System.out.println("3   . Back to main menu");
 
             int option = Integer.parseInt(sc.nextLine());
-            String serviceId = sc.nextLine();
-
+            String service = "";
             switch (option) {
                 case 1:
-                    System.out.print("Enter auction ID\n-> ");
-                    serviceId = sc.nextLine();
-                    System.out.println("  - Current highest bid: " + auction.getPrice(serviceId.getBytes()));
+                    System.out.print("Enter name of service\n-> ");
+                    service = sc.nextLine();
+                    byte [] serviceId1 = bc.addSubscribe(service);
+                    System.out.println("Sucessfully subscribed to serviceId " + k.rt.printId(serviceId1));
                     //System.out.println("  - Auction status: " + auction.); // if it's open or closed
                     break;
                 case 2:
-                    System.out.print("Enter auction ID\n-> ");
-                    serviceId = sc.nextLine();
-                    System.out.println("  - Current highest bid: " + auction.getPrice(serviceId.getBytes()));
-                    //System.out.println("  - Auction status: " + auction.); // if it's open or closed
+                    System.out.print("Enter name of service\n-> ");
+                    service = sc.nextLine();
+                    boolean succesful = bc.removeSubscribe(service);
+                    if(succesful)
+                    {
+                        System.out.println("Sucessfully unsubscribed " );
+                    }
+                    else
+                    {
+                        System.out.println("Error : service not found" );
+                    }
                     break;
-                case 3:
+                case 3 :
+                    System.out.print("Enter name of service\n-> ");
+                    service = sc.nextLine();
+                    Transaction latestInformationOnBlockChain= bc.getInformation(service);
                     break;
                 case 4:
-                    return;
+                    break;
                 default:
                     System.out.println("Error: invalid parameter");
                     break;
