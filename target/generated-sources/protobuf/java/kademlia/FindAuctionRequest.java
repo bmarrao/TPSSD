@@ -15,10 +15,11 @@ package kademlia;
  *message FindBlockResponse
  *{
  *bytes id = 1;
- *Block value = 2;
- *repeated Node nodes = 3;
- *bytes publicKey = 4;
- *bytes signature = 5;
+ *bool hasBlcok = 2;
+ *Block b = 3;
+ *repeated Node nodes = 4;
+ *bytes publicKey = 5;
+ *bytes signature = 6;
  *}
  * </pre>
  *
@@ -361,10 +362,11 @@ public  final class FindAuctionRequest extends
    *message FindBlockResponse
    *{
    *bytes id = 1;
-   *Block value = 2;
-   *repeated Node nodes = 3;
-   *bytes publicKey = 4;
-   *bytes signature = 5;
+   *bool hasBlcok = 2;
+   *Block b = 3;
+   *repeated Node nodes = 4;
+   *bytes publicKey = 5;
+   *bytes signature = 6;
    *}
    * </pre>
    *

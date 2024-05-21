@@ -161,16 +161,122 @@ public class KademliaProtocol
                                 .setSender(senderOffer)
                                 .build();
 
+        byte[] ownerNodeToSign = ownerNode.toByteArray();
+        byte[] brokerNodeToSign = brokerNode.toByteArray();
+        byte[] senderNodeToSign = senderNode.toByteArray();
+        byte[] offerInfoToSign = senderOffer.toByteArray();
+
+        int ownerAndBrokerLength = ownerNodeToSign.length + brokerNodeToSign.length;
+        int withSenderLength = ownerAndBrokerLength + senderNodeToSign.length;
+        int withOfferLength = withSenderLength + offerInfoToSign.length;
+        int totalLength = withOfferLength + nodeId.length;
+
+        byte[] infoToSign = new byte[totalLength];
+
+        System.arraycopy(ownerNodeToSign, 0, infoToSign, 0, ownerNodeToSign.length);
+        System.arraycopy(brokerNodeToSign, 0, infoToSign, ownerNodeToSign.length, brokerNodeToSign.length);
+        System.arraycopy(senderNodeToSign, 0, infoToSign, ownerAndBrokerLength, senderNodeToSign.length);
+        System.arraycopy(offerInfoToSign, 0, infoToSign, withSenderLength, offerInfoToSign.length);
+        System.arraycopy(nodeId, 0, infoToSign, withOfferLength, nodeId.length);
 
         // Sign node content
         byte[] signature = null;
         try {
-            //TODO signature = SignatureClass.sign(node.toByteArray(), privateKey);
+            signature = SignatureClass.sign(infoToSign, privateKey);
         }
         catch(Exception e) {
             e.printStackTrace();
         }
 
+        KademliaGrpc.KademliaBlockingStub stub = KademliaGrpc.newBlockingStub(channel);
+
+        StoreTransactionRequest request = StoreTransactionRequest.newBuilder()
+                .setNode(senderNode)
+                .setTransaction(transaction)
+                .setSignature(ByteString.copyFrom(signature))
+                .setPublicKey(ByteString.copyFrom(publicKey.getEncoded())).build();
+
+        // Receive response
+        StoreTransactionResponse response = stub.storeTransaction(request);
+
+        // Check signature
+        boolean signVal = false;
+
+        try {
+            signVal = SignatureClass.verify(response.getId().toByteArray(), response.getSignature().toByteArray(), response.getPublicKey().toByteArray());
+        }
+        catch(Exception e) {
+            e.printStackTrace();
+        }
+
+        channel.shutdown();
+
+        if (signVal) {
+            return response.getStored();
+        }
+        return false;
+    }
+
+    public boolean storeBlockOp(byte[] nodeId, String receiverIp, int receiverPort,
+                                      byte[] ownerNodeID, String ownerIP, int ownerPort,
+                                      byte[] brokerNodeID, String brokerIP, int brokerPort,
+                                      byte[] auctionID, int transactionType, float price) {
+        ManagedChannel channel = ManagedChannelBuilder.forAddress(receiverIp, receiverPort).usePlaintext().build();
+
+        Node ownerNode = Node.newBuilder()
+                .setId(ByteString.copyFrom(ownerNodeID))
+                .setIp(ownerIP)
+                .setPort(ownerPort)
+                .setRandomX(ByteString.copyFrom(new byte[]{randomX})).build();
+
+        Node brokerNode = Node.newBuilder()
+                .setId(ByteString.copyFrom(brokerNodeID))
+                .setIp(brokerIP)
+                .setPort(brokerPort)
+                .setRandomX(ByteString.copyFrom(new byte[]{randomX})).build();
+
+        Node senderNode = Node.newBuilder()
+                .setId(ByteString.copyFrom(nodeId))
+                .setIp(ipAddress)
+                .setPort(port)
+                .setRandomX(ByteString.copyFrom(new byte[]{randomX})).build();
+
+        Offer senderOffer = Offer.newBuilder().setNode(senderNode).setPrice(price).build();
+
+        Transaction transaction = Transaction.newBuilder()
+                .setId(ByteString.copyFrom(auctionID))
+                .setType(transactionType)
+                .setOwner(ownerNode)
+                .setBroker(brokerNode)
+                .setSender(senderOffer)
+                .build();
+
+        byte[] ownerNodeToSign = ownerNode.toByteArray();
+        byte[] brokerNodeToSign = brokerNode.toByteArray();
+        byte[] senderNodeToSign = senderNode.toByteArray();
+        byte[] offerInfoToSign = senderOffer.toByteArray();
+
+        int ownerAndBrokerLength = ownerNodeToSign.length + brokerNodeToSign.length;
+        int withSenderLength = ownerAndBrokerLength + senderNodeToSign.length;
+        int withOfferLength = withSenderLength + offerInfoToSign.length;
+        int totalLength = withOfferLength + nodeId.length;
+
+        byte[] infoToSign = new byte[totalLength];
+
+        System.arraycopy(ownerNodeToSign, 0, infoToSign, 0, ownerNodeToSign.length);
+        System.arraycopy(brokerNodeToSign, 0, infoToSign, ownerNodeToSign.length, brokerNodeToSign.length);
+        System.arraycopy(senderNodeToSign, 0, infoToSign, ownerAndBrokerLength, senderNodeToSign.length);
+        System.arraycopy(offerInfoToSign, 0, infoToSign, withSenderLength, offerInfoToSign.length);
+        System.arraycopy(nodeId, 0, infoToSign, withOfferLength, nodeId.length);
+
+        // Sign node content
+        byte[] signature = null;
+        try {
+            signature = SignatureClass.sign(infoToSign, privateKey);
+        }
+        catch(Exception e) {
+            e.printStackTrace();
+        }
 
         KademliaGrpc.KademliaBlockingStub stub = KademliaGrpc.newBlockingStub(channel);
 
