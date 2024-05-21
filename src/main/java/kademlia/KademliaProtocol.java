@@ -438,7 +438,7 @@ public class KademliaProtocol
         }
         return null;
     }
-    
+
     /*
     public FindBlockResponse findAuctionOp(byte[] key, String receiverIp, int receiverPort)
     {
@@ -506,6 +506,6 @@ public class KademliaProtocol
         }
         return null;
     }
-    */
+
 
 }
