@@ -23,6 +23,37 @@ public class KademliaNode
         reputation = 0;
     }
 
+    public String getIpAdress() {
+        return ipAdress;
+    }
+
+    public void setIpAdress(String ipAdress) {
+        this.ipAdress = ipAdress;
+    }
+
+    public byte[] getNodeId() {
+        return nodeId;
+    }
+
+    public void setNodeId(byte[] nodeId) {
+        this.nodeId = nodeId;
+    }
+
+    public int getPort() {
+        return port;
+    }
+
+    public void setPort(int port) {
+        this.port = port;
+    }
+
+    public LocalDateTime getTime() {
+        return time;
+    }
+
+    public void setTime(LocalDateTime time) {
+        this.time = time;
+    }
 
     public LocalDateTime getDateTime()
     {

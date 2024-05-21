@@ -43,18 +43,18 @@ message Offer
 message Transaction
 {
   // Tipo 1: inicio de auction | Tipo 2: bid/proposta | Tipo 3: fecho de auction
-  bytes id = 1;
+  string id = 1;
   uint32 type = 2;
   Node owner = 3;
-  Node broker = 4;
-  Offer sender = 5;
-  bytes signature = 6;
+  Offer sender = 4;
+  bytes signature = 5;
 }
 
 message StoreTransactionRequest
 {
   Node node = 1;
-  Transaction transaction = 2;
+  bytes nodeID = 2;
+  Transaction transaction = 3;
   bytes publicKey = 4;
   bytes signature = 5;
 }

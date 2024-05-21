@@ -134,7 +134,7 @@ public class Blockchain
             return false;
         }
         for (Transaction transaction : transactions) {
-            if (transaction.getAmount() <= 0 || transaction.getSender() == null || transaction.getReceiver() == null) {
+            if (transaction.getPrice() <= 0 || transaction.getSender() == null || transaction.getReceiver() == null) {
                 block.setReputation(0);
                 return false;
             }

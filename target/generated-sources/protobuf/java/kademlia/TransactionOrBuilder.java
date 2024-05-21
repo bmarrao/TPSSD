@@ -12,9 +12,18 @@ public interface TransactionOrBuilder extends
    * Tipo 1: inicio de auction | Tipo 2: bid/proposta | Tipo 3: fecho de auction
    * </pre>
    *
-   * <code>bytes id = 1;</code>
+   * <code>string id = 1;</code>
    */
-  com.google.protobuf.ByteString getId();
+  java.lang.String getId();
+  /**
+   * <pre>
+   * Tipo 1: inicio de auction | Tipo 2: bid/proposta | Tipo 3: fecho de auction
+   * </pre>
+   *
+   * <code>string id = 1;</code>
+   */
+  com.google.protobuf.ByteString
+      getIdBytes();
 
   /**
    * <code>uint32 type = 2;</code>
@@ -35,33 +44,20 @@ public interface TransactionOrBuilder extends
   kademlia.NodeOrBuilder getOwnerOrBuilder();
 
   /**
-   * <code>.kademlia.Node broker = 4;</code>
-   */
-  boolean hasBroker();
-  /**
-   * <code>.kademlia.Node broker = 4;</code>
-   */
-  kademlia.Node getBroker();
-  /**
-   * <code>.kademlia.Node broker = 4;</code>
-   */
-  kademlia.NodeOrBuilder getBrokerOrBuilder();
-
-  /**
-   * <code>.kademlia.Offer sender = 5;</code>
+   * <code>.kademlia.Offer sender = 4;</code>
    */
   boolean hasSender();
   /**
-   * <code>.kademlia.Offer sender = 5;</code>
+   * <code>.kademlia.Offer sender = 4;</code>
    */
   kademlia.Offer getSender();
   /**
-   * <code>.kademlia.Offer sender = 5;</code>
+   * <code>.kademlia.Offer sender = 4;</code>
    */
   kademlia.OfferOrBuilder getSenderOrBuilder();
 
   /**
-   * <code>bytes signature = 6;</code>
+   * <code>bytes signature = 5;</code>
    */
   com.google.protobuf.ByteString getSignature();
 }

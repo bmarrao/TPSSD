@@ -270,8 +270,8 @@ public class Kademlia
         }
         //TODO ALTER THIS TO SORT BY REPUTATION/TRUST
         Collections.sort(allResults, (node1, node2) -> {
-            BigInteger distance1 = rt.calculateDistance(node1.getId().toByteArray(), nodeId);
-            BigInteger distance2 = rt.calculateDistance(node2.getId().toByteArray(), nodeId);
+            BigInteger distance1 = rt.calculateDistance(node1.getId().getBytes(), nodeId);
+            BigInteger distance2 = rt.calculateDistance(node2.getId().getBytes(), nodeId);
             return distance1.compareTo(distance2);
         });
 

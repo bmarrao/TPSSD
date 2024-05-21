@@ -21,15 +21,20 @@ public interface StoreTransactionRequestOrBuilder extends
   kademlia.NodeOrBuilder getNodeOrBuilder();
 
   /**
-   * <code>.kademlia.Transaction transaction = 2;</code>
+   * <code>bytes nodeID = 2;</code>
+   */
+  com.google.protobuf.ByteString getNodeID();
+
+  /**
+   * <code>.kademlia.Transaction transaction = 3;</code>
    */
   boolean hasTransaction();
   /**
-   * <code>.kademlia.Transaction transaction = 2;</code>
+   * <code>.kademlia.Transaction transaction = 3;</code>
    */
   kademlia.Transaction getTransaction();
   /**
-   * <code>.kademlia.Transaction transaction = 2;</code>
+   * <code>.kademlia.Transaction transaction = 3;</code>
    */
   kademlia.TransactionOrBuilder getTransactionOrBuilder();
 

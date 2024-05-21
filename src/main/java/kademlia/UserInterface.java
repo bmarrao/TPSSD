@@ -3,6 +3,7 @@ package kademlia;
 import auctions.Auction;
 import auctions.BrokerService;
 import blockchain.Blockchain;
+import blockchain.Transaction;
 
 import java.security.NoSuchAlgorithmException;
 import java.util.Arrays;
@@ -95,11 +96,13 @@ public class UserInterface {
         System.out.print("Enter auction service ID\n-> ");
         String serviceID = sc.nextLine();
         System.out.print("Enter bid amount\n-> ");
-        double bidAmount = Double.parseDouble(sc.nextLine());
+        float bidAmount = Float.parseFloat(sc.nextLine());
 
         //TODO : GET RECEIVER SEARCH RECEIVER WITH THE AUCTION THAT HAS THE MOST CHEAP AUCTION FOR THIS SERVICE  FALTA METODO
         //
-        boolean didTransactionGoThrough = k.protocol.storeTransactionOp(new Transaction(k.getOwnNode(), receiver, bidAmount, blockchain.Transaction.TransactionType.BID));
+        KademliaNode receiverNode = new KademliaNode("","".getBytes(),0);
+
+        boolean didTransactionGoThrough = k.protocol.storeTransactionOp(new Transaction(receiverNode, bidAmount, serviceID, blockchain.Transaction.TransactionType.BID ));
 
         if (didTransactionGoThrough)
         {

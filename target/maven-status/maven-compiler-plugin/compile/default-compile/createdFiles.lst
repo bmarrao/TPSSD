@@ -79,5 +79,6 @@ kademlia/Offer$1.class
 kademlia/KademliaGrpc$KademliaImplBase.class
 kademlia/PingRequest$Builder.class
 kademlia/PingRequest$1.class
+kademlia/KademliaProtocol$1.class
 kademlia/FindAuctionRequest$1.class
 kademlia/StoreTransactionResponse$1.class

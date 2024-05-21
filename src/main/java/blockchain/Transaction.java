@@ -1,5 +1,7 @@
 package blockchain;
 
+import kademlia.KademliaNode;
+
 public class Transaction {
 
     public enum TransactionType {
@@ -8,55 +10,57 @@ public class Transaction {
         CLOSURE
         // Add more transaction types as needed
     }
-    private String sender;
-    private String receiver;
-    private double amount;
-    // Add other fields as needed
+    private KademliaNode sender;
+    private KademliaNode receiver;
+    private float price;
+    private String serviceID;
+
     private TransactionType type;
 
-    // Constructor
-    public Transaction(String sender, String receiver, double amount, TransactionType type) {
-        this.sender = sender;
-        this.receiver = receiver;
-        this.amount = amount;
+    public Transaction(KademliaNode owner, float price, String serviceID, TransactionType type) {
+        this.receiver = owner;
+        this.price = price;
+        this.serviceID = serviceID;
         this.type = type;
     }
 
-    public String getSender() {
+    public KademliaNode getSender() {
         return sender;
     }
 
-    public void setSender(String sender) {
+    public void setSender(KademliaNode sender) {
         this.sender = sender;
     }
 
-    public String getReceiver() {
+    public KademliaNode getReceiver() {
         return receiver;
     }
 
-    public void setReceiver(String receiver) {
+    public void setReceiver(KademliaNode receiver) {
         this.receiver = receiver;
     }
 
-    public double getAmount() {
-        return amount;
+    public float getPrice() {
+        return price;
     }
 
-    public void setAmount(double amount) {
-        this.amount = amount;
+    public void setPrice(float price) {
+        this.price = price;
+    }
+
+    public String getServiceID() {
+        return serviceID;
+    }
+
+    public void setServiceID(String serviceID) {
+        this.serviceID = serviceID;
     }
 
     public TransactionType getType() {
         return type;
     }
 
-    @Override
-    public String toString() {
-        return "Transaction{" +
-                "sender='" + sender + '\'' +
-                ", receiver='" + receiver + '\'' +
-                ", amount=" + amount +
-                ", type=" + type +
-                '}';
+    public void setType(TransactionType type) {
+        this.type = type;
     }
 }

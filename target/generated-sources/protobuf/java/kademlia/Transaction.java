@@ -15,7 +15,7 @@ public  final class Transaction extends
     super(builder);
   }
   private Transaction() {
-    id_ = com.google.protobuf.ByteString.EMPTY;
+    id_ = "";
     type_ = 0;
     signature_ = com.google.protobuf.ByteString.EMPTY;
   }
@@ -46,8 +46,9 @@ public  final class Transaction extends
             break;
           }
           case 10: {
+            java.lang.String s = input.readStringRequireUtf8();
 
-            id_ = input.readBytes();
+            id_ = s;
             break;
           }
           case 16: {
@@ -69,19 +70,6 @@ public  final class Transaction extends
             break;
           }
           case 34: {
-            kademlia.Node.Builder subBuilder = null;
-            if (broker_ != null) {
-              subBuilder = broker_.toBuilder();
-            }
-            broker_ = input.readMessage(kademlia.Node.parser(), extensionRegistry);
-            if (subBuilder != null) {
-              subBuilder.mergeFrom(broker_);
-              broker_ = subBuilder.buildPartial();
-            }
-
-            break;
-          }
-          case 42: {
             kademlia.Offer.Builder subBuilder = null;
             if (sender_ != null) {
               subBuilder = sender_.toBuilder();
@@ -94,7 +82,7 @@ public  final class Transaction extends
 
             break;
           }
-          case 50: {
+          case 42: {
 
             signature_ = input.readBytes();
             break;
@@ -123,16 +111,45 @@ public  final class Transaction extends
   }
 
   public static final int ID_FIELD_NUMBER = 1;
-  private com.google.protobuf.ByteString id_;
+  private volatile java.lang.Object id_;
   /**
    * <pre>
    * Tipo 1: inicio de auction | Tipo 2: bid/proposta | Tipo 3: fecho de auction
    * </pre>
    *
-   * <code>bytes id = 1;</code>
+   * <code>string id = 1;</code>
    */
-  public com.google.protobuf.ByteString getId() {
-    return id_;
+  public java.lang.String getId() {
+    java.lang.Object ref = id_;
+    if (ref instanceof java.lang.String) {
+      return (java.lang.String) ref;
+    } else {
+      com.google.protobuf.ByteString bs = 
+          (com.google.protobuf.ByteString) ref;
+      java.lang.String s = bs.toStringUtf8();
+      id_ = s;
+      return s;
+    }
+  }
+  /**
+   * <pre>
+   * Tipo 1: inicio de auction | Tipo 2: bid/proposta | Tipo 3: fecho de auction
+   * </pre>
+   *
+   * <code>string id = 1;</code>
+   */
+  public com.google.protobuf.ByteString
+      getIdBytes() {
+    java.lang.Object ref = id_;
+    if (ref instanceof java.lang.String) {
+      com.google.protobuf.ByteString b = 
+          com.google.protobuf.ByteString.copyFromUtf8(
+              (java.lang.String) ref);
+      id_ = b;
+      return b;
+    } else {
+      return (com.google.protobuf.ByteString) ref;
+    }
   }
 
   public static final int TYPE_FIELD_NUMBER = 2;
@@ -165,52 +182,31 @@ public  final class Transaction extends
     return getOwner();
   }
 
-  public static final int BROKER_FIELD_NUMBER = 4;
-  private kademlia.Node broker_;
-  /**
-   * <code>.kademlia.Node broker = 4;</code>
-   */
-  public boolean hasBroker() {
-    return broker_ != null;
-  }
-  /**
-   * <code>.kademlia.Node broker = 4;</code>
-   */
-  public kademlia.Node getBroker() {
-    return broker_ == null ? kademlia.Node.getDefaultInstance() : broker_;
-  }
-  /**
-   * <code>.kademlia.Node broker = 4;</code>
-   */
-  public kademlia.NodeOrBuilder getBrokerOrBuilder() {
-    return getBroker();
-  }
-
-  public static final int SENDER_FIELD_NUMBER = 5;
+  public static final int SENDER_FIELD_NUMBER = 4;
   private kademlia.Offer sender_;
   /**
-   * <code>.kademlia.Offer sender = 5;</code>
+   * <code>.kademlia.Offer sender = 4;</code>
    */
   public boolean hasSender() {
     return sender_ != null;
   }
   /**
-   * <code>.kademlia.Offer sender = 5;</code>
+   * <code>.kademlia.Offer sender = 4;</code>
    */
   public kademlia.Offer getSender() {
     return sender_ == null ? kademlia.Offer.getDefaultInstance() : sender_;
   }
   /**
-   * <code>.kademlia.Offer sender = 5;</code>
+   * <code>.kademlia.Offer sender = 4;</code>
    */
   public kademlia.OfferOrBuilder getSenderOrBuilder() {
     return getSender();
   }
 
-  public static final int SIGNATURE_FIELD_NUMBER = 6;
+  public static final int SIGNATURE_FIELD_NUMBER = 5;
   private com.google.protobuf.ByteString signature_;
   /**
-   * <code>bytes signature = 6;</code>
+   * <code>bytes signature = 5;</code>
    */
   public com.google.protobuf.ByteString getSignature() {
     return signature_;
@@ -228,8 +224,8 @@ public  final class Transaction extends
 
   public void writeTo(com.google.protobuf.CodedOutputStream output)
                       throws java.io.IOException {
-    if (!id_.isEmpty()) {
-      output.writeBytes(1, id_);
+    if (!getIdBytes().isEmpty()) {
+      com.google.protobuf.GeneratedMessageV3.writeString(output, 1, id_);
     }
     if (type_ != 0) {
       output.writeUInt32(2, type_);
@@ -237,14 +233,11 @@ public  final class Transaction extends
     if (owner_ != null) {
       output.writeMessage(3, getOwner());
     }
-    if (broker_ != null) {
-      output.writeMessage(4, getBroker());
-    }
     if (sender_ != null) {
-      output.writeMessage(5, getSender());
+      output.writeMessage(4, getSender());
     }
     if (!signature_.isEmpty()) {
-      output.writeBytes(6, signature_);
+      output.writeBytes(5, signature_);
     }
   }
 
@@ -253,9 +246,8 @@ public  final class Transaction extends
     if (size != -1) return size;
 
     size = 0;
-    if (!id_.isEmpty()) {
-      size += com.google.protobuf.CodedOutputStream
-        .computeBytesSize(1, id_);
+    if (!getIdBytes().isEmpty()) {
+      size += com.google.protobuf.GeneratedMessageV3.computeStringSize(1, id_);
     }
     if (type_ != 0) {
       size += com.google.protobuf.CodedOutputStream
@@ -265,17 +257,13 @@ public  final class Transaction extends
       size += com.google.protobuf.CodedOutputStream
         .computeMessageSize(3, getOwner());
     }
-    if (broker_ != null) {
-      size += com.google.protobuf.CodedOutputStream
-        .computeMessageSize(4, getBroker());
-    }
     if (sender_ != null) {
       size += com.google.protobuf.CodedOutputStream
-        .computeMessageSize(5, getSender());
+        .computeMessageSize(4, getSender());
     }
     if (!signature_.isEmpty()) {
       size += com.google.protobuf.CodedOutputStream
-        .computeBytesSize(6, signature_);
+        .computeBytesSize(5, signature_);
     }
     memoizedSize = size;
     return size;
@@ -302,11 +290,6 @@ public  final class Transaction extends
       result = result && getOwner()
           .equals(other.getOwner());
     }
-    result = result && (hasBroker() == other.hasBroker());
-    if (hasBroker()) {
-      result = result && getBroker()
-          .equals(other.getBroker());
-    }
     result = result && (hasSender() == other.hasSender());
     if (hasSender()) {
       result = result && getSender()
@@ -331,10 +314,6 @@ public  final class Transaction extends
     if (hasOwner()) {
       hash = (37 * hash) + OWNER_FIELD_NUMBER;
       hash = (53 * hash) + getOwner().hashCode();
-    }
-    if (hasBroker()) {
-      hash = (37 * hash) + BROKER_FIELD_NUMBER;
-      hash = (53 * hash) + getBroker().hashCode();
     }
     if (hasSender()) {
       hash = (37 * hash) + SENDER_FIELD_NUMBER;
@@ -471,7 +450,7 @@ public  final class Transaction extends
     }
     public Builder clear() {
       super.clear();
-      id_ = com.google.protobuf.ByteString.EMPTY;
+      id_ = "";
 
       type_ = 0;
 
@@ -480,12 +459,6 @@ public  final class Transaction extends
       } else {
         owner_ = null;
         ownerBuilder_ = null;
-      }
-      if (brokerBuilder_ == null) {
-        broker_ = null;
-      } else {
-        broker_ = null;
-        brokerBuilder_ = null;
       }
       if (senderBuilder_ == null) {
         sender_ = null;
@@ -523,11 +496,6 @@ public  final class Transaction extends
         result.owner_ = owner_;
       } else {
         result.owner_ = ownerBuilder_.build();
-      }
-      if (brokerBuilder_ == null) {
-        result.broker_ = broker_;
-      } else {
-        result.broker_ = brokerBuilder_.build();
       }
       if (senderBuilder_ == null) {
         result.sender_ = sender_;
@@ -576,17 +544,15 @@ public  final class Transaction extends
 
     public Builder mergeFrom(kademlia.Transaction other) {
       if (other == kademlia.Transaction.getDefaultInstance()) return this;
-      if (other.getId() != com.google.protobuf.ByteString.EMPTY) {
-        setId(other.getId());
+      if (!other.getId().isEmpty()) {
+        id_ = other.id_;
+        onChanged();
       }
       if (other.getType() != 0) {
         setType(other.getType());
       }
       if (other.hasOwner()) {
         mergeOwner(other.getOwner());
-      }
-      if (other.hasBroker()) {
-        mergeBroker(other.getBroker());
       }
       if (other.hasSender()) {
         mergeSender(other.getSender());
@@ -620,25 +586,55 @@ public  final class Transaction extends
       return this;
     }
 
-    private com.google.protobuf.ByteString id_ = com.google.protobuf.ByteString.EMPTY;
+    private java.lang.Object id_ = "";
     /**
      * <pre>
      * Tipo 1: inicio de auction | Tipo 2: bid/proposta | Tipo 3: fecho de auction
      * </pre>
      *
-     * <code>bytes id = 1;</code>
+     * <code>string id = 1;</code>
      */
-    public com.google.protobuf.ByteString getId() {
-      return id_;
+    public java.lang.String getId() {
+      java.lang.Object ref = id_;
+      if (!(ref instanceof java.lang.String)) {
+        com.google.protobuf.ByteString bs =
+            (com.google.protobuf.ByteString) ref;
+        java.lang.String s = bs.toStringUtf8();
+        id_ = s;
+        return s;
+      } else {
+        return (java.lang.String) ref;
+      }
     }
     /**
      * <pre>
      * Tipo 1: inicio de auction | Tipo 2: bid/proposta | Tipo 3: fecho de auction
      * </pre>
      *
-     * <code>bytes id = 1;</code>
+     * <code>string id = 1;</code>
      */
-    public Builder setId(com.google.protobuf.ByteString value) {
+    public com.google.protobuf.ByteString
+        getIdBytes() {
+      java.lang.Object ref = id_;
+      if (ref instanceof String) {
+        com.google.protobuf.ByteString b = 
+            com.google.protobuf.ByteString.copyFromUtf8(
+                (java.lang.String) ref);
+        id_ = b;
+        return b;
+      } else {
+        return (com.google.protobuf.ByteString) ref;
+      }
+    }
+    /**
+     * <pre>
+     * Tipo 1: inicio de auction | Tipo 2: bid/proposta | Tipo 3: fecho de auction
+     * </pre>
+     *
+     * <code>string id = 1;</code>
+     */
+    public Builder setId(
+        java.lang.String value) {
       if (value == null) {
     throw new NullPointerException();
   }
@@ -652,11 +648,29 @@ public  final class Transaction extends
      * Tipo 1: inicio de auction | Tipo 2: bid/proposta | Tipo 3: fecho de auction
      * </pre>
      *
-     * <code>bytes id = 1;</code>
+     * <code>string id = 1;</code>
      */
     public Builder clearId() {
       
       id_ = getDefaultInstance().getId();
+      onChanged();
+      return this;
+    }
+    /**
+     * <pre>
+     * Tipo 1: inicio de auction | Tipo 2: bid/proposta | Tipo 3: fecho de auction
+     * </pre>
+     *
+     * <code>string id = 1;</code>
+     */
+    public Builder setIdBytes(
+        com.google.protobuf.ByteString value) {
+      if (value == null) {
+    throw new NullPointerException();
+  }
+  checkByteStringIsUtf8(value);
+      
+      id_ = value;
       onChanged();
       return this;
     }
@@ -804,134 +818,17 @@ public  final class Transaction extends
       return ownerBuilder_;
     }
 
-    private kademlia.Node broker_ = null;
-    private com.google.protobuf.SingleFieldBuilderV3<
-        kademlia.Node, kademlia.Node.Builder, kademlia.NodeOrBuilder> brokerBuilder_;
-    /**
-     * <code>.kademlia.Node broker = 4;</code>
-     */
-    public boolean hasBroker() {
-      return brokerBuilder_ != null || broker_ != null;
-    }
-    /**
-     * <code>.kademlia.Node broker = 4;</code>
-     */
-    public kademlia.Node getBroker() {
-      if (brokerBuilder_ == null) {
-        return broker_ == null ? kademlia.Node.getDefaultInstance() : broker_;
-      } else {
-        return brokerBuilder_.getMessage();
-      }
-    }
-    /**
-     * <code>.kademlia.Node broker = 4;</code>
-     */
-    public Builder setBroker(kademlia.Node value) {
-      if (brokerBuilder_ == null) {
-        if (value == null) {
-          throw new NullPointerException();
-        }
-        broker_ = value;
-        onChanged();
-      } else {
-        brokerBuilder_.setMessage(value);
-      }
-
-      return this;
-    }
-    /**
-     * <code>.kademlia.Node broker = 4;</code>
-     */
-    public Builder setBroker(
-        kademlia.Node.Builder builderForValue) {
-      if (brokerBuilder_ == null) {
-        broker_ = builderForValue.build();
-        onChanged();
-      } else {
-        brokerBuilder_.setMessage(builderForValue.build());
-      }
-
-      return this;
-    }
-    /**
-     * <code>.kademlia.Node broker = 4;</code>
-     */
-    public Builder mergeBroker(kademlia.Node value) {
-      if (brokerBuilder_ == null) {
-        if (broker_ != null) {
-          broker_ =
-            kademlia.Node.newBuilder(broker_).mergeFrom(value).buildPartial();
-        } else {
-          broker_ = value;
-        }
-        onChanged();
-      } else {
-        brokerBuilder_.mergeFrom(value);
-      }
-
-      return this;
-    }
-    /**
-     * <code>.kademlia.Node broker = 4;</code>
-     */
-    public Builder clearBroker() {
-      if (brokerBuilder_ == null) {
-        broker_ = null;
-        onChanged();
-      } else {
-        broker_ = null;
-        brokerBuilder_ = null;
-      }
-
-      return this;
-    }
-    /**
-     * <code>.kademlia.Node broker = 4;</code>
-     */
-    public kademlia.Node.Builder getBrokerBuilder() {
-      
-      onChanged();
-      return getBrokerFieldBuilder().getBuilder();
-    }
-    /**
-     * <code>.kademlia.Node broker = 4;</code>
-     */
-    public kademlia.NodeOrBuilder getBrokerOrBuilder() {
-      if (brokerBuilder_ != null) {
-        return brokerBuilder_.getMessageOrBuilder();
-      } else {
-        return broker_ == null ?
-            kademlia.Node.getDefaultInstance() : broker_;
-      }
-    }
-    /**
-     * <code>.kademlia.Node broker = 4;</code>
-     */
-    private com.google.protobuf.SingleFieldBuilderV3<
-        kademlia.Node, kademlia.Node.Builder, kademlia.NodeOrBuilder> 
-        getBrokerFieldBuilder() {
-      if (brokerBuilder_ == null) {
-        brokerBuilder_ = new com.google.protobuf.SingleFieldBuilderV3<
-            kademlia.Node, kademlia.Node.Builder, kademlia.NodeOrBuilder>(
-                getBroker(),
-                getParentForChildren(),
-                isClean());
-        broker_ = null;
-      }
-      return brokerBuilder_;
-    }
-
     private kademlia.Offer sender_ = null;
     private com.google.protobuf.SingleFieldBuilderV3<
         kademlia.Offer, kademlia.Offer.Builder, kademlia.OfferOrBuilder> senderBuilder_;
     /**
-     * <code>.kademlia.Offer sender = 5;</code>
+     * <code>.kademlia.Offer sender = 4;</code>
      */
     public boolean hasSender() {
       return senderBuilder_ != null || sender_ != null;
     }
     /**
-     * <code>.kademlia.Offer sender = 5;</code>
+     * <code>.kademlia.Offer sender = 4;</code>
      */
     public kademlia.Offer getSender() {
       if (senderBuilder_ == null) {
@@ -941,7 +838,7 @@ public  final class Transaction extends
       }
     }
     /**
-     * <code>.kademlia.Offer sender = 5;</code>
+     * <code>.kademlia.Offer sender = 4;</code>
      */
     public Builder setSender(kademlia.Offer value) {
       if (senderBuilder_ == null) {
@@ -957,7 +854,7 @@ public  final class Transaction extends
       return this;
     }
     /**
-     * <code>.kademlia.Offer sender = 5;</code>
+     * <code>.kademlia.Offer sender = 4;</code>
      */
     public Builder setSender(
         kademlia.Offer.Builder builderForValue) {
@@ -971,7 +868,7 @@ public  final class Transaction extends
       return this;
     }
     /**
-     * <code>.kademlia.Offer sender = 5;</code>
+     * <code>.kademlia.Offer sender = 4;</code>
      */
     public Builder mergeSender(kademlia.Offer value) {
       if (senderBuilder_ == null) {
@@ -989,7 +886,7 @@ public  final class Transaction extends
       return this;
     }
     /**
-     * <code>.kademlia.Offer sender = 5;</code>
+     * <code>.kademlia.Offer sender = 4;</code>
      */
     public Builder clearSender() {
       if (senderBuilder_ == null) {
@@ -1003,7 +900,7 @@ public  final class Transaction extends
       return this;
     }
     /**
-     * <code>.kademlia.Offer sender = 5;</code>
+     * <code>.kademlia.Offer sender = 4;</code>
      */
     public kademlia.Offer.Builder getSenderBuilder() {
       
@@ -1011,7 +908,7 @@ public  final class Transaction extends
       return getSenderFieldBuilder().getBuilder();
     }
     /**
-     * <code>.kademlia.Offer sender = 5;</code>
+     * <code>.kademlia.Offer sender = 4;</code>
      */
     public kademlia.OfferOrBuilder getSenderOrBuilder() {
       if (senderBuilder_ != null) {
@@ -1022,7 +919,7 @@ public  final class Transaction extends
       }
     }
     /**
-     * <code>.kademlia.Offer sender = 5;</code>
+     * <code>.kademlia.Offer sender = 4;</code>
      */
     private com.google.protobuf.SingleFieldBuilderV3<
         kademlia.Offer, kademlia.Offer.Builder, kademlia.OfferOrBuilder> 
@@ -1040,13 +937,13 @@ public  final class Transaction extends
 
     private com.google.protobuf.ByteString signature_ = com.google.protobuf.ByteString.EMPTY;
     /**
-     * <code>bytes signature = 6;</code>
+     * <code>bytes signature = 5;</code>
      */
     public com.google.protobuf.ByteString getSignature() {
       return signature_;
     }
     /**
-     * <code>bytes signature = 6;</code>
+     * <code>bytes signature = 5;</code>
      */
     public Builder setSignature(com.google.protobuf.ByteString value) {
       if (value == null) {
@@ -1058,7 +955,7 @@ public  final class Transaction extends
       return this;
     }
     /**
-     * <code>bytes signature = 6;</code>
+     * <code>bytes signature = 5;</code>
      */
     public Builder clearSignature() {
       

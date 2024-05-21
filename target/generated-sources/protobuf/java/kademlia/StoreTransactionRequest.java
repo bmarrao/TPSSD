@@ -15,6 +15,7 @@ public  final class StoreTransactionRequest extends
     super(builder);
   }
   private StoreTransactionRequest() {
+    nodeID_ = com.google.protobuf.ByteString.EMPTY;
     publicKey_ = com.google.protobuf.ByteString.EMPTY;
     signature_ = com.google.protobuf.ByteString.EMPTY;
   }
@@ -58,6 +59,11 @@ public  final class StoreTransactionRequest extends
             break;
           }
           case 18: {
+
+            nodeID_ = input.readBytes();
+            break;
+          }
+          case 26: {
             kademlia.Transaction.Builder subBuilder = null;
             if (transaction_ != null) {
               subBuilder = transaction_.toBuilder();
@@ -124,22 +130,31 @@ public  final class StoreTransactionRequest extends
     return getNode();
   }
 
-  public static final int TRANSACTION_FIELD_NUMBER = 2;
+  public static final int NODEID_FIELD_NUMBER = 2;
+  private com.google.protobuf.ByteString nodeID_;
+  /**
+   * <code>bytes nodeID = 2;</code>
+   */
+  public com.google.protobuf.ByteString getNodeID() {
+    return nodeID_;
+  }
+
+  public static final int TRANSACTION_FIELD_NUMBER = 3;
   private kademlia.Transaction transaction_;
   /**
-   * <code>.kademlia.Transaction transaction = 2;</code>
+   * <code>.kademlia.Transaction transaction = 3;</code>
    */
   public boolean hasTransaction() {
     return transaction_ != null;
   }
   /**
-   * <code>.kademlia.Transaction transaction = 2;</code>
+   * <code>.kademlia.Transaction transaction = 3;</code>
    */
   public kademlia.Transaction getTransaction() {
     return transaction_ == null ? kademlia.Transaction.getDefaultInstance() : transaction_;
   }
   /**
-   * <code>.kademlia.Transaction transaction = 2;</code>
+   * <code>.kademlia.Transaction transaction = 3;</code>
    */
   public kademlia.TransactionOrBuilder getTransactionOrBuilder() {
     return getTransaction();
@@ -178,8 +193,11 @@ public  final class StoreTransactionRequest extends
     if (node_ != null) {
       output.writeMessage(1, getNode());
     }
+    if (!nodeID_.isEmpty()) {
+      output.writeBytes(2, nodeID_);
+    }
     if (transaction_ != null) {
-      output.writeMessage(2, getTransaction());
+      output.writeMessage(3, getTransaction());
     }
     if (!publicKey_.isEmpty()) {
       output.writeBytes(4, publicKey_);
@@ -198,9 +216,13 @@ public  final class StoreTransactionRequest extends
       size += com.google.protobuf.CodedOutputStream
         .computeMessageSize(1, getNode());
     }
+    if (!nodeID_.isEmpty()) {
+      size += com.google.protobuf.CodedOutputStream
+        .computeBytesSize(2, nodeID_);
+    }
     if (transaction_ != null) {
       size += com.google.protobuf.CodedOutputStream
-        .computeMessageSize(2, getTransaction());
+        .computeMessageSize(3, getTransaction());
     }
     if (!publicKey_.isEmpty()) {
       size += com.google.protobuf.CodedOutputStream
@@ -231,6 +253,8 @@ public  final class StoreTransactionRequest extends
       result = result && getNode()
           .equals(other.getNode());
     }
+    result = result && getNodeID()
+        .equals(other.getNodeID());
     result = result && (hasTransaction() == other.hasTransaction());
     if (hasTransaction()) {
       result = result && getTransaction()
@@ -254,6 +278,8 @@ public  final class StoreTransactionRequest extends
       hash = (37 * hash) + NODE_FIELD_NUMBER;
       hash = (53 * hash) + getNode().hashCode();
     }
+    hash = (37 * hash) + NODEID_FIELD_NUMBER;
+    hash = (53 * hash) + getNodeID().hashCode();
     if (hasTransaction()) {
       hash = (37 * hash) + TRANSACTION_FIELD_NUMBER;
       hash = (53 * hash) + getTransaction().hashCode();
@@ -397,6 +423,8 @@ public  final class StoreTransactionRequest extends
         node_ = null;
         nodeBuilder_ = null;
       }
+      nodeID_ = com.google.protobuf.ByteString.EMPTY;
+
       if (transactionBuilder_ == null) {
         transaction_ = null;
       } else {
@@ -434,6 +462,7 @@ public  final class StoreTransactionRequest extends
       } else {
         result.node_ = nodeBuilder_.build();
       }
+      result.nodeID_ = nodeID_;
       if (transactionBuilder_ == null) {
         result.transaction_ = transaction_;
       } else {
@@ -484,6 +513,9 @@ public  final class StoreTransactionRequest extends
       if (other == kademlia.StoreTransactionRequest.getDefaultInstance()) return this;
       if (other.hasNode()) {
         mergeNode(other.getNode());
+      }
+      if (other.getNodeID() != com.google.protobuf.ByteString.EMPTY) {
+        setNodeID(other.getNodeID());
       }
       if (other.hasTransaction()) {
         mergeTransaction(other.getTransaction());
@@ -637,17 +669,46 @@ public  final class StoreTransactionRequest extends
       return nodeBuilder_;
     }
 
+    private com.google.protobuf.ByteString nodeID_ = com.google.protobuf.ByteString.EMPTY;
+    /**
+     * <code>bytes nodeID = 2;</code>
+     */
+    public com.google.protobuf.ByteString getNodeID() {
+      return nodeID_;
+    }
+    /**
+     * <code>bytes nodeID = 2;</code>
+     */
+    public Builder setNodeID(com.google.protobuf.ByteString value) {
+      if (value == null) {
+    throw new NullPointerException();
+  }
+  
+      nodeID_ = value;
+      onChanged();
+      return this;
+    }
+    /**
+     * <code>bytes nodeID = 2;</code>
+     */
+    public Builder clearNodeID() {
+      
+      nodeID_ = getDefaultInstance().getNodeID();
+      onChanged();
+      return this;
+    }
+
     private kademlia.Transaction transaction_ = null;
     private com.google.protobuf.SingleFieldBuilderV3<
         kademlia.Transaction, kademlia.Transaction.Builder, kademlia.TransactionOrBuilder> transactionBuilder_;
     /**
-     * <code>.kademlia.Transaction transaction = 2;</code>
+     * <code>.kademlia.Transaction transaction = 3;</code>
      */
     public boolean hasTransaction() {
       return transactionBuilder_ != null || transaction_ != null;
     }
     /**
-     * <code>.kademlia.Transaction transaction = 2;</code>
+     * <code>.kademlia.Transaction transaction = 3;</code>
      */
     public kademlia.Transaction getTransaction() {
       if (transactionBuilder_ == null) {
@@ -657,7 +718,7 @@ public  final class StoreTransactionRequest extends
       }
     }
     /**
-     * <code>.kademlia.Transaction transaction = 2;</code>
+     * <code>.kademlia.Transaction transaction = 3;</code>
      */
     public Builder setTransaction(kademlia.Transaction value) {
       if (transactionBuilder_ == null) {
@@ -673,7 +734,7 @@ public  final class StoreTransactionRequest extends
       return this;
     }
     /**
-     * <code>.kademlia.Transaction transaction = 2;</code>
+     * <code>.kademlia.Transaction transaction = 3;</code>
      */
     public Builder setTransaction(
         kademlia.Transaction.Builder builderForValue) {
@@ -687,7 +748,7 @@ public  final class StoreTransactionRequest extends
       return this;
     }
     /**
-     * <code>.kademlia.Transaction transaction = 2;</code>
+     * <code>.kademlia.Transaction transaction = 3;</code>
      */
     public Builder mergeTransaction(kademlia.Transaction value) {
       if (transactionBuilder_ == null) {
@@ -705,7 +766,7 @@ public  final class StoreTransactionRequest extends
       return this;
     }
     /**
-     * <code>.kademlia.Transaction transaction = 2;</code>
+     * <code>.kademlia.Transaction transaction = 3;</code>
      */
     public Builder clearTransaction() {
       if (transactionBuilder_ == null) {
@@ -719,7 +780,7 @@ public  final class StoreTransactionRequest extends
       return this;
     }
     /**
-     * <code>.kademlia.Transaction transaction = 2;</code>
+     * <code>.kademlia.Transaction transaction = 3;</code>
      */
     public kademlia.Transaction.Builder getTransactionBuilder() {
       
@@ -727,7 +788,7 @@ public  final class StoreTransactionRequest extends
       return getTransactionFieldBuilder().getBuilder();
     }
     /**
-     * <code>.kademlia.Transaction transaction = 2;</code>
+     * <code>.kademlia.Transaction transaction = 3;</code>
      */
     public kademlia.TransactionOrBuilder getTransactionOrBuilder() {
       if (transactionBuilder_ != null) {
@@ -738,7 +799,7 @@ public  final class StoreTransactionRequest extends
       }
     }
     /**
-     * <code>.kademlia.Transaction transaction = 2;</code>
+     * <code>.kademlia.Transaction transaction = 3;</code>
      */
     private com.google.protobuf.SingleFieldBuilderV3<
         kademlia.Transaction, kademlia.Transaction.Builder, kademlia.TransactionOrBuilder> 
