@@ -10,6 +10,7 @@ public class KademliaNode
 
     public int port;
     public LocalDateTime time;
+    public static int reputation;
 
 
     public KademliaNode(String ipAdress, byte[] nodeId,int port)
@@ -19,6 +20,7 @@ public class KademliaNode
         this.port = port;
         this.nodeId = nodeId;
         this.time = LocalDateTime.now();
+        reputation = 0;
     }
 
 
@@ -26,6 +28,10 @@ public class KademliaNode
     {
         return time;
     }
+
+    public void setReputation(int val) { reputation = val; }
+
+    public int getReputation() { return reputation; }
 
     public void setTime()
     {

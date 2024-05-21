@@ -1,5 +1,6 @@
 package kademlia;
 
+import auctions.BrokerService;
 import com.google.protobuf.ByteString;
 import io.grpc.ManagedChannel;
 import io.grpc.ManagedChannelBuilder;

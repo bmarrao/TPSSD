@@ -3,12 +3,13 @@ package blockchain;
 
 import kademlia.Node;
 import kademlia.Offer;
+import kademlia.SignatureClass;
 
 import java.util.*;
 
 public class Blockchain
 {
-    private List<Block> chain;
+    private final List<Block> chain;
     private final int difficulty;
     HashMap<byte[] ,Transaction > transactions;
     // Constructor
@@ -23,8 +24,8 @@ public class Blockchain
     // Create the genesis block
     private Block createGenesisBlock() {
         // Implement logic to create the first block in the blockchain
-        ArrayList<Transaction> transactions = new ArrayList<Transaction>();
-        Block genesisBlock = new Block("", transactions, 0);
+        ArrayList<Transaction> transactions = new ArrayList<>();
+        Block genesisBlock = new Block("", transactions);
         // Ensure the genesis block has valid proof-of-work
         genesisBlock.mineBlock(difficulty);
 
@@ -94,28 +95,59 @@ public class Blockchain
     }
 
 
-    // Used by consensus group to verify validity of keyblocks and then pin one of them, then choose a new leader
-    /*
-    public void pinKeyblock(ArrayList<Block> keyblocks, int minReputation) {
-        // TODO: verificar a validade da hash e da reputationScore
-        for (Block keyblock : keyblocks) {
-            if (!isHashValid(keyblock.getHash()) || !(keyblock.getReputationScore() >= minReputation)) {
-                keyblocks.remove(keyblock);
-                keyblock.setReputationScore(-100);
+    public boolean isBlockValid(Block block, int difficulty, float repIncreasePercentage) {
+        int currRepScore = block.getReputation();
+
+        // Verify previous block reference and that POW was done
+        String target = new String(new char[difficulty]).replace('\0', '0');
+        String bcLatestBlockHash = getLatestBlock().getHash();
+        String previousBlockHash = block.getPreviousHash();
+        if (!bcLatestBlockHash.equals(previousBlockHash) || !block.getHash().startsWith(target)) {
+            block.setReputation(0);
+            return false;
+        }
+
+        // Verify block signature
+        byte[] infoToVerify = {
+                Byte.parseByte(block.getPreviousHash()),
+                (byte) block.getTimestamp(),
+                (byte) block.getNonce(),
+                Byte.parseByte(String.valueOf(block.getTransactionList())),
+                Byte.parseByte(block.getHash()),
+                (byte) block.getReputation()
+        };
+
+        try {
+            if (!SignatureClass.verify(infoToVerify, block.getSignature(), block.getPublicKey().getEncoded())) {
+                block.setReputation(0);
+                return false;
+            }
+        }
+        catch(Exception e) {
+            e.printStackTrace();
+        }
+
+        // Verify block transactions
+        ArrayList<Transaction> transactions = block.getTransactionList();
+        if (transactions.isEmpty()) {
+            block.setReputation(0);
+            return false;
+        }
+        for (Transaction transaction : transactions) {
+            if (transaction.getAmount() <= 0 || transaction.getSender() == null || transaction.getReceiver() == null) {
+                block.setReputation(0);
+                return false;
             }
         }
 
-        // TODO: pin one of the keyblocks
-        Block pinnedKeyblock = null;
-
-        // miner que criou o keyblock que foi pinned recebe um reward
-        pinnedKeyblock.setReputationScore(100);
-
-        // escolher aleatoriamente novo lider do CG
-        Random random = new Random(0);
-        int randomIndex = random.nextInt(consensusGroup.size());
-        String leader = consensusGroup.get(randomIndex);
+        // increases reputation based on defined percentage
+        if (currRepScore != 0) {
+            block.setReputation((int) ((currRepScore * repIncreasePercentage) + currRepScore));
+        }
+        else {
+            block.setReputation((int) (0.01 + currRepScore)); // TODO: mudar
+        }
+        return true;
     }
-    */
 }
 
