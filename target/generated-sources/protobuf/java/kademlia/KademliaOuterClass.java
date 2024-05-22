@@ -107,7 +107,7 @@ public final class KademliaOuterClass {
       "\022\n\n\002ip\030\002 \001(\t\022\014\n\004port\030\003 \001(\r\022\017\n\007randomX\030\004 " +
       "\001(\014\"\"\n\rNodeSignature\022\021\n\tsignature\030\001 \001(\014\"" +
       "4\n\005Offer\022\034\n\004node\030\001 \001(\0132\016.kademlia.Node\022\r" +
-      "\n\005price\030\002 \001(\002\"z\n\013Transaction\022\n\n\002id\030\001 \001(\t",
+      "\n\005price\030\002 \001(\002\"z\n\013Transaction\022\n\n\002id\030\001 \001(\014",
       "\022\014\n\004type\030\002 \001(\r\022\035\n\005owner\030\003 \001(\0132\016.kademlia" +
       ".Node\022\037\n\006sender\030\004 \001(\0132\017.kademlia.Offer\022\021" +
       "\n\tsignature\030\005 \001(\014\"\241\001\n\tgrpcBlock\022\020\n\010prevH" +

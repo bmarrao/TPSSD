@@ -5,6 +5,7 @@ import auctions.BrokerService;
 import blockchain.Blockchain;
 import blockchain.Transaction;
 
+import java.io.UnsupportedEncodingException;
 import java.security.NoSuchAlgorithmException;
 import java.util.Arrays;
 import java.util.Scanner;
@@ -112,7 +113,13 @@ public class UserInterface {
         //
         KademliaNode receiverNode = new KademliaNode("","".getBytes(),0);
 
-        boolean didTransactionGoThrough = k.protocol.storeTransactionOp(new Transaction(receiverNode, bidAmount, serviceID, blockchain.Transaction.TransactionType.BID ));
+        boolean didTransactionGoThrough = false;
+
+        try {
+            didTransactionGoThrough = k.protocol.storeTransactionOp(new Transaction(receiverNode, bidAmount, serviceID, Transaction.TransactionType.BID ));
+        } catch (UnsupportedEncodingException e) {
+            throw new RuntimeException(e);
+        }
 
         if (didTransactionGoThrough)
         {

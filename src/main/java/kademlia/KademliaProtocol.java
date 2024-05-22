@@ -5,6 +5,7 @@ import com.google.protobuf.ByteString;
 import io.grpc.ManagedChannel;
 import io.grpc.ManagedChannelBuilder;
 
+import java.io.UnsupportedEncodingException;
 import java.nio.charset.StandardCharsets;
 import java.security.PrivateKey;
 import java.security.PublicKey;
@@ -120,7 +121,7 @@ public class KademliaProtocol {
     }
 
     //TODO Implementar KademliaIMPL para lidar com a resposta
-    public boolean storeTransactionOp(blockchain.Transaction t) {
+    public boolean storeTransactionOp(blockchain.Transaction t) throws UnsupportedEncodingException {
 
         byte[] receiverNodeID = t.getReceiver().getNodeId();
 
@@ -147,7 +148,7 @@ public class KademliaProtocol {
         Offer senderOffer = Offer.newBuilder().setNode(senderNode).setPrice(t.getPrice()).build();
 
         Transaction transaction = Transaction.newBuilder()
-                .setId(t.getServiceID())
+                .setId(ByteString.copyFrom(t.getServiceID(), "UTF-8"))
                 .setType(transactionType)
                 .setOwner(ownerNode)
                 .setSender(senderOffer)

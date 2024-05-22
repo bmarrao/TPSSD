@@ -12,18 +12,9 @@ public interface TransactionOrBuilder extends
    * Tipo 1: inicio de auction | Tipo 2: bid/proposta | Tipo 3: fecho de auction
    * </pre>
    *
-   * <code>string id = 1;</code>
+   * <code>bytes id = 1;</code>
    */
-  java.lang.String getId();
-  /**
-   * <pre>
-   * Tipo 1: inicio de auction | Tipo 2: bid/proposta | Tipo 3: fecho de auction
-   * </pre>
-   *
-   * <code>string id = 1;</code>
-   */
-  com.google.protobuf.ByteString
-      getIdBytes();
+  com.google.protobuf.ByteString getId();
 
   /**
    * <code>uint32 type = 2;</code>
