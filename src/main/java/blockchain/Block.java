@@ -7,6 +7,7 @@ import java.security.*;
 import java.util.ArrayList;
 import java.util.Date;
 
+import kademlia.Node;
 import kademlia.SignatureClass;
 import org.bouncycastle.jcajce.provider.digest.SHA256;
 import java.nio.charset.StandardCharsets;
@@ -85,13 +86,39 @@ public class Block
 
     public PublicKey getPublicKey() { return this.publicKey; }
 
-
+    public Transaction lookFor (byte[] serviceId, Node Owner)
+    {
+        for(Transaction t : transactionList)
+        {
+            if (compareId(serviceId,t.getServiceID().getBytes()) && Owner.equals(t.getReceiver()))
+            {
+                return t;
+            }
+        }
+        return null;
+    }
     private void generateKeyPair() throws NoSuchAlgorithmException {
         KeyPairGenerator keyPairGen = KeyPairGenerator.getInstance("RSA");
         keyPairGen.initialize(2048);
         KeyPair pair = keyPairGen.generateKeyPair();
         this.publicKey = pair.getPublic();
         this.privateKey = pair.getPrivate();
+    }
+    private boolean compareId(byte[] id1, byte[] id2)
+    {
+
+        // Iterate through each byte and compare them
+        for (int i = 0; i < id1.length; i++)
+        {
+            if (id1[i] != id2[i])
+            {
+                return false; // If any byte differs, return false
+            }
+        }
+
+
+        // If all bytes are the same, return true
+        return true;
     }
 
 

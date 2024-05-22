@@ -81,10 +81,17 @@ public class Blockchain
     }
 
 
-    public Transaction getInformation(String service)
+    public Transaction getInformation(String service, Node owner)
     {
         byte[] serviceId = encryptService(service);
-        //TODO : FINISH THIS METHOD
+        for (Block b : this.chain)
+        {
+            Transaction t = b.lookFor(serviceId,owner);
+            if (t != null)
+            {
+                return t;
+            }
+        }
         return null;
     }
     public byte[] addSubscribe(String service)

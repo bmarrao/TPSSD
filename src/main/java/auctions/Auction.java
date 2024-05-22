@@ -58,27 +58,6 @@ public class Auction
     }
 
 
-
-    public float getPrice(byte[] serviceId)
-    {
-        l.lock();
-        BrokerService bs = this.getService(serviceId);
-        l.unlock();
-        float price = -1;
-        if (bs != null)
-        {
-            bs.l.lock();
-            price = bs.getPrice();
-            bs.l.unlock();
-        }
-        else
-        {
-            l.unlock();
-        }
-        return price;
-
-    }
-
     private boolean compareId(byte[] id1, byte[] id2)
     {
 
