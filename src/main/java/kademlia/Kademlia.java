@@ -266,21 +266,19 @@ public class Kademlia
         return allResults.get(0);
     }
 
-    /*
-    TODO UNCOMMENT THIS
     public Transaction sKadBlockLookup(byte[] nodeId, int d_closest_nodes)
     {
         // get closest nodes to destinationKey (non recursive)
         ArrayList<Node> closestNodes = rt.findClosestNode(nodeId, d_closest_nodes);
-        Block[] results = new Transaction[closestNodes.size()];
-        ArrayList<Transaction> allResults = new ArrayList<>();
+        grpcBlock[] results = new grpcBlock[closestNodes.size()];
+        ArrayList<grpcBlock> allResults = new ArrayList<>();
 
         Thread[] threads = new Thread[closestNodes.size()];
 
         int i = 0;
         for (Node n : closestNodes)
         {
-            final Block currentResults = results[i]; // Final variable capturing the current results
+            final grpcBlock currentResults = results[i]; // Final variable capturing the current results
             KademliaBlockLookUp lk = new KademliaBlockLookUp(protocol, rt, currentResults, nodeId, d_closest_nodes, n);
             threads[i] = new Thread(() -> {
                 lk.run();
@@ -310,7 +308,6 @@ public class Kademlia
 
         return allResults.get(0);
     }
-         */
 
     /*
     // node id generation without crypto puzzles

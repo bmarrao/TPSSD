@@ -6,22 +6,26 @@ import kademlia.Node;
 import kademlia.Offer;
 import kademlia.SignatureClass;
 
+import javax.accessibility.AccessibleIcon;
+import java.lang.reflect.Array;
 import java.nio.charset.StandardCharsets;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 import java.util.*;
 
+
 public class Blockchain
 {
     private final List<Block> chain;
     private final int difficulty;
-    HashMap<byte[] ,Transaction > transactions;
+    HashMap<AuctionId ,Transaction > activeAuctions;
     ArrayList<byte[]> topicsSubscribed;
     // Constructor
     public Blockchain(int initialDifficulty)
     {
         this.chain = new ArrayList<>();
         this.topicsSubscribed = new ArrayList<>();
+        this.activeAuctions = new HashMap<>();
         this.difficulty = initialDifficulty;
         Block genesis = createGenesisBlock();
         this.chain.add(genesis);
@@ -84,15 +88,21 @@ public class Blockchain
     public Transaction getInformation(String service, Node owner)
     {
         byte[] serviceId = encryptService(service);
-        for (Block b : this.chain)
+        return this.activeAuctions.get(new AuctionId(serviceId, owner));
+    }
+
+    public ArrayList<Transaction> getInformation(String service)
+    {
+        byte[] serviceId = encryptService(service);
+        ArrayList<Transaction> ret = new ArrayList<>();
+        for (Transaction t : this.activeAuctions.values())
         {
-            Transaction t = b.lookFor(serviceId,owner);
-            if (t != null)
+            if (compareId(t.getServiceID(),serviceId)
             {
-                return t;
+                ret.add(t);
             }
         }
-        return null;
+        return ret;
     }
     public byte[] addSubscribe(String service)
     {
@@ -224,6 +234,21 @@ public class Blockchain
             block.setReputation((int) (0.01 + currRepScore)); // TODO: mudar
         }
         return true;
+    }
+    public class AuctionId
+    {
+        byte[] serviceId;
+        Node Owner;
+        AuctionId(byte[] serviceId, Node owner)
+        {
+            this.serviceId = serviceId;
+            this.Owner = owner;
+        }
+
+        public boolean equals(AuctionId a)
+        {
+            return compareId(a.serviceId,this.serviceId) && a.Owner.equals(this.Owner);
+        }
     }
 }
 

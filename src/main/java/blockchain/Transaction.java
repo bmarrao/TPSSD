@@ -13,11 +13,11 @@ public class Transaction {
     private KademliaNode sender;
     private KademliaNode receiver;
     private float price;
-    private String serviceID;
+    private byte[] serviceID;
 
     private TransactionType type;
 
-    public Transaction(KademliaNode owner, float price, String serviceID, TransactionType type) {
+    public Transaction(KademliaNode owner, float price, byte[] serviceID, TransactionType type) {
         this.receiver = owner;
         this.price = price;
         this.serviceID = serviceID;
@@ -48,11 +48,11 @@ public class Transaction {
         this.price = price;
     }
 
-    public String getServiceID() {
+    public byte[] getServiceID() {
         return serviceID;
     }
 
-    public void setServiceID(String serviceID) {
+    public void setServiceID(byte[] serviceID) {
         this.serviceID = serviceID;
     }
 

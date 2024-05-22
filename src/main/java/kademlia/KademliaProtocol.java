@@ -377,9 +377,8 @@ public class KademliaProtocol {
         }
         return null;
     }
-
-    /*
-    public FindBlockResponse findAuctionOp(byte[] key, String receiverIp, int receiverPort)
+    // TODO UNDO PROTO
+    public FindBlockResponse findBlockOp(byte[] key, String receiverIp, int receiverPort)
     {
         ManagedChannel channel = ManagedChannelBuilder.forAddress(receiverIp, receiverPort).usePlaintext().build();
 
@@ -418,12 +417,12 @@ public class KademliaProtocol {
                 .setPublicKey(ByteString.copyFrom(publicKey.getEncoded()))
                 .setSignature(ByteString.copyFrom(signature)).build();
 
-        FindAuctionResponse response = stub.findBlock(request);
+        FindBlockResponse response = stub.findBlock(request);
 
         // Check response's signature
         boolean signVal = false;
         byte[] idToVerify = response.getId().toByteArray();
-        byte[] valueToVerify = response.getT().toByteArray();
+        byte[] valueToVerify = response.getB().toByteArray();
         byte[] infoToVerify = new byte[idToVerify.length + valueToVerify.length];
         // TODO assinar novos nos ?
         System.arraycopy(idToVerify, 0, infoToVerify, 0, idToVerify.length);
@@ -445,6 +444,5 @@ public class KademliaProtocol {
         }
         return null;
     }
-*/
 
 }

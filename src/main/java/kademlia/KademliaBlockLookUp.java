@@ -5,22 +5,17 @@ import java.util.*;
 
 public class KademliaBlockLookUp implements Runnable
 {
-    @Override
-    public void run() {
-
-    }
-    /*
     public static KademliaRoutingTable rt;
     public static KademliaProtocol protocol;
-    Block t; ;
+    grpcBlock b; ;
     byte[] key ;
     int a ;
     Node n;
-    KademliaBlockLookUp(KademliaProtocol protocol, KademliaRoutingTable rt, Transaction t, byte[] key, int a, Node n)
+    KademliaBlockLookUp(KademliaProtocol protocol, KademliaRoutingTable rt, grpcBlock b, byte[] key, int a, Node n)
     {
         this.rt = rt;
         this.protocol = protocol;
-        this.t= t;
+        this.b= b;
         this.key = key ;
         this.a = a ;
         this.n = n;
@@ -37,11 +32,11 @@ public class KademliaBlockLookUp implements Runnable
             return distance1.compareTo(distance2);
         });
         // Start by finding the closest nodes in the routing table to the target key
-        FindAuctionResponse response = protocol.findAuctionOp(key, n.getIp(), n.getPort());
+        FindAuctionResponse response = protocol.findBlockOp(key, n.getIp(), n.getPort());
 
         if (response.getHasTransaction())
         {
-            this.t = response.getT();
+            this.b = response.getB();
         } else
         {
             closestNodesQueue.addAll(response.getNodesList());
@@ -58,7 +53,7 @@ public class KademliaBlockLookUp implements Runnable
 
                     if (response.getHasTransaction())
                     {
-                        this.t = response.getT();
+                        this.b = response.getT();
                         break;
                     }
                     List<Node> additionalClosestNodes = response.getNodesList();
@@ -81,5 +76,4 @@ public class KademliaBlockLookUp implements Runnable
     }
 
 
-     */
 }

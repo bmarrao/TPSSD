@@ -7,6 +7,7 @@ import blockchain.Transaction;
 
 import java.io.UnsupportedEncodingException;
 import java.security.NoSuchAlgorithmException;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Scanner;
 
@@ -25,24 +26,22 @@ public class UserInterface {
             System.out.println("================== MAIN MENU =================");
             System.out.println("Select one of the following options:");
             System.out.println("1) Subscribe/unsubscribe to auctions or get information");
-            System.out.println("2) Place bid");
-            System.out.println("3) Create auction");
-            System.out.println("4) View account");
-            System.out.println("5) Exit");
+            System.out.println("2) Create auction");
+            System.out.println("3) View account");
+            System.out.println("4) Exit");
 
             int option = Integer.parseInt(sc.nextLine());
 
             switch (option) {
                 case 1:
+                    System.out.println("Pick the number of the auction from the previous ones ");
+                    int auction = sc.nextInt();
                     viewAuctions();
                     break;
                 case 2:
-                    placeBid();
-                    break;
-                case 3:
                     createAuction();
                     break;
-                case 4:
+                case 3:
                     //System.out.println("-> Balance: ");
                     System.out.println("-> Reputation: " + kn.getReputation());
                     break;
@@ -62,7 +61,7 @@ public class UserInterface {
             System.out.println("Select one of the following options:");
             System.out.println("1. Subscribe to an auctionId");
             System.out.println("2. Unsubscribe to an auctionId");
-            System.out.println("3. Get Information");
+            System.out.println("3. Get Information and bid ");
             System.out.println("4. Back to main menu");
 
             int option = Integer.parseInt(sc.nextLine());
@@ -91,7 +90,8 @@ public class UserInterface {
                 case 3 :
                     System.out.print("Enter name of service\n-> ");
                     service = sc.nextLine();
-                    Transaction latestInformationOnBlockChain= bc.getInformation(service);
+                    ArrayList<Transaction> latestInformationOnBlockChain= bc.getInformation(service);
+                    showAuctionsInformation(latestInformationOnBlockChain);
                     break;
                 case 4:
                     return;
@@ -102,10 +102,54 @@ public class UserInterface {
         }
     }
 
-    private static void placeBid() {
+    private static void showAuctionsInformation(ArrayList<Transaction> latestInformationOnBlockChain)
+    {
+        System.out.println("============= Information about auctions =============");
+        int i = 1;
+        for(Transaction t : latestInformationOnBlockChain)
+        {
+            KademliaNode owner = t.getReceiver();
+
+            System.out.println(i);
+            // Print all owner attributes
+            System.out.println("Owner - IP Address: " + owner.ipAdress);
+            System.out.println("Owner - Port: " + owner.getPort());
+            System.out.println("Owner - Reputation: " + KademliaNode.reputation);
+            System.out.println("Price: " + t.getPrice());
+            i++;
+        }
+
+            System.out.println("Please select an option:");
+            System.out.println("1. Place a Bid");
+            System.out.println("2. Go Back");
+            System.out.println("3. Leave and Go to Main Menu");
+            System.out.print("Enter your choice (1, 2, or 3): ");
+
+            String choice = sc.nextLine();
+
+        switch (choice) {
+            case "1":
+                System.out.println("Pick the number of the auction");
+                int auction = sc.nextInt();
+                Transaction t = latestInformationOnBlockChain.get(i-1);
+                placeBid(t.getServiceID(),t.getReceiver());
+                break;
+            case "2":
+                viewAuctions();
+                break;
+            case "3":
+                mainMenu();
+                break;
+            default:
+                System.out.println("Invalid choice. Please try again.");
+                break;
+
+        }
+        sc.nextLine();
+    }
+
+    private static void placeBid(byte[] serviceId, KademliaNode owner) {
         System.out.println("============= PLACE BID SUB-MENU =============");
-        System.out.print("Enter auction service ID\n-> ");
-        String serviceID = sc.nextLine();
         System.out.print("Enter bid amount\n-> ");
         float bidAmount = Float.parseFloat(sc.nextLine());
 
@@ -116,7 +160,7 @@ public class UserInterface {
         boolean didTransactionGoThrough = false;
 
         try {
-            didTransactionGoThrough = k.protocol.storeTransactionOp(new Transaction(receiverNode, bidAmount, serviceID, Transaction.TransactionType.BID ));
+            didTransactionGoThrough = k.protocol.storeTransactionOp(new Transaction(owner, bidAmount, serviceId, Transaction.TransactionType.BID ));
         } catch (UnsupportedEncodingException e) {
             throw new RuntimeException(e);
         }
