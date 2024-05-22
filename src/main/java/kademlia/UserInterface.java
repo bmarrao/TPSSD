@@ -62,7 +62,7 @@ public class UserInterface {
             System.out.println("1. Subscribe to an auctionId");
             System.out.println("2. Unsubscribe to an auctionId");
             System.out.println("3. Get Information");
-            System.out.println("3   . Back to main menu");
+            System.out.println("4. Back to main menu");
 
             int option = Integer.parseInt(sc.nextLine());
             String service = "";
@@ -93,7 +93,7 @@ public class UserInterface {
                     Transaction latestInformationOnBlockChain= bc.getInformation(service);
                     break;
                 case 4:
-                    break;
+                    return;
                 default:
                     System.out.println("Error: invalid parameter");
                     break;

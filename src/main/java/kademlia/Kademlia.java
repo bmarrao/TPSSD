@@ -55,38 +55,25 @@ public class Kademlia
             e.printStackTrace();
         }
 
+        protocol = new KademliaProtocol(nodeId, ip, port, generatedPk, generatedSk,randomX);
+
+        rt = new KrtBootStrap(nodeId,protocol,
+                Integer.parseInt(properties.getProperty("bucket.size")),
+                Integer.parseInt(properties.getProperty("siblingList.size")));
+
+        System.out.println("Initializing blockchain...");
+        bc = new Blockchain(Integer.parseInt(properties.getProperty("blockchain.difficulty")));
+
+        KademliaServer server = new KademliaServer(port,  new Auction(this,bc),leadingZeros,generatedPk, generatedSk);
+
+        Thread serverThread = new Thread(server);
+        serverThread.start();
+
         if (nodeType.equals("bootstrap"))
         {
-            protocol = new KademliaProtocol(nodeId, ip, port, generatedPk, generatedSk,randomX);
-            rt = new KrtBootStrap(nodeId,protocol,
-                    Integer.parseInt(properties.getProperty("bucket.size")),
-                    Integer.parseInt(properties.getProperty("siblingList.size")));
-
-            System.out.println("Initializing blockchain...");
-            bc = new Blockchain(Integer.parseInt(properties.getProperty("blockchain.difficulty")));
-
-            KademliaServer server = new KademliaServer(port,  new Auction(this,bc),leadingZeros,generatedPk, generatedSk);
-
-            Thread serverThread = new Thread(server);
-            serverThread.start();
-
             addIpPortBSFile(ip, port, bootstrapFilePath);
         }
         else {
-            protocol = new KademliaProtocol(nodeId, ip, port, generatedPk, generatedSk, randomX);
-
-            rt = new KrtBootStrap(nodeId, protocol,
-                    Integer.parseInt(properties.getProperty("bucket.size")),
-                    Integer.parseInt(properties.getProperty("siblingList.size")));
-
-            System.out.println("Initializing blockchain...");
-            bc = new Blockchain(Integer.parseInt(properties.getProperty("blockchain.difficulty")));
-
-            KademliaServer server = new KademliaServer(port,
-                    new Auction(new Kademlia("normal", ip, port), bc), leadingZeros, generatedPk, generatedSk);
-            Thread serverThread = new Thread(server);
-            serverThread.start();
-
             // Randomly select one bootstrap node from BootstrapNodes.txt to contact
             List<String> bootstrapNodesInfo = getBootstrapNodesInfo(bootstrapFilePath);
             String selectedBootstrap = selectRandomBootstrapNode(bootstrapNodesInfo);
