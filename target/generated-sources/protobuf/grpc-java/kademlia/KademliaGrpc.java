@@ -40,6 +40,18 @@ public final class KademliaGrpc {
               kademlia.PingResponse.getDefaultInstance()))
           .build();
   @io.grpc.ExperimentalApi("https://github.com/grpc/grpc-java/issues/1901")
+  public static final io.grpc.MethodDescriptor<kademlia.StoreBlockRequest,
+      kademlia.StoreBlockResponse> METHOD_STORE_BLOCK =
+      io.grpc.MethodDescriptor.<kademlia.StoreBlockRequest, kademlia.StoreBlockResponse>newBuilder()
+          .setType(io.grpc.MethodDescriptor.MethodType.UNARY)
+          .setFullMethodName(generateFullMethodName(
+              "kademlia.Kademlia", "storeBlock"))
+          .setRequestMarshaller(io.grpc.protobuf.ProtoUtils.marshaller(
+              kademlia.StoreBlockRequest.getDefaultInstance()))
+          .setResponseMarshaller(io.grpc.protobuf.ProtoUtils.marshaller(
+              kademlia.StoreBlockResponse.getDefaultInstance()))
+          .build();
+  @io.grpc.ExperimentalApi("https://github.com/grpc/grpc-java/issues/1901")
   public static final io.grpc.MethodDescriptor<kademlia.StoreTransactionRequest,
       kademlia.StoreTransactionResponse> METHOD_STORE_TRANSACTION =
       io.grpc.MethodDescriptor.<kademlia.StoreTransactionRequest, kademlia.StoreTransactionResponse>newBuilder()
@@ -114,6 +126,16 @@ public final class KademliaGrpc {
     }
 
     /**
+     * <pre>
+     * store a [key, value] pair for later retrieval
+     * </pre>
+     */
+    public void storeBlock(kademlia.StoreBlockRequest request,
+        io.grpc.stub.StreamObserver<kademlia.StoreBlockResponse> responseObserver) {
+      asyncUnimplementedUnaryCall(METHOD_STORE_BLOCK, responseObserver);
+    }
+
+    /**
      */
     public void storeTransaction(kademlia.StoreTransactionRequest request,
         io.grpc.stub.StreamObserver<kademlia.StoreTransactionResponse> responseObserver) {
@@ -146,6 +168,13 @@ public final class KademliaGrpc {
                 kademlia.PingRequest,
                 kademlia.PingResponse>(
                   this, METHODID_PING)))
+          .addMethod(
+            METHOD_STORE_BLOCK,
+            asyncUnaryCall(
+              new MethodHandlers<
+                kademlia.StoreBlockRequest,
+                kademlia.StoreBlockResponse>(
+                  this, METHODID_STORE_BLOCK)))
           .addMethod(
             METHOD_STORE_TRANSACTION,
             asyncUnaryCall(
@@ -198,6 +227,17 @@ public final class KademliaGrpc {
         io.grpc.stub.StreamObserver<kademlia.PingResponse> responseObserver) {
       asyncUnaryCall(
           getChannel().newCall(METHOD_PING, getCallOptions()), request, responseObserver);
+    }
+
+    /**
+     * <pre>
+     * store a [key, value] pair for later retrieval
+     * </pre>
+     */
+    public void storeBlock(kademlia.StoreBlockRequest request,
+        io.grpc.stub.StreamObserver<kademlia.StoreBlockResponse> responseObserver) {
+      asyncUnaryCall(
+          getChannel().newCall(METHOD_STORE_BLOCK, getCallOptions()), request, responseObserver);
     }
 
     /**
@@ -257,6 +297,16 @@ public final class KademliaGrpc {
     }
 
     /**
+     * <pre>
+     * store a [key, value] pair for later retrieval
+     * </pre>
+     */
+    public kademlia.StoreBlockResponse storeBlock(kademlia.StoreBlockRequest request) {
+      return blockingUnaryCall(
+          getChannel(), METHOD_STORE_BLOCK, getCallOptions(), request);
+    }
+
+    /**
      */
     public kademlia.StoreTransactionResponse storeTransaction(kademlia.StoreTransactionRequest request) {
       return blockingUnaryCall(
@@ -311,6 +361,17 @@ public final class KademliaGrpc {
     }
 
     /**
+     * <pre>
+     * store a [key, value] pair for later retrieval
+     * </pre>
+     */
+    public com.google.common.util.concurrent.ListenableFuture<kademlia.StoreBlockResponse> storeBlock(
+        kademlia.StoreBlockRequest request) {
+      return futureUnaryCall(
+          getChannel().newCall(METHOD_STORE_BLOCK, getCallOptions()), request);
+    }
+
+    /**
      */
     public com.google.common.util.concurrent.ListenableFuture<kademlia.StoreTransactionResponse> storeTransaction(
         kademlia.StoreTransactionRequest request) {
@@ -339,9 +400,10 @@ public final class KademliaGrpc {
   }
 
   private static final int METHODID_PING = 0;
-  private static final int METHODID_STORE_TRANSACTION = 1;
-  private static final int METHODID_FIND_NODE = 2;
-  private static final int METHODID_FIND_AUCTION = 3;
+  private static final int METHODID_STORE_BLOCK = 1;
+  private static final int METHODID_STORE_TRANSACTION = 2;
+  private static final int METHODID_FIND_NODE = 3;
+  private static final int METHODID_FIND_AUCTION = 4;
 
   private static final class MethodHandlers<Req, Resp> implements
       io.grpc.stub.ServerCalls.UnaryMethod<Req, Resp>,
@@ -363,6 +425,10 @@ public final class KademliaGrpc {
         case METHODID_PING:
           serviceImpl.ping((kademlia.PingRequest) request,
               (io.grpc.stub.StreamObserver<kademlia.PingResponse>) responseObserver);
+          break;
+        case METHODID_STORE_BLOCK:
+          serviceImpl.storeBlock((kademlia.StoreBlockRequest) request,
+              (io.grpc.stub.StreamObserver<kademlia.StoreBlockResponse>) responseObserver);
           break;
         case METHODID_STORE_TRANSACTION:
           serviceImpl.storeTransaction((kademlia.StoreTransactionRequest) request,
@@ -410,6 +476,7 @@ public final class KademliaGrpc {
           serviceDescriptor = result = io.grpc.ServiceDescriptor.newBuilder(SERVICE_NAME)
               .setSchemaDescriptor(new KademliaDescriptorSupplier())
               .addMethod(METHOD_PING)
+              .addMethod(METHOD_STORE_BLOCK)
               .addMethod(METHOD_STORE_TRANSACTION)
               .addMethod(METHOD_FIND_NODE)
               .addMethod(METHOD_FIND_AUCTION)
