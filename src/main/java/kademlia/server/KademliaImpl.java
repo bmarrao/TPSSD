@@ -403,11 +403,55 @@ public class KademliaImpl extends KademliaGrpc.KademliaImplBase
         }
 
     }
-
-
-
      */
 
+    @Override
+    public void storeTransaction(StoreTransactionRequest request, StreamObserver<StoreTransactionResponse> responseObserver) {
+
+        // Retrieve the nodeID from the request
+        byte[] nodeID = request.getNodeID().toByteArray();
+        byte[] signature = request.getSignature().toByteArray();
+
+        // Verify signature
+        boolean signVal = false;
+        byte[] senderNodeToVerify = request.getNode().toByteArray();
+        byte[] transactionToVerify = request.getTransaction().toByteArray();
+
+        int senderAndTransactionLength = senderNodeToVerify.length + transactionToVerify.length;
+        int totalLength = senderAndTransactionLength + nodeID.length;
 
 
+        byte[] infoToVerify = new byte[totalLength];
+        System.arraycopy(senderNodeToVerify, 0, infoToVerify, 0, senderNodeToVerify.length);;
+        System.arraycopy(transactionToVerify, 0, infoToVerify, senderNodeToVerify.length, transactionToVerify.length );;
+        System.arraycopy(nodeID, 0, infoToVerify, senderAndTransactionLength, nodeID.length);
+
+        try {
+            signVal = SignatureClass.verify(infoToVerify, signature, request.getPublicKey().toByteArray());
+        }
+        catch(Exception e) {
+            e.printStackTrace();
+        }
+
+        if (signVal && arePuzzlesValid(request.getNode().getId().toByteArray(), request.getNode().getRandomX().byteAt(0))) {
+
+
+
+
+
+        }
+        else if (!signVal)
+        {
+            System.out.println("Signature is invalid, discarding find node request...");
+        }
+        else
+        {
+            System.out.println("Node didn't solve crypto puzzles, discarding find node request...");
+        }
+    }
+
+    @Override
+    public void storeBlock(StoreBlockRequest request, StreamObserver<StoreBlockResponse> responseObserver) {
+        super.storeBlock(request, responseObserver);
+    }
 }
