@@ -148,7 +148,7 @@ public class KademliaProtocol {
         Offer senderOffer = Offer.newBuilder().setNode(senderNode).setPrice(t.getPrice()).build();
 
         Transaction transaction = Transaction.newBuilder()
-                .setId(ByteString.copyFrom(t.getServiceID(), "UTF-8"))
+                .setId(ByteString.copyFrom(t.getServiceID()))
                 .setType(transactionType)
                 .setOwner(ownerNode)
                 .setSender(senderOffer)

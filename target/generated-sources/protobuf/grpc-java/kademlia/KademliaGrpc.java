@@ -76,6 +76,18 @@ public final class KademliaGrpc {
               kademlia.FindNodeResponse.getDefaultInstance()))
           .build();
   @io.grpc.ExperimentalApi("https://github.com/grpc/grpc-java/issues/1901")
+  public static final io.grpc.MethodDescriptor<kademlia.FindBlockRequest,
+      kademlia.FindBlockResponse> METHOD_FIND_BLOCK =
+      io.grpc.MethodDescriptor.<kademlia.FindBlockRequest, kademlia.FindBlockResponse>newBuilder()
+          .setType(io.grpc.MethodDescriptor.MethodType.UNARY)
+          .setFullMethodName(generateFullMethodName(
+              "kademlia.Kademlia", "findBlock"))
+          .setRequestMarshaller(io.grpc.protobuf.ProtoUtils.marshaller(
+              kademlia.FindBlockRequest.getDefaultInstance()))
+          .setResponseMarshaller(io.grpc.protobuf.ProtoUtils.marshaller(
+              kademlia.FindBlockResponse.getDefaultInstance()))
+          .build();
+  @io.grpc.ExperimentalApi("https://github.com/grpc/grpc-java/issues/1901")
   public static final io.grpc.MethodDescriptor<kademlia.FindAuctionRequest,
       kademlia.FindAuctionResponse> METHOD_FIND_AUCTION =
       io.grpc.MethodDescriptor.<kademlia.FindAuctionRequest, kademlia.FindAuctionResponse>newBuilder()
@@ -153,6 +165,16 @@ public final class KademliaGrpc {
     }
 
     /**
+     * <pre>
+     * similar to findNode + if RPC recipient received a STORE for the given key then it returns the stored value
+     * </pre>
+     */
+    public void findBlock(kademlia.FindBlockRequest request,
+        io.grpc.stub.StreamObserver<kademlia.FindBlockResponse> responseObserver) {
+      asyncUnimplementedUnaryCall(METHOD_FIND_BLOCK, responseObserver);
+    }
+
+    /**
      */
     public void findAuction(kademlia.FindAuctionRequest request,
         io.grpc.stub.StreamObserver<kademlia.FindAuctionResponse> responseObserver) {
@@ -189,6 +211,13 @@ public final class KademliaGrpc {
                 kademlia.FindNodeRequest,
                 kademlia.FindNodeResponse>(
                   this, METHODID_FIND_NODE)))
+          .addMethod(
+            METHOD_FIND_BLOCK,
+            asyncUnaryCall(
+              new MethodHandlers<
+                kademlia.FindBlockRequest,
+                kademlia.FindBlockResponse>(
+                  this, METHODID_FIND_BLOCK)))
           .addMethod(
             METHOD_FIND_AUCTION,
             asyncUnaryCall(
@@ -260,6 +289,17 @@ public final class KademliaGrpc {
     }
 
     /**
+     * <pre>
+     * similar to findNode + if RPC recipient received a STORE for the given key then it returns the stored value
+     * </pre>
+     */
+    public void findBlock(kademlia.FindBlockRequest request,
+        io.grpc.stub.StreamObserver<kademlia.FindBlockResponse> responseObserver) {
+      asyncUnaryCall(
+          getChannel().newCall(METHOD_FIND_BLOCK, getCallOptions()), request, responseObserver);
+    }
+
+    /**
      */
     public void findAuction(kademlia.FindAuctionRequest request,
         io.grpc.stub.StreamObserver<kademlia.FindAuctionResponse> responseObserver) {
@@ -321,6 +361,16 @@ public final class KademliaGrpc {
     public kademlia.FindNodeResponse findNode(kademlia.FindNodeRequest request) {
       return blockingUnaryCall(
           getChannel(), METHOD_FIND_NODE, getCallOptions(), request);
+    }
+
+    /**
+     * <pre>
+     * similar to findNode + if RPC recipient received a STORE for the given key then it returns the stored value
+     * </pre>
+     */
+    public kademlia.FindBlockResponse findBlock(kademlia.FindBlockRequest request) {
+      return blockingUnaryCall(
+          getChannel(), METHOD_FIND_BLOCK, getCallOptions(), request);
     }
 
     /**
@@ -391,6 +441,17 @@ public final class KademliaGrpc {
     }
 
     /**
+     * <pre>
+     * similar to findNode + if RPC recipient received a STORE for the given key then it returns the stored value
+     * </pre>
+     */
+    public com.google.common.util.concurrent.ListenableFuture<kademlia.FindBlockResponse> findBlock(
+        kademlia.FindBlockRequest request) {
+      return futureUnaryCall(
+          getChannel().newCall(METHOD_FIND_BLOCK, getCallOptions()), request);
+    }
+
+    /**
      */
     public com.google.common.util.concurrent.ListenableFuture<kademlia.FindAuctionResponse> findAuction(
         kademlia.FindAuctionRequest request) {
@@ -403,7 +464,8 @@ public final class KademliaGrpc {
   private static final int METHODID_STORE_BLOCK = 1;
   private static final int METHODID_STORE_TRANSACTION = 2;
   private static final int METHODID_FIND_NODE = 3;
-  private static final int METHODID_FIND_AUCTION = 4;
+  private static final int METHODID_FIND_BLOCK = 4;
+  private static final int METHODID_FIND_AUCTION = 5;
 
   private static final class MethodHandlers<Req, Resp> implements
       io.grpc.stub.ServerCalls.UnaryMethod<Req, Resp>,
@@ -437,6 +499,10 @@ public final class KademliaGrpc {
         case METHODID_FIND_NODE:
           serviceImpl.findNode((kademlia.FindNodeRequest) request,
               (io.grpc.stub.StreamObserver<kademlia.FindNodeResponse>) responseObserver);
+          break;
+        case METHODID_FIND_BLOCK:
+          serviceImpl.findBlock((kademlia.FindBlockRequest) request,
+              (io.grpc.stub.StreamObserver<kademlia.FindBlockResponse>) responseObserver);
           break;
         case METHODID_FIND_AUCTION:
           serviceImpl.findAuction((kademlia.FindAuctionRequest) request,
@@ -479,6 +545,7 @@ public final class KademliaGrpc {
               .addMethod(METHOD_STORE_BLOCK)
               .addMethod(METHOD_STORE_TRANSACTION)
               .addMethod(METHOD_FIND_NODE)
+              .addMethod(METHOD_FIND_BLOCK)
               .addMethod(METHOD_FIND_AUCTION)
               .build();
         }

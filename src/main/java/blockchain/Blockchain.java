@@ -97,7 +97,7 @@ public class Blockchain
         ArrayList<Transaction> ret = new ArrayList<>();
         for (Transaction t : this.activeAuctions.values())
         {
-            if (compareId(t.getServiceID(),serviceId)
+            if (compareId(t.getServiceID(),serviceId))
             {
                 ret.add(t);
             }

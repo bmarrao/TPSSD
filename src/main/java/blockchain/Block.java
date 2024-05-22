@@ -90,7 +90,7 @@ public class Block
     {
         for(Transaction t : transactionList)
         {
-            if (compareId(serviceId,t.getServiceID().getBytes()) && Owner.equals(t.getReceiver()))
+            if (compareId(serviceId,t.getServiceID()) && Owner.equals(t.getReceiver()))
             {
                 return t;
             }

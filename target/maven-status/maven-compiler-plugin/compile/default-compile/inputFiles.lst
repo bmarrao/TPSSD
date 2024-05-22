@@ -1,5 +1,7 @@
+/Users/hugoferreira/Desktop/Hugo/Study/Faculdade/SSD_2024/TPSSD/target/generated-sources/protobuf/java/kademlia/FindBlockRequestOrBuilder.java
 /Users/hugoferreira/Desktop/Hugo/Study/Faculdade/SSD_2024/TPSSD/src/main/java/kademlia/Kademlia.java
 /Users/hugoferreira/Desktop/Hugo/Study/Faculdade/SSD_2024/TPSSD/src/main/java/kademlia/KademliaTeste.java
+/Users/hugoferreira/Desktop/Hugo/Study/Faculdade/SSD_2024/TPSSD/target/generated-sources/protobuf/java/kademlia/FindBlockRequest.java
 /Users/hugoferreira/Desktop/Hugo/Study/Faculdade/SSD_2024/TPSSD/src/main/java/blockchain/Blockchain.java
 /Users/hugoferreira/Desktop/Hugo/Study/Faculdade/SSD_2024/TPSSD/target/generated-sources/protobuf/java/kademlia/grpcBlock.java
 /Users/hugoferreira/Desktop/Hugo/Study/Faculdade/SSD_2024/TPSSD/src/main/java/kademlia/KademliaAuctionLookUp.java
@@ -26,6 +28,8 @@
 /Users/hugoferreira/Desktop/Hugo/Study/Faculdade/SSD_2024/TPSSD/target/generated-sources/protobuf/java/kademlia/PingRequestOrBuilder.java
 /Users/hugoferreira/Desktop/Hugo/Study/Faculdade/SSD_2024/TPSSD/target/generated-sources/protobuf/grpc-java/kademlia/KademliaGrpc.java
 /Users/hugoferreira/Desktop/Hugo/Study/Faculdade/SSD_2024/TPSSD/target/generated-sources/protobuf/java/kademlia/NodeSignatureOrBuilder.java
+/Users/hugoferreira/Desktop/Hugo/Study/Faculdade/SSD_2024/TPSSD/target/generated-sources/protobuf/java/kademlia/FindBlockResponse.java
+/Users/hugoferreira/Desktop/Hugo/Study/Faculdade/SSD_2024/TPSSD/target/generated-sources/protobuf/java/kademlia/FindBlockResponseOrBuilder.java
 /Users/hugoferreira/Desktop/Hugo/Study/Faculdade/SSD_2024/TPSSD/target/generated-sources/protobuf/java/kademlia/grpcBlockOrBuilder.java
 /Users/hugoferreira/Desktop/Hugo/Study/Faculdade/SSD_2024/TPSSD/src/main/java/kademlia/KrtBootStrap.java
 /Users/hugoferreira/Desktop/Hugo/Study/Faculdade/SSD_2024/TPSSD/target/generated-sources/protobuf/java/kademlia/FindAuctionRequest.java

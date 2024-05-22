@@ -1,6 +1,7 @@
 package kademlia.server;
 import auctions.Auction;
 
+import blockchain.Block;
 import com.google.protobuf.ByteString;
 import io.grpc.stub.StreamObserver;
 import kademlia.*;
@@ -9,6 +10,7 @@ import java.security.*;
 import java.util.ArrayList;
 import java.util.List;
 
+import static kademlia.Kademlia.bc;
 import static kademlia.Kademlia.rt;
 
 
@@ -435,9 +437,28 @@ public class KademliaImpl extends KademliaGrpc.KademliaImplBase
 
         if (signVal && arePuzzlesValid(request.getNode().getId().toByteArray(), request.getNode().getRandomX().byteAt(0))) {
 
+            //Creates a new instance of storage. If already exists, use it.
+            rt.insert(request.getNode(), 1);
+
+            //TODO Lógica
 
 
+            // Sign RPC response
+            try {
+                signature = SignatureClass.sign(request.getNode().getId().toByteArray(), privateKey);
+            }
+            catch(Exception e) {
+                e.printStackTrace();
+            }
 
+            StoreTransactionResponse response = StoreTransactionResponse.newBuilder()
+                    .setId(request.getNode().getId())
+                    .setStored(true)
+                    .setPublicKey(ByteString.copyFrom(publicKey.getEncoded()))
+                    .setSignature(ByteString.copyFrom(signature)).build();
+
+            responseObserver.onNext(response);
+            responseObserver.onCompleted();
 
         }
         else if (!signVal)
@@ -452,6 +473,138 @@ public class KademliaImpl extends KademliaGrpc.KademliaImplBase
 
     @Override
     public void storeBlock(StoreBlockRequest request, StreamObserver<StoreBlockResponse> responseObserver) {
-        super.storeBlock(request, responseObserver);
+
+        // Retrieve the nodeID from the request
+        //TODO do I need nodeID?
+        byte[] nodeID = request.getNode().getId().toByteArray();
+        byte[] signature = request.getSignature().toByteArray();
+
+        // Verify signature
+        boolean signVal = false;
+        byte[] senderNodeToVerify = request.getNode().toByteArray();
+        byte[] receiverNodeToVerify = request.getReceiver().toByteArray();
+        byte[] blockToVerify = request.getBlock().toByteArray();
+
+        int senderAndReceiverLength = senderNodeToVerify.length + receiverNodeToVerify.length;
+        int totalLength = senderAndReceiverLength + blockToVerify.length;
+
+
+        byte[] infoToVerify = new byte[totalLength];
+        System.arraycopy(senderNodeToVerify, 0, infoToVerify, 0, senderNodeToVerify.length);;
+        System.arraycopy(receiverNodeToVerify, 0, infoToVerify, senderNodeToVerify.length, receiverNodeToVerify.length );;
+        System.arraycopy(blockToVerify, 0, infoToVerify, senderAndReceiverLength, blockToVerify.length);
+
+        try {
+            signVal = SignatureClass.verify(infoToVerify, signature, request.getPublicKey().toByteArray());
+        }
+        catch(Exception e) {
+            e.printStackTrace();
+        }
+
+        if (signVal && arePuzzlesValid(request.getNode().getId().toByteArray(), request.getNode().getRandomX().byteAt(0))) {
+
+            //Creates a new instance of storage. If already exists, use it.
+            rt.insert(request.getNode(), 1);
+
+            ArrayList<blockchain.Transaction> transactions = new ArrayList<>();
+
+            for(Transaction transaction : request.getBlock().getTransList()){
+
+                blockchain.Transaction convertedTransaction = convertGRPCTransaction(transaction);
+                transactions.add(convertedTransaction);
+
+            }
+
+            String previousHash = request.getBlock().getPrevHash().toString();
+
+            Block newBlock = new Block(previousHash, transactions);
+
+            //TODO Verificar Lógica
+            bc.addBlock(newBlock);
+
+            //Check if chain is valid!
+            if(!bc.isChainValid()){
+
+                System.out.println("Blockchain is invalid, discarding store block request...");
+
+            }else {
+
+                // Sign RPC response
+                try {
+                    signature = SignatureClass.sign(request.getNode().getId().toByteArray(), privateKey);
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+
+                StoreBlockResponse response = StoreBlockResponse.newBuilder()
+                        .setId(request.getNode().getId())
+                        .setStored(true)
+                        .setPublicKey(ByteString.copyFrom(publicKey.getEncoded()))
+                        .setSignature(ByteString.copyFrom(signature)).build();
+
+                responseObserver.onNext(response);
+                responseObserver.onCompleted();
+
+            }
+
+        }
+        else if (!signVal)
+        {
+            System.out.println("Signature is invalid, discarding store block request...");
+        }
+        else
+        {
+            System.out.println("Node didn't solve crypto puzzles, discarding store block request...");
+        }
     }
+
+    private blockchain.Transaction convertGRPCTransaction(Transaction grpcTransaction)
+    {
+
+        Node ownerNode = grpcTransaction.getOwner();
+
+        KademliaNode convertedOwner = convertGRPCNode(ownerNode);
+
+        float price = grpcTransaction.getSender().getPrice();
+
+        byte[] serviceID = grpcTransaction.getId().toByteArray();
+
+        blockchain.Transaction.TransactionType transactionType = convertTransactionType(grpcTransaction.getType());
+
+        blockchain.Transaction convertedTransaction = new blockchain.Transaction(convertedOwner, price, serviceID, transactionType);
+
+        return convertedTransaction;
+
+    }
+
+    private KademliaNode convertGRPCNode(Node grpcNode)
+    {
+        KademliaNode convertedNode = new KademliaNode(grpcNode.getIp(), grpcNode.getId().toByteArray() , grpcNode.getPort());
+
+        return convertedNode;
+    }
+
+    private blockchain.Transaction.TransactionType convertTransactionType(int type)
+    {
+
+        //There are 3 Transactions Type:
+        // 0 -> Bid
+        // 1 -> NewAuction
+        // 2 -> CloseAuction
+        blockchain.Transaction.TransactionType transactionType = blockchain.Transaction.TransactionType.BID;
+
+        switch (type) {
+            case 1:
+                transactionType = blockchain.Transaction.TransactionType.OPENING;
+                break;
+            case 2:
+                transactionType = blockchain.Transaction.TransactionType.CLOSURE;
+                break;
+            default:
+                break;
+        }
+
+        return transactionType;
+    }
+
 }

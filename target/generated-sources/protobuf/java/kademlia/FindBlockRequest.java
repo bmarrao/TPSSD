@@ -4,18 +4,18 @@
 package kademlia;
 
 /**
- * Protobuf type {@code kademlia.FindAuctionRequest}
+ * Protobuf type {@code kademlia.FindBlockRequest}
  */
-public  final class FindAuctionRequest extends
+public  final class FindBlockRequest extends
     com.google.protobuf.GeneratedMessageV3 implements
-    // @@protoc_insertion_point(message_implements:kademlia.FindAuctionRequest)
-    FindAuctionRequestOrBuilder {
-  // Use FindAuctionRequest.newBuilder() to construct.
-  private FindAuctionRequest(com.google.protobuf.GeneratedMessageV3.Builder<?> builder) {
+    // @@protoc_insertion_point(message_implements:kademlia.FindBlockRequest)
+    FindBlockRequestOrBuilder {
+  // Use FindBlockRequest.newBuilder() to construct.
+  private FindBlockRequest(com.google.protobuf.GeneratedMessageV3.Builder<?> builder) {
     super(builder);
   }
-  private FindAuctionRequest() {
-    nodeID_ = com.google.protobuf.ByteString.EMPTY;
+  private FindBlockRequest() {
+    key_ = com.google.protobuf.ByteString.EMPTY;
     publicKey_ = com.google.protobuf.ByteString.EMPTY;
     signature_ = com.google.protobuf.ByteString.EMPTY;
   }
@@ -25,7 +25,7 @@ public  final class FindAuctionRequest extends
   getUnknownFields() {
     return com.google.protobuf.UnknownFieldSet.getDefaultInstance();
   }
-  private FindAuctionRequest(
+  private FindBlockRequest(
       com.google.protobuf.CodedInputStream input,
       com.google.protobuf.ExtensionRegistryLite extensionRegistry)
       throws com.google.protobuf.InvalidProtocolBufferException {
@@ -60,7 +60,7 @@ public  final class FindAuctionRequest extends
           }
           case 18: {
 
-            nodeID_ = input.readBytes();
+            key_ = input.readBytes();
             break;
           }
           case 26: {
@@ -86,14 +86,14 @@ public  final class FindAuctionRequest extends
   }
   public static final com.google.protobuf.Descriptors.Descriptor
       getDescriptor() {
-    return kademlia.KademliaOuterClass.internal_static_kademlia_FindAuctionRequest_descriptor;
+    return kademlia.KademliaOuterClass.internal_static_kademlia_FindBlockRequest_descriptor;
   }
 
   protected com.google.protobuf.GeneratedMessageV3.FieldAccessorTable
       internalGetFieldAccessorTable() {
-    return kademlia.KademliaOuterClass.internal_static_kademlia_FindAuctionRequest_fieldAccessorTable
+    return kademlia.KademliaOuterClass.internal_static_kademlia_FindBlockRequest_fieldAccessorTable
         .ensureFieldAccessorsInitialized(
-            kademlia.FindAuctionRequest.class, kademlia.FindAuctionRequest.Builder.class);
+            kademlia.FindBlockRequest.class, kademlia.FindBlockRequest.Builder.class);
   }
 
   public static final int NODE_FIELD_NUMBER = 1;
@@ -117,13 +117,13 @@ public  final class FindAuctionRequest extends
     return getNode();
   }
 
-  public static final int NODEID_FIELD_NUMBER = 2;
-  private com.google.protobuf.ByteString nodeID_;
+  public static final int KEY_FIELD_NUMBER = 2;
+  private com.google.protobuf.ByteString key_;
   /**
-   * <code>bytes nodeID = 2;</code>
+   * <code>bytes key = 2;</code>
    */
-  public com.google.protobuf.ByteString getNodeID() {
-    return nodeID_;
+  public com.google.protobuf.ByteString getKey() {
+    return key_;
   }
 
   public static final int PUBLICKEY_FIELD_NUMBER = 3;
@@ -159,8 +159,8 @@ public  final class FindAuctionRequest extends
     if (node_ != null) {
       output.writeMessage(1, getNode());
     }
-    if (!nodeID_.isEmpty()) {
-      output.writeBytes(2, nodeID_);
+    if (!key_.isEmpty()) {
+      output.writeBytes(2, key_);
     }
     if (!publicKey_.isEmpty()) {
       output.writeBytes(3, publicKey_);
@@ -179,9 +179,9 @@ public  final class FindAuctionRequest extends
       size += com.google.protobuf.CodedOutputStream
         .computeMessageSize(1, getNode());
     }
-    if (!nodeID_.isEmpty()) {
+    if (!key_.isEmpty()) {
       size += com.google.protobuf.CodedOutputStream
-        .computeBytesSize(2, nodeID_);
+        .computeBytesSize(2, key_);
     }
     if (!publicKey_.isEmpty()) {
       size += com.google.protobuf.CodedOutputStream
@@ -201,10 +201,10 @@ public  final class FindAuctionRequest extends
     if (obj == this) {
      return true;
     }
-    if (!(obj instanceof kademlia.FindAuctionRequest)) {
+    if (!(obj instanceof kademlia.FindBlockRequest)) {
       return super.equals(obj);
     }
-    kademlia.FindAuctionRequest other = (kademlia.FindAuctionRequest) obj;
+    kademlia.FindBlockRequest other = (kademlia.FindBlockRequest) obj;
 
     boolean result = true;
     result = result && (hasNode() == other.hasNode());
@@ -212,8 +212,8 @@ public  final class FindAuctionRequest extends
       result = result && getNode()
           .equals(other.getNode());
     }
-    result = result && getNodeID()
-        .equals(other.getNodeID());
+    result = result && getKey()
+        .equals(other.getKey());
     result = result && getPublicKey()
         .equals(other.getPublicKey());
     result = result && getSignature()
@@ -232,8 +232,8 @@ public  final class FindAuctionRequest extends
       hash = (37 * hash) + NODE_FIELD_NUMBER;
       hash = (53 * hash) + getNode().hashCode();
     }
-    hash = (37 * hash) + NODEID_FIELD_NUMBER;
-    hash = (53 * hash) + getNodeID().hashCode();
+    hash = (37 * hash) + KEY_FIELD_NUMBER;
+    hash = (53 * hash) + getKey().hashCode();
     hash = (37 * hash) + PUBLICKEY_FIELD_NUMBER;
     hash = (53 * hash) + getPublicKey().hashCode();
     hash = (37 * hash) + SIGNATURE_FIELD_NUMBER;
@@ -243,69 +243,69 @@ public  final class FindAuctionRequest extends
     return hash;
   }
 
-  public static kademlia.FindAuctionRequest parseFrom(
+  public static kademlia.FindBlockRequest parseFrom(
       java.nio.ByteBuffer data)
       throws com.google.protobuf.InvalidProtocolBufferException {
     return PARSER.parseFrom(data);
   }
-  public static kademlia.FindAuctionRequest parseFrom(
+  public static kademlia.FindBlockRequest parseFrom(
       java.nio.ByteBuffer data,
       com.google.protobuf.ExtensionRegistryLite extensionRegistry)
       throws com.google.protobuf.InvalidProtocolBufferException {
     return PARSER.parseFrom(data, extensionRegistry);
   }
-  public static kademlia.FindAuctionRequest parseFrom(
+  public static kademlia.FindBlockRequest parseFrom(
       com.google.protobuf.ByteString data)
       throws com.google.protobuf.InvalidProtocolBufferException {
     return PARSER.parseFrom(data);
   }
-  public static kademlia.FindAuctionRequest parseFrom(
+  public static kademlia.FindBlockRequest parseFrom(
       com.google.protobuf.ByteString data,
       com.google.protobuf.ExtensionRegistryLite extensionRegistry)
       throws com.google.protobuf.InvalidProtocolBufferException {
     return PARSER.parseFrom(data, extensionRegistry);
   }
-  public static kademlia.FindAuctionRequest parseFrom(byte[] data)
+  public static kademlia.FindBlockRequest parseFrom(byte[] data)
       throws com.google.protobuf.InvalidProtocolBufferException {
     return PARSER.parseFrom(data);
   }
-  public static kademlia.FindAuctionRequest parseFrom(
+  public static kademlia.FindBlockRequest parseFrom(
       byte[] data,
       com.google.protobuf.ExtensionRegistryLite extensionRegistry)
       throws com.google.protobuf.InvalidProtocolBufferException {
     return PARSER.parseFrom(data, extensionRegistry);
   }
-  public static kademlia.FindAuctionRequest parseFrom(java.io.InputStream input)
+  public static kademlia.FindBlockRequest parseFrom(java.io.InputStream input)
       throws java.io.IOException {
     return com.google.protobuf.GeneratedMessageV3
         .parseWithIOException(PARSER, input);
   }
-  public static kademlia.FindAuctionRequest parseFrom(
+  public static kademlia.FindBlockRequest parseFrom(
       java.io.InputStream input,
       com.google.protobuf.ExtensionRegistryLite extensionRegistry)
       throws java.io.IOException {
     return com.google.protobuf.GeneratedMessageV3
         .parseWithIOException(PARSER, input, extensionRegistry);
   }
-  public static kademlia.FindAuctionRequest parseDelimitedFrom(java.io.InputStream input)
+  public static kademlia.FindBlockRequest parseDelimitedFrom(java.io.InputStream input)
       throws java.io.IOException {
     return com.google.protobuf.GeneratedMessageV3
         .parseDelimitedWithIOException(PARSER, input);
   }
-  public static kademlia.FindAuctionRequest parseDelimitedFrom(
+  public static kademlia.FindBlockRequest parseDelimitedFrom(
       java.io.InputStream input,
       com.google.protobuf.ExtensionRegistryLite extensionRegistry)
       throws java.io.IOException {
     return com.google.protobuf.GeneratedMessageV3
         .parseDelimitedWithIOException(PARSER, input, extensionRegistry);
   }
-  public static kademlia.FindAuctionRequest parseFrom(
+  public static kademlia.FindBlockRequest parseFrom(
       com.google.protobuf.CodedInputStream input)
       throws java.io.IOException {
     return com.google.protobuf.GeneratedMessageV3
         .parseWithIOException(PARSER, input);
   }
-  public static kademlia.FindAuctionRequest parseFrom(
+  public static kademlia.FindBlockRequest parseFrom(
       com.google.protobuf.CodedInputStream input,
       com.google.protobuf.ExtensionRegistryLite extensionRegistry)
       throws java.io.IOException {
@@ -317,7 +317,7 @@ public  final class FindAuctionRequest extends
   public static Builder newBuilder() {
     return DEFAULT_INSTANCE.toBuilder();
   }
-  public static Builder newBuilder(kademlia.FindAuctionRequest prototype) {
+  public static Builder newBuilder(kademlia.FindBlockRequest prototype) {
     return DEFAULT_INSTANCE.toBuilder().mergeFrom(prototype);
   }
   public Builder toBuilder() {
@@ -332,25 +332,25 @@ public  final class FindAuctionRequest extends
     return builder;
   }
   /**
-   * Protobuf type {@code kademlia.FindAuctionRequest}
+   * Protobuf type {@code kademlia.FindBlockRequest}
    */
   public static final class Builder extends
       com.google.protobuf.GeneratedMessageV3.Builder<Builder> implements
-      // @@protoc_insertion_point(builder_implements:kademlia.FindAuctionRequest)
-      kademlia.FindAuctionRequestOrBuilder {
+      // @@protoc_insertion_point(builder_implements:kademlia.FindBlockRequest)
+      kademlia.FindBlockRequestOrBuilder {
     public static final com.google.protobuf.Descriptors.Descriptor
         getDescriptor() {
-      return kademlia.KademliaOuterClass.internal_static_kademlia_FindAuctionRequest_descriptor;
+      return kademlia.KademliaOuterClass.internal_static_kademlia_FindBlockRequest_descriptor;
     }
 
     protected com.google.protobuf.GeneratedMessageV3.FieldAccessorTable
         internalGetFieldAccessorTable() {
-      return kademlia.KademliaOuterClass.internal_static_kademlia_FindAuctionRequest_fieldAccessorTable
+      return kademlia.KademliaOuterClass.internal_static_kademlia_FindBlockRequest_fieldAccessorTable
           .ensureFieldAccessorsInitialized(
-              kademlia.FindAuctionRequest.class, kademlia.FindAuctionRequest.Builder.class);
+              kademlia.FindBlockRequest.class, kademlia.FindBlockRequest.Builder.class);
     }
 
-    // Construct using kademlia.FindAuctionRequest.newBuilder()
+    // Construct using kademlia.FindBlockRequest.newBuilder()
     private Builder() {
       maybeForceBuilderInitialization();
     }
@@ -373,7 +373,7 @@ public  final class FindAuctionRequest extends
         node_ = null;
         nodeBuilder_ = null;
       }
-      nodeID_ = com.google.protobuf.ByteString.EMPTY;
+      key_ = com.google.protobuf.ByteString.EMPTY;
 
       publicKey_ = com.google.protobuf.ByteString.EMPTY;
 
@@ -384,29 +384,29 @@ public  final class FindAuctionRequest extends
 
     public com.google.protobuf.Descriptors.Descriptor
         getDescriptorForType() {
-      return kademlia.KademliaOuterClass.internal_static_kademlia_FindAuctionRequest_descriptor;
+      return kademlia.KademliaOuterClass.internal_static_kademlia_FindBlockRequest_descriptor;
     }
 
-    public kademlia.FindAuctionRequest getDefaultInstanceForType() {
-      return kademlia.FindAuctionRequest.getDefaultInstance();
+    public kademlia.FindBlockRequest getDefaultInstanceForType() {
+      return kademlia.FindBlockRequest.getDefaultInstance();
     }
 
-    public kademlia.FindAuctionRequest build() {
-      kademlia.FindAuctionRequest result = buildPartial();
+    public kademlia.FindBlockRequest build() {
+      kademlia.FindBlockRequest result = buildPartial();
       if (!result.isInitialized()) {
         throw newUninitializedMessageException(result);
       }
       return result;
     }
 
-    public kademlia.FindAuctionRequest buildPartial() {
-      kademlia.FindAuctionRequest result = new kademlia.FindAuctionRequest(this);
+    public kademlia.FindBlockRequest buildPartial() {
+      kademlia.FindBlockRequest result = new kademlia.FindBlockRequest(this);
       if (nodeBuilder_ == null) {
         result.node_ = node_;
       } else {
         result.node_ = nodeBuilder_.build();
       }
-      result.nodeID_ = nodeID_;
+      result.key_ = key_;
       result.publicKey_ = publicKey_;
       result.signature_ = signature_;
       onBuilt();
@@ -440,21 +440,21 @@ public  final class FindAuctionRequest extends
       return (Builder) super.addRepeatedField(field, value);
     }
     public Builder mergeFrom(com.google.protobuf.Message other) {
-      if (other instanceof kademlia.FindAuctionRequest) {
-        return mergeFrom((kademlia.FindAuctionRequest)other);
+      if (other instanceof kademlia.FindBlockRequest) {
+        return mergeFrom((kademlia.FindBlockRequest)other);
       } else {
         super.mergeFrom(other);
         return this;
       }
     }
 
-    public Builder mergeFrom(kademlia.FindAuctionRequest other) {
-      if (other == kademlia.FindAuctionRequest.getDefaultInstance()) return this;
+    public Builder mergeFrom(kademlia.FindBlockRequest other) {
+      if (other == kademlia.FindBlockRequest.getDefaultInstance()) return this;
       if (other.hasNode()) {
         mergeNode(other.getNode());
       }
-      if (other.getNodeID() != com.google.protobuf.ByteString.EMPTY) {
-        setNodeID(other.getNodeID());
+      if (other.getKey() != com.google.protobuf.ByteString.EMPTY) {
+        setKey(other.getKey());
       }
       if (other.getPublicKey() != com.google.protobuf.ByteString.EMPTY) {
         setPublicKey(other.getPublicKey());
@@ -474,11 +474,11 @@ public  final class FindAuctionRequest extends
         com.google.protobuf.CodedInputStream input,
         com.google.protobuf.ExtensionRegistryLite extensionRegistry)
         throws java.io.IOException {
-      kademlia.FindAuctionRequest parsedMessage = null;
+      kademlia.FindBlockRequest parsedMessage = null;
       try {
         parsedMessage = PARSER.parsePartialFrom(input, extensionRegistry);
       } catch (com.google.protobuf.InvalidProtocolBufferException e) {
-        parsedMessage = (kademlia.FindAuctionRequest) e.getUnfinishedMessage();
+        parsedMessage = (kademlia.FindBlockRequest) e.getUnfinishedMessage();
         throw e.unwrapIOException();
       } finally {
         if (parsedMessage != null) {
@@ -605,31 +605,31 @@ public  final class FindAuctionRequest extends
       return nodeBuilder_;
     }
 
-    private com.google.protobuf.ByteString nodeID_ = com.google.protobuf.ByteString.EMPTY;
+    private com.google.protobuf.ByteString key_ = com.google.protobuf.ByteString.EMPTY;
     /**
-     * <code>bytes nodeID = 2;</code>
+     * <code>bytes key = 2;</code>
      */
-    public com.google.protobuf.ByteString getNodeID() {
-      return nodeID_;
+    public com.google.protobuf.ByteString getKey() {
+      return key_;
     }
     /**
-     * <code>bytes nodeID = 2;</code>
+     * <code>bytes key = 2;</code>
      */
-    public Builder setNodeID(com.google.protobuf.ByteString value) {
+    public Builder setKey(com.google.protobuf.ByteString value) {
       if (value == null) {
     throw new NullPointerException();
   }
   
-      nodeID_ = value;
+      key_ = value;
       onChanged();
       return this;
     }
     /**
-     * <code>bytes nodeID = 2;</code>
+     * <code>bytes key = 2;</code>
      */
-    public Builder clearNodeID() {
+    public Builder clearKey() {
       
-      nodeID_ = getDefaultInstance().getNodeID();
+      key_ = getDefaultInstance().getKey();
       onChanged();
       return this;
     }
@@ -702,39 +702,39 @@ public  final class FindAuctionRequest extends
     }
 
 
-    // @@protoc_insertion_point(builder_scope:kademlia.FindAuctionRequest)
+    // @@protoc_insertion_point(builder_scope:kademlia.FindBlockRequest)
   }
 
-  // @@protoc_insertion_point(class_scope:kademlia.FindAuctionRequest)
-  private static final kademlia.FindAuctionRequest DEFAULT_INSTANCE;
+  // @@protoc_insertion_point(class_scope:kademlia.FindBlockRequest)
+  private static final kademlia.FindBlockRequest DEFAULT_INSTANCE;
   static {
-    DEFAULT_INSTANCE = new kademlia.FindAuctionRequest();
+    DEFAULT_INSTANCE = new kademlia.FindBlockRequest();
   }
 
-  public static kademlia.FindAuctionRequest getDefaultInstance() {
+  public static kademlia.FindBlockRequest getDefaultInstance() {
     return DEFAULT_INSTANCE;
   }
 
-  private static final com.google.protobuf.Parser<FindAuctionRequest>
-      PARSER = new com.google.protobuf.AbstractParser<FindAuctionRequest>() {
-    public FindAuctionRequest parsePartialFrom(
+  private static final com.google.protobuf.Parser<FindBlockRequest>
+      PARSER = new com.google.protobuf.AbstractParser<FindBlockRequest>() {
+    public FindBlockRequest parsePartialFrom(
         com.google.protobuf.CodedInputStream input,
         com.google.protobuf.ExtensionRegistryLite extensionRegistry)
         throws com.google.protobuf.InvalidProtocolBufferException {
-        return new FindAuctionRequest(input, extensionRegistry);
+        return new FindBlockRequest(input, extensionRegistry);
     }
   };
 
-  public static com.google.protobuf.Parser<FindAuctionRequest> parser() {
+  public static com.google.protobuf.Parser<FindBlockRequest> parser() {
     return PARSER;
   }
 
   @java.lang.Override
-  public com.google.protobuf.Parser<FindAuctionRequest> getParserForType() {
+  public com.google.protobuf.Parser<FindBlockRequest> getParserForType() {
     return PARSER;
   }
 
-  public kademlia.FindAuctionRequest getDefaultInstanceForType() {
+  public kademlia.FindBlockRequest getDefaultInstanceForType() {
     return DEFAULT_INSTANCE;
   }
 

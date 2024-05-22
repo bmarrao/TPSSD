@@ -113,7 +113,7 @@ message FindNodeResponse
   bytes idSignature = 4;
 }
 
-/*
+
 message FindBlockRequest
 {
   Node node = 1;
@@ -126,14 +126,13 @@ message FindBlockResponse
 {
   bytes id = 1;
   bool hasBlcok = 2;
-  Block b = 3;
+  grpcBlock b = 3;
   repeated Node nodes = 4;
   bytes publicKey = 5;
   bytes signature = 6;
 }
 
 
- */
 message FindAuctionRequest
 {
   Node node = 1;
@@ -168,7 +167,7 @@ service Kademlia
   rpc findNode(FindNodeRequest) returns (FindNodeResponse);
 
   // similar to findNode + if RPC recipient received a STORE for the given key then it returns the stored value
-  //rpc findBlock(FindBlockRequest) returns (FindBlockResponse);
+  rpc findBlock(FindBlockRequest) returns (FindBlockResponse);
 
   rpc findAuction(FindAuctionRequest) returns (FindAuctionResponse);
 
