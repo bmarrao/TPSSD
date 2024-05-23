@@ -441,6 +441,7 @@ public class KademliaImpl extends KademliaGrpc.KademliaImplBase
             rt.insert(request.getNode(), 1);
 
             //TODO Lógica
+            //bc.validateTransactionsSignature();
             //bc.addTransaction();
                 //isTransactionValid();
                     //Verificar HashMap e ver se:
