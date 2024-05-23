@@ -27,9 +27,7 @@ public class Block
     private long timestamp;
     private int nonce;
     private ArrayList<Transaction> transactionList;
-    private PublicKey publicKey;
     private int reputationScore;
-    private PrivateKey privateKey;
     private byte[] signature;
 
     public Block(String previousHash, ArrayList<Transaction> transactionList)
@@ -39,17 +37,8 @@ public class Block
         this.nonce = 0;
         this.transactionList = transactionList;
         this.hash = calculateHash();
-
-        try {
-            generateKeyPair();
-        }
-        catch(Exception e) {
-            e.printStackTrace();
-        }
-
-        signBlockContent();
+        this.signature = null;
     }
-
     public Block(grpcBlock grpcBlock)
     {
         this.previousHash = grpcBlock.getPrevHash().toString();
@@ -62,7 +51,7 @@ public class Block
             this.transactionList.add(t);
         }
         this.nonce = grpcBlock.getNonce();
-
+        this.signature = grpcBlock.getSignature().toByteArray();
 
     }
 
@@ -70,16 +59,16 @@ public class Block
     {
         return this.node;
     }
-    
+
     public void setNode()
     {
-        return this.node;
+
     }
     public String getHash() {
         return hash;
     }
 
-    public int getReputation() { return reputation; }
+    public float getReputation() { return reputation; }
     public void setReputation(int reputationScore) { reputation = reputationScore; }
 
     public String getPreviousHash() {
@@ -112,7 +101,6 @@ public class Block
 
     public byte[] getSignature() { return this.signature; }
 
-    public PublicKey getPublicKey() { return this.publicKey; }
 
     public Transaction lookFor (byte[] serviceId, Node Owner)
     {
@@ -125,13 +113,7 @@ public class Block
         }
         return null;
     }
-    private void generateKeyPair() throws NoSuchAlgorithmException {
-        KeyPairGenerator keyPairGen = KeyPairGenerator.getInstance("RSA");
-        keyPairGen.initialize(2048);
-        KeyPair pair = keyPairGen.generateKeyPair();
-        this.publicKey = pair.getPublic();
-        this.privateKey = pair.getPrivate();
-    }
+
     private boolean compareId(byte[] id1, byte[] id2)
     {
 
@@ -172,7 +154,6 @@ public class Block
             outputStream.write(ByteBuffer.allocate(4).putInt(nonce).array());
             outputStream.write(ByteBuffer.allocate(4).putInt(reputationScore).array());
 
-            this.signature = SignatureClass.sign(outputStream.toByteArray(), this.privateKey);
             outputStream.close();
         }
         catch(Exception e) {

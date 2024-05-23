@@ -231,12 +231,26 @@ public class KademliaProtocol {
                 .setPort(receiverPort)
                 .setRandomX(ByteString.copyFrom(new byte[]{randomX})).build();
 
+        byte[] infoToSign =
+        {
+                Byte.parseByte(block.getPreviousHash()),
+                (byte) block.getTimestamp(),
+                (byte) block.getNonce(),
+                Byte.parseByte(String.valueOf(block.getTransactionList())),
+                Byte.parseByte(block.getHash()),
+        };
+        ByteString signedInfo;
+        try {
+            signedInfo = ByteString.copyFrom(SignatureClass.sign(infoToSign,this.privateKey));
+        } catch (Exception e) {
+            throw new RuntimeException(e);
+        }
         grpcBlock kBlock = grpcBlock.newBuilder()
                 .setPrevHash(ByteString.copyFrom(block.getPreviousHash(), StandardCharsets.UTF_8))
                 .setCurrentHash(ByteString.copyFrom(block.getHash(), StandardCharsets.UTF_8))
                 .setTimestamp(block.getTimestamp())
-                .setReputation(block.getReputation())
                 .setNonce(block.getNonce())
+                .setSignature(signedInfo)
                 .build();
 
         byte[] senderNodeToSign = senderNode.toByteArray();
@@ -246,7 +260,7 @@ public class KademliaProtocol {
         int senderAndReceiverLength = senderNodeToSign.length + receiverNodeToSign.length;
         int totalLength = senderAndReceiverLength + kBlockToSign.length;
 
-        byte[] infoToSign = new byte[totalLength];
+        infoToSign = new byte[totalLength];
 
         System.arraycopy(senderNodeToSign, 0, infoToSign, 0, senderNodeToSign.length);
         System.arraycopy(receiverNodeToSign, 0, infoToSign, senderNodeToSign.length, receiverNodeToSign.length);

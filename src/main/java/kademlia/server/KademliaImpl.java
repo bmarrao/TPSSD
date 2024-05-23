@@ -266,7 +266,7 @@ public class KademliaImpl extends KademliaGrpc.KademliaImplBase
         System.arraycopy(key, 0, infoToVerify, nodeToVerify.length, key.length);
 
         try {
-            signVal = SignatureClass.verify(infoToVerify, signature, request.getPublicKey().toByteArray());
+            signVal = SignatureClass.verify(infoToVerify, signature, request.getNode().getPublicKey().toByteArray());
         }
         catch(Exception e) {
             e.printStackTrace();

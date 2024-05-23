@@ -1,4 +1,4 @@
-syntax = "proto3";
+bsyntax = "proto3";
 
 import "google/protobuf/empty.proto";
 
@@ -47,14 +47,13 @@ message Transaction
 
 message grpcBlock
 {
-  Node block = 1;
+  Node node = 1;
   bytes prevHash = 2;
   bytes currentHash = 3;
   int64 timestamp = 4;
-  int32 reputation = 5;
-  int32 nonce = 6;
-  repeated Transaction trans = 7;
-  bytes signature = 8;
+  int32 nonce = 5;
+  repeated Transaction trans =6;
+  bytes signature = 7;
 }
 
 message StoreTransactionRequest

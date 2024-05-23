@@ -9,7 +9,7 @@ public class KademliaNode
     public int port;
     public byte[] publicKey;
     public LocalDateTime time;
-    public static int reputation;
+    public static float reputation;
 
 
     public KademliaNode(String ipAdress, byte[] nodeId,int port, byte[] publicKey)
@@ -62,9 +62,9 @@ public class KademliaNode
         return time;
     }
 
-    public void setReputation(int val) { reputation = val; }
+    public void setReputation(float val) { reputation = val; }
 
-    public int getReputation() { return reputation; }
+    public float getReputation() { return reputation; }
 
     public void setTime()
     {

@@ -59,10 +59,12 @@ public class Kademlia
 
         rt = new KademliaRoutingTable(nodeId,protocol,
                 Integer.parseInt(properties.getProperty("bucket.size")),
-                Integer.parseInt(properties.getProperty("siblingList.size")),generatedPk);
+                Integer.parseInt(properties.getProperty("siblingList.size")),
+                generatedPk,
+                Float.parseFloat(properties.getProperty("reputation.percentage")));
 
         System.out.println("Initializing blockchain...");
-        bc = new Blockchain(Integer.parseInt(properties.getProperty("blockchain.difficulty")));
+        bc = new Blockchain(Integer.parseInt(properties.getProperty("blockchain.difficulty")),this);
 
         KademliaServer server = new KademliaServer(port,  new Auction(this,bc),leadingZeros,generatedPk, generatedSk);
 

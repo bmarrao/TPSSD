@@ -114,20 +114,18 @@ public class Blockchain
     public byte[] addBlock(grpcBlock block)
     {
         Block block1 = new Block(block);
-        if (checkIfBlockIsValid(block1))
+        if (isBlockValid(block1))
         {
             chain.add(block1);
         }
         else
         {
-            if(checkIfOrphanBlockIsValid(block1))
-            {
-                orphanBlocks.add(block1);
-            }
+
         }
-        resolveForks();
+        //resolveForks();
         return null;
     }
+    /*
     private void resolveForks() {
         // Check all orphan blocks to see if they can be connected to the main chain
         List<Block> toBeRemoved = new ArrayList<>();
@@ -141,12 +139,12 @@ public class Blockchain
 
         // Optionally, implement more sophisticated fork resolution
     }
-
+    */
     private boolean hasValidTransactions(Block block, ArrayList<Transaction> transactions)
     {
         for (Transaction transaction : transactions)
         {
-            if(!(transaction.isSignatureValid()))
+            if(!isTransactionSignValid(transaction))
             {
                 return false;
             }
@@ -159,6 +157,7 @@ public class Blockchain
         boolean isValid = false;
 
         byte[] transactionOriginalSign = transaction.getSignature().toByteArray();
+
 
 
         try {
@@ -244,9 +243,9 @@ public class Blockchain
     }
 
 
-    public boolean isBlockValid(Block block, int difficulty, float repIncreasePercentage)
+    public boolean isBlockValid(Block block)
     {
-        int currRepScore = block.getReputation();
+        float currRepScore = block.getReputation();
 
         // Verify previous block reference and that POW was done
         String target = new String(new char[difficulty]).replace('\0', '0');
@@ -254,23 +253,24 @@ public class Blockchain
         String previousBlockHash = block.getPreviousHash();
         if (!bcLatestBlockHash.equals(previousBlockHash) || !block.getHash().startsWith(target))
         {
-            k.rt.setReputation(block.);
-            block.setReputation(0);
+            currRepScore = 0;
             return false;
         }
 
+        // TODO TEST THIS
         // Verify block signature
-        byte[] infoToVerify = {
+        byte[] infoToVerify = 
+        {
                 Byte.parseByte(block.getPreviousHash()),
                 (byte) block.getTimestamp(),
                 (byte) block.getNonce(),
                 Byte.parseByte(String.valueOf(block.getTransactionList())),
                 Byte.parseByte(block.getHash()),
-                (byte) block.getReputation()
         };
 
         try {
-            if (!SignatureClass.verify(infoToVerify, block.getSignature(), block.getPublicKey().getEncoded())) {
+            if (!SignatureClass.verify(infoToVerify, block.getSignature(), block.getNode().getPublicKey().toByteArray()))
+            {
                 block.setReputation(0);
                 return false;
             }
@@ -281,26 +281,27 @@ public class Blockchain
 
         // Verify block transactions
         ArrayList<Transaction> transactions = block.getTransactionList();
-        if (transactions.isEmpty()) {
-            block.setReputation(0);
+        if (transactions.isEmpty())
+        {
+            currRepScore = 0;
             return false;
         }
         for (Transaction transaction : transactions) {
             if (transaction.getSender().getPrice() <= 0 || transaction.getSender() == null || transaction.getOwner() == null) {
-                block.setReputation(0);
+                currRepScore = 0;
                 return false;
             }
         }
 
-        // increases reputation based on defined percentage
-        if (currRepScore != 0) {
-            block.setReputation((int) ((currRepScore * repIncreasePercentage) + currRepScore));
-        }
-        else {
-            block.setReputation((int) (0.01 + currRepScore)); // TODO: mudar
-        }
+        this.k.rt.setReputation(block.getNode());
         return true;
     }
+
+    public boolean checkValidityOfTransactions(ArrayList<Transaction> transactions, Block block)
+    {
+        return false;
+    }
+
     public class AuctionId
     {
         byte[] serviceId;

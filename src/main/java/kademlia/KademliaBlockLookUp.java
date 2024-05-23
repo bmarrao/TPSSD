@@ -32,7 +32,7 @@ public class KademliaBlockLookUp implements Runnable
             return distance1.compareTo(distance2);
         });
         // Start by finding the closest nodes in the routing table to the target key
-        FindAuctionResponse response = protocol.findBlockOp(key, n.getIp(), n.getPort());
+        FindBlockResponse response = protocol.findBlockOp(key, n.getIp(), n.getPort());
 
         if (response.getHasTransaction())
         {

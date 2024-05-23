@@ -64,9 +64,10 @@ public class KademliaRoutingTable
     // Sibling list size
     int s;
     PublicKey publicKey;
+    float reputationPercentage;
 
     //Inicialização da classe
-    public KademliaRoutingTable(byte[] nodeId, KademliaProtocol protocol, int k, int s, PublicKey publicKey)
+    public KademliaRoutingTable(byte[] nodeId, KademliaProtocol protocol, int k, int s, PublicKey publicKey, float reputationPercentage)
     {
         this.root = new TreeNode();
         this.root.createKBucket();
@@ -77,8 +78,18 @@ public class KademliaRoutingTable
         this.siblingList= new ArrayList<>();
         this.s = s;
         this.publicKey = publicKey;
+        this.reputationPercentage = reputationPercentage;
     }
 
+
+    public void setReputation(Node node) {
+        KademliaNode kn = CheckNodeIsInTree(node.getId().toByteArray(), this.root, "");
+        if (kn.getReputation() != 0) {
+            kn.setReputation((kn.reputation * reputationPercentage) + kn.reputation);
+        } else {
+            kn.setReputation((float) (0.01 + kn.reputation));
+        }
+    }
 
     //  Função que insere um no na arvore
     public boolean insert(Node node, int valid)
@@ -238,9 +249,39 @@ public class KademliaRoutingTable
         return false;
     }
 
+
+
+    public KademliaNode returnsObject(SortedArrayList<KademliaNode> kbucket,KademliaNode node)
+    {
+        byte[] id1 = node.nodeId;
+        byte[] id2;
+        boolean isEqual;
+        for (KademliaNode n : kbucket)
+        {
+
+            id2 = n.nodeId;
+            isEqual = true;
+            // Iterate through each byte and compare them
+            for (int i = 0; i < id1.length; i++)
+            {
+                if (id1[i] != id2[i]) {
+                    isEqual = false;
+                    break;
+                }
+            }
+
+            if (isEqual)
+            {
+                n.setTime();
+                return n;
+
+            }
+            // If all bytes are the same, return true
+        }
+        return null;
+    }
     // Função recursiva
 
-    // TOdo testar
     // Adiciona os nodes que estão na variavel kbucket para os novos buckets criados de acordo com a distancia
     // em relação ao id do Node ao qual pertence a routing table
     public void addToBuckets(TreeNode left, TreeNode right, ArrayList<KademliaNode> kbucket,KademliaNode node, int i ,int j)
@@ -556,26 +597,22 @@ public class KademliaRoutingTable
 
     }
 
-    public boolean CheckNodeIsInTree(byte[] nodeId, TreeNode node,String path)
+    public KademliaNode CheckNodeIsInTree(byte[] nodeId, TreeNode node,String path)
     {
         if (node.kbucket != null)
         {
-            if (hasObject(node.kbucket,new KademliaNode("",nodeId,421, publicKey.getEncoded())))
-            {
-                System.out.println("path " + path);
-                return true;
-            }
-            return false;
+            KademliaNode kn = returnsObject(node.kbucket,new KademliaNode("",nodeId,421, publicKey.getEncoded()));
+            System.out.println("path " + path);
+            return kn;
         }
         else
         {
-
-            if (CheckNodeIsInTree(nodeId,node.left,path + " l"))
+            KademliaNode kn = CheckNodeIsInTree(nodeId,node.left,path + " l");
+            if (kn != null)
             {
-                return true;
+                return kn;
             }
             return CheckNodeIsInTree(nodeId,node.right,path + " r");
-
         }
 
     }
