@@ -1,18 +1,12 @@
 package kademlia;
 
 import auctions.Auction;
-import auctions.BrokerService;
-import blockchain.Blockchain;
-import blockchain.Transaction;
 
 import java.io.UnsupportedEncodingException;
-import java.security.NoSuchAlgorithmException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Scanner;
 
-import static kademlia.Kademlia.rt;
-import static kademlia.Kademlia.protocol;
 import static kademlia.Kademlia.bc;
 
 public class UserInterface {

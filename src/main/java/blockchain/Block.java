@@ -9,8 +9,10 @@ import java.util.Date;
 
 import kademlia.Node;
 import kademlia.SignatureClass;
+import kademlia.grpcBlock;
 import org.bouncycastle.jcajce.provider.digest.SHA256;
 import java.nio.charset.StandardCharsets;
+import java.util.List;
 
 import static kademlia.KademliaNode.reputation;
 
@@ -23,9 +25,9 @@ public class Block
     public String previousHash;
     private long timestamp;
     private int nonce;
-    private int reputationScore;
     private ArrayList<Transaction> transactionList;
     private PublicKey publicKey;
+    private int reputationScore;
     private PrivateKey privateKey;
     private byte[] signature;
 
@@ -45,6 +47,23 @@ public class Block
         }
 
         signBlockContent();
+    }
+
+    public Block(grpcBlock grpcBlock)
+    {
+        this.previousHash = grpcBlock.getPrevHash().toString();
+        this.hash = grpcBlock.getCurrentHash().toString();
+        this.timestamp = grpcBlock.getTimestamp();
+        this.nonce = grpcBlock.getNonce();
+        this.transactionList = new ArrayList<>();
+        for (Transaction t : transactionList)
+        {
+            Transaction tBlockChain = new Transaction(t.getReceiver(),t.getPrice(),t.getServiceID(),t.getType());
+            this.transactionList.add(tBlockChain);
+        }
+        this.nonce = grpcBlock.getNonce();
+
+
     }
 
     public String getHash() {

@@ -13,28 +13,17 @@ import java.util.concurrent.locks.ReentrantLock;
 // transaction
 public class BrokerService
 {
-    public ReentrantLock l = new ReentrantLock();
-    private final Lock lock = new ReentrantLock();
-    public Condition endTimer = lock.newCondition();
-    public Condition waitBiggestOffer = lock.newCondition();
-    public boolean sleep = true;
     byte[] serviceId ;
-    Node owner;
-    ArrayList<Node>brokerSet;
     Offer highestOffer;
-    ArrayList <Node> subscribed;
     int time;
-    BrokerService(byte[] serviceId, Node owner, int time, ArrayList<Node> brokerSet)
+    Node Owner;
+    BrokerService(byte[] serviceId,int time,Node Owner)
     {
         this.serviceId = serviceId;
-        this.brokerSet = brokerSet;
-        subscribed = new ArrayList<>();
         Offer.Builder bd = Offer.newBuilder();
-        bd.setNode(owner);
         bd.setPrice(-1);
-
-        highestOffer = null;
-        this.owner = owner;
+        this.owner = Owner;
+        highestOffer = bd.build();
         this.time = time;
     }
     public float getPrice()
