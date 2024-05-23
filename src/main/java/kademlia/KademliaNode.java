@@ -1,7 +1,5 @@
 package kademlia;
-import java.math.BigInteger;
 import java.time.LocalDateTime;
-import java.util.Comparator;
 
 public class KademliaNode
 {
@@ -9,16 +7,18 @@ public class KademliaNode
     public byte[] nodeId;
 
     public int port;
+    public byte[] publicKey;
     public LocalDateTime time;
     public static int reputation;
 
 
-    public KademliaNode(String ipAdress, byte[] nodeId,int port)
+    public KademliaNode(String ipAdress, byte[] nodeId,int port, byte[] publicKey)
     {
         this.ipAdress = ipAdress;
         // Create nodeID this.nodeId= nodeId;
         this.port = port;
         this.nodeId = nodeId;
+        this.publicKey = publicKey;
         this.time = LocalDateTime.now();
         reputation = 0;
     }
@@ -46,6 +46,8 @@ public class KademliaNode
     public void setPort(int port) {
         this.port = port;
     }
+
+    public byte[] getPublicKey() { return this.publicKey; }
 
     public LocalDateTime getTime() {
         return time;

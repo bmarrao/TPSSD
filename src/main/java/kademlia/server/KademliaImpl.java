@@ -91,7 +91,7 @@ public class KademliaImpl extends KademliaGrpc.KademliaImplBase
         byte[] signature = request.getSignature().toByteArray();
         boolean signVal = false;
         try {
-            signVal = SignatureClass.verify(request.getNode().toByteArray(), signature, request.getPublicKey().toByteArray());
+            signVal = SignatureClass.verify(request.getNode().toByteArray(), signature, request.getNode().getPublicKey().toByteArray());
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -102,7 +102,7 @@ public class KademliaImpl extends KademliaGrpc.KademliaImplBase
             // Atualizar o horario da última vez online do sender TODO: confirmar isto
             new KademliaNode(request.getNode().getIp(),
                     request.getNode().getId().toByteArray(),
-                    request.getNode().getPort()).setTime();
+                    request.getNode().getPort(), publicKey.getEncoded()).setTime();
 
             // Sign RPC response
             try {
@@ -140,7 +140,7 @@ public class KademliaImpl extends KademliaGrpc.KademliaImplBase
         byte[] signature = request.getSignature().toByteArray();
         boolean signVal = false;
         try {
-            signVal = SignatureClass.verify(request.getNode().toByteArray(), signature, request.getPublicKey().toByteArray());
+            signVal = SignatureClass.verify(request.getNode().toByteArray(), signature, request.getNode().getPublicKey().toByteArray());
         }
         catch(Exception e) {
             e.printStackTrace();
@@ -195,7 +195,7 @@ public class KademliaImpl extends KademliaGrpc.KademliaImplBase
         System.arraycopy(key, 0, infoToVerify, nodeToVerify.length, key.length);
 
         try {
-            signVal = SignatureClass.verify(infoToVerify, signature, request.getPublicKey().toByteArray());
+            signVal = SignatureClass.verify(infoToVerify, signature, request.getNode().getPublicKey().toByteArray());
         }
         catch(Exception e) {
             e.printStackTrace();
@@ -429,7 +429,7 @@ public class KademliaImpl extends KademliaGrpc.KademliaImplBase
         System.arraycopy(nodeID, 0, infoToVerify, senderAndTransactionLength, nodeID.length);
 
         try {
-            signVal = SignatureClass.verify(infoToVerify, signature, request.getPublicKey().toByteArray());
+            signVal = SignatureClass.verify(infoToVerify, signature, request.getNode().getPublicKey().toByteArray());
         }
         catch(Exception e) {
             e.printStackTrace();
@@ -490,12 +490,12 @@ public class KademliaImpl extends KademliaGrpc.KademliaImplBase
 
 
         byte[] infoToVerify = new byte[totalLength];
-        System.arraycopy(senderNodeToVerify, 0, infoToVerify, 0, senderNodeToVerify.length);;
-        System.arraycopy(receiverNodeToVerify, 0, infoToVerify, senderNodeToVerify.length, receiverNodeToVerify.length );;
+        System.arraycopy(senderNodeToVerify, 0, infoToVerify, 0, senderNodeToVerify.length);
+        System.arraycopy(receiverNodeToVerify, 0, infoToVerify, senderNodeToVerify.length, receiverNodeToVerify.length );
         System.arraycopy(blockToVerify, 0, infoToVerify, senderAndReceiverLength, blockToVerify.length);
 
         try {
-            signVal = SignatureClass.verify(infoToVerify, signature, request.getPublicKey().toByteArray());
+            signVal = SignatureClass.verify(infoToVerify, signature, request.getNode().getPublicKey().toByteArray());
         }
         catch(Exception e) {
             e.printStackTrace();
@@ -579,7 +579,7 @@ public class KademliaImpl extends KademliaGrpc.KademliaImplBase
 
     private KademliaNode convertGRPCNode(Node grpcNode)
     {
-        KademliaNode convertedNode = new KademliaNode(grpcNode.getIp(), grpcNode.getId().toByteArray() , grpcNode.getPort());
+        KademliaNode convertedNode = new KademliaNode(grpcNode.getIp(), grpcNode.getId().toByteArray() , grpcNode.getPort(), grpcNode.getPublicKey().toByteArray());
 
         return convertedNode;
     }

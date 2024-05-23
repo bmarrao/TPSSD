@@ -9,8 +9,7 @@ package kademlia;
 message PingRequest 
 {
   Node node = 1;
-  bytes publicKey = 2;
-  bytes signature = 3;
+  bytes signature = 2;
 }
 
 message PingResponse 
@@ -27,11 +26,7 @@ message Node
   string ip = 2;
   uint32 port = 3;
   bytes randomX = 4;
-}
-
-message NodeSignature
-{
-  bytes signature = 1;
+  bytes publicKey = 5;
 }
 
 message Offer
@@ -66,8 +61,7 @@ message StoreTransactionRequest
   Node node = 1;
   bytes nodeID = 2;
   Transaction transaction = 3;
-  bytes publicKey = 4;
-  bytes signature = 5;
+  bytes signature = 4;
 }
 
 message StoreTransactionResponse
@@ -83,8 +77,7 @@ message StoreBlockRequest
   Node node = 1;
   Node receiver = 2;
   grpcBlock block = 3;
-  bytes publicKey = 4;
-  bytes signature = 5;
+  bytes signature = 4;
 }
 
 message StoreBlockResponse
@@ -100,8 +93,7 @@ message FindNodeRequest
   Node node = 1;
   bytes nodeID = 2;
   uint32 k = 3;
-  bytes publicKey = 4;
-  bytes signature = 5;
+  bytes signature = 4;
 }
 
 // Interativo ou recursivo
@@ -118,8 +110,7 @@ message FindBlockRequest
 {
   Node node = 1;
   bytes key = 2;
-  bytes publicKey = 3;
-  bytes signature = 4;
+  bytes signature = 3;
 }
 
 message FindBlockResponse
@@ -137,8 +128,7 @@ message FindAuctionRequest
 {
   Node node = 1;
   bytes nodeID = 2;
-  bytes publicKey = 3;
-  bytes signature = 4;
+  bytes signature = 3;
 }
 
 message FindAuctionResponse
