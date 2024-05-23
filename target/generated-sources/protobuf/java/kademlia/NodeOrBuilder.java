@@ -31,4 +31,9 @@ public interface NodeOrBuilder extends
    * <code>bytes randomX = 4;</code>
    */
   com.google.protobuf.ByteString getRandomX();
+
+  /**
+   * <code>bytes publicKey = 5;</code>
+   */
+  com.google.protobuf.ByteString getPublicKey();
 }

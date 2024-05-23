@@ -26,12 +26,7 @@ public interface FindBlockRequestOrBuilder extends
   com.google.protobuf.ByteString getKey();
 
   /**
-   * <code>bytes publicKey = 3;</code>
-   */
-  com.google.protobuf.ByteString getPublicKey();
-
-  /**
-   * <code>bytes signature = 4;</code>
+   * <code>bytes signature = 3;</code>
    */
   com.google.protobuf.ByteString getSignature();
 }

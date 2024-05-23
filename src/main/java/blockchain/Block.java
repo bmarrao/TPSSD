@@ -21,7 +21,7 @@ public class Block
 {
     //TODO Needed?
     //private int index;
-
+    Node node;
     public String hash;
     public String previousHash;
     private long timestamp;
@@ -66,6 +66,15 @@ public class Block
 
     }
 
+    public Node getNode()
+    {
+        return this.node;
+    }
+    
+    public void setNode()
+    {
+        return this.node;
+    }
     public String getHash() {
         return hash;
     }

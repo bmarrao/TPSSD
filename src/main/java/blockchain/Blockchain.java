@@ -10,6 +10,7 @@ import java.lang.reflect.Array;
 import java.nio.charset.StandardCharsets;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
+import java.security.PublicKey;
 import java.util.*;
 
 
@@ -18,14 +19,16 @@ public class Blockchain
     private final List<Block> chain;
     private final List<Block> orphanBlocks; // Blocks that are not part of the main chain
 
+    private final Kademlia k;
     private final List<BrokerService> myAuctions;
     private final int difficulty;
     HashMap<AuctionId , Transaction> activeAuctions;
     ArrayList<byte[]> topicsSubscribed;
     // Constructor
-    public Blockchain(int initialDifficulty)
+    public Blockchain(int initialDifficulty, Kademlia k)
     {
         this.chain = new ArrayList<>();
+        this. k = k;
         this.orphanBlocks = new ArrayList<>();
         this.topicsSubscribed = new ArrayList<>();
         this.activeAuctions = new HashMap<>();
@@ -138,25 +141,6 @@ public class Blockchain
 
         // Optionally, implement more sophisticated fork resolution
     }
-    public boolean checkIfBlockIsValid(Block block)
-    {
-        if (!(block.hash.equals(block.calculateHash())))
-        {
-            return false ;
-        }
-        Block lastMinedBlock = chain.get(chain.size()-1);
-        if(!block.previousHash.equals(lastMinedBlock.hash))
-        {
-
-            return false ;
-        }
-        if(!(hasValidTransaction(block,block.getTransactionList())))
-        {
-            return false ;
-        }
-        // TODO BLOCK SIGNATURE ?
-        return true;
-    }
 
     private boolean hasValidTransactions(Block block, ArrayList<Transaction> transactions)
     {
@@ -168,6 +152,26 @@ public class Blockchain
             }
         }
         return true;
+    }
+
+    private boolean isTransactionSignValid(Transaction transaction)
+    {
+        boolean isValid = false;
+
+        byte[] transactionOriginalSign = transaction.getSignature().toByteArray();
+
+
+        try {
+            byte[] publicKey = transaction.getSender().getNode().getPublicKey().toByteArray();
+            if (SignatureClass.verify(infoToVerify, transactionOriginalSign, publicKey)) {
+                isValid = true;
+            }
+        }
+        catch(Exception e) {
+            e.printStackTrace();
+        }
+
+        return isValid;
     }
 
     public boolean removeSubscribe(String service)
@@ -240,14 +244,17 @@ public class Blockchain
     }
 
 
-    public boolean isBlockValid(Block block, int difficulty, float repIncreasePercentage) {
+    public boolean isBlockValid(Block block, int difficulty, float repIncreasePercentage)
+    {
         int currRepScore = block.getReputation();
 
         // Verify previous block reference and that POW was done
         String target = new String(new char[difficulty]).replace('\0', '0');
         String bcLatestBlockHash = getLatestBlock().getHash();
         String previousBlockHash = block.getPreviousHash();
-        if (!bcLatestBlockHash.equals(previousBlockHash) || !block.getHash().startsWith(target)) {
+        if (!bcLatestBlockHash.equals(previousBlockHash) || !block.getHash().startsWith(target))
+        {
+            k.rt.setReputation(block.);
             block.setReputation(0);
             return false;
         }

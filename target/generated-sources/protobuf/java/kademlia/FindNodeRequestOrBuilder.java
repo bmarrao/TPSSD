@@ -31,12 +31,7 @@ public interface FindNodeRequestOrBuilder extends
   int getK();
 
   /**
-   * <code>bytes publicKey = 4;</code>
-   */
-  com.google.protobuf.ByteString getPublicKey();
-
-  /**
-   * <code>bytes signature = 5;</code>
+   * <code>bytes signature = 4;</code>
    */
   com.google.protobuf.ByteString getSignature();
 }

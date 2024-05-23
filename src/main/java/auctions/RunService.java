@@ -1,8 +1,11 @@
 package auctions;
 
+import com.google.protobuf.ByteString;
 import kademlia.KademliaProtocol;
 import kademlia.Offer;
 import kademlia.Transaction;
+
+import java.io.UnsupportedEncodingException;
 
 
 public class RunService implements Runnable {
@@ -48,15 +51,27 @@ public class RunService implements Runnable {
                 throw new RuntimeException(e);
             }
         }
-        byte[] = bs.serviceId
-        Node = bs.owner
-        Offer = bs.highestOffer;
-        byte[] data = ;
+
+
+        byte[] owner = bs.Owner.toByteArray();
+        byte[] offer = bs.highestOffer.toByteArray();
+        byte[] data = new byte[bs.serviceId.length + owner.length + offer.length];
+
+        System.arraycopy(bs.serviceId, 0, data, 0, bs.serviceId.length);
+        System.arraycopy(owner, 0, data, bs.serviceId.length, owner.length);
+        System.arraycopy(offer, 0, data, bs.serviceId.length+owner.length, offer.length);
+
         byte[] signature = this.a.k.signData(data);
+
         Transaction t= Transaction.newBuilder()
-        .setId(bs.serviceId).setOwner(bs.Owner).setSender(bs.highestOffer)
-        .setSignature(signature).build();
-        kp.storeTransactionOp(t);
+        .setId(ByteString.copyFrom(bs.serviceId)).setOwner(bs.Owner).setSender(bs.highestOffer)
+        .setSignature(ByteString.copyFrom(signature)).build();
+        try
+        {
+            this.a.bc.addTransaction(t);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     }
 
     Offer clone (Offer o)

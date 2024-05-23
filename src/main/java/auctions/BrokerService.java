@@ -22,7 +22,7 @@ public class BrokerService
         this.serviceId = serviceId;
         Offer.Builder bd = Offer.newBuilder();
         bd.setPrice(-1);
-        this.owner = Owner;
+        this.Owner = Owner;
         highestOffer = bd.build();
         this.time = time;
     }

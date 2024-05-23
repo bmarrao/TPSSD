@@ -21,12 +21,7 @@ public interface PingRequestOrBuilder extends
   kademlia.NodeOrBuilder getNodeOrBuilder();
 
   /**
-   * <code>bytes publicKey = 2;</code>
-   */
-  com.google.protobuf.ByteString getPublicKey();
-
-  /**
-   * <code>bytes signature = 3;</code>
+   * <code>bytes signature = 2;</code>
    */
   com.google.protobuf.ByteString getSignature();
 }

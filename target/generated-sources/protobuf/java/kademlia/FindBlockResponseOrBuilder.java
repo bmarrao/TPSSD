@@ -13,9 +13,9 @@ public interface FindBlockResponseOrBuilder extends
   com.google.protobuf.ByteString getId();
 
   /**
-   * <code>bool hasBlcok = 2;</code>
+   * <code>bool hasBlock = 2;</code>
    */
-  boolean getHasBlcok();
+  boolean getHasBlock();
 
   /**
    * <code>.kademlia.grpcBlock b = 3;</code>

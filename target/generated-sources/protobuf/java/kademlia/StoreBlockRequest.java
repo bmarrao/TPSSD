@@ -15,7 +15,6 @@ public  final class StoreBlockRequest extends
     super(builder);
   }
   private StoreBlockRequest() {
-    publicKey_ = com.google.protobuf.ByteString.EMPTY;
     signature_ = com.google.protobuf.ByteString.EMPTY;
   }
 
@@ -84,11 +83,6 @@ public  final class StoreBlockRequest extends
             break;
           }
           case 34: {
-
-            publicKey_ = input.readBytes();
-            break;
-          }
-          case 42: {
 
             signature_ = input.readBytes();
             break;
@@ -179,19 +173,10 @@ public  final class StoreBlockRequest extends
     return getBlock();
   }
 
-  public static final int PUBLICKEY_FIELD_NUMBER = 4;
-  private com.google.protobuf.ByteString publicKey_;
-  /**
-   * <code>bytes publicKey = 4;</code>
-   */
-  public com.google.protobuf.ByteString getPublicKey() {
-    return publicKey_;
-  }
-
-  public static final int SIGNATURE_FIELD_NUMBER = 5;
+  public static final int SIGNATURE_FIELD_NUMBER = 4;
   private com.google.protobuf.ByteString signature_;
   /**
-   * <code>bytes signature = 5;</code>
+   * <code>bytes signature = 4;</code>
    */
   public com.google.protobuf.ByteString getSignature() {
     return signature_;
@@ -218,11 +203,8 @@ public  final class StoreBlockRequest extends
     if (block_ != null) {
       output.writeMessage(3, getBlock());
     }
-    if (!publicKey_.isEmpty()) {
-      output.writeBytes(4, publicKey_);
-    }
     if (!signature_.isEmpty()) {
-      output.writeBytes(5, signature_);
+      output.writeBytes(4, signature_);
     }
   }
 
@@ -243,13 +225,9 @@ public  final class StoreBlockRequest extends
       size += com.google.protobuf.CodedOutputStream
         .computeMessageSize(3, getBlock());
     }
-    if (!publicKey_.isEmpty()) {
-      size += com.google.protobuf.CodedOutputStream
-        .computeBytesSize(4, publicKey_);
-    }
     if (!signature_.isEmpty()) {
       size += com.google.protobuf.CodedOutputStream
-        .computeBytesSize(5, signature_);
+        .computeBytesSize(4, signature_);
     }
     memoizedSize = size;
     return size;
@@ -282,8 +260,6 @@ public  final class StoreBlockRequest extends
       result = result && getBlock()
           .equals(other.getBlock());
     }
-    result = result && getPublicKey()
-        .equals(other.getPublicKey());
     result = result && getSignature()
         .equals(other.getSignature());
     return result;
@@ -308,8 +284,6 @@ public  final class StoreBlockRequest extends
       hash = (37 * hash) + BLOCK_FIELD_NUMBER;
       hash = (53 * hash) + getBlock().hashCode();
     }
-    hash = (37 * hash) + PUBLICKEY_FIELD_NUMBER;
-    hash = (53 * hash) + getPublicKey().hashCode();
     hash = (37 * hash) + SIGNATURE_FIELD_NUMBER;
     hash = (53 * hash) + getSignature().hashCode();
     hash = (29 * hash) + unknownFields.hashCode();
@@ -459,8 +433,6 @@ public  final class StoreBlockRequest extends
         block_ = null;
         blockBuilder_ = null;
       }
-      publicKey_ = com.google.protobuf.ByteString.EMPTY;
-
       signature_ = com.google.protobuf.ByteString.EMPTY;
 
       return this;
@@ -500,7 +472,6 @@ public  final class StoreBlockRequest extends
       } else {
         result.block_ = blockBuilder_.build();
       }
-      result.publicKey_ = publicKey_;
       result.signature_ = signature_;
       onBuilt();
       return result;
@@ -551,9 +522,6 @@ public  final class StoreBlockRequest extends
       }
       if (other.hasBlock()) {
         mergeBlock(other.getBlock());
-      }
-      if (other.getPublicKey() != com.google.protobuf.ByteString.EMPTY) {
-        setPublicKey(other.getPublicKey());
       }
       if (other.getSignature() != com.google.protobuf.ByteString.EMPTY) {
         setSignature(other.getSignature());
@@ -935,44 +903,15 @@ public  final class StoreBlockRequest extends
       return blockBuilder_;
     }
 
-    private com.google.protobuf.ByteString publicKey_ = com.google.protobuf.ByteString.EMPTY;
-    /**
-     * <code>bytes publicKey = 4;</code>
-     */
-    public com.google.protobuf.ByteString getPublicKey() {
-      return publicKey_;
-    }
-    /**
-     * <code>bytes publicKey = 4;</code>
-     */
-    public Builder setPublicKey(com.google.protobuf.ByteString value) {
-      if (value == null) {
-    throw new NullPointerException();
-  }
-  
-      publicKey_ = value;
-      onChanged();
-      return this;
-    }
-    /**
-     * <code>bytes publicKey = 4;</code>
-     */
-    public Builder clearPublicKey() {
-      
-      publicKey_ = getDefaultInstance().getPublicKey();
-      onChanged();
-      return this;
-    }
-
     private com.google.protobuf.ByteString signature_ = com.google.protobuf.ByteString.EMPTY;
     /**
-     * <code>bytes signature = 5;</code>
+     * <code>bytes signature = 4;</code>
      */
     public com.google.protobuf.ByteString getSignature() {
       return signature_;
     }
     /**
-     * <code>bytes signature = 5;</code>
+     * <code>bytes signature = 4;</code>
      */
     public Builder setSignature(com.google.protobuf.ByteString value) {
       if (value == null) {
@@ -984,7 +923,7 @@ public  final class StoreBlockRequest extends
       return this;
     }
     /**
-     * <code>bytes signature = 5;</code>
+     * <code>bytes signature = 4;</code>
      */
     public Builder clearSignature() {
       

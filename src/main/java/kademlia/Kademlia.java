@@ -140,6 +140,17 @@ public class Kademlia
     }
 
 
+    public byte[] signData (byte[] data)
+    {
+        try
+        {
+            return SignatureClass.sign(data,generatedSk);
+        }
+        catch(Exception e)
+        {
+            return null;
+        }
+    }
     public static void solveDynamicPuzzle(byte[] sKadNodeId, int leadingZerosDynamic) throws NoSuchAlgorithmException {
         /* against sybil attacks
             1) NodeId = H(Spub)
@@ -366,6 +377,7 @@ public class Kademlia
                 .setId(ByteString.copyFrom(nodeId))
                 .setIp(protocol.ipAddress)
                 .setPort(protocol.port)
+                .setPublicKey(ByteString.copyFrom(generatedPk.getEncoded()))
                 .build();
         return node;
     }

@@ -16,7 +16,7 @@ public  final class FindBlockResponse extends
   }
   private FindBlockResponse() {
     id_ = com.google.protobuf.ByteString.EMPTY;
-    hasBlcok_ = false;
+    hasBlock_ = false;
     nodes_ = java.util.Collections.emptyList();
     publicKey_ = com.google.protobuf.ByteString.EMPTY;
     signature_ = com.google.protobuf.ByteString.EMPTY;
@@ -54,7 +54,7 @@ public  final class FindBlockResponse extends
           }
           case 16: {
 
-            hasBlcok_ = input.readBool();
+            hasBlock_ = input.readBool();
             break;
           }
           case 26: {
@@ -125,13 +125,13 @@ public  final class FindBlockResponse extends
     return id_;
   }
 
-  public static final int HASBLCOK_FIELD_NUMBER = 2;
-  private boolean hasBlcok_;
+  public static final int HASBLOCK_FIELD_NUMBER = 2;
+  private boolean hasBlock_;
   /**
-   * <code>bool hasBlcok = 2;</code>
+   * <code>bool hasBlock = 2;</code>
    */
-  public boolean getHasBlcok() {
-    return hasBlcok_;
+  public boolean getHasBlock() {
+    return hasBlock_;
   }
 
   public static final int B_FIELD_NUMBER = 3;
@@ -223,8 +223,8 @@ public  final class FindBlockResponse extends
     if (!id_.isEmpty()) {
       output.writeBytes(1, id_);
     }
-    if (hasBlcok_ != false) {
-      output.writeBool(2, hasBlcok_);
+    if (hasBlock_ != false) {
+      output.writeBool(2, hasBlock_);
     }
     if (b_ != null) {
       output.writeMessage(3, getB());
@@ -249,9 +249,9 @@ public  final class FindBlockResponse extends
       size += com.google.protobuf.CodedOutputStream
         .computeBytesSize(1, id_);
     }
-    if (hasBlcok_ != false) {
+    if (hasBlock_ != false) {
       size += com.google.protobuf.CodedOutputStream
-        .computeBoolSize(2, hasBlcok_);
+        .computeBoolSize(2, hasBlock_);
     }
     if (b_ != null) {
       size += com.google.protobuf.CodedOutputStream
@@ -287,8 +287,8 @@ public  final class FindBlockResponse extends
     boolean result = true;
     result = result && getId()
         .equals(other.getId());
-    result = result && (getHasBlcok()
-        == other.getHasBlcok());
+    result = result && (getHasBlock()
+        == other.getHasBlock());
     result = result && (hasB() == other.hasB());
     if (hasB()) {
       result = result && getB()
@@ -312,9 +312,9 @@ public  final class FindBlockResponse extends
     hash = (19 * hash) + getDescriptor().hashCode();
     hash = (37 * hash) + ID_FIELD_NUMBER;
     hash = (53 * hash) + getId().hashCode();
-    hash = (37 * hash) + HASBLCOK_FIELD_NUMBER;
+    hash = (37 * hash) + HASBLOCK_FIELD_NUMBER;
     hash = (53 * hash) + com.google.protobuf.Internal.hashBoolean(
-        getHasBlcok());
+        getHasBlock());
     if (hasB()) {
       hash = (37 * hash) + B_FIELD_NUMBER;
       hash = (53 * hash) + getB().hashCode();
@@ -459,7 +459,7 @@ public  final class FindBlockResponse extends
       super.clear();
       id_ = com.google.protobuf.ByteString.EMPTY;
 
-      hasBlcok_ = false;
+      hasBlock_ = false;
 
       if (bBuilder_ == null) {
         b_ = null;
@@ -502,7 +502,7 @@ public  final class FindBlockResponse extends
       int from_bitField0_ = bitField0_;
       int to_bitField0_ = 0;
       result.id_ = id_;
-      result.hasBlcok_ = hasBlcok_;
+      result.hasBlock_ = hasBlock_;
       if (bBuilder_ == null) {
         result.b_ = b_;
       } else {
@@ -564,8 +564,8 @@ public  final class FindBlockResponse extends
       if (other.getId() != com.google.protobuf.ByteString.EMPTY) {
         setId(other.getId());
       }
-      if (other.getHasBlcok() != false) {
-        setHasBlcok(other.getHasBlcok());
+      if (other.getHasBlock() != false) {
+        setHasBlock(other.getHasBlock());
       }
       if (other.hasB()) {
         mergeB(other.getB());
@@ -658,28 +658,28 @@ public  final class FindBlockResponse extends
       return this;
     }
 
-    private boolean hasBlcok_ ;
+    private boolean hasBlock_ ;
     /**
-     * <code>bool hasBlcok = 2;</code>
+     * <code>bool hasBlock = 2;</code>
      */
-    public boolean getHasBlcok() {
-      return hasBlcok_;
+    public boolean getHasBlock() {
+      return hasBlock_;
     }
     /**
-     * <code>bool hasBlcok = 2;</code>
+     * <code>bool hasBlock = 2;</code>
      */
-    public Builder setHasBlcok(boolean value) {
+    public Builder setHasBlock(boolean value) {
       
-      hasBlcok_ = value;
+      hasBlock_ = value;
       onChanged();
       return this;
     }
     /**
-     * <code>bool hasBlcok = 2;</code>
+     * <code>bool hasBlock = 2;</code>
      */
-    public Builder clearHasBlcok() {
+    public Builder clearHasBlock() {
       
-      hasBlcok_ = false;
+      hasBlock_ = false;
       onChanged();
       return this;
     }

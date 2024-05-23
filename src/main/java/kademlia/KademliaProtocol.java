@@ -4,6 +4,7 @@ import blockchain.Block;
 import com.google.protobuf.ByteString;
 import io.grpc.ManagedChannel;
 import io.grpc.ManagedChannelBuilder;
+import io.grpc.stub.StreamObserver;
 
 import java.io.UnsupportedEncodingException;
 import java.nio.charset.StandardCharsets;
@@ -120,23 +121,15 @@ public class KademliaProtocol {
         return new ArrayList<>();
     }
 
-    public boolean storeTransactionOp(Transaction t) throws UnsupportedEncodingException {
+    public void storeTransactionOp(Transaction t, String receiverIp , int receiverPort) throws UnsupportedEncodingException {
 
         byte[] receiverNodeID = t.getOwner().getId().toByteArray();
 
-        String receiverIP = t.getOwner().getIp();
-
-        int receiverPort = t.getOwner().getPort();
-
         //int transactionType = getTransactionType(t.getType());
 
-        ManagedChannel channel = ManagedChannelBuilder.forAddress(receiverIP, receiverPort).usePlaintext().build();
+        ManagedChannel channel = ManagedChannelBuilder.forAddress(receiverIp, receiverPort).usePlaintext().build();
 
-        Node ownerNode = Node.newBuilder()
-                .setId(ByteString.copyFrom(receiverNodeID))
-                .setIp(receiverIP)
-                .setPort(receiverPort)
-                .setRandomX(ByteString.copyFrom(new byte[]{randomX})).build();
+        Node ownerNode = t.getOwner();
 
         Node senderNode = Node.newBuilder()
                 .setId(ByteString.copyFrom(this.nodeId))
@@ -145,7 +138,7 @@ public class KademliaProtocol {
                 .setRandomX(ByteString.copyFrom(new byte[]{randomX}))
                 .setPublicKey(ByteString.copyFrom(publicKey.getEncoded())).build();
 
-        Offer senderOffer = Offer.newBuilder().setNode(senderNode).setPrice(t.getSender().getPrice()).build();
+        Offer senderOffer = t.getSender();
 
         Transaction transaction = Transaction.newBuilder()
                 .setId(t.getId())
@@ -174,36 +167,54 @@ public class KademliaProtocol {
             e.printStackTrace();
         }
 
-        KademliaGrpc.KademliaBlockingStub stub = KademliaGrpc.newBlockingStub(channel);
+        // TODO TRANSFORM IN STUB NÃO NO BLOCKING
+        KademliaGrpc.KademliaStub stub = KademliaGrpc.newStub(channel);
 
         StoreTransactionRequest request = StoreTransactionRequest.newBuilder()
                 .setNode(senderNode)
-                .setNodeID(ByteString.copyFrom(this.nodeId))
+                .setNodeID(ByteString.copyFrom(nodeId))
                 .setTransaction(transaction)
-                .setSignature(ByteString.copyFrom(signature)).build();
+                .setSignature(ByteString.copyFrom(signature))
+                .build();
 
-        // Receive response
-        StoreTransactionResponse response = stub.storeTransaction(request);
+        stub.storeTransaction(request, new StreamObserver<StoreTransactionResponse>() {
+            @Override
+            public void onNext(StoreTransactionResponse response) {
+                // Process the response
+                boolean signVal = false;
+                try {
+                    signVal = SignatureClass.verify(
+                            response.getId().toByteArray(),
+                            response.getSignature().toByteArray(),
+                            response.getPublicKey().toByteArray()
+                    );
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
 
-        // Check signature
-        boolean signVal = false;
+                if (signVal) {
+                    System.out.println("Transaction stored successfully: " + response.getStored());
+                } else {
+                    System.out.println("Signature verification failed.");
+                }
+            }
 
-        try {
-            signVal = SignatureClass.verify(response.getId().toByteArray(), response.getSignature().toByteArray(), response.getPublicKey().toByteArray());
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
+            @Override
+            public void onError(Throwable t) {
+                // Handle the error
+                t.printStackTrace();
+            }
 
-        channel.shutdown();
+            @Override
+            public void onCompleted() {
+                // Clean up resources
+                channel.shutdown();
+            }
+        });
 
-        if (signVal) {
-            return response.getStored();
-        }
-        return false;
     }
 
-    //TODO Transactions
-    public boolean storeBlockOp(byte[] receiverNodeID, String receiverIp, int receiverPort, blockchain.Block block) {
+    public void storeBlockOp(byte[] receiverNodeID, String receiverIp, int receiverPort, blockchain.Block block) {
 
         ManagedChannel channel = ManagedChannelBuilder.forAddress(receiverIp, receiverPort).usePlaintext().build();
 
@@ -250,7 +261,7 @@ public class KademliaProtocol {
             e.printStackTrace();
         }
 
-        KademliaGrpc.KademliaBlockingStub stub = KademliaGrpc.newBlockingStub(channel);
+        KademliaGrpc.KademliaStub stub = KademliaGrpc.newStub(channel);
 
         StoreBlockRequest request = StoreBlockRequest.newBuilder()
                 .setNode(senderNode)
@@ -258,25 +269,40 @@ public class KademliaProtocol {
                 .setBlock(kBlock)
                 .setSignature(ByteString.copyFrom(signature)).build();
 
-        // Receive response
-        StoreBlockResponse response = stub.storeBlock(request);
+        stub.storeBlock(request, new StreamObserver<StoreBlockResponse>() {
+            @Override
+            public void onNext(StoreBlockResponse response) {
+                // Process the response
+                boolean signVal = false;
+                try {
+                    signVal = SignatureClass.verify(
+                            response.getId().toByteArray(),
+                            response.getSignature().toByteArray(),
+                            response.getPublicKey().toByteArray()
+                    );
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
 
-        // Check signature
-        boolean signVal = false;
+                if (signVal) {
+                    System.out.println("Transaction stored successfully: " + response.getStored());
+                } else {
+                    System.out.println("Signature verification failed.");
+                }
+            }
 
-        try {
-            signVal = SignatureClass.verify(response.getId().toByteArray(), response.getSignature().toByteArray(), response.getPublicKey().toByteArray());
-        }
-        catch(Exception e) {
-            e.printStackTrace();
-        }
+            @Override
+            public void onError(Throwable t) {
+                // Handle the error
+                t.printStackTrace();
+            }
 
-        channel.shutdown();
-
-        if (signVal) {
-            return response.getStored();
-        }
-        return false;
+            @Override
+            public void onCompleted() {
+                // Clean up resources
+                channel.shutdown();
+            }
+        });
     }
 
     public FindAuctionResponse findAuctionOp(byte[] nodeID, String receiverIp, int receiverPort) {

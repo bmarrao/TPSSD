@@ -279,8 +279,8 @@ public class KademliaImpl extends KademliaGrpc.KademliaImplBase
             rt.insert(request.getNode(), 1);
 
             // Get the value associated with the key from the data store
-            // TODO GET A COPY OF BLOCKCHAIN
-            Block value = null;//bc.findBlock(key);
+            // TODO GET A COPY OF BLOCKCHAIN - FIX THIS
+            grpcBlock value = null;//bc.findBlock(key);
             boolean hasBlock = true;
             List<Node> closestNodes = new ArrayList<>();
             if (value == null)
@@ -357,7 +357,10 @@ public class KademliaImpl extends KademliaGrpc.KademliaImplBase
             //TODO Lógica
             //bc.validateTransactionsSignature();
             //bc.addTransaction();
-                //isTransactionValid();
+                //isTransactionValid()
+                    // Send to all Nodes on kademlia routing table
+                    // for (KademliaNode n : allNodes
+                    // k.protocol.storeTransactionOp(request.getTransaction,n.receiverIp, n.receiverPort)
                     //Verificar HashMap e ver se:
                         //For open auction é só put
                         //Se for Bid verificar se existe auction e se o price é maior que o anterior Se for maior atualizar BrokerService MyAuctions
