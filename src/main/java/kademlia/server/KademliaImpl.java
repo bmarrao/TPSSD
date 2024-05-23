@@ -441,6 +441,18 @@ public class KademliaImpl extends KademliaGrpc.KademliaImplBase
             rt.insert(request.getNode(), 1);
 
             //TODO Lógica
+            //bc.addTransaction();
+                //isTransactionValid();
+                    //Verificar HashMap e ver se:
+                        //For open auction é só put
+                        //Se for Bid verificar se existe auction e se o price é maior que o anterior
+                        //Se for close auction, verificar se há auction
+
+                    //Verificar número limite de transactions para minerar bloco
+                    //Adicionar transaction a esse bloco
+
+            //Passar para todos os blocos essa transaction || Validar Transaction
+            //Cheguei no limite de transações então vou tentar minerar bloco
 
 
             // Sign RPC response
@@ -520,6 +532,13 @@ public class KademliaImpl extends KademliaGrpc.KademliaImplBase
             Block newBlock = new Block(previousHash, transactions);
 
             //TODO Verificar Lógica
+            //Recebo bloco
+            //Verificar se o Bloco é válido:
+                //Verificar hash do anterior
+                //Verificar se as transações são válidas
+
+            //Caso receba dois blocos ao mesmo tempo, se tiver outro storeblock quero ver o que tem maior reputação
+
             bc.addBlock(newBlock);
 
             //Check if chain is valid!
