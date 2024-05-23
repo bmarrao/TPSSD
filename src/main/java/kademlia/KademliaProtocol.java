@@ -38,7 +38,8 @@ public class KademliaProtocol {
                 .setId(ByteString.copyFrom(this.nodeId))
                 .setIp(ipAddress)
                 .setPort(port)
-                .setRandomX(ByteString.copyFrom(new byte[]{randomX})).build();
+                .setRandomX(ByteString.copyFrom(new byte[]{randomX}))
+                .setPublicKey(ByteString.copyFrom(publicKey.getEncoded())).build();
 
         // Sign node content
         byte[] signature = null;
@@ -53,8 +54,7 @@ public class KademliaProtocol {
 
         PingRequest request = PingRequest.newBuilder()
                 .setNode(node)
-                .setSignature(ByteString.copyFrom(signature))
-                .setPublicKey(ByteString.copyFrom(publicKey.getEncoded())).build();
+                .setSignature(ByteString.copyFrom(signature)).build();
 
         // Receive response
         PingResponse response = stub.ping(request);
@@ -84,7 +84,8 @@ public class KademliaProtocol {
                 .setId(ByteString.copyFrom(this.nodeId))
                 .setIp(ipAddress)
                 .setPort(port)
-                .setRandomX(ByteString.copyFrom(new byte[]{randomX})).build();
+                .setRandomX(ByteString.copyFrom(new byte[]{randomX}))
+                .setPublicKey(ByteString.copyFrom(publicKey.getEncoded())).build();
 
         // Sign message content
         byte[] signature = null;
@@ -99,7 +100,6 @@ public class KademliaProtocol {
         FindNodeRequest request = FindNodeRequest.newBuilder()
                 .setNode(node)
                 .setNodeID(ByteString.copyFrom(nodeId))
-                .setPublicKey(ByteString.copyFrom(publicKey.getEncoded()))
                 .setSignature(ByteString.copyFrom(signature)).build();
 
         FindNodeResponse response = stub.findNode(request);
@@ -142,7 +142,8 @@ public class KademliaProtocol {
                 .setId(ByteString.copyFrom(this.nodeId))
                 .setIp(this.ipAddress)
                 .setPort(this.port)
-                .setRandomX(ByteString.copyFrom(new byte[]{randomX})).build();
+                .setRandomX(ByteString.copyFrom(new byte[]{randomX}))
+                .setPublicKey(ByteString.copyFrom(publicKey.getEncoded())).build();
 
         Offer senderOffer = Offer.newBuilder().setNode(senderNode).setPrice(t.getSender().getPrice()).build();
 
@@ -179,8 +180,7 @@ public class KademliaProtocol {
                 .setNode(senderNode)
                 .setNodeID(ByteString.copyFrom(this.nodeId))
                 .setTransaction(transaction)
-                .setSignature(ByteString.copyFrom(signature))
-                .setPublicKey(ByteString.copyFrom(publicKey.getEncoded())).build();
+                .setSignature(ByteString.copyFrom(signature)).build();
 
         // Receive response
         StoreTransactionResponse response = stub.storeTransaction(request);
@@ -211,7 +211,8 @@ public class KademliaProtocol {
                 .setId(ByteString.copyFrom(this.nodeId))
                 .setIp(this.ipAddress)
                 .setPort(this.port)
-                .setRandomX(ByteString.copyFrom(new byte[]{randomX})).build();
+                .setRandomX(ByteString.copyFrom(new byte[]{randomX}))
+                .setPublicKey(ByteString.copyFrom(publicKey.getEncoded())).build();
 
         Node receiverNode = Node.newBuilder()
                 .setId(ByteString.copyFrom(receiverNodeID))
@@ -255,8 +256,7 @@ public class KademliaProtocol {
                 .setNode(senderNode)
                 .setReceiver(receiverNode)
                 .setBlock(kBlock)
-                .setSignature(ByteString.copyFrom(signature))
-                .setPublicKey(ByteString.copyFrom(publicKey.getEncoded())).build();
+                .setSignature(ByteString.copyFrom(signature)).build();
 
         // Receive response
         StoreBlockResponse response = stub.storeBlock(request);
@@ -289,6 +289,7 @@ public class KademliaProtocol {
                 .setId(ByteString.copyFrom(this.nodeId))
                 .setIp(ipAddress)
                 .setRandomX(ByteString.copyFrom(new byte[]{randomX}))
+                .setPublicKey(ByteString.copyFrom(publicKey.getEncoded()))
                 .setPort(port).build();
 
 
@@ -312,7 +313,6 @@ public class KademliaProtocol {
         FindAuctionRequest request = FindAuctionRequest.newBuilder()
                 .setNode(node)
                 .setNodeID(ByteString.copyFrom(nodeID))
-                .setPublicKey(ByteString.copyFrom(publicKey.getEncoded()))
                 .setSignature(ByteString.copyFrom(signature)).build();
 
         FindAuctionResponse response = stub.findAuction(request);
@@ -352,6 +352,7 @@ public class KademliaProtocol {
                 .setId(ByteString.copyFrom(nodeId))
                 .setIp(ipAddress)
                 .setRandomX(ByteString.copyFrom(new byte[]{randomX}))
+                .setPublicKey(ByteString.copyFrom(publicKey.getEncoded()))
                 .setPort(port).build();
 
 
@@ -377,7 +378,6 @@ public class KademliaProtocol {
         FindBlockRequest request = FindBlockRequest.newBuilder()
                 .setNode(node)
                 .setKey(ByteString.copyFrom(key))
-                .setPublicKey(ByteString.copyFrom(publicKey.getEncoded()))
                 .setSignature(ByteString.copyFrom(signature)).build();
 
         FindBlockResponse response = stub.findBlock(request);

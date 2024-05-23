@@ -4,7 +4,7 @@ import auctions.Auction;
 import blockchain.Blockchain;
 import com.google.protobuf.ByteString;
 import kademlia.server.KademliaServer;
-import kademlia.KademliaLookUp;
+
 import java.io.*;
 import java.math.BigInteger;
 import java.nio.file.Files;
@@ -57,9 +57,9 @@ public class Kademlia
 
         protocol = new KademliaProtocol(nodeId, ip, port, generatedPk, generatedSk,randomX);
 
-        rt = new KrtBootStrap(nodeId,protocol,
+        rt = new KademliaRoutingTable(nodeId,protocol,
                 Integer.parseInt(properties.getProperty("bucket.size")),
-                Integer.parseInt(properties.getProperty("siblingList.size")));
+                Integer.parseInt(properties.getProperty("siblingList.size")),generatedPk);
 
         System.out.println("Initializing blockchain...");
         bc = new Blockchain(Integer.parseInt(properties.getProperty("blockchain.difficulty")));
@@ -139,18 +139,6 @@ public class Kademlia
         }
     }
 
-    public byte[] signData (byte[]data)
-    {
-        try
-        {
-            return SignatureClass.sign(data,this.generatedSk);
-
-        }
-        catch(Exception e)
-        {
-            return null;
-        }
-    }
 
     public static void solveDynamicPuzzle(byte[] sKadNodeId, int leadingZerosDynamic) throws NoSuchAlgorithmException {
         /* against sybil attacks
@@ -220,7 +208,7 @@ public class Kademlia
             }
         }
         // Sort the combined results by distance to nodeId
-        Collections.sort(allResults, (node1, node2) -> {
+        allResults.sort((node1, node2) -> {
             BigInteger distance1 = rt.calculateDistance(node1.getId().toByteArray(), nodeId);
             BigInteger distance2 = rt.calculateDistance(node2.getId().toByteArray(), nodeId);
             return distance1.compareTo(distance2);
@@ -268,7 +256,7 @@ public class Kademlia
             }
         }
         //TODO ALTER THIS TO SORT BY REPUTATION/TRUST
-        Collections.sort(allResults, (node1, node2) -> {
+        allResults.sort((node1, node2) -> {
             BigInteger distance1 = rt.calculateDistance(node1.getId().toByteArray(), nodeId);
             BigInteger distance2 = rt.calculateDistance(node2.getId().toByteArray(), nodeId);
             return distance1.compareTo(distance2);
@@ -310,9 +298,11 @@ public class Kademlia
                 e.printStackTrace();
             }
         }
-
+        //TODO ALTER THIS TO SORT BY REPUTATION/TRUST
         Collections.sort(allResults, (node1, node2) -> {
-            return Integer.compare(node2.getReputation(), node1.getReputation()); // Descending order
+            BigInteger distance1 = rt.calculateDistance(node1.toByteArray(), nodeId);
+            BigInteger distance2 = rt.calculateDistance(node2.toByteArray(), nodeId);
+            return distance1.compareTo(distance2);
         });
 
 
@@ -373,14 +363,13 @@ public class Kademlia
     {
         Node node = Node.newBuilder()
                 //.setId(ByteString.copyFrom(nodeId)) ALTEREI ISSO
-                .setId(ByteString.copyFrom(this.nodeId))
+                .setId(ByteString.copyFrom(nodeId))
                 .setIp(protocol.ipAddress)
                 .setPort(protocol.port)
-                // TODO ADD PUBLIC KEY
-                .setPublicKey()
                 .build();
         return node;
     }
+
 
 
     // TODO: Delete this later

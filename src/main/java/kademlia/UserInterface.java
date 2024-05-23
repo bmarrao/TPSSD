@@ -149,7 +149,7 @@ public class UserInterface {
 
         //TODO : GET RECEIVER SEARCH RECEIVER WITH THE AUCTION THAT HAS THE MOST CHEAP AUCTION FOR THIS SERVICE  FALTA METODO
         //
-        KademliaNode receiverNode = new KademliaNode("","".getBytes(),0);
+        KademliaNode receiverNode = new KademliaNode("","".getBytes(),0, "".getBytes());
 
         boolean didTransactionGoThrough = false;
 
