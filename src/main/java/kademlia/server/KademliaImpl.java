@@ -360,7 +360,7 @@ public class KademliaImpl extends KademliaGrpc.KademliaImplBase
                 //isTransactionValid();
                     //Verificar HashMap e ver se:
                         //For open auction é só put
-                        //Se for Bid verificar se existe auction e se o price é maior que o anterior
+                        //Se for Bid verificar se existe auction e se o price é maior que o anterior Se for maior atualizar BrokerService MyAuctions
                         //Se for close auction, verificar se há auction
 
                     //Verificar número limite de transactions para minerar bloco
@@ -434,14 +434,7 @@ public class KademliaImpl extends KademliaGrpc.KademliaImplBase
             //Creates a new instance of storage. If already exists, use it.
             rt.insert(request.getNode(), 1);
 
-            ArrayList<blockchain.Transaction> transactions = new ArrayList<>();
-
-            for(Transaction transaction : request.getBlock().getTransList()){
-
-                blockchain.Transaction convertedTransaction = convertGRPCTransaction(transaction);
-                transactions.add(convertedTransaction);
-
-            }
+            ArrayList<Transaction> transactions = new ArrayList<>(request.getBlock().getTransList());
 
             String previousHash = request.getBlock().getPrevHash().toString();
 
@@ -493,6 +486,7 @@ public class KademliaImpl extends KademliaGrpc.KademliaImplBase
         }
     }
 
+    /*
     private blockchain.Transaction convertGRPCTransaction(Transaction grpcTransaction)
     {
 
@@ -510,15 +504,17 @@ public class KademliaImpl extends KademliaGrpc.KademliaImplBase
 
         return convertedTransaction;
 
-    }
+    }*/
 
+    /*
     private KademliaNode convertGRPCNode(Node grpcNode)
     {
         KademliaNode convertedNode = new KademliaNode(grpcNode.getIp(), grpcNode.getId().toByteArray() , grpcNode.getPort());
 
         return convertedNode;
-    }
+    } */
 
+    /*
     private blockchain.Transaction.TransactionType convertTransactionType(int type)
     {
 
@@ -540,6 +536,6 @@ public class KademliaImpl extends KademliaGrpc.KademliaImplBase
         }
 
         return transactionType;
-    }
+    }*/
 
 }

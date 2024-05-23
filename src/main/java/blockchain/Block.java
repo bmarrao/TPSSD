@@ -9,6 +9,7 @@ import java.util.Date;
 
 import kademlia.Node;
 import kademlia.SignatureClass;
+import kademlia.Transaction;
 import kademlia.grpcBlock;
 import org.bouncycastle.jcajce.provider.digest.SHA256;
 import java.nio.charset.StandardCharsets;
@@ -58,8 +59,7 @@ public class Block
         this.transactionList = new ArrayList<>();
         for (Transaction t : transactionList)
         {
-            Transaction tBlockChain = new Transaction(t.getReceiver(),t.getPrice(),t.getServiceID(),t.getType());
-            this.transactionList.add(tBlockChain);
+            this.transactionList.add(t);
         }
         this.nonce = grpcBlock.getNonce();
 
@@ -109,7 +109,7 @@ public class Block
     {
         for(Transaction t : transactionList)
         {
-            if (compareId(serviceId,t.getServiceID()) && Owner.equals(t.getReceiver()))
+            if (compareId(serviceId,t.getId().toByteArray()) && Owner.equals(t.getOwner()))
             {
                 return t;
             }

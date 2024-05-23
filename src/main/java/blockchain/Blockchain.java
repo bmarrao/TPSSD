@@ -2,10 +2,8 @@
 package blockchain;
 
 import auctions.BrokerService;
-import kademlia.Node;
-import kademlia.Offer;
-import kademlia.SignatureClass;
-import kademlia.grpcBlock;
+import kademlia.*;
+import org.checkerframework.checker.units.qual.A;
 
 import javax.accessibility.AccessibleIcon;
 import java.lang.reflect.Array;
@@ -20,8 +18,9 @@ public class Blockchain
     private final List<Block> chain;
     private final List<Block> orphanBlocks; // Blocks that are not part of the main chain
 
+    private final List<BrokerService> myAuctions;
     private final int difficulty;
-    HashMap<AuctionId ,Transaction > activeAuctions;
+    HashMap<AuctionId , Transaction> activeAuctions;
     ArrayList<byte[]> topicsSubscribed;
     // Constructor
     public Blockchain(int initialDifficulty)
@@ -30,6 +29,7 @@ public class Blockchain
         this.orphanBlocks = new ArrayList<>();
         this.topicsSubscribed = new ArrayList<>();
         this.activeAuctions = new HashMap<>();
+        this.myAuctions = new ArrayList<>();
         this.difficulty = initialDifficulty;
         Block genesis = createGenesisBlock();
         this.chain.add(genesis);
@@ -94,7 +94,7 @@ public class Blockchain
         ArrayList<Transaction> ret = new ArrayList<>();
         for (Transaction t : this.activeAuctions.values())
         {
-            if (compareId(t.getServiceID(),serviceId))
+            if (compareId(t.getId().toByteArray(),serviceId))
             {
                 ret.add(t);
             }
@@ -279,7 +279,7 @@ public class Blockchain
             return false;
         }
         for (Transaction transaction : transactions) {
-            if (transaction.getPrice() <= 0 || transaction.getSender() == null || transaction.getReceiver() == null) {
+            if (transaction.getSender().getPrice() <= 0 || transaction.getSender() == null || transaction.getOwner() == null) {
                 block.setReputation(0);
                 return false;
             }

@@ -2,6 +2,7 @@ package auctions;
 
 import kademlia.KademliaProtocol;
 import kademlia.Offer;
+import kademlia.Transaction;
 
 
 public class RunService implements Runnable {
@@ -47,10 +48,15 @@ public class RunService implements Runnable {
                 throw new RuntimeException(e);
             }
         }
-        // TODO FIX THIS
-        a.k.
-        kademlia.Transaction t= kademlia.Transaction.newBuilder().setId(bs.serviceId).setOwner(bs.Owner).setSender(bs.highestOffer).setSignature().build()
-        kp.storeTransactionOp(new Transaction())
+        byte[] = bs.serviceId
+        Node = bs.owner
+        Offer = bs.highestOffer;
+        byte[] data = ;
+        byte[] signature = this.a.k.signData(data);
+        Transaction t= Transaction.newBuilder()
+        .setId(bs.serviceId).setOwner(bs.Owner).setSender(bs.highestOffer)
+        .setSignature(signature).build();
+        kp.storeTransactionOp(t);
     }
 
     Offer clone (Offer o)

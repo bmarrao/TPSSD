@@ -139,6 +139,18 @@ public class Kademlia
         }
     }
 
+    public byte[] signData (byte[]data)
+    {
+        try
+        {
+            return SignatureClass.sign(data,this.generatedSk);
+
+        }
+        catch(Exception e)
+        {
+            return null;
+        }
+    }
 
     public static void solveDynamicPuzzle(byte[] sKadNodeId, int leadingZerosDynamic) throws NoSuchAlgorithmException {
         /* against sybil attacks
@@ -266,7 +278,7 @@ public class Kademlia
         return allResults.get(0);
     }
 
-    public Transaction sKadBlockLookup(byte[] nodeId, int d_closest_nodes)
+    public grpcBlock sKadBlockLookup(byte[] nodeId, int d_closest_nodes)
     {
         // get closest nodes to destinationKey (non recursive)
         ArrayList<Node> closestNodes = rt.findClosestNode(nodeId, d_closest_nodes);
@@ -298,11 +310,9 @@ public class Kademlia
                 e.printStackTrace();
             }
         }
-        //TODO ALTER THIS TO SORT BY REPUTATION/TRUST
+
         Collections.sort(allResults, (node1, node2) -> {
-            BigInteger distance1 = rt.calculateDistance(node1.getId().toByteArray(), nodeId);
-            BigInteger distance2 = rt.calculateDistance(node2.getId().toByteArray(), nodeId);
-            return distance1.compareTo(distance2);
+            return Integer.compare(node2.getReputation(), node1.getReputation()); // Descending order
         });
 
 
@@ -366,10 +376,11 @@ public class Kademlia
                 .setId(ByteString.copyFrom(this.nodeId))
                 .setIp(protocol.ipAddress)
                 .setPort(protocol.port)
+                // TODO ADD PUBLIC KEY
+                .setPublicKey()
                 .build();
         return node;
     }
-
 
 
     // TODO: Delete this later

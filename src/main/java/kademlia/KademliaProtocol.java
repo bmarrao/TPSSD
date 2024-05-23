@@ -120,16 +120,15 @@ public class KademliaProtocol {
         return new ArrayList<>();
     }
 
-    //TODO Implementar KademliaIMPL para lidar com a resposta
-    public boolean storeTransactionOp(blockchain.Transaction t) throws UnsupportedEncodingException {
+    public boolean storeTransactionOp(Transaction t) throws UnsupportedEncodingException {
 
-        byte[] receiverNodeID = t.getReceiver().getNodeId();
+        byte[] receiverNodeID = t.getOwner().getId().toByteArray();
 
-        String receiverIP = t.getReceiver().getIpAdress();
+        String receiverIP = t.getOwner().getIp();
 
-        int receiverPort = t.getReceiver().getPort();
+        int receiverPort = t.getOwner().getPort();
 
-        int transactionType = getTransactionType(t.getType());
+        //int transactionType = getTransactionType(t.getType());
 
         ManagedChannel channel = ManagedChannelBuilder.forAddress(receiverIP, receiverPort).usePlaintext().build();
 
@@ -145,27 +144,14 @@ public class KademliaProtocol {
                 .setPort(this.port)
                 .setRandomX(ByteString.copyFrom(new byte[]{randomX})).build();
 
-        Offer senderOffer = Offer.newBuilder().setNode(senderNode).setPrice(t.getPrice()).build();
+        Offer senderOffer = Offer.newBuilder().setNode(senderNode).setPrice(t.getSender().getPrice()).build();
 
         Transaction transaction = Transaction.newBuilder()
-                .setId(ByteString.copyFrom(t.getServiceID()))
-                .setType(transactionType)
+                .setId(t.getId())
+                .setType(t.getType())
                 .setOwner(ownerNode)
                 .setSender(senderOffer)
                 .build();
-
-        /*byte[] ownerNodeToSign = ownerNode.toByteArray();
-        byte[] senderNodeToSign = senderNode.toByteArray();
-        byte[] offerInfoToSign = senderOffer.toByteArray();
-
-        int ownerAndSenderLength = ownerNodeToSign.length + senderNodeToSign.length;
-        int withOfferLength = ownerAndSenderLength + offerInfoToSign.length;
-        int totalLength = withOfferLength + nodeId.length;*/
-
-        /*System.arraycopy(ownerNodeToSign, 0, infoToSign, 0, ownerNodeToSign.length);
-        System.arraycopy(senderNodeToSign, 0, infoToSign, ownerNodeToSign.length, senderNodeToSign.length);
-        System.arraycopy(offerInfoToSign, 0, infoToSign, ownerAndSenderLength, offerInfoToSign.length);
-        System.arraycopy(nodeId, 0, infoToSign, withOfferLength, nodeId.length);*/
 
         byte[] senderNodeToSign = senderNode.toByteArray();
         byte[] transactionToSign = transaction.toByteArray();
@@ -214,29 +200,6 @@ public class KademliaProtocol {
             return response.getStored();
         }
         return false;
-    }
-
-    private int getTransactionType(blockchain.Transaction.TransactionType type) {
-
-        //There are 3 Transactions Type:
-        // 0 -> Bid
-        // 1 -> NewAuction
-        // 2 -> CloseAuction
-        int transactionType = 0;
-
-        switch (type) {
-            case OPENING:
-                transactionType = 1;
-                break;
-            case CLOSURE:
-                transactionType = 2;
-                break;
-            default:
-                break;
-        }
-
-        return transactionType;
-
     }
 
     //TODO Transactions
