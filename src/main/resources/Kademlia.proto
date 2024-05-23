@@ -125,7 +125,7 @@ message FindBlockRequest
 message FindBlockResponse
 {
   bytes id = 1;
-  bool hasBlcok = 2;
+  bool hasBlock = 2;
   grpcBlock b = 3;
   repeated Node nodes = 4;
   bytes publicKey = 5;

@@ -5,6 +5,7 @@ import auctions.BrokerService;
 import kademlia.Node;
 import kademlia.Offer;
 import kademlia.SignatureClass;
+import kademlia.grpcBlock;
 
 import javax.accessibility.AccessibleIcon;
 import java.lang.reflect.Array;
@@ -109,6 +110,19 @@ public class Blockchain
         byte[] serviceId = encryptService(service);
         this.topicsSubscribed.add(serviceId);
         return serviceId;
+    }
+
+    public byte[] addBlock(grpcBlock block)
+    {
+        Block block1 = new Block(block);
+        byte[] serviceId = encryptService(service);
+        this.topicsSubscribed.add(serviceId);
+        return serviceId;
+    }
+
+    public boolean checkIfBlockIsValid(grpcBlock block)
+    {
+
     }
 
     public boolean removeSubscribe(String service)
