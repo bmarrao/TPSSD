@@ -251,11 +251,8 @@ public class KademliaImpl extends KademliaGrpc.KademliaImplBase
         }
     }
 
-    /*
-
-
     @Override
-    public void findBlock(FindAuctionRequest request, StreamObserver<FindAuctionResponse> responseObserver)
+    public void findBlock(FindBlockRequest request, StreamObserver<FindBlockResponse> responseObserver)
     {
         // Retrieve the key from the request
         byte[] key = request.getKey().toByteArray();
@@ -284,7 +281,7 @@ public class KademliaImpl extends KademliaGrpc.KademliaImplBase
             // Get the value associated with the key from the data store
             // TODO GET A COPY OF BLOCKCHAIN
             Block value = null;//bc.findBlock(key);
-            boolean hasBlockk = true;
+            boolean hasBlock = true;
             List<Node> closestNodes = new ArrayList<>();
             if (value == null)
             {
@@ -306,11 +303,11 @@ public class KademliaImpl extends KademliaGrpc.KademliaImplBase
                 e.printStackTrace();
             }
 
-            FindAuctionResponse response = FindAuctionResponse.newBuilder()
+            FindBlockResponse response = FindBlockResponse.newBuilder()
                     .setId(request.getNode().getId())
-                    .setBlock(value)
+                    .setB(value)
                     .addAllNodes(closestNodes)
-                    .setHasTransaction(hasTransaction)
+                    .setHasBlock(hasBlock)
                     .setPublicKey(ByteString.copyFrom(publicKey.getEncoded()))
                     .setSignature(ByteString.copyFrom(signature)).build();
 
@@ -324,89 +321,6 @@ public class KademliaImpl extends KademliaGrpc.KademliaImplBase
             System.out.println("Node didn't solve crypto puzzles, discarding find value request...");
         }
     }
-    */
-    /*
-
-    @Override
-    public void store(StoreRequest request, StreamObserver<StoreResponse> responseObserver)
-    {
-        // Retrieve the key, value and signature from the request
-        byte[] key = request.getKey().toByteArray();
-        Node value = request.getValue();
-        byte[] signature = request.getSignature().toByteArray();
-
-        // Build data byte array for signature verification
-        byte[] nodeBytes = request.getNode().toByteArray();
-        byte[] valueBytes = request.getValue().toByteArray();
-        byte[] infoToVerify = new byte[key.length + valueBytes.length + nodeBytes.length];
-        System.arraycopy(nodeBytes, 0, infoToVerify, 0, nodeBytes.length);
-        System.arraycopy(key, 0, infoToVerify, nodeBytes.length, key.length);
-        System.arraycopy(valueBytes, 0, infoToVerify, nodeBytes.length + key.length, valueBytes.length);
-
-
-        // Verify signature from request RPC
-        boolean signVal = false;
-        try {
-            signVal = SignatureClass.verify(infoToVerify, signature, request.getPublicKey().toByteArray());
-        }
-        catch(Exception e) {
-            e.printStackTrace();
-        }
-
-
-        if (signVal && arePuzzlesValid(request.getNode().getId().toByteArray(), request.getNode().getRandomX().byteAt(0))) {
-            rt.insert(request.getNode(), 1);
-
-            // Creates a new instance of storage. If already exists, use it.
-            // TODO PUT IN BLOCKCHAIN
-            // Hash <HashTransaction,Transaction> ?
-            if (request.getTransaction() == null)
-            {
-                // Recebi um bloco
-            }
-            else
-            {
-                // recebi uma transação
-            }
-            boolean isInBlockChain = bc.addTransaction(request.getTransaction);
-            if (isInBlockChain)
-            {
-                // Não precisa propagar
-            }
-            else
-            {
-                // RANDOM - PROPAGA OU NÃO?
-                // VARIAVEL PROBABILIDADE CONFIGURAVEL
-            }
-            // Sign RPC response
-            try {
-                signature = SignatureClass.sign(request.getNode().getId().toByteArray(), privateKey);
-            }
-            catch(Exception e) {
-                e.printStackTrace();
-            }
-
-            // if store successfull -> send true, else false
-            //TODO [ When it's false? ]
-            StoreResponse response = StoreResponse.newBuilder()
-                    .setId(request.getNode().getId())
-                    .setStored(true)
-                    .setPublicKey(ByteString.copyFrom(publicKey.getEncoded()))
-                    .setSignature(ByteString.copyFrom(signature)).build();
-
-            responseObserver.onNext(response);
-            responseObserver.onCompleted();
-        }
-        else if (!signVal) {
-            System.out.println("Signature is invalid, discarding store request...");
-        }
-        else {
-            System.out.println("Node didn't solve crypto puzzles, discarding store request...");
-        }
-
-    }
-     */
-
     @Override
     public void storeTransaction(StoreTransactionRequest request, StreamObserver<StoreTransactionResponse> responseObserver) {
 
@@ -441,6 +355,19 @@ public class KademliaImpl extends KademliaGrpc.KademliaImplBase
             rt.insert(request.getNode(), 1);
 
             //TODO Lógica
+            //bc.validateTransactionsSignature();
+            //bc.addTransaction();
+                //isTransactionValid();
+                    //Verificar HashMap e ver se:
+                        //For open auction é só put
+                        //Se for Bid verificar se existe auction e se o price é maior que o anterior
+                        //Se for close auction, verificar se há auction
+
+                    //Verificar número limite de transactions para minerar bloco
+                    //Adicionar transaction a esse bloco
+
+            //Passar para todos os blocos essa transaction || Validar Transaction
+            //Cheguei no limite de transações então vou tentar minerar bloco
 
 
             // Sign RPC response
@@ -501,7 +428,8 @@ public class KademliaImpl extends KademliaGrpc.KademliaImplBase
             e.printStackTrace();
         }
 
-        if (signVal && arePuzzlesValid(request.getNode().getId().toByteArray(), request.getNode().getRandomX().byteAt(0))) {
+        if (signVal && arePuzzlesValid(request.getNode().getId().toByteArray(), request.getNode().getRandomX().byteAt(0)))
+        {
 
             //Creates a new instance of storage. If already exists, use it.
             rt.insert(request.getNode(), 1);
@@ -520,6 +448,13 @@ public class KademliaImpl extends KademliaGrpc.KademliaImplBase
             Block newBlock = new Block(previousHash, transactions);
 
             //TODO Verificar Lógica
+            //Recebo bloco
+            //Verificar se o Bloco é válido:
+                //Verificar hash do anterior
+                //Verificar se as transações são válidas
+
+            //Caso receba dois blocos ao mesmo tempo, se tiver outro storeblock quero ver o que tem maior reputação
+
             bc.addBlock(newBlock);
 
             //Check if chain is valid!

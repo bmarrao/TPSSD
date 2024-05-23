@@ -1,13 +1,7 @@
 package auctions;
 
-import auctions.BrokerService;
-import com.google.protobuf.ByteString;
 import kademlia.KademliaProtocol;
-import kademlia.Node;
 import kademlia.Offer;
-import java.util.concurrent.locks.Condition;
-
-import java.util.*;
 
 
 public class RunService implements Runnable {
@@ -26,7 +20,6 @@ public class RunService implements Runnable {
     public void run()
     {
 
-        Map<Node,Offer> offers  = new HashMap<>();
         Offer of = clone(bs.highestOffer);
 
         while (true)
@@ -54,7 +47,10 @@ public class RunService implements Runnable {
                 throw new RuntimeException(e);
             }
         }
-        //kp.endService()
+        // TODO FIX THIS
+        a.k.
+        kademlia.Transaction t= kademlia.Transaction.newBuilder().setId(bs.serviceId).setOwner(bs.Owner).setSender(bs.highestOffer).setSignature().build()
+        kp.storeTransactionOp(new Transaction())
     }
 
     Offer clone (Offer o)

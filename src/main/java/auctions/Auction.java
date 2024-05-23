@@ -24,15 +24,6 @@ public class Auction
     }
 
 
-    public boolean hasService(byte[] serviceId) {
-        for (BrokerService service : services) {
-            if (service.getServiceId() == serviceId) {
-                return true;
-            }
-        }
-        return false;
-    }
-
     public byte[] initiateService(String service, int time)
     {
         byte[] serviceId  = null;
@@ -45,7 +36,7 @@ public class Auction
             e.printStackTrace();
         }
         l.lock();
-        BrokerService bs = new BrokerService(serviceId,null, time,null);
+        BrokerService bs = new BrokerService(serviceId, time,k.getOwnNode());
         services.add(bs);
         Offer.Builder nd = Offer.newBuilder();
         nd.setPrice(-1);

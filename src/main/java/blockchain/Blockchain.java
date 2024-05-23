@@ -5,6 +5,7 @@ import auctions.BrokerService;
 import kademlia.Node;
 import kademlia.Offer;
 import kademlia.SignatureClass;
+import kademlia.grpcBlock;
 
 import javax.accessibility.AccessibleIcon;
 import java.lang.reflect.Array;
@@ -17,6 +18,8 @@ import java.util.*;
 public class Blockchain
 {
     private final List<Block> chain;
+    private final List<Block> orphanBlocks; // Blocks that are not part of the main chain
+
     private final int difficulty;
     HashMap<AuctionId ,Transaction > activeAuctions;
     ArrayList<byte[]> topicsSubscribed;
@@ -24,6 +27,7 @@ public class Blockchain
     public Blockchain(int initialDifficulty)
     {
         this.chain = new ArrayList<>();
+        this.orphanBlocks = new ArrayList<>();
         this.topicsSubscribed = new ArrayList<>();
         this.activeAuctions = new HashMap<>();
         this.difficulty = initialDifficulty;
@@ -77,13 +81,6 @@ public class Blockchain
         // disseminar transaction
     }
 
-    // Method to add a new block to the blockchain
-    public void addBlock(Block newBlock) {
-        // Set the previous hash to the hash of the latest block
-        newBlock.mineBlock(difficulty); // Ensure the block has valid proof-of-work
-        chain.add(newBlock);
-    }
-
 
     public Transaction getInformation(String service, Node owner)
     {
@@ -109,6 +106,68 @@ public class Blockchain
         byte[] serviceId = encryptService(service);
         this.topicsSubscribed.add(serviceId);
         return serviceId;
+    }
+
+    public byte[] addBlock(grpcBlock block)
+    {
+        Block block1 = new Block(block);
+        if (checkIfBlockIsValid(block1))
+        {
+            chain.add(block1);
+        }
+        else
+        {
+            if(checkIfOrphanBlockIsValid(block1))
+            {
+                orphanBlocks.add(block1);
+            }
+        }
+        resolveForks();
+        return null;
+    }
+    private void resolveForks() {
+        // Check all orphan blocks to see if they can be connected to the main chain
+        List<Block> toBeRemoved = new ArrayList<>();
+        for (Block orphan : orphanBlocks) {
+            if (isValidNewBlock(orphan, getLastBlock())) {
+                chain.add(orphan);
+                toBeRemoved.add(orphan);
+            }
+        }
+        orphanBlocks.removeAll(toBeRemoved);
+
+        // Optionally, implement more sophisticated fork resolution
+    }
+    public boolean checkIfBlockIsValid(Block block)
+    {
+        if (!(block.hash.equals(block.calculateHash())))
+        {
+            return false ;
+        }
+        Block lastMinedBlock = chain.get(chain.size()-1);
+        if(!block.previousHash.equals(lastMinedBlock.hash))
+        {
+
+            return false ;
+        }
+        if(!(hasValidTransaction(block,block.getTransactionList())))
+        {
+            return false ;
+        }
+        // TODO BLOCK SIGNATURE ?
+        return true;
+    }
+
+    private boolean hasValidTransactions(Block block, ArrayList<Transaction> transactions)
+    {
+        for (Transaction transaction : transactions)
+        {
+            if(!(transaction.isSignatureValid()))
+            {
+                return false;
+            }
+        }
+        return true;
     }
 
     public boolean removeSubscribe(String service)
