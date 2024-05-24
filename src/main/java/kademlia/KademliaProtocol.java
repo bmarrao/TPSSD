@@ -6,7 +6,9 @@ import io.grpc.ManagedChannel;
 import io.grpc.ManagedChannelBuilder;
 import io.grpc.stub.StreamObserver;
 
+import java.io.ByteArrayOutputStream;
 import java.io.UnsupportedEncodingException;
+import java.nio.ByteBuffer;
 import java.nio.charset.StandardCharsets;
 import java.security.PrivateKey;
 import java.security.PublicKey;
@@ -227,42 +229,46 @@ public class KademliaProtocol {
                 .setPort(receiverPort)
                 .setRandomX(ByteString.copyFrom(new byte[]{randomX})).build();
 
-        byte[] infoToSign =
-        {
-                Byte.parseByte(block.getPreviousHash()),
-                (byte) block.getTimestamp(),
-                (byte) block.getNonce(),
-                Byte.parseByte(String.valueOf(block.getTransactionList())),
-                Byte.parseByte(block.getHash()),
-        };
-        ByteString signedInfo;
+        // Sign GRPC Block
+        ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
+        byte[] signedInfo = null;
         try {
-            signedInfo = ByteString.copyFrom(SignatureClass.sign(infoToSign,this.privateKey));
-        } catch (Exception e) {
-            throw new RuntimeException(e);
+            outputStream.write(block.getNode().toByteArray());
+            outputStream.write(block.getPreviousHash());
+            outputStream.write(block.getHash());
+            outputStream.write(ByteBuffer.allocate(8).putLong(block.getTimestamp()).array());
+            outputStream.write(ByteBuffer.allocate(4).putInt(block.getNonce()).array());
+            outputStream.write(block.getTransactionList().toString().getBytes(StandardCharsets.UTF_8));
+            outputStream.close();
+            signedInfo = SignatureClass.sign(outputStream.toByteArray(),this.privateKey);
         }
+        catch(Exception e) {
+            e.printStackTrace();
+        }
+
+        // Build GRPC Block
         grpcBlock kBlock = grpcBlock.newBuilder()
-                .setPrevHash(ByteString.copyFrom(block.getPreviousHash(), StandardCharsets.UTF_8))
-                .setCurrentHash(ByteString.copyFrom(block.getHash(), StandardCharsets.UTF_8))
+                .setPrevHash(ByteString.copyFrom(block.getPreviousHash()))
+                .setCurrentHash(ByteString.copyFrom(block.getHash()))
                 .setTimestamp(block.getTimestamp())
                 .setNonce(block.getNonce())
-                .setSignature(signedInfo)
+                .setSignature(ByteString.copyFrom(signedInfo))
                 .build();
 
+
+        // Sign node content (sender + receiver + block)
         byte[] senderNodeToSign = senderNode.toByteArray();
         byte[] receiverNodeToSign = receiverNode.toByteArray();
         byte[] kBlockToSign = kBlock.toByteArray();
 
         int senderAndReceiverLength = senderNodeToSign.length + receiverNodeToSign.length;
         int totalLength = senderAndReceiverLength + kBlockToSign.length;
-
-        infoToSign = new byte[totalLength];
+        byte[] infoToSign = new byte[totalLength];
 
         System.arraycopy(senderNodeToSign, 0, infoToSign, 0, senderNodeToSign.length);
         System.arraycopy(receiverNodeToSign, 0, infoToSign, senderNodeToSign.length, receiverNodeToSign.length);
         System.arraycopy(kBlockToSign, 0, infoToSign, senderAndReceiverLength, kBlockToSign.length);
 
-        // Sign node content
         byte[] signature = null;
         try {
             signature = SignatureClass.sign(infoToSign, privateKey);
@@ -315,11 +321,10 @@ public class KademliaProtocol {
         });
     }
 
-    public FindAuctionResponse findAuctionOp(byte[] nodeID, String receiverIp, int receiverPort) {
+    public FindAuctionRequest findAuctionOp(byte[] nodeID, String receiverIp, int receiverPort) {
         ManagedChannel channel = ManagedChannelBuilder.forAddress(receiverIp, receiverPort).usePlaintext().build();
 
         KademliaGrpc.KademliaBlockingStub stub = KademliaGrpc.newBlockingStub(channel);
-
 
         Node node = Node.newBuilder()
                 .setId(ByteString.copyFrom(this.nodeId))
@@ -329,7 +334,7 @@ public class KademliaProtocol {
                 .setPort(port).build();
 
 
-        // TODO FIX THIS
+        // TODO FIX THIS ??
         byte[] nodeInfoToSign = node.toByteArray();
         byte[] infoToSign = new byte[nodeInfoToSign.length + nodeID.length];
 

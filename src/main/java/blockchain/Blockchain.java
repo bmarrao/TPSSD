@@ -348,14 +348,18 @@ public class Blockchain
         // Verify block signature
         ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
 
-        outputStream.write(block.getPreviousHash());
-        outputStream.write(transactionList.toString().getBytes(StandardCharsets.UTF_8));
-        outputStream.write(hexStringToByteArray(hash));
-        outputStream.write(ByteBuffer.allocate(8).putLong(timestamp).array());
-        outputStream.write(ByteBuffer.allocate(4).putInt(nonce).array());
-        outputStream.write(ByteBuffer.allocate(4).putInt(reputationScore).array());
-
-        outputStream.close();
+        try {
+            outputStream.write(block.getPreviousHash());
+            outputStream.write(transactionList.toString().getBytes(StandardCharsets.UTF_8));
+            outputStream.write(hexStringToByteArray(hash));
+            outputStream.write(ByteBuffer.allocate(8).putLong(timestamp).array());
+            outputStream.write(ByteBuffer.allocate(4).putInt(nonce).array());
+            outputStream.write(ByteBuffer.allocate(4).putInt(reputationScore).array());
+            outputStream.close();
+        }
+        catch(Exception e) {
+            e.printStackTrace();
+        }
         byte[] infoToVerify = new byte[block.getPreviousHash().length];
         byte[] infoToVerify = 
         {
