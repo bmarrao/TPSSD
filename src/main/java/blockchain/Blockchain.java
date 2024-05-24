@@ -16,9 +16,10 @@ import java.util.*;
 
 public class Blockchain
 {
-    private final List<Block> chain;
-    private final List<Block> orphanBlocks; // Blocks that are not part of the main chain
 
+    private static final int TRANSACTIONS_LIMIT = 5;
+    Block latestBlock;
+    private final HashMap<String, Block> blocks;
     private final Kademlia k;
     private final List<BrokerService> myAuctions;
     private final int difficulty;
@@ -27,15 +28,14 @@ public class Blockchain
     // Constructor
     public Blockchain(int initialDifficulty, Kademlia k)
     {
-        this.chain = new ArrayList<>();
         this. k = k;
-        this.orphanBlocks = new ArrayList<>();
         this.topicsSubscribed = new ArrayList<>();
         this.activeAuctions = new HashMap<>();
+        this.blocks = new HashMap<>();
         this.myAuctions = new ArrayList<>();
         this.difficulty = initialDifficulty;
         Block genesis = createGenesisBlock();
-        this.chain.add(genesis);
+        this.latestBlock = genesis;
 
     }
 
@@ -52,13 +52,10 @@ public class Blockchain
 
 
     // Getters
-    public List<Block> getChain() {
-        return chain;
+    public Block getLastBlock() {
+        return latestBlock;
     }
 
-    public Block getLatestBlock() {
-        return chain.get(chain.size() - 1);
-    }
 
     public int getDifficulty() {
         return difficulty;
@@ -114,9 +111,17 @@ public class Blockchain
     public byte[] addBlock(grpcBlock block)
     {
         Block block1 = new Block(block);
-        if (isBlockValid(block1))
+        // Verify previous block reference and that POW was done
+        String target = new String(new char[difficulty]).replace('\0', '0');
+        String bcLatestBlockHash = getLatestBlock().getH;
+        String previousBlockHash = block1.getPreviousHash();
+        if (!bcLatestBlockHash.equals(previousBlockHash) || !block1.getHash().startsWith(target))
         {
-            chain.add(block1);
+            this.k.rt.setReputation(block1.getNode(),-1);
+            if (isBlockValid(block1))
+            {
+                chain.add(block1);
+            }
         }
         else
         {
@@ -140,6 +145,7 @@ public class Blockchain
         // Optionally, implement more sophisticated fork resolution
     }
     */
+
     private boolean hasValidTransactions(Block block, ArrayList<Transaction> transactions)
     {
         for (Transaction transaction : transactions)
@@ -152,13 +158,77 @@ public class Blockchain
         return true;
     }
 
-    private boolean isTransactionSignValid(Transaction transaction)
+    //There are 3 Transactions Type:
+    // 0 -> Bid
+    // 1 -> NewAuction
+    // 2 -> CloseAuction
+    private boolean isTransactionSignValid(Transaction transaction, Block block)
+    {
+        boolean isValid = false;
+        Transaction lastTransaction;
+
+        /*for (Block b : chain)
+        {
+
+        }*/
+
+        //Checa no bloco ;
+        // Se não tiver no bloco
+        // Block newB = getBLock(b.previousHash)
+        // return isTransactionValid(t, newB)
+
+        if(block != null)
+        {
+            lastTransaction = isBlockTransactionValid(transaction, block);
+            
+
+        }else{
+
+            if(!verifyTransactionSignature(transaction)){
+                return isValid;
+            }
+            else
+            {
+                //TODO Validar se o limite de transactions foi atingido
+                //Se sim, minerar bloco novo e colocar transaction lá.
+
+                //TODO Validar se existe uma auction
+
+                switch (transaction.getType()) {
+                    case 1:
+                        //Verificar se já não existe uma. Dar put se não existir.
+                        break;
+                    case 2:
+                        //Verificar se existe uma auction a decorrer. Se sim, fazer close.
+                        break;
+                    default:
+                        //Verificar se exista uma auction a decorrer. Se sim, verificar se o valor é maior que o atual.
+                        break;
+                }
+
+            }
+        }
+
+        return isValid;
+    }
+
+    private boolean verifyTransactionSignature(Transaction transaction)
     {
         boolean isValid = false;
 
         byte[] transactionOriginalSign = transaction.getSignature().toByteArray();
+        byte[] serviceID = transaction.getId().toByteArray();
+        byte[] senderNodeToVerify = transaction.getSender().getNode().toByteArray();
+        byte[] transactionToVerify = transaction.toByteArray();
 
+        int senderAndTransactionLength = senderNodeToVerify.length + transactionToVerify.length;
+        int totalLength = senderAndTransactionLength + serviceID.length;
 
+        byte[] infoToVerify = new byte[totalLength];
+
+        System.arraycopy(senderNodeToVerify, 0, infoToVerify, 0, senderNodeToVerify.length);;
+        System.arraycopy(transactionToVerify, 0, infoToVerify, senderNodeToVerify.length, transactionToVerify.length );;
+        System.arraycopy(serviceID, 0, infoToVerify, senderAndTransactionLength, serviceID.length);
 
         try {
             byte[] publicKey = transaction.getSender().getNode().getPublicKey().toByteArray();
@@ -171,6 +241,7 @@ public class Blockchain
         }
 
         return isValid;
+
     }
 
     public boolean removeSubscribe(String service)
@@ -245,17 +316,7 @@ public class Blockchain
 
     public boolean isBlockValid(Block block)
     {
-        float currRepScore = block.getReputation();
 
-        // Verify previous block reference and that POW was done
-        String target = new String(new char[difficulty]).replace('\0', '0');
-        String bcLatestBlockHash = getLatestBlock().getHash();
-        String previousBlockHash = block.getPreviousHash();
-        if (!bcLatestBlockHash.equals(previousBlockHash) || !block.getHash().startsWith(target))
-        {
-            currRepScore = 0;
-            return false;
-        }
 
         // TODO TEST THIS
         // Verify block signature
@@ -271,7 +332,7 @@ public class Blockchain
         try {
             if (!SignatureClass.verify(infoToVerify, block.getSignature(), block.getNode().getPublicKey().toByteArray()))
             {
-                block.setReputation(0);
+                this.k.rt.setReputation(block.getNode(),-1);
                 return false;
             }
         }
@@ -283,17 +344,20 @@ public class Blockchain
         ArrayList<Transaction> transactions = block.getTransactionList();
         if (transactions.isEmpty())
         {
-            currRepScore = 0;
+            this.k.rt.setReputation(block.getNode(),-1);
             return false;
         }
-        for (Transaction transaction : transactions) {
-            if (transaction.getSender().getPrice() <= 0 || transaction.getSender() == null || transaction.getOwner() == null) {
-                currRepScore = 0;
+        for (Transaction transaction : transactions)
+        {
+            if(!isTransactionSignValid(transaction, block))
+            {
+                this.k.rt.setReputation(block.getNode(),-1)      ;
                 return false;
             }
         }
 
-        this.k.rt.setReputation(block.getNode());
+        this.k.rt.setReputation(block.getNode(),1);
+        block.setReputation(1);
         return true;
     }
 

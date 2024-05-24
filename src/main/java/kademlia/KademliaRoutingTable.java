@@ -82,12 +82,22 @@ public class KademliaRoutingTable
     }
 
 
-    public void setReputation(Node node) {
+    // a can be 1 or -1 wether we want to increase or decrease the reputation
+    public void setReputation(Node node, int a) {
         KademliaNode kn = CheckNodeIsInTree(node.getId().toByteArray(), this.root, "");
-        if (kn.getReputation() != 0) {
-            kn.setReputation((kn.reputation * reputationPercentage) + kn.reputation);
-        } else {
-            kn.setReputation((float) (0.01 + kn.reputation));
+        if (a == 1) {
+            if (kn.getReputation() != 0) {
+                kn.setReputation((kn.reputation * reputationPercentage) + kn.reputation);
+            } else {
+                kn.setReputation((float) (0.01 + kn.reputation));
+            }
+        }
+        else {
+            if (kn.getReputation() != 0) {
+                kn.setReputation(kn.reputation - (kn.reputation * reputationPercentage));
+            } else {
+                kn.setReputation((float) (kn.reputation - 0.01));
+            }
         }
     }
 
@@ -638,6 +648,22 @@ public class KademliaRoutingTable
             }
         }
         return nodeId.toString();
+    }
+
+    //TODO GetAllNodes
+    public ArrayList<Node> getAllNodes(){
+
+        this.root.right. ;
+        this.root.left ;
+        if(this.root.right.kbucket == null)
+        {
+            getAllNodes(this.root.right.left)
+        }
+        else
+        {
+            addAllNodes(this.root.right.kbucket);
+        }
+
     }
 }
 

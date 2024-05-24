@@ -23,6 +23,7 @@ public class Block
     //private int index;
     Node node;
     public String hash;
+    public Block previousBlock;
     public String previousHash;
     private long timestamp;
     private int nonce;
@@ -30,7 +31,7 @@ public class Block
     private int reputationScore;
     private byte[] signature;
 
-    public Block(String previousHash, ArrayList<Transaction> transactionList)
+    public Block(String previousHash, ArrayList<Transaction> transactionList,Block previousBlock)
     {
         this.previousHash = previousHash;
         this.timestamp = new Date().getTime();
@@ -38,6 +39,7 @@ public class Block
         this.transactionList = transactionList;
         this.hash = calculateHash();
         this.signature = null;
+        this.previousBlock = previousBlock;
     }
     public Block(grpcBlock grpcBlock)
     {
@@ -67,7 +69,15 @@ public class Block
     public String getHash() {
         return hash;
     }
+    public Block getPreviousBlock()
+    {
+        return this.previousBlock;
+    }
 
+    public void setPreviousBlock(Block prevBlock)
+    {
+        this.previousBlock = prevBlock;
+    }
     public float getReputation() { return reputation; }
     public void setReputation(int reputationScore) { reputation = reputationScore; }
 
