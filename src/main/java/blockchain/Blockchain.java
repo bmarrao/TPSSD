@@ -180,7 +180,172 @@ public class Blockchain
     // 0 -> Bid
     // 1 -> NewAuction
     // 2 -> CloseAuction
-    private boolean isTransactionValid(Transaction transaction, Block block)
+    private boolean isTransactionValid(Transaction transaction)
+    {
+        boolean isValid = false;
+
+        /*for (Block b : this.blocks) {
+
+            for (Transaction t : b.getTransactionList()) {
+
+                // se a transação inicial já existir, então devolver falso.
+                if(t.getId().equals(transaction.getId()) && t.getOwner().equals(transaction.getOwner())){
+
+                    switch (t.getType()) {
+                        case 0:
+                            //Verificar se a offer atual é maior.
+                            if(transaction.getSender().getPrice() > t.getSender().getPrice()) {
+                                isValid = true;
+                            }
+                            break;
+                        case 2:
+                            //Verificar se existe uma auction a decorrer. Se sim, fazer close.
+                            break;
+                        default:
+                            //Verificar se exista uma auction a decorrer. Se sim, verificar se o valor é maior que o atual.
+                            break;
+                    }
+
+                }
+
+            }
+
+        }*/
+
+        //ArrayList<Transaction> sameAuctionTransactions = getSameAuctionTransactionsFromBlockchain(transaction);
+
+        HashMap<Integer, Transaction> sameAuctionTransactions = getSameAuctionTransactionsFromBlockchain(transaction);
+
+        /*
+        switch (transaction.getType()) {
+            case 1:
+                //Verificar se existe alguma Transaction.
+                if(!sameAuctionTransactions.isEmpty()){
+                    isValid = true;
+                }
+                break;
+            case 2:
+                //Verificar se existe uma auction a decorrer. Se sim, fazer close.
+                if(sameAuctionTransactions.get(1) != null && sameAuctionTransactions.get(2) == null){
+                    isValid = true;
+                }
+                break;
+            default:
+                //Verificar se exista uma auction a decorrer. Se sim, verificar se o valor é maior que o atual.
+                if(sameAuctionTransactions.get(1) != null && sameAuctionTransactions.get(2) == null){
+                    if(sameAuctionTransactions.get(0) == null) {
+                        isValid = true;
+                    }else if(transaction.getSender().getPrice() > sameAuctionTransactions.get(0).getSender().getPrice()) {
+                            isValid = true;
+                    }
+                }
+                break;
+        }
+
+         */
+
+        if (!verifyTransactionSignature(transaction) || !verifyTransactionTypeConsistency(transaction, sameAuctionTransactions)) {
+            isValid = false;
+        }
+        else
+        {
+            //TODO Validar se o limite de transactions foi atingido
+            //Se sim, minerar bloco novo e colocar transaction lá.
+
+            isValid = true;
+        }
+
+        return isValid;
+    }
+
+    // Transaction Type , Transaction Object
+    private HashMap<Integer, Transaction> getSameAuctionTransactionsFromBlockchain(Transaction receivedTransaction){
+
+        HashMap<Integer, Transaction> sameAuctionTransactions = new HashMap<>();
+
+        for (Block b : this.blocks) {
+
+            for (Transaction t : b.getTransactionList()) {
+
+                if(t.getId().equals(receivedTransaction.getId()) && t.getOwner().equals(receivedTransaction.getOwner())){
+                    sameAuctionTransactions.put(t.getType(), t);
+                }
+
+            }
+
+        }
+
+        return sameAuctionTransactions;
+    }
+
+    /*
+    private boolean verifyTransactionTypeConsistency(Transaction transaction, HashMap<Integer, Transaction> sameAuctionTransactions){
+
+        boolean isValid = true;
+        int processedAuctions = 0;
+
+        while(isValid && processedAuctions < sameAuctionTransactions.size()){
+
+            Transaction t = sameAuctionTransactions.get(processedAuctions);
+
+            //TODO Validar se existe uma auction
+
+            switch (t.getType()) {
+                case 1:
+                    //Verificar se já não existe uma. Dar put se não existir.
+
+                    break;
+                case 2:
+                    //Verificar se existe uma close auction. Se sim, então não há mais auctions a receber.
+                    isValid = false;
+                    break;
+                default:
+                    //Verificar se exista uma auction a decorrer. Se sim, verificar se o valor é maior que o atual.
+                    if(transaction.getSender().getPrice() > t.getSender().getPrice()) {
+                        isValid = true;
+                    }
+                    break;
+            }
+
+        }
+
+        return isValid;
+    }        */
+
+    private boolean verifyTransactionTypeConsistency(Transaction transaction, HashMap<Integer, Transaction> sameAuctionTransactions){
+
+        boolean isValid = true;
+
+        switch (transaction.getType()) {
+            case 1:
+                //Verificar se existe alguma Transaction.
+                if(!sameAuctionTransactions.isEmpty()){
+                    isValid = true;
+                }
+                break;
+            case 2:
+                //Verificar se existe uma auction a decorrer. Se sim, fazer close.
+                if(sameAuctionTransactions.get(1) != null && sameAuctionTransactions.get(2) == null){
+                    isValid = true;
+                }
+                break;
+            default:
+                //Verificar se exista uma auction a decorrer. Se sim, verificar se o valor é maior que o atual.
+                if(sameAuctionTransactions.get(1) != null && sameAuctionTransactions.get(2) == null){
+                    if(sameAuctionTransactions.get(0) == null) {
+                        isValid = true;
+                    }else if(transaction.getSender().getPrice() > sameAuctionTransactions.get(0).getSender().getPrice()) {
+                        isValid = true;
+                    }
+                }
+                break;
+        }
+
+        return isValid;
+    }
+
+
+    private boolean isBlockTransactionValid(Transaction transaction, Block block)
     {
         boolean isValid = false;
         Transaction lastTransaction;
@@ -200,7 +365,7 @@ public class Blockchain
             lastTransaction = isBlockTransactionValid(transaction, block);
             // Se transaction já existe num bloco, devo retornar falso
 
-            while(){
+            while(previousBlock != null){
 
 
 
@@ -208,34 +373,41 @@ public class Blockchain
 
         }else{
 
-            /*for (Block b : chain)
-        {
+            for(Block b : this.blocks){
 
-        }*/
+                for(Transaction t : b.getTransactionList()){
 
-        }
+                    if (!verifyTransactionSignature(transaction)) {
+                        return isValid;
+                    }
 
-        if (!verifyTransactionSignature(transaction)) {
-            return isValid;
-        } else {
-            //TODO Validar se o limite de transactions foi atingido
-            //Se sim, minerar bloco novo e colocar transaction lá.
 
-            //TODO Validar se existe uma auction
 
-            switch (transaction.getType()) {
-                case 1:
-                    //Verificar se já não existe uma. Dar put se não existir.
-                    break;
-                case 2:
-                    //Verificar se existe uma auction a decorrer. Se sim, fazer close.
-                    break;
-                default:
-                    //Verificar se exista uma auction a decorrer. Se sim, verificar se o valor é maior que o atual.
-                    break;
+                }
+
             }
 
         }
+
+         else {
+        //TODO Validar se o limite de transactions foi atingido
+        //Se sim, minerar bloco novo e colocar transaction lá.
+
+        //TODO Validar se existe uma auction
+
+        switch (transaction.getType()) {
+            case 1:
+                //Verificar se já não existe uma. Dar put se não existir.
+                break;
+            case 2:
+                //Verificar se existe uma auction a decorrer. Se sim, fazer close.
+                break;
+            default:
+                //Verificar se exista uma auction a decorrer. Se sim, verificar se o valor é maior que o atual.
+                break;
+        }
+
+    }
 
         return isValid;
     }
