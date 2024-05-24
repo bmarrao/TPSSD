@@ -182,75 +182,18 @@ public class Blockchain
     // 2 -> CloseAuction
     private boolean isTransactionValid(Transaction transaction)
     {
-        boolean isValid = false;
-
-        /*for (Block b : this.blocks) {
-
-            for (Transaction t : b.getTransactionList()) {
-
-                // se a transação inicial já existir, então devolver falso.
-                if(t.getId().equals(transaction.getId()) && t.getOwner().equals(transaction.getOwner())){
-
-                    switch (t.getType()) {
-                        case 0:
-                            //Verificar se a offer atual é maior.
-                            if(transaction.getSender().getPrice() > t.getSender().getPrice()) {
-                                isValid = true;
-                            }
-                            break;
-                        case 2:
-                            //Verificar se existe uma auction a decorrer. Se sim, fazer close.
-                            break;
-                        default:
-                            //Verificar se exista uma auction a decorrer. Se sim, verificar se o valor é maior que o atual.
-                            break;
-                    }
-
-                }
-
-            }
-
-        }*/
-
-        //ArrayList<Transaction> sameAuctionTransactions = getSameAuctionTransactionsFromBlockchain(transaction);
+        boolean isValid;
 
         HashMap<Integer, Transaction> sameAuctionTransactions = getSameAuctionTransactionsFromBlockchain(transaction);
-
-        /*
-        switch (transaction.getType()) {
-            case 1:
-                //Verificar se existe alguma Transaction.
-                if(!sameAuctionTransactions.isEmpty()){
-                    isValid = true;
-                }
-                break;
-            case 2:
-                //Verificar se existe uma auction a decorrer. Se sim, fazer close.
-                if(sameAuctionTransactions.get(1) != null && sameAuctionTransactions.get(2) == null){
-                    isValid = true;
-                }
-                break;
-            default:
-                //Verificar se exista uma auction a decorrer. Se sim, verificar se o valor é maior que o atual.
-                if(sameAuctionTransactions.get(1) != null && sameAuctionTransactions.get(2) == null){
-                    if(sameAuctionTransactions.get(0) == null) {
-                        isValid = true;
-                    }else if(transaction.getSender().getPrice() > sameAuctionTransactions.get(0).getSender().getPrice()) {
-                            isValid = true;
-                    }
-                }
-                break;
-        }
-
-         */
 
         if (!verifyTransactionSignature(transaction) || !verifyTransactionTypeConsistency(transaction, sameAuctionTransactions)) {
             isValid = false;
         }
         else
         {
+            //Significa que a Transação é coerente com transações anteriores para a mesma auction e que tem a assinatura válida
             //TODO Validar se o limite de transactions foi atingido
-            //Se sim, minerar bloco novo e colocar transaction lá.
+            //Se sim, minerar bloco novo e colocar transaction lá. Isto será fora. No método que pedir a validação da transaction
 
             isValid = true;
         }
@@ -278,39 +221,30 @@ public class Blockchain
         return sameAuctionTransactions;
     }
 
-    /*
-    private boolean verifyTransactionTypeConsistency(Transaction transaction, HashMap<Integer, Transaction> sameAuctionTransactions){
+    private HashMap<Integer, Transaction> getSameAuctionTransactionsFromBlockchain(Transaction receivedTransaction, Block block){
 
-        boolean isValid = true;
-        int processedAuctions = 0;
+        HashMap<Integer, Transaction> sameAuctionTransactions = new HashMap<>();
 
-        while(isValid && processedAuctions < sameAuctionTransactions.size()){
+        Block previousBlock = block.getPreviousBlock();
 
-            Transaction t = sameAuctionTransactions.get(processedAuctions);
+        while(previousBlock != null){
 
-            //TODO Validar se existe uma auction
+            for (Transaction t : block.getTransactionList()) {
 
-            switch (t.getType()) {
-                case 1:
-                    //Verificar se já não existe uma. Dar put se não existir.
+                if(t.getId().equals(receivedTransaction.getId()) && t.getOwner().equals(receivedTransaction.getOwner())){
+                    sameAuctionTransactions.put(t.getType(), t);
+                }
 
-                    break;
-                case 2:
-                    //Verificar se existe uma close auction. Se sim, então não há mais auctions a receber.
-                    isValid = false;
-                    break;
-                default:
-                    //Verificar se exista uma auction a decorrer. Se sim, verificar se o valor é maior que o atual.
-                    if(transaction.getSender().getPrice() > t.getSender().getPrice()) {
-                        isValid = true;
-                    }
-                    break;
             }
+            //TODO Posso fazer isto?
+            block = previousBlock;
+
+            previousBlock = block.getPreviousBlock();
 
         }
 
-        return isValid;
-    }        */
+        return sameAuctionTransactions;
+    }
 
     private boolean verifyTransactionTypeConsistency(Transaction transaction, HashMap<Integer, Transaction> sameAuctionTransactions){
 
@@ -347,67 +281,22 @@ public class Blockchain
 
     private boolean isBlockTransactionValid(Transaction transaction, Block block)
     {
-        boolean isValid = false;
-        Transaction lastTransaction;
 
-        //Checa no bloco ;
-        // Se não tiver no bloco
-        // Block newB = getBLock(b.previousHash)
-        // return isTransactionValid(t, newB)
+        boolean isValid;
 
-        if(block != null)
+        HashMap<Integer, Transaction> sameAuctionTransactions = getSameAuctionTransactionsFromBlockchain(transaction, block);
+
+        if (!verifyTransactionSignature(transaction) || !verifyTransactionTypeConsistency(transaction, sameAuctionTransactions)) {
+            isValid = false;
+        }
+        else
         {
-            Block previousBlock = block.getPreviousBlock();
-            //Percorrer blocos
-            // Block newB = getBLock(b.previousHash)
-            // return isTransactionValid(t, newB)
+            //Significa que a Transação é coerente com transações anteriores para a mesma auction e que tem a assinatura válida
+            //TODO Validar se o limite de transactions foi atingido
+            //Se sim, minerar bloco novo e colocar transaction lá. Isto será fora. No método que pedir a validação da transaction
 
-            lastTransaction = isBlockTransactionValid(transaction, block);
-            // Se transaction já existe num bloco, devo retornar falso
-
-            while(previousBlock != null){
-
-
-
-            }
-
-        }else{
-
-            for(Block b : this.blocks){
-
-                for(Transaction t : b.getTransactionList()){
-
-                    if (!verifyTransactionSignature(transaction)) {
-                        return isValid;
-                    }
-
-
-
-                }
-
-            }
-
+            isValid = true;
         }
-
-         else {
-        //TODO Validar se o limite de transactions foi atingido
-        //Se sim, minerar bloco novo e colocar transaction lá.
-
-        //TODO Validar se existe uma auction
-
-        switch (transaction.getType()) {
-            case 1:
-                //Verificar se já não existe uma. Dar put se não existir.
-                break;
-            case 2:
-                //Verificar se existe uma auction a decorrer. Se sim, fazer close.
-                break;
-            default:
-                //Verificar se exista uma auction a decorrer. Se sim, verificar se o valor é maior que o atual.
-                break;
-        }
-
-    }
 
         return isValid;
     }
