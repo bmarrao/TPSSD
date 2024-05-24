@@ -8,24 +8,32 @@ public interface grpcBlockOrBuilder extends
     com.google.protobuf.MessageOrBuilder {
 
   /**
-   * <code>bytes prevHash = 1;</code>
+   * <code>.kademlia.Node node = 1;</code>
+   */
+  boolean hasNode();
+  /**
+   * <code>.kademlia.Node node = 1;</code>
+   */
+  kademlia.Node getNode();
+  /**
+   * <code>.kademlia.Node node = 1;</code>
+   */
+  kademlia.NodeOrBuilder getNodeOrBuilder();
+
+  /**
+   * <code>bytes prevHash = 2;</code>
    */
   com.google.protobuf.ByteString getPrevHash();
 
   /**
-   * <code>bytes currentHash = 2;</code>
+   * <code>bytes currentHash = 3;</code>
    */
   com.google.protobuf.ByteString getCurrentHash();
 
   /**
-   * <code>int64 timestamp = 3;</code>
+   * <code>int64 timestamp = 4;</code>
    */
   long getTimestamp();
-
-  /**
-   * <code>int32 reputation = 4;</code>
-   */
-  int getReputation();
 
   /**
    * <code>int32 nonce = 5;</code>

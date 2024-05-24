@@ -24,6 +24,8 @@ public class Kademlia
 
     public static KademliaProtocol protocol;
     public static Blockchain bc;
+    public static KademliaNode kn;
+    public static Auction auction;
     public static byte randomX;
     public static Properties properties;
     public static String bootstrapFilePath = "src/main/java/kademlia/BootstrapNodes.txt";
@@ -55,6 +57,8 @@ public class Kademlia
             e.printStackTrace();
         }
 
+        kn = new KademliaNode(ip, nodeId, port, generatedPk.getEncoded());
+
         protocol = new KademliaProtocol(nodeId, ip, port, generatedPk, generatedSk,randomX);
 
         rt = new KademliaRoutingTable(nodeId,protocol,
@@ -66,7 +70,8 @@ public class Kademlia
         System.out.println("Initializing blockchain...");
         bc = new Blockchain(Integer.parseInt(properties.getProperty("blockchain.difficulty")),this);
 
-        KademliaServer server = new KademliaServer(port,  new Auction(this,bc),leadingZeros,generatedPk, generatedSk);
+        auction = new Auction(this,bc);
+        KademliaServer server = new KademliaServer(port, auction,leadingZeros,generatedPk, generatedSk);
 
         Thread serverThread = new Thread(server);
         serverThread.start();

@@ -34,7 +34,7 @@ public class KademliaBlockLookUp implements Runnable
         // Start by finding the closest nodes in the routing table to the target key
         FindBlockResponse response = protocol.findBlockOp(key, n.getIp(), n.getPort());
 
-        if (response.getHasTransaction())
+        if (response.getHasBlock())
         {
             this.b = response.getB();
         } else
@@ -49,11 +49,11 @@ public class KademliaBlockLookUp implements Runnable
                     // Mark the current node as visited
                     visitedNodes.add(currentNode);
 
-                    response = protocol.findAuctionOp(key, currentNode.getIp(),currentNode.getPort());
+                    response = protocol.findBlockOp(key, currentNode.getIp(),currentNode.getPort());
 
-                    if (response.getHasTransaction())
+                    if (response.getHasBlock())
                     {
-                        this.b = response.getT();
+                        this.b = response.getB();
                         break;
                     }
                     List<Node> additionalClosestNodes = response.getNodesList();

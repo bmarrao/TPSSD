@@ -147,17 +147,14 @@ public class KademliaProtocol {
                 .setSender(senderOffer)
                 .build();
 
-        byte[] senderNodeToSign = senderNode.toByteArray();
-        byte[] transactionToSign = transaction.toByteArray();
+        byte[] ownerNodeToSign   = ownerNode.toByteArray();
+        byte[] senderNodeToSign  = senderNode.toByteArray();
 
-        int senderAndTransactionLength = senderNodeToSign.length + transactionToSign.length;
-        int totalLength = senderAndTransactionLength + this.nodeId.length;
+        byte[] infoToSign = new byte[this.nodeId.length + ownerNodeToSign.length + senderNodeToSign.length];
 
-        byte[] infoToSign = new byte[totalLength];
-
-        System.arraycopy(senderNodeToSign, 0, infoToSign, 0, senderNodeToSign.length);
-        System.arraycopy(transactionToSign, 0, infoToSign, senderNodeToSign.length, transactionToSign.length);
-        System.arraycopy(this.nodeId, 0, infoToSign, senderAndTransactionLength, this.nodeId.length);
+        System.arraycopy(this.nodeId, 0, infoToSign, 0, this.nodeId.length);
+        System.arraycopy(ownerNodeToSign, 0, infoToSign, this.nodeId.length, ownerNodeToSign.length);
+        System.arraycopy(senderNodeToSign, 0, infoToSign, this.nodeId.length+ownerNodeToSign.length, senderNodeToSign.length);
 
         // Sign node content
         byte[] signature = null;
@@ -167,7 +164,6 @@ public class KademliaProtocol {
             e.printStackTrace();
         }
 
-        // TODO TRANSFORM IN STUB NÃO NO BLOCKING
         KademliaGrpc.KademliaStub stub = KademliaGrpc.newStub(channel);
 
         StoreTransactionRequest request = StoreTransactionRequest.newBuilder()

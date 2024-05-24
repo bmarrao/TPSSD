@@ -114,51 +114,51 @@ public final class KademliaOuterClass {
       "de\022\r\n\005price\030\002 \001(\002\"z\n\013Transaction\022\n\n\002id\030\001" +
       " \001(\014\022\014\n\004type\030\002 \001(\r\022\035\n\005owner\030\003 \001(\0132\016.kade",
       "mlia.Node\022\037\n\006sender\030\004 \001(\0132\017.kademlia.Off" +
-      "er\022\021\n\tsignature\030\005 \001(\014\"\241\001\n\tgrpcBlock\022\020\n\010p" +
-      "revHash\030\001 \001(\014\022\023\n\013currentHash\030\002 \001(\014\022\021\n\tti" +
-      "mestamp\030\003 \001(\003\022\022\n\nreputation\030\004 \001(\005\022\r\n\005non" +
-      "ce\030\005 \001(\005\022$\n\005trans\030\006 \003(\0132\025.kademlia.Trans" +
-      "action\022\021\n\tsignature\030\007 \001(\014\"\206\001\n\027StoreTrans" +
-      "actionRequest\022\034\n\004node\030\001 \001(\0132\016.kademlia.N" +
-      "ode\022\016\n\006nodeID\030\002 \001(\014\022*\n\013transaction\030\003 \001(\013" +
-      "2\025.kademlia.Transaction\022\021\n\tsignature\030\004 \001" +
-      "(\014\"\\\n\030StoreTransactionResponse\022\n\n\002id\030\001 \001",
-      "(\014\022\016\n\006stored\030\002 \001(\010\022\021\n\tpublicKey\030\003 \001(\014\022\021\n" +
-      "\tsignature\030\004 \001(\014\"\212\001\n\021StoreBlockRequest\022\034" +
-      "\n\004node\030\001 \001(\0132\016.kademlia.Node\022 \n\010receiver" +
-      "\030\002 \001(\0132\016.kademlia.Node\022\"\n\005block\030\003 \001(\0132\023." +
-      "kademlia.grpcBlock\022\021\n\tsignature\030\004 \001(\014\"V\n" +
-      "\022StoreBlockResponse\022\n\n\002id\030\001 \001(\014\022\016\n\006store" +
-      "d\030\002 \001(\010\022\021\n\tpublicKey\030\003 \001(\014\022\021\n\tsignature\030" +
-      "\004 \001(\014\"]\n\017FindNodeRequest\022\034\n\004node\030\001 \001(\0132\016" +
-      ".kademlia.Node\022\016\n\006nodeID\030\002 \001(\014\022\t\n\001k\030\003 \001(" +
-      "\r\022\021\n\tsignature\030\004 \001(\014\"e\n\020FindNodeResponse",
-      "\022\n\n\002id\030\001 \001(\014\022\035\n\005nodes\030\002 \003(\0132\016.kademlia.N" +
-      "ode\022\021\n\tpublicKey\030\003 \001(\014\022\023\n\013idSignature\030\004 " +
-      "\001(\014\"P\n\020FindBlockRequest\022\034\n\004node\030\001 \001(\0132\016." +
-      "kademlia.Node\022\013\n\003key\030\002 \001(\014\022\021\n\tsignature\030" +
-      "\003 \001(\014\"\226\001\n\021FindBlockResponse\022\n\n\002id\030\001 \001(\014\022" +
-      "\020\n\010hasBlock\030\002 \001(\010\022\036\n\001b\030\003 \001(\0132\023.kademlia." +
-      "grpcBlock\022\035\n\005nodes\030\004 \003(\0132\016.kademlia.Node" +
-      "\022\021\n\tpublicKey\030\005 \001(\014\022\021\n\tsignature\030\006 \001(\014\"U" +
-      "\n\022FindAuctionRequest\022\034\n\004node\030\001 \001(\0132\016.kad" +
-      "emlia.Node\022\016\n\006nodeID\030\002 \001(\014\022\021\n\tsignature\030",
-      "\003 \001(\014\"\240\001\n\023FindAuctionResponse\022\n\n\002id\030\001 \001(" +
-      "\014\022\026\n\016hasTransaction\030\002 \001(\010\022 \n\001t\030\003 \001(\0132\025.k" +
-      "ademlia.Transaction\022\035\n\005nodes\030\004 \003(\0132\016.kad" +
+      "er\022\021\n\tsignature\030\005 \001(\014\"\253\001\n\tgrpcBlock\022\034\n\004n" +
+      "ode\030\001 \001(\0132\016.kademlia.Node\022\020\n\010prevHash\030\002 " +
+      "\001(\014\022\023\n\013currentHash\030\003 \001(\014\022\021\n\ttimestamp\030\004 " +
+      "\001(\003\022\r\n\005nonce\030\005 \001(\005\022$\n\005trans\030\006 \003(\0132\025.kade" +
+      "mlia.Transaction\022\021\n\tsignature\030\007 \001(\014\"\206\001\n\027" +
+      "StoreTransactionRequest\022\034\n\004node\030\001 \001(\0132\016." +
+      "kademlia.Node\022\016\n\006nodeID\030\002 \001(\014\022*\n\013transac" +
+      "tion\030\003 \001(\0132\025.kademlia.Transaction\022\021\n\tsig" +
+      "nature\030\004 \001(\014\"\\\n\030StoreTransactionResponse",
+      "\022\n\n\002id\030\001 \001(\014\022\016\n\006stored\030\002 \001(\010\022\021\n\tpublicKe" +
+      "y\030\003 \001(\014\022\021\n\tsignature\030\004 \001(\014\"\212\001\n\021StoreBloc" +
+      "kRequest\022\034\n\004node\030\001 \001(\0132\016.kademlia.Node\022 " +
+      "\n\010receiver\030\002 \001(\0132\016.kademlia.Node\022\"\n\005bloc" +
+      "k\030\003 \001(\0132\023.kademlia.grpcBlock\022\021\n\tsignatur" +
+      "e\030\004 \001(\014\"V\n\022StoreBlockResponse\022\n\n\002id\030\001 \001(" +
+      "\014\022\016\n\006stored\030\002 \001(\010\022\021\n\tpublicKey\030\003 \001(\014\022\021\n\t" +
+      "signature\030\004 \001(\014\"]\n\017FindNodeRequest\022\034\n\004no" +
+      "de\030\001 \001(\0132\016.kademlia.Node\022\016\n\006nodeID\030\002 \001(\014" +
+      "\022\t\n\001k\030\003 \001(\r\022\021\n\tsignature\030\004 \001(\014\"e\n\020FindNo",
+      "deResponse\022\n\n\002id\030\001 \001(\014\022\035\n\005nodes\030\002 \003(\0132\016." +
+      "kademlia.Node\022\021\n\tpublicKey\030\003 \001(\014\022\023\n\013idSi" +
+      "gnature\030\004 \001(\014\"P\n\020FindBlockRequest\022\034\n\004nod" +
+      "e\030\001 \001(\0132\016.kademlia.Node\022\013\n\003key\030\002 \001(\014\022\021\n\t" +
+      "signature\030\003 \001(\014\"\226\001\n\021FindBlockResponse\022\n\n" +
+      "\002id\030\001 \001(\014\022\020\n\010hasBlock\030\002 \001(\010\022\036\n\001b\030\003 \001(\0132\023" +
+      ".kademlia.grpcBlock\022\035\n\005nodes\030\004 \003(\0132\016.kad" +
       "emlia.Node\022\021\n\tpublicKey\030\005 \001(\014\022\021\n\tsignatu" +
-      "re\030\006 \001(\0142\272\003\n\010Kademlia\0225\n\004ping\022\025.kademlia" +
-      ".PingRequest\032\026.kademlia.PingResponse\022G\n\n" +
-      "storeBlock\022\033.kademlia.StoreBlockRequest\032" +
-      "\034.kademlia.StoreBlockResponse\022Y\n\020storeTr" +
-      "ansaction\022!.kademlia.StoreTransactionReq" +
-      "uest\032\".kademlia.StoreTransactionResponse",
-      "\022A\n\010findNode\022\031.kademlia.FindNodeRequest\032" +
-      "\032.kademlia.FindNodeResponse\022D\n\tfindBlock" +
-      "\022\032.kademlia.FindBlockRequest\032\033.kademlia." +
-      "FindBlockResponse\022J\n\013findAuction\022\034.kadem" +
-      "lia.FindAuctionRequest\032\035.kademlia.FindAu" +
-      "ctionResponseB\002P\001b\006proto3"
+      "re\030\006 \001(\014\"U\n\022FindAuctionRequest\022\034\n\004node\030\001" +
+      " \001(\0132\016.kademlia.Node\022\016\n\006nodeID\030\002 \001(\014\022\021\n\t",
+      "signature\030\003 \001(\014\"\240\001\n\023FindAuctionResponse\022" +
+      "\n\n\002id\030\001 \001(\014\022\026\n\016hasTransaction\030\002 \001(\010\022 \n\001t" +
+      "\030\003 \001(\0132\025.kademlia.Transaction\022\035\n\005nodes\030\004" +
+      " \003(\0132\016.kademlia.Node\022\021\n\tpublicKey\030\005 \001(\014\022" +
+      "\021\n\tsignature\030\006 \001(\0142\272\003\n\010Kademlia\0225\n\004ping\022" +
+      "\025.kademlia.PingRequest\032\026.kademlia.PingRe" +
+      "sponse\022G\n\nstoreBlock\022\033.kademlia.StoreBlo" +
+      "ckRequest\032\034.kademlia.StoreBlockResponse\022" +
+      "Y\n\020storeTransaction\022!.kademlia.StoreTran" +
+      "sactionRequest\032\".kademlia.StoreTransacti",
+      "onResponse\022A\n\010findNode\022\031.kademlia.FindNo" +
+      "deRequest\032\032.kademlia.FindNodeResponse\022D\n" +
+      "\tfindBlock\022\032.kademlia.FindBlockRequest\032\033" +
+      ".kademlia.FindBlockResponse\022J\n\013findAucti" +
+      "on\022\034.kademlia.FindAuctionRequest\032\035.kadem" +
+      "lia.FindAuctionResponseB\002P\001b\006proto3"
     };
     com.google.protobuf.Descriptors.FileDescriptor.InternalDescriptorAssigner assigner =
         new com.google.protobuf.Descriptors.FileDescriptor.    InternalDescriptorAssigner() {
@@ -208,7 +208,7 @@ public final class KademliaOuterClass {
     internal_static_kademlia_grpcBlock_fieldAccessorTable = new
       com.google.protobuf.GeneratedMessageV3.FieldAccessorTable(
         internal_static_kademlia_grpcBlock_descriptor,
-        new java.lang.String[] { "PrevHash", "CurrentHash", "Timestamp", "Reputation", "Nonce", "Trans", "Signature", });
+        new java.lang.String[] { "Node", "PrevHash", "CurrentHash", "Timestamp", "Nonce", "Trans", "Signature", });
     internal_static_kademlia_StoreTransactionRequest_descriptor =
       getDescriptor().getMessageTypes().get(6);
     internal_static_kademlia_StoreTransactionRequest_fieldAccessorTable = new

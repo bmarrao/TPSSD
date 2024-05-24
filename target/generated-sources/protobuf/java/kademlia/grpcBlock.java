@@ -18,7 +18,6 @@ public  final class grpcBlock extends
     prevHash_ = com.google.protobuf.ByteString.EMPTY;
     currentHash_ = com.google.protobuf.ByteString.EMPTY;
     timestamp_ = 0L;
-    reputation_ = 0;
     nonce_ = 0;
     trans_ = java.util.Collections.emptyList();
     signature_ = com.google.protobuf.ByteString.EMPTY;
@@ -50,23 +49,31 @@ public  final class grpcBlock extends
             break;
           }
           case 10: {
+            kademlia.Node.Builder subBuilder = null;
+            if (node_ != null) {
+              subBuilder = node_.toBuilder();
+            }
+            node_ = input.readMessage(kademlia.Node.parser(), extensionRegistry);
+            if (subBuilder != null) {
+              subBuilder.mergeFrom(node_);
+              node_ = subBuilder.buildPartial();
+            }
 
-            prevHash_ = input.readBytes();
             break;
           }
           case 18: {
 
-            currentHash_ = input.readBytes();
+            prevHash_ = input.readBytes();
             break;
           }
-          case 24: {
+          case 26: {
 
-            timestamp_ = input.readInt64();
+            currentHash_ = input.readBytes();
             break;
           }
           case 32: {
 
-            reputation_ = input.readInt32();
+            timestamp_ = input.readInt64();
             break;
           }
           case 40: {
@@ -115,40 +122,52 @@ public  final class grpcBlock extends
   }
 
   private int bitField0_;
-  public static final int PREVHASH_FIELD_NUMBER = 1;
+  public static final int NODE_FIELD_NUMBER = 1;
+  private kademlia.Node node_;
+  /**
+   * <code>.kademlia.Node node = 1;</code>
+   */
+  public boolean hasNode() {
+    return node_ != null;
+  }
+  /**
+   * <code>.kademlia.Node node = 1;</code>
+   */
+  public kademlia.Node getNode() {
+    return node_ == null ? kademlia.Node.getDefaultInstance() : node_;
+  }
+  /**
+   * <code>.kademlia.Node node = 1;</code>
+   */
+  public kademlia.NodeOrBuilder getNodeOrBuilder() {
+    return getNode();
+  }
+
+  public static final int PREVHASH_FIELD_NUMBER = 2;
   private com.google.protobuf.ByteString prevHash_;
   /**
-   * <code>bytes prevHash = 1;</code>
+   * <code>bytes prevHash = 2;</code>
    */
   public com.google.protobuf.ByteString getPrevHash() {
     return prevHash_;
   }
 
-  public static final int CURRENTHASH_FIELD_NUMBER = 2;
+  public static final int CURRENTHASH_FIELD_NUMBER = 3;
   private com.google.protobuf.ByteString currentHash_;
   /**
-   * <code>bytes currentHash = 2;</code>
+   * <code>bytes currentHash = 3;</code>
    */
   public com.google.protobuf.ByteString getCurrentHash() {
     return currentHash_;
   }
 
-  public static final int TIMESTAMP_FIELD_NUMBER = 3;
+  public static final int TIMESTAMP_FIELD_NUMBER = 4;
   private long timestamp_;
   /**
-   * <code>int64 timestamp = 3;</code>
+   * <code>int64 timestamp = 4;</code>
    */
   public long getTimestamp() {
     return timestamp_;
-  }
-
-  public static final int REPUTATION_FIELD_NUMBER = 4;
-  private int reputation_;
-  /**
-   * <code>int32 reputation = 4;</code>
-   */
-  public int getReputation() {
-    return reputation_;
   }
 
   public static final int NONCE_FIELD_NUMBER = 5;
@@ -216,17 +235,17 @@ public  final class grpcBlock extends
 
   public void writeTo(com.google.protobuf.CodedOutputStream output)
                       throws java.io.IOException {
+    if (node_ != null) {
+      output.writeMessage(1, getNode());
+    }
     if (!prevHash_.isEmpty()) {
-      output.writeBytes(1, prevHash_);
+      output.writeBytes(2, prevHash_);
     }
     if (!currentHash_.isEmpty()) {
-      output.writeBytes(2, currentHash_);
+      output.writeBytes(3, currentHash_);
     }
     if (timestamp_ != 0L) {
-      output.writeInt64(3, timestamp_);
-    }
-    if (reputation_ != 0) {
-      output.writeInt32(4, reputation_);
+      output.writeInt64(4, timestamp_);
     }
     if (nonce_ != 0) {
       output.writeInt32(5, nonce_);
@@ -244,21 +263,21 @@ public  final class grpcBlock extends
     if (size != -1) return size;
 
     size = 0;
+    if (node_ != null) {
+      size += com.google.protobuf.CodedOutputStream
+        .computeMessageSize(1, getNode());
+    }
     if (!prevHash_.isEmpty()) {
       size += com.google.protobuf.CodedOutputStream
-        .computeBytesSize(1, prevHash_);
+        .computeBytesSize(2, prevHash_);
     }
     if (!currentHash_.isEmpty()) {
       size += com.google.protobuf.CodedOutputStream
-        .computeBytesSize(2, currentHash_);
+        .computeBytesSize(3, currentHash_);
     }
     if (timestamp_ != 0L) {
       size += com.google.protobuf.CodedOutputStream
-        .computeInt64Size(3, timestamp_);
-    }
-    if (reputation_ != 0) {
-      size += com.google.protobuf.CodedOutputStream
-        .computeInt32Size(4, reputation_);
+        .computeInt64Size(4, timestamp_);
     }
     if (nonce_ != 0) {
       size += com.google.protobuf.CodedOutputStream
@@ -288,14 +307,17 @@ public  final class grpcBlock extends
     kademlia.grpcBlock other = (kademlia.grpcBlock) obj;
 
     boolean result = true;
+    result = result && (hasNode() == other.hasNode());
+    if (hasNode()) {
+      result = result && getNode()
+          .equals(other.getNode());
+    }
     result = result && getPrevHash()
         .equals(other.getPrevHash());
     result = result && getCurrentHash()
         .equals(other.getCurrentHash());
     result = result && (getTimestamp()
         == other.getTimestamp());
-    result = result && (getReputation()
-        == other.getReputation());
     result = result && (getNonce()
         == other.getNonce());
     result = result && getTransList()
@@ -312,6 +334,10 @@ public  final class grpcBlock extends
     }
     int hash = 41;
     hash = (19 * hash) + getDescriptor().hashCode();
+    if (hasNode()) {
+      hash = (37 * hash) + NODE_FIELD_NUMBER;
+      hash = (53 * hash) + getNode().hashCode();
+    }
     hash = (37 * hash) + PREVHASH_FIELD_NUMBER;
     hash = (53 * hash) + getPrevHash().hashCode();
     hash = (37 * hash) + CURRENTHASH_FIELD_NUMBER;
@@ -319,8 +345,6 @@ public  final class grpcBlock extends
     hash = (37 * hash) + TIMESTAMP_FIELD_NUMBER;
     hash = (53 * hash) + com.google.protobuf.Internal.hashLong(
         getTimestamp());
-    hash = (37 * hash) + REPUTATION_FIELD_NUMBER;
-    hash = (53 * hash) + getReputation();
     hash = (37 * hash) + NONCE_FIELD_NUMBER;
     hash = (53 * hash) + getNonce();
     if (getTransCount() > 0) {
@@ -459,13 +483,17 @@ public  final class grpcBlock extends
     }
     public Builder clear() {
       super.clear();
+      if (nodeBuilder_ == null) {
+        node_ = null;
+      } else {
+        node_ = null;
+        nodeBuilder_ = null;
+      }
       prevHash_ = com.google.protobuf.ByteString.EMPTY;
 
       currentHash_ = com.google.protobuf.ByteString.EMPTY;
 
       timestamp_ = 0L;
-
-      reputation_ = 0;
 
       nonce_ = 0;
 
@@ -501,10 +529,14 @@ public  final class grpcBlock extends
       kademlia.grpcBlock result = new kademlia.grpcBlock(this);
       int from_bitField0_ = bitField0_;
       int to_bitField0_ = 0;
+      if (nodeBuilder_ == null) {
+        result.node_ = node_;
+      } else {
+        result.node_ = nodeBuilder_.build();
+      }
       result.prevHash_ = prevHash_;
       result.currentHash_ = currentHash_;
       result.timestamp_ = timestamp_;
-      result.reputation_ = reputation_;
       result.nonce_ = nonce_;
       if (transBuilder_ == null) {
         if (((bitField0_ & 0x00000020) == 0x00000020)) {
@@ -558,6 +590,9 @@ public  final class grpcBlock extends
 
     public Builder mergeFrom(kademlia.grpcBlock other) {
       if (other == kademlia.grpcBlock.getDefaultInstance()) return this;
+      if (other.hasNode()) {
+        mergeNode(other.getNode());
+      }
       if (other.getPrevHash() != com.google.protobuf.ByteString.EMPTY) {
         setPrevHash(other.getPrevHash());
       }
@@ -566,9 +601,6 @@ public  final class grpcBlock extends
       }
       if (other.getTimestamp() != 0L) {
         setTimestamp(other.getTimestamp());
-      }
-      if (other.getReputation() != 0) {
-        setReputation(other.getReputation());
       }
       if (other.getNonce() != 0) {
         setNonce(other.getNonce());
@@ -629,15 +661,132 @@ public  final class grpcBlock extends
     }
     private int bitField0_;
 
+    private kademlia.Node node_ = null;
+    private com.google.protobuf.SingleFieldBuilderV3<
+        kademlia.Node, kademlia.Node.Builder, kademlia.NodeOrBuilder> nodeBuilder_;
+    /**
+     * <code>.kademlia.Node node = 1;</code>
+     */
+    public boolean hasNode() {
+      return nodeBuilder_ != null || node_ != null;
+    }
+    /**
+     * <code>.kademlia.Node node = 1;</code>
+     */
+    public kademlia.Node getNode() {
+      if (nodeBuilder_ == null) {
+        return node_ == null ? kademlia.Node.getDefaultInstance() : node_;
+      } else {
+        return nodeBuilder_.getMessage();
+      }
+    }
+    /**
+     * <code>.kademlia.Node node = 1;</code>
+     */
+    public Builder setNode(kademlia.Node value) {
+      if (nodeBuilder_ == null) {
+        if (value == null) {
+          throw new NullPointerException();
+        }
+        node_ = value;
+        onChanged();
+      } else {
+        nodeBuilder_.setMessage(value);
+      }
+
+      return this;
+    }
+    /**
+     * <code>.kademlia.Node node = 1;</code>
+     */
+    public Builder setNode(
+        kademlia.Node.Builder builderForValue) {
+      if (nodeBuilder_ == null) {
+        node_ = builderForValue.build();
+        onChanged();
+      } else {
+        nodeBuilder_.setMessage(builderForValue.build());
+      }
+
+      return this;
+    }
+    /**
+     * <code>.kademlia.Node node = 1;</code>
+     */
+    public Builder mergeNode(kademlia.Node value) {
+      if (nodeBuilder_ == null) {
+        if (node_ != null) {
+          node_ =
+            kademlia.Node.newBuilder(node_).mergeFrom(value).buildPartial();
+        } else {
+          node_ = value;
+        }
+        onChanged();
+      } else {
+        nodeBuilder_.mergeFrom(value);
+      }
+
+      return this;
+    }
+    /**
+     * <code>.kademlia.Node node = 1;</code>
+     */
+    public Builder clearNode() {
+      if (nodeBuilder_ == null) {
+        node_ = null;
+        onChanged();
+      } else {
+        node_ = null;
+        nodeBuilder_ = null;
+      }
+
+      return this;
+    }
+    /**
+     * <code>.kademlia.Node node = 1;</code>
+     */
+    public kademlia.Node.Builder getNodeBuilder() {
+      
+      onChanged();
+      return getNodeFieldBuilder().getBuilder();
+    }
+    /**
+     * <code>.kademlia.Node node = 1;</code>
+     */
+    public kademlia.NodeOrBuilder getNodeOrBuilder() {
+      if (nodeBuilder_ != null) {
+        return nodeBuilder_.getMessageOrBuilder();
+      } else {
+        return node_ == null ?
+            kademlia.Node.getDefaultInstance() : node_;
+      }
+    }
+    /**
+     * <code>.kademlia.Node node = 1;</code>
+     */
+    private com.google.protobuf.SingleFieldBuilderV3<
+        kademlia.Node, kademlia.Node.Builder, kademlia.NodeOrBuilder> 
+        getNodeFieldBuilder() {
+      if (nodeBuilder_ == null) {
+        nodeBuilder_ = new com.google.protobuf.SingleFieldBuilderV3<
+            kademlia.Node, kademlia.Node.Builder, kademlia.NodeOrBuilder>(
+                getNode(),
+                getParentForChildren(),
+                isClean());
+        node_ = null;
+      }
+      return nodeBuilder_;
+    }
+
     private com.google.protobuf.ByteString prevHash_ = com.google.protobuf.ByteString.EMPTY;
     /**
-     * <code>bytes prevHash = 1;</code>
+     * <code>bytes prevHash = 2;</code>
      */
     public com.google.protobuf.ByteString getPrevHash() {
       return prevHash_;
     }
     /**
-     * <code>bytes prevHash = 1;</code>
+     * <code>bytes prevHash = 2;</code>
      */
     public Builder setPrevHash(com.google.protobuf.ByteString value) {
       if (value == null) {
@@ -649,7 +798,7 @@ public  final class grpcBlock extends
       return this;
     }
     /**
-     * <code>bytes prevHash = 1;</code>
+     * <code>bytes prevHash = 2;</code>
      */
     public Builder clearPrevHash() {
       
@@ -660,13 +809,13 @@ public  final class grpcBlock extends
 
     private com.google.protobuf.ByteString currentHash_ = com.google.protobuf.ByteString.EMPTY;
     /**
-     * <code>bytes currentHash = 2;</code>
+     * <code>bytes currentHash = 3;</code>
      */
     public com.google.protobuf.ByteString getCurrentHash() {
       return currentHash_;
     }
     /**
-     * <code>bytes currentHash = 2;</code>
+     * <code>bytes currentHash = 3;</code>
      */
     public Builder setCurrentHash(com.google.protobuf.ByteString value) {
       if (value == null) {
@@ -678,7 +827,7 @@ public  final class grpcBlock extends
       return this;
     }
     /**
-     * <code>bytes currentHash = 2;</code>
+     * <code>bytes currentHash = 3;</code>
      */
     public Builder clearCurrentHash() {
       
@@ -689,13 +838,13 @@ public  final class grpcBlock extends
 
     private long timestamp_ ;
     /**
-     * <code>int64 timestamp = 3;</code>
+     * <code>int64 timestamp = 4;</code>
      */
     public long getTimestamp() {
       return timestamp_;
     }
     /**
-     * <code>int64 timestamp = 3;</code>
+     * <code>int64 timestamp = 4;</code>
      */
     public Builder setTimestamp(long value) {
       
@@ -704,37 +853,11 @@ public  final class grpcBlock extends
       return this;
     }
     /**
-     * <code>int64 timestamp = 3;</code>
+     * <code>int64 timestamp = 4;</code>
      */
     public Builder clearTimestamp() {
       
       timestamp_ = 0L;
-      onChanged();
-      return this;
-    }
-
-    private int reputation_ ;
-    /**
-     * <code>int32 reputation = 4;</code>
-     */
-    public int getReputation() {
-      return reputation_;
-    }
-    /**
-     * <code>int32 reputation = 4;</code>
-     */
-    public Builder setReputation(int value) {
-      
-      reputation_ = value;
-      onChanged();
-      return this;
-    }
-    /**
-     * <code>int32 reputation = 4;</code>
-     */
-    public Builder clearReputation() {
-      
-      reputation_ = 0;
       onChanged();
       return this;
     }

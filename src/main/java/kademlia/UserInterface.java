@@ -8,12 +8,12 @@ import java.util.Arrays;
 import java.util.Scanner;
 
 import static kademlia.Kademlia.bc;
+import static kademlia.Kademlia.auction;
+import static kademlia.Kademlia.kn;
 
 public class UserInterface {
     private static Kademlia k;
     private static Scanner sc;
-    private static KademliaNode kn;
-    private static Auction auction;
 
     private static void mainMenu() {
         while (true) {
@@ -102,14 +102,15 @@ public class UserInterface {
         int i = 1;
         for(Transaction t : latestInformationOnBlockChain)
         {
-            KademliaNode owner = t.getReceiver();
+            //KademliaNode owner = t.getReceiver();
+            Node owner = t.getOwner();
 
             System.out.println(i);
             // Print all owner attributes
-            System.out.println("Owner - IP Address: " + owner.ipAdress);
+            System.out.println("Owner - IP Address: " + owner.getIp());
             System.out.println("Owner - Port: " + owner.getPort());
             System.out.println("Owner - Reputation: " + KademliaNode.reputation);
-            System.out.println("Price: " + t.getPrice());
+            System.out.println("Price: " + t.getSender().getPrice());
             i++;
         }
 
@@ -183,7 +184,6 @@ public class UserInterface {
         System.out.println("Initializing Kademlia...");
         k = new Kademlia(args[0], args[1], Integer.parseInt(args[2]));
         sc = new Scanner(System.in);
-        auction = new Auction(k, bc);
         mainMenu();
     }
 }

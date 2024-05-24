@@ -47,12 +47,12 @@ message Transaction
 
 message grpcBlock
 {
-  bytes prevHash = 1;
-  bytes currentHash = 2;
-  int64 timestamp = 3;
-  int32 reputation = 4;
+  Node node = 1;
+  bytes prevHash = 2;
+  bytes currentHash = 3;
+  int64 timestamp = 4;
   int32 nonce = 5;
-  repeated Transaction trans = 6;
+  repeated Transaction trans =6;
   bytes signature = 7;
 }
 

@@ -22,16 +22,16 @@ public class Block
     //TODO Needed?
     //private int index;
     Node node;
-    public String hash;
+    public byte[] hash;
     public Block previousBlock;
-    public String previousHash;
+    public byte[] previousHash;
     private long timestamp;
     private int nonce;
     private ArrayList<Transaction> transactionList;
     private int reputationScore;
     private byte[] signature;
 
-    public Block(String previousHash, ArrayList<Transaction> transactionList,Block previousBlock)
+    public Block(byte[] previousHash, ArrayList<Transaction> transactionList,Block previousBlock)
     {
         this.previousHash = previousHash;
         this.timestamp = new Date().getTime();
@@ -43,8 +43,8 @@ public class Block
     }
     public Block(grpcBlock grpcBlock)
     {
-        this.previousHash = grpcBlock.getPrevHash().toString();
-        this.hash = grpcBlock.getCurrentHash().toString();
+        this.previousHash = grpcBlock.getPrevHash().toByteArray();
+        this.hash = grpcBlock.getCurrentHash().toByteArray();
         this.timestamp = grpcBlock.getTimestamp();
         this.nonce = grpcBlock.getNonce();
         this.transactionList = new ArrayList<>();
@@ -66,7 +66,7 @@ public class Block
     {
 
     }
-    public String getHash() {
+    public byte []getHash() {
         return hash;
     }
     public Block getPreviousBlock()
@@ -81,7 +81,7 @@ public class Block
     public float getReputation() { return reputation; }
     public void setReputation(int reputationScore) { reputation = reputationScore; }
 
-    public String getPreviousHash() {
+    public byte[] getPreviousHash() {
         return previousHash;
     }
 
