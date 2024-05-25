@@ -361,18 +361,21 @@ public class KademliaImpl extends KademliaGrpc.KademliaImplBase
             //bc.validateTransactionsSignature();
             boolean isValid = bc.isTransactionValid(request.getTransaction());
 
+            if (isValid)
+            {
+                bc.addTransaction(request.getTransaction());
+                //Verificar número limite de transactions para minerar bloco
+                //Adicionar transaction a esse bloco
+            }
+
             //isValid ? bc.addTransaction() : break;
                 //isTransactionValid()
-                    // Send to all Nodes on kademlia routing table
-                    // for (KademliaNode n : allNodes
-                    // k.protocol.storeTransactionOp(request.getTransaction,n.receiverIp, n.receiverPort)
                     //Verificar HashMap e ver se:
                         //For open auction é só put
                         //Se for Bid verificar se existe auction e se o price é maior que o anterior Se for maior atualizar BrokerService MyAuctions
                         //Se for close auction, verificar se há auction
 
-                    //Verificar número limite de transactions para minerar bloco
-                    //Adicionar transaction a esse bloco
+
 
             //Passar para todos os blocos essa transaction || Validar Transaction
             //Cheguei no limite de transações então vou tentar minerar bloco

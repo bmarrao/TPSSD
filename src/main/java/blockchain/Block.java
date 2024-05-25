@@ -19,6 +19,7 @@ public class Block
 {
     //TODO Needed?
     //private int index;
+    private static final int TRANSACTIONS_LIMIT = 5;
     Node node;
     public byte[] hash;
     public Block previousBlock;
@@ -171,7 +172,7 @@ public class Block
 
 
     // Method to apply SHA-256 hash
-    private String applySha256(String input) {
+    private byte[] applySha256(String input) {
         SHA256.Digest sha256 = new SHA256.Digest(); // Create a new SHA-256 digest with BouncyCastle
 
         byte[] hashBytes = sha256.digest(input.getBytes(StandardCharsets.UTF_8)); // Compute the hash
@@ -187,7 +188,8 @@ public class Block
 
 
     // Calculate the block's hash || almost a checksum
-    public String calculateHash() {
+    public byte[] calculateHash()
+    {
         return applySha256(
                Arrays.toString(previousHash) +
                     timestamp +
@@ -198,8 +200,15 @@ public class Block
     }
 
     // Add a transaction to the block
-    public void addTransaction(Transaction transaction) {
+    public boolean addTransaction(Transaction transaction)
+    {
+
         transactionList.add(transaction);
+        if(transactionList.size() == TRANSACTIONS_LIMIT)
+        {
+            return true;
+        }
+        return false;
     }
 
     //TODO : Faz sentido? Validate transactions in the block
@@ -214,7 +223,7 @@ public class Block
 
         while (!Arrays.toString(hash).startsWith(target)) { // Check if the hash has the required leading zero bits
             nonce++;
-            hash = calculateHash().getBytes(); // Recalculate the hash with the incremented nonce
+            hash = calculateHash(); // Recalculate the hash with the incremented nonce
         }
 
         System.out.println("Block mined: " + Arrays.toString(hash)); // Block successfully mined

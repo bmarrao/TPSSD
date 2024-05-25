@@ -3,6 +3,7 @@ package blockchain;
 
 import auctions.BrokerService;
 import kademlia.*;
+import kademlia.server.KademliaServer;
 
 import java.io.ByteArrayOutputStream;
 import java.nio.ByteBuffer;
@@ -14,16 +15,17 @@ import java.util.*;
 
 public class Blockchain
 {
-
     private static final int TRANSACTIONS_LIMIT = 5;
+    private static final double GOSSIP_CHANCE = 0.1;
     Block latestMinedBlock;
     // currentMiningBlock
     Block currentMiningBlock;
     private final ArrayList<Block> blocks;
+    Thread miningBlock;
     private final Kademlia k;
-    private final List<BrokerService> myAuctions;
     private final int difficulty;
     HashMap<AuctionId , Transaction> activeAuctions;
+    ArrayList<Transaction> pendingTransactions;
     ArrayList<byte[]> topicsSubscribed;
     // Constructor
     public Blockchain(int initialDifficulty, Kademlia k)
@@ -32,8 +34,8 @@ public class Blockchain
         this.topicsSubscribed = new ArrayList<>();
         this.activeAuctions = new HashMap<>();
         this.blocks = new ArrayList<>();
-        this.myAuctions = new ArrayList<>();
         this.difficulty = initialDifficulty;
+        this.pendingTransactions = new ArrayList<>();
         Block genesis = createGenesisBlock();
         this.latestMinedBlock = genesis;
 
@@ -122,12 +124,11 @@ public class Blockchain
         return serviceId;
     }
 
-    public Block addBlock(grpcBlock block)
+    public Block addBlock(Block block1)
     {
-        Block block1 = new Block(block);
         // Verify previous block reference and that POW was done
         String target = new String(new char[difficulty]).replace('\0', '0');
-        byte[] bcLatestBlockHash = block.getCurrentHash().toByteArray();
+        byte[] bcLatestBlockHash = block1.getCurrentHash().toByteArray();
         byte[] previousBlockHash = block1.getPreviousHash();
         if (!Arrays.equals(bcLatestBlockHash, previousBlockHash) || !compareId(bcLatestBlockHash,previousBlockHash) || !Arrays.toString(block1.getHash()).startsWith(target))
         {
@@ -272,6 +273,105 @@ public class Blockchain
         }
 
         return isValid;
+    }
+
+    public void addTransaction(Transaction t )
+    {
+        this.pendingTransactions.add(t);
+        if (currentMiningBlock == null) {
+            if (this.pendingTransactions.size() == TRANSACTIONS_LIMIT) {
+
+                ArrayList<Transaction> transactionToBlock = this.maxLimitPendingTransactions(pendingTransactions);
+                currentMiningBlock = new Block(this.latestMinedBlock.getHash(), transactionToBlock, this.latestMinedBlock);
+                MineThread mt = new MineThread(this.currentMiningBlock, this.difficulty,this);
+                this.miningBlock = new Thread(mt);
+                miningBlock.start();
+            }
+        }
+        this.pendingTransactions.add(t);
+        gossipTransactionToOthers(t);
+    }
+
+    private ArrayList<Transaction> maxLimitPendingTransactions(ArrayList<Transaction> pendingTransactions){
+
+        ArrayList<Transaction> transactionsToBlock = new ArrayList<>();
+
+        for(int i=0; i < TRANSACTIONS_LIMIT; i++){
+            transactionsToBlock.add(pendingTransactions.remove(0));
+        }
+
+        return transactionsToBlock;
+    }
+
+    //TODO ADD TRANSACTION TO BLOCK
+    public void addTransactionBlock(Transaction t)
+    {
+        if (this.currentMiningBlock.addTransaction(t))
+        {
+            MineThread mt = new MineThread(this.currentMiningBlock.clone(),this.difficulty);
+            this.miningBlock = new Thread(mt);
+            miningBlock.start();
+            this.currentMiningBlock = null;
+        }
+    }
+
+    public void gossipTransactionToOthers(Transaction t)
+    {
+        if (random.nextDouble() > GOSSIP_CHANCE)
+        {
+            ArrayList<KademliaNode> allNodes = k.protocol.getAllNodes();
+            for(KademliaNode n :allNodes)
+            {
+                try
+                {
+                    k.protocol.storeTransactionOp(t,n.getIpAdress(),n.getPort());
+                }
+                catch(Exception e)
+                {
+
+                }
+            }
+        }
+    }
+
+    public void addFromMyAuction(Transaction t)
+    {
+        this.pendingTransactions.add(t);
+        if (currentMiningBlock == null) {
+            if (this.pendingTransactions.size() == TRANSACTIONS_LIMIT) {
+
+                ArrayList<Transaction> transactionToBlock = this.maxLimitPendingTransactions(pendingTransactions);
+                currentMiningBlock = new Block(this.latestMinedBlock.getHash(), transactionToBlock, this.latestMinedBlock);
+                MineThread mt = new MineThread(this.currentMiningBlock, this.difficulty,this);
+                this.miningBlock = new Thread(mt);
+                miningBlock.start();
+            }
+        }
+        gossipTransactionToAllOthers(t);
+    }
+
+    public void gossipTransactionToAllOthers(Block b)
+    {
+        ArrayList<KademliaNode> allNodes = k.protocol.getAllNodes();
+        for(KademliaNode n :allNodes)
+        {
+            try
+            {
+                k.protocol.storeBlockOp(n.getNodeId(),n.getIpAdress(),n.getPort(),b);
+            }
+            catch(Exception e)
+            {
+
+            }
+        }
+
+    }
+    public void gossipBlockToOthers(Block b)
+    {
+        if (random.nextDouble() > GOSSIP_CHANCE)
+        {
+            gossipTransactionToAllOthers(b);
+        }
     }
 
 

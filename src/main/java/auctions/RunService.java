@@ -68,8 +68,10 @@ public class RunService implements Runnable {
         .setSignature(ByteString.copyFrom(signature)).build();
         try
         {
-            this.a.bc.addTransaction(t);
-        } catch (Exception e) {
+            this.a.bc.addFromMyAuction(t);
+        }
+        catch (Exception e)
+        {
             e.printStackTrace();
         }
     }
