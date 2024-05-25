@@ -5,7 +5,6 @@ public class KademliaNode
 {
     public String ipAdress ;
     public byte[] nodeId;
-
     public int port;
     public byte[] publicKey;
     public LocalDateTime time;
@@ -15,7 +14,6 @@ public class KademliaNode
     public KademliaNode(String ipAdress, byte[] nodeId,int port, byte[] publicKey)
     {
         this.ipAdress = ipAdress;
-        // Create nodeID this.nodeId= nodeId;
         this.port = port;
         this.nodeId = nodeId;
         this.publicKey = publicKey;

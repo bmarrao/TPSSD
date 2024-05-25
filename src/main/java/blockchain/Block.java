@@ -3,17 +3,15 @@ package blockchain;
 
 import java.io.ByteArrayOutputStream;
 import java.nio.ByteBuffer;
-import java.security.*;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Date;
 
 import kademlia.Node;
-import kademlia.SignatureClass;
 import kademlia.Transaction;
 import kademlia.grpcBlock;
 import org.bouncycastle.jcajce.provider.digest.SHA256;
 import java.nio.charset.StandardCharsets;
-import java.util.List;
 
 import static kademlia.KademliaNode.reputation;
 
@@ -157,9 +155,9 @@ public class Block
         try {
             ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
 
-            outputStream.write(previousHash.getBytes(StandardCharsets.UTF_8));
+            outputStream.write(previousHash);
             outputStream.write(transactionList.toString().getBytes(StandardCharsets.UTF_8));
-            outputStream.write(hexStringToByteArray(hash));
+            outputStream.write(hash);
             outputStream.write(ByteBuffer.allocate(8).putLong(timestamp).array());
             outputStream.write(ByteBuffer.allocate(4).putInt(nonce).array());
             outputStream.write(ByteBuffer.allocate(4).putInt(reputationScore).array());
@@ -190,12 +188,10 @@ public class Block
 
     // Calculate the block's hash || almost a checksum
     public String calculateHash() {
-        //return applySha256(previousHash + nonce + publicKeyStr + reputationScore);
         return applySha256(
-            previousHash +
+               Arrays.toString(previousHash) +
                     timestamp +
                     nonce +
-                    //Base64.getUrlEncoder().withoutPadding().encodeToString(publicKey.getEncoded()) +
                     reputationScore +
                     transactionList.toString()
         );
@@ -216,11 +212,11 @@ public class Block
     public void mineBlock(int difficulty) {
         String target = new String(new char[difficulty]).replace('\0', '0'); // Create a string with difficulty * "0"
 
-        while (!hash.startsWith(target)) { // Check if the hash has the required leading zero bits
+        while (!Arrays.toString(hash).startsWith(target)) { // Check if the hash has the required leading zero bits
             nonce++;
-            hash = calculateHash(); // Recalculate the hash with the incremented nonce
+            hash = calculateHash().getBytes(); // Recalculate the hash with the incremented nonce
         }
 
-        System.out.println("Block mined: " + hash); // Block successfully mined
+        System.out.println("Block mined: " + Arrays.toString(hash)); // Block successfully mined
     }
 }

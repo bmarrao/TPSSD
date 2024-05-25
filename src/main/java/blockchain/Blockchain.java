@@ -3,16 +3,12 @@ package blockchain;
 
 import auctions.BrokerService;
 import kademlia.*;
-import org.checkerframework.checker.units.qual.A;
 
-import javax.accessibility.AccessibleIcon;
 import java.io.ByteArrayOutputStream;
-import java.lang.reflect.Array;
 import java.nio.ByteBuffer;
 import java.nio.charset.StandardCharsets;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
-import java.security.PublicKey;
 import java.util.*;
 
 
@@ -133,7 +129,7 @@ public class Blockchain
         String target = new String(new char[difficulty]).replace('\0', '0');
         byte[] bcLatestBlockHash = block.getCurrentHash().toByteArray();
         byte[] previousBlockHash = block1.getPreviousHash();
-        if (!bcLatestBlockHash.equals(previousBlockHash)|| !compareId(bcLatestBlockHash,previousBlockHash) || !block1.getHash().startsWith(target))
+        if (!Arrays.equals(bcLatestBlockHash, previousBlockHash) || !compareId(bcLatestBlockHash,previousBlockHash) || !Arrays.toString(block1.getHash()).startsWith(target))
         {
             this.k.rt.setReputation(block1.getNode(),-1);
             if (isBlockValid(block1))
@@ -403,36 +399,24 @@ public class Blockchain
 
     public boolean isBlockValid(Block block)
     {
-
-
         // TODO TEST THIS
         // Verify block signature
         ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
-
         try {
             outputStream.write(block.getPreviousHash());
-            outputStream.write(transactionList.toString().getBytes(StandardCharsets.UTF_8));
-            outputStream.write(hexStringToByteArray(hash));
-            outputStream.write(ByteBuffer.allocate(8).putLong(timestamp).array());
-            outputStream.write(ByteBuffer.allocate(4).putInt(nonce).array());
-            outputStream.write(ByteBuffer.allocate(4).putInt(reputationScore).array());
+            outputStream.write(block.getTransactionList().toString().getBytes(StandardCharsets.UTF_8));
+            outputStream.write(block.getHash());
+            outputStream.write(ByteBuffer.allocate(8).putLong(block.getTimestamp()).array());
+            outputStream.write(ByteBuffer.allocate(4).putInt(block.getNonce()).array());
+            outputStream.write(ByteBuffer.allocate(4).putFloat(block.getReputation()).array());
             outputStream.close();
         }
         catch(Exception e) {
             e.printStackTrace();
         }
-        byte[] infoToVerify = new byte[block.getPreviousHash().length];
-        byte[] infoToVerify = 
-        {
-                block.getPreviousHash(),
-                (byte) block.getTimestamp(),
-                (byte) block.getNonce(),
-                Byte.parseByte(String.valueOf(block.getTransactionList())),
-                Byte.parseByte(block.getHash()),
-        };
 
         try {
-            if (!SignatureClass.verify(infoToVerify, block.getSignature(), block.getNode().getPublicKey().toByteArray()))
+            if (!SignatureClass.verify(outputStream.toByteArray(), block.getSignature(), block.getNode().getPublicKey().toByteArray()))
             {
                 this.k.rt.setReputation(block.getNode(),-1);
                 return false;
