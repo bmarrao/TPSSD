@@ -17,10 +17,10 @@ import static kademlia.Kademlia.rt;
 public class KademliaImpl extends KademliaGrpc.KademliaImplBase
 {
     private static final int k_nodes = 3;
-    private final Auction auc;
     private final int leadingZeros;
     private final PrivateKey privateKey;
     private final PublicKey publicKey;
+    public Auction auc;
 
     KademliaImpl(Auction auc, int leadingZeros, PublicKey publicKey, PrivateKey privateKey)
     {
@@ -29,6 +29,7 @@ public class KademliaImpl extends KademliaGrpc.KademliaImplBase
         this.publicKey = publicKey;
         this.privateKey = privateKey;
     }
+
 
     // Check crypto puzzle zero count
     public static boolean checkZeroCount(byte[] puzzle, int numOfLeadingZeros) {
@@ -87,7 +88,7 @@ public class KademliaImpl extends KademliaGrpc.KademliaImplBase
 
     @Override
     public void ping(PingRequest request, StreamObserver<PingResponse> responseObserver) {
-        // Verify signature from request RPC
+        // Verify signature from request RPC (node)
         byte[] signature = request.getSignature().toByteArray();
         boolean signVal = false;
         try {
@@ -99,12 +100,12 @@ public class KademliaImpl extends KademliaGrpc.KademliaImplBase
         if (signVal && arePuzzlesValid(request.getNode().getId().toByteArray(), request.getNode().getRandomX().byteAt(0))) {
             rt.insert(request.getNode(), 1);
 
-            // Atualizar o horario da última vez online do sender TODO: confirmar isto
+            // Update timestamp of last time sender was online
             new KademliaNode(request.getNode().getIp(),
                     request.getNode().getId().toByteArray(),
                     request.getNode().getPort(), publicKey.getEncoded()).setTime();
 
-            // Sign RPC response
+            // Sign RPC response (id)
             try {
                 signature = SignatureClass.sign(request.getNode().getId().toByteArray(), privateKey);
             } catch (Exception e) {
@@ -136,7 +137,7 @@ public class KademliaImpl extends KademliaGrpc.KademliaImplBase
     @Override
     public void findNode(FindNodeRequest request, StreamObserver<FindNodeResponse> responseObserver) {
 
-        // Verify received signature
+        // Verify received signature (node)
         byte[] signature = request.getSignature().toByteArray();
         boolean signVal = false;
         try {
@@ -183,15 +184,15 @@ public class KademliaImpl extends KademliaGrpc.KademliaImplBase
     @Override
     public void findAuction(FindAuctionRequest request, StreamObserver<FindAuctionResponse> responseObserver)
     {
-        // Retrieve the key from the request
+
+        // Verify signature (node + nodeId)
+        boolean signVal = false;
+        byte[] nodeToVerify = request.getNode().toByteArray();
         byte[] key = request.getNodeID().toByteArray();
         byte[] signature = request.getSignature().toByteArray();
 
-        // Verify signature
-        boolean signVal = false;
-        byte[] nodeToVerify = request.getNode().toByteArray();
         byte[] infoToVerify = new byte[nodeToVerify.length + key.length];
-        System.arraycopy(nodeToVerify, 0, infoToVerify, 0, nodeToVerify.length);;
+        System.arraycopy(nodeToVerify, 0, infoToVerify, 0, nodeToVerify.length);
         System.arraycopy(key, 0, infoToVerify, nodeToVerify.length, key.length);
 
         try {
@@ -204,7 +205,6 @@ public class KademliaImpl extends KademliaGrpc.KademliaImplBase
 
         if (signVal && arePuzzlesValid(request.getNode().getId().toByteArray(), request.getNode().getRandomX().byteAt(0))) {
             //Creates a new instance of storage. If already exists, use it.
-
             rt.insert(request.getNode(), 1);
 
             // Get the value associated with the key from the data store
@@ -217,7 +217,8 @@ public class KademliaImpl extends KademliaGrpc.KademliaImplBase
                 closestNodes = rt.findClosestNode(key, k_nodes);
                 hasTransaction = false;
             }
-            // Sign RPC response
+
+            // Sign RPC response (id + transaction)
             try {
                 byte[] idToSign = request.getNode().getId().toByteArray();
                 byte[] valueToSign = value.toByteArray();
@@ -226,12 +227,13 @@ public class KademliaImpl extends KademliaGrpc.KademliaImplBase
                 System.arraycopy(idToSign, 0, infoToSign, 0, idToSign.length);
                 System.arraycopy(valueToSign, 0, infoToSign, idToSign.length, valueToSign.length);
 
-                signature = SignatureClass.sign(request.getNode().getId().toByteArray(), privateKey);
+                signature = SignatureClass.sign(infoToSign, privateKey);
             }
             catch(Exception e) {
                 e.printStackTrace();
             }
 
+            // Send find auction response
             FindAuctionResponse response = FindAuctionResponse.newBuilder()
                     .setId(request.getNode().getId())
                     .setT(value)
@@ -251,18 +253,18 @@ public class KademliaImpl extends KademliaGrpc.KademliaImplBase
         }
     }
 
+
     @Override
     public void findBlock(FindBlockRequest request, StreamObserver<FindBlockResponse> responseObserver)
     {
-        // Retrieve the key from the request
-        byte[] key = request.getKey().toByteArray();
-        byte[] signature = request.getSignature().toByteArray();
-
-        // Verify signature
+        // Verify signature (node + key)
         boolean signVal = false;
+        byte[] signature = request.getSignature().toByteArray();
         byte[] nodeToVerify = request.getNode().toByteArray();
+        byte[] key = request.getKey().toByteArray();
+
         byte[] infoToVerify = new byte[nodeToVerify.length + key.length];
-        System.arraycopy(nodeToVerify, 0, infoToVerify, 0, nodeToVerify.length);;
+        System.arraycopy(nodeToVerify, 0, infoToVerify, 0, nodeToVerify.length);
         System.arraycopy(key, 0, infoToVerify, nodeToVerify.length, key.length);
 
         try {
@@ -275,7 +277,6 @@ public class KademliaImpl extends KademliaGrpc.KademliaImplBase
 
         if (signVal && arePuzzlesValid(request.getNode().getId().toByteArray(), request.getNode().getRandomX().byteAt(0))) {
             //Creates a new instance of storage. If already exists, use it.
-
             rt.insert(request.getNode(), 1);
 
             // Get the value associated with the key from the data store
@@ -288,7 +289,8 @@ public class KademliaImpl extends KademliaGrpc.KademliaImplBase
                 closestNodes = rt.findClosestNode(key, k_nodes);
                 hasBlock = false;
             }
-            // Sign RPC response
+
+            // Sign RPC response (id + block)
             try {
                 byte[] idToSign = request.getNode().getId().toByteArray();
                 byte[] valueToSign = value.toByteArray();
@@ -297,12 +299,13 @@ public class KademliaImpl extends KademliaGrpc.KademliaImplBase
                 System.arraycopy(idToSign, 0, infoToSign, 0, idToSign.length);
                 System.arraycopy(valueToSign, 0, infoToSign, idToSign.length, valueToSign.length);
 
-                signature = SignatureClass.sign(request.getNode().getId().toByteArray(), privateKey);
+                signature = SignatureClass.sign(infoToSign, privateKey);
             }
             catch(Exception e) {
                 e.printStackTrace();
             }
 
+            // Send find block response
             FindBlockResponse response = FindBlockResponse.newBuilder()
                     .setId(request.getNode().getId())
                     .setB(value)
@@ -321,26 +324,25 @@ public class KademliaImpl extends KademliaGrpc.KademliaImplBase
             System.out.println("Node didn't solve crypto puzzles, discarding find value request...");
         }
     }
+
+
     @Override
-    public void storeTransaction(StoreTransactionRequest request, StreamObserver<StoreTransactionResponse> responseObserver) {
-
-        // Retrieve the nodeID from the request
-        byte[] nodeID = request.getNodeID().toByteArray();
-        byte[] signature = request.getSignature().toByteArray();
-
-        // Verify signature
+    public void storeTransaction(StoreTransactionRequest request, StreamObserver<StoreTransactionResponse> responseObserver)
+    {
+        // Verify signature (senderNode + id + transaction)
         boolean signVal = false;
+        byte[] signature = request.getSignature().toByteArray();
         byte[] senderNodeToVerify = request.getNode().toByteArray();
+        byte[] nodeID = request.getNodeID().toByteArray();
         byte[] transactionToVerify = request.getTransaction().toByteArray();
 
         int senderAndTransactionLength = senderNodeToVerify.length + transactionToVerify.length;
         int totalLength = senderAndTransactionLength + nodeID.length;
 
-
         byte[] infoToVerify = new byte[totalLength];
-        System.arraycopy(senderNodeToVerify, 0, infoToVerify, 0, senderNodeToVerify.length);;
-        System.arraycopy(transactionToVerify, 0, infoToVerify, senderNodeToVerify.length, transactionToVerify.length );;
-        System.arraycopy(nodeID, 0, infoToVerify, senderAndTransactionLength, nodeID.length);
+        System.arraycopy(senderNodeToVerify, 0, infoToVerify, 0, senderNodeToVerify.length);
+        System.arraycopy(nodeID, 0, infoToVerify, senderNodeToVerify.length, nodeID.length);
+        System.arraycopy(transactionToVerify, 0, infoToVerify, senderAndTransactionLength, transactionToVerify.length );
 
         try {
             signVal = SignatureClass.verify(infoToVerify, signature, request.getNode().getPublicKey().toByteArray());
@@ -348,6 +350,7 @@ public class KademliaImpl extends KademliaGrpc.KademliaImplBase
         catch(Exception e) {
             e.printStackTrace();
         }
+
 
         if (signVal && arePuzzlesValid(request.getNode().getId().toByteArray(), request.getNode().getRandomX().byteAt(0))) {
 
@@ -373,7 +376,7 @@ public class KademliaImpl extends KademliaGrpc.KademliaImplBase
             //Cheguei no limite de transações então vou tentar minerar bloco
 
 
-            // Sign RPC response
+            // Sign RPC response (id)
             try {
                 signature = SignatureClass.sign(request.getNode().getId().toByteArray(), privateKey);
             }
@@ -401,23 +404,19 @@ public class KademliaImpl extends KademliaGrpc.KademliaImplBase
         }
     }
 
+
     @Override
-    public void storeBlock(StoreBlockRequest request, StreamObserver<StoreBlockResponse> responseObserver) {
-
-        // Retrieve the nodeID from the request
-        //TODO do I need nodeID?
-        byte[] nodeID = request.getNode().getId().toByteArray();
-        byte[] signature = request.getSignature().toByteArray();
-
-        // Verify signature
+    public void storeBlock(StoreBlockRequest request, StreamObserver<StoreBlockResponse> responseObserver)
+    {
+        // Verify signature (senderNode + receiverNode + grpcBlock)
         boolean signVal = false;
+        byte[] signature = request.getSignature().toByteArray();
         byte[] senderNodeToVerify = request.getNode().toByteArray();
         byte[] receiverNodeToVerify = request.getReceiver().toByteArray();
         byte[] blockToVerify = request.getBlock().toByteArray();
 
         int senderAndReceiverLength = senderNodeToVerify.length + receiverNodeToVerify.length;
         int totalLength = senderAndReceiverLength + blockToVerify.length;
-
 
         byte[] infoToVerify = new byte[totalLength];
         System.arraycopy(senderNodeToVerify, 0, infoToVerify, 0, senderNodeToVerify.length);
@@ -431,17 +430,18 @@ public class KademliaImpl extends KademliaGrpc.KademliaImplBase
             e.printStackTrace();
         }
 
+
         if (signVal && arePuzzlesValid(request.getNode().getId().toByteArray(), request.getNode().getRandomX().byteAt(0)))
         {
-
-            //Creates a new instance of storage. If already exists, use it.
+            // Creates a new instance of storage. If already exists, use it.
             rt.insert(request.getNode(), 1);
 
             ArrayList<Transaction> transactions = new ArrayList<>(request.getBlock().getTransList());
 
             String previousHash = request.getBlock().getPrevHash().toString();
 
-            Block newBlock = new Block(previousHash, transactions);
+            // TODO: define previousBlock
+            Block newBlock = new Block(previousHash.getBytes(), transactions, null);
 
             //TODO Verificar Lógica
             //Recebo bloco
@@ -451,16 +451,15 @@ public class KademliaImpl extends KademliaGrpc.KademliaImplBase
 
             //Caso receba dois blocos ao mesmo tempo, se tiver outro storeblock quero ver o que tem maior reputação
 
+            // TODO: create newBlock grpcBlock OR change addBlock parameter to Block
             bc.addBlock(newBlock);
 
-            //Check if chain is valid!
-            if(!bc.isChainValid()){
-
+            // Check if chain is valid!
+            if(!bc.isChainValid()) {
                 System.out.println("Blockchain is invalid, discarding store block request...");
 
-            }else {
-
-                // Sign RPC response
+            } else {
+                // Sign RPC response (id)
                 try {
                     signature = SignatureClass.sign(request.getNode().getId().toByteArray(), privateKey);
                 } catch (Exception e) {
@@ -475,9 +474,7 @@ public class KademliaImpl extends KademliaGrpc.KademliaImplBase
 
                 responseObserver.onNext(response);
                 responseObserver.onCompleted();
-
             }
-
         }
         else if (!signVal)
         {
@@ -488,6 +485,7 @@ public class KademliaImpl extends KademliaGrpc.KademliaImplBase
             System.out.println("Node didn't solve crypto puzzles, discarding store block request...");
         }
     }
+
 
     /*
     private blockchain.Transaction convertGRPCTransaction(Transaction grpcTransaction)
