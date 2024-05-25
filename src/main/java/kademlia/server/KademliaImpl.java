@@ -356,7 +356,9 @@ public class KademliaImpl extends KademliaGrpc.KademliaImplBase
 
             //TODO Lógica
             //bc.validateTransactionsSignature();
-            //bc.addTransaction();
+            boolean isValid = bc.isTransactionValid(request.getTransaction());
+
+            //isValid ? bc.addTransaction() : break;
                 //isTransactionValid()
                     // Send to all Nodes on kademlia routing table
                     // for (KademliaNode n : allNodes

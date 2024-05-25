@@ -180,7 +180,7 @@ public class Blockchain
     // 0 -> Bid
     // 1 -> NewAuction
     // 2 -> CloseAuction
-    private boolean isTransactionValid(Transaction transaction)
+    public boolean isTransactionValid(Transaction transaction)
     {
         boolean isValid;
 
