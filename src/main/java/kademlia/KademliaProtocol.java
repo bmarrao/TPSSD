@@ -44,7 +44,7 @@ public class KademliaProtocol {
                 .setRandomX(ByteString.copyFrom(new byte[]{randomX}))
                 .setPublicKey(ByteString.copyFrom(publicKey.getEncoded())).build();
 
-        // Sign node content
+        // Sign node content (node)
         byte[] signature = null;
         try {
             signature = SignatureClass.sign(node.toByteArray(), privateKey);
@@ -62,7 +62,7 @@ public class KademliaProtocol {
         // Receive response
         PingResponse response = stub.ping(request);
 
-        // Check signature
+        // Check signature (id)
         boolean signVal = false;
         try {
             signVal = SignatureClass.verify(response.getId().toByteArray(), response.getSignature().toByteArray(), response.getPublicKey().toByteArray());
@@ -90,7 +90,7 @@ public class KademliaProtocol {
                 .setRandomX(ByteString.copyFrom(new byte[]{randomX}))
                 .setPublicKey(ByteString.copyFrom(publicKey.getEncoded())).build();
 
-        // Sign message content
+        // Sign message content (node)
         byte[] signature = null;
         try {
             signature = SignatureClass.sign(node.toByteArray(), privateKey);
@@ -123,6 +123,7 @@ public class KademliaProtocol {
         return new ArrayList<>();
     }
 
+
     public void storeTransactionOp(Transaction t, String receiverIp , int receiverPort) throws UnsupportedEncodingException {
 
         byte[] receiverNodeID = t.getOwner().getId().toByteArray();
@@ -149,22 +150,23 @@ public class KademliaProtocol {
                 .setSender(senderOffer)
                 .build();
 
-        byte[] ownerNodeToSign   = ownerNode.toByteArray();
+
+        // Sign node content (senderNode + nodeId + transaction)
         byte[] senderNodeToSign  = senderNode.toByteArray();
+        byte[] transactionToSign = transaction.toByteArray();
+        byte[] infoToSign = new byte[senderNodeToSign.length + nodeId.length + transactionToSign.length];
 
-        byte[] infoToSign = new byte[this.nodeId.length + ownerNodeToSign.length + senderNodeToSign.length];
+        System.arraycopy(senderNodeToSign, 0, infoToSign, 0, senderNodeToSign.length);
+        System.arraycopy(this.nodeId, 0, infoToSign, senderNodeToSign.length, this.nodeId.length);
+        System.arraycopy(transactionToSign, 0, infoToSign, senderNodeToSign.length + this.nodeId.length, transactionToSign.length);
 
-        System.arraycopy(this.nodeId, 0, infoToSign, 0, this.nodeId.length);
-        System.arraycopy(ownerNodeToSign, 0, infoToSign, this.nodeId.length, ownerNodeToSign.length);
-        System.arraycopy(senderNodeToSign, 0, infoToSign, this.nodeId.length+ownerNodeToSign.length, senderNodeToSign.length);
-
-        // Sign node content
         byte[] signature = null;
         try {
             signature = SignatureClass.sign(infoToSign, privateKey);
         } catch (Exception e) {
             e.printStackTrace();
         }
+
 
         KademliaGrpc.KademliaStub stub = KademliaGrpc.newStub(channel);
 
@@ -321,7 +323,8 @@ public class KademliaProtocol {
         });
     }
 
-    public FindAuctionRequest findAuctionOp(byte[] nodeID, String receiverIp, int receiverPort) {
+
+    public FindAuctionResponse findAuctionOp(byte[] nodeID, String receiverIp, int receiverPort) {
         ManagedChannel channel = ManagedChannelBuilder.forAddress(receiverIp, receiverPort).usePlaintext().build();
 
         KademliaGrpc.KademliaBlockingStub stub = KademliaGrpc.newBlockingStub(channel);
@@ -334,15 +337,13 @@ public class KademliaProtocol {
                 .setPort(port).build();
 
 
-        // TODO FIX THIS ??
+        // Sign message content (node, nodeId)
         byte[] nodeInfoToSign = node.toByteArray();
         byte[] infoToSign = new byte[nodeInfoToSign.length + nodeID.length];
 
         System.arraycopy(nodeInfoToSign, 0, infoToSign, 0, nodeInfoToSign.length);
         System.arraycopy(nodeID, 0, infoToSign, nodeInfoToSign.length, nodeID.length);
 
-
-        // Sign message content
         byte[] signature = null;
         try {
             signature = SignatureClass.sign(infoToSign, privateKey);
@@ -358,12 +359,13 @@ public class KademliaProtocol {
 
         FindAuctionResponse response = stub.findAuction(request);
 
-        // Check response's signature
+        // Check response's signature (id + transaction)
         boolean signVal = false;
         byte[] idToVerify = response.getId().toByteArray();
         byte[] valueToVerify = response.getT().toByteArray();
         byte[] infoToVerify = new byte[idToVerify.length + valueToVerify.length];
-        // TODO assinar novos nos ?
+
+        // TODO assinar novos nos ? <- acho que não é preciso
         System.arraycopy(idToVerify, 0, infoToVerify, 0, idToVerify.length);
         System.arraycopy(valueToVerify, 0, infoToVerify, idToVerify.length, valueToVerify.length);
 
@@ -381,13 +383,14 @@ public class KademliaProtocol {
         }
         return null;
     }
+
+
     // TODO UNDO PROTO
     public FindBlockResponse findBlockOp(byte[] key, String receiverIp, int receiverPort)
     {
         ManagedChannel channel = ManagedChannelBuilder.forAddress(receiverIp, receiverPort).usePlaintext().build();
 
         KademliaGrpc.KademliaBlockingStub stub = KademliaGrpc.newBlockingStub(channel);
-
 
         Node node = Node.newBuilder()
                 .setId(ByteString.copyFrom(nodeId))
@@ -397,16 +400,13 @@ public class KademliaProtocol {
                 .setPort(port).build();
 
 
-        // TODO FIX THIS
+        // Sign message content (node + key)
         byte[] nodeInfoToSign = node.toByteArray();
         byte[] infoToSign = new byte[nodeInfoToSign.length + key.length];
 
         System.arraycopy(nodeInfoToSign, 0, infoToSign, 0, nodeInfoToSign.length);
         System.arraycopy(key, 0, infoToSign, nodeInfoToSign.length, key.length);
 
-
-
-        // Sign message content
         byte[] signature = null;
         try {
             signature = SignatureClass.sign(infoToSign, privateKey);
@@ -414,6 +414,7 @@ public class KademliaProtocol {
         catch(Exception e) {
             e.printStackTrace();
         }
+
 
         // Send RPC request
         FindBlockRequest request = FindBlockRequest.newBuilder()
@@ -423,12 +424,13 @@ public class KademliaProtocol {
 
         FindBlockResponse response = stub.findBlock(request);
 
-        // Check response's signature
+        // Check response's signature (id + block)
         boolean signVal = false;
         byte[] idToVerify = response.getId().toByteArray();
         byte[] valueToVerify = response.getB().toByteArray();
         byte[] infoToVerify = new byte[idToVerify.length + valueToVerify.length];
-        // TODO assinar novos nos ?
+
+        // TODO assinar novos nos ? <- acho que não é preciso
         System.arraycopy(idToVerify, 0, infoToVerify, 0, idToVerify.length);
         System.arraycopy(valueToVerify,  0, infoToVerify, idToVerify.length, valueToVerify.length);
 

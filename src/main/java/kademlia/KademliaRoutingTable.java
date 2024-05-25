@@ -85,18 +85,19 @@ public class KademliaRoutingTable
     // a can be 1 or -1 wether we want to increase or decrease the reputation
     public void setReputation(Node node, int a) {
         KademliaNode kn = CheckNodeIsInTree(node.getId().toByteArray(), this.root, "");
+        float reputation = kn.reputation;
         if (a == 1) {
             if (kn.getReputation() != 0) {
-                kn.setReputation((kn.reputation * reputationPercentage) + kn.reputation);
+                kn.setReputation((reputation * reputationPercentage) + reputation);
             } else {
-                kn.setReputation((float) (0.01 + kn.reputation));
+                kn.setReputation((float) (0.01 + reputation));
             }
         }
         else {
             if (kn.getReputation() != 0) {
-                kn.setReputation(kn.reputation - (kn.reputation * reputationPercentage));
+                kn.setReputation(reputation - (reputation * reputationPercentage));
             } else {
-                kn.setReputation((float) (kn.reputation - 0.01));
+                kn.setReputation((float) (reputation - 0.01));
             }
         }
     }
@@ -132,7 +133,7 @@ public class KademliaRoutingTable
     }
 
     // Função recursiva
-    public boolean insertRec(KademliaNode node, TreeNode curr,int i,int j, char prevDir )
+    public boolean insertRec(KademliaNode node, TreeNode curr, int i, int j, char prevDir)
     {
         if (i < 20)
         {
@@ -169,7 +170,6 @@ public class KademliaRoutingTable
 
                         }
                         curr.kbucket = null;
-                        return true;
                     }
                     else
                     {
@@ -177,8 +177,8 @@ public class KademliaRoutingTable
                         curr.kc++;
                         addSiblingList(node);
                         curr.kbucket.add(node);
-                        return true;
                     }
+                    return true;
                 }
             }
             else
@@ -229,6 +229,7 @@ public class KademliaRoutingTable
         return true;
 
     }
+
     public boolean hasObject(SortedArrayList<KademliaNode> kbucket,KademliaNode node)
     {
         byte[] id1 = node.nodeId;
@@ -260,7 +261,6 @@ public class KademliaRoutingTable
     }
 
 
-
     public KademliaNode returnsObject(SortedArrayList<KademliaNode> kbucket,KademliaNode node)
     {
         byte[] id1 = node.nodeId;
@@ -290,7 +290,7 @@ public class KademliaRoutingTable
         }
         return null;
     }
-    // Função recursiva
+
 
     // Adiciona os nodes que estão na variavel kbucket para os novos buckets criados de acordo com a distancia
     // em relação ao id do Node ao qual pertence a routing table
@@ -362,6 +362,7 @@ public class KademliaRoutingTable
         }
     }
 
+
     public ArrayList<Node> findClosestNode(byte[] nodeId,int a)
     {
         ArrayList<KademliaNode> nodos;
@@ -400,6 +401,7 @@ public class KademliaRoutingTable
         }
         return ret;
     }
+
 
     private ArrayList<KademliaNode> findClosestNodeRec(TreeNode curr, byte[] nodeId, int i, int j,int a, String path)
     {
@@ -499,9 +501,10 @@ public class KademliaRoutingTable
         int tamanho = siblingList.size();
         if (tamanho >= this.s)
         {
-            this.siblingList.remove(tamanho);
+            this.siblingList.remove(tamanho); // TODO ??
         }
     }
+
     // Função que pesquisa o map pelo node mais perto da variavel 'nodeId'
     public ArrayList<KademliaNode> searchMapClosest(ArrayList<KademliaNode> kbucket,byte[] nodeId, int a)
     {
@@ -556,6 +559,7 @@ public class KademliaRoutingTable
             return this.dist.compareTo(other.dist);
         }
     }
+
     // TODO testar se isso funciona direito
     // Função que calcula a distancia de um no
     public BigInteger calculateDistance (byte[] node1, byte[] node2)
@@ -578,7 +582,6 @@ public class KademliaRoutingTable
         }
         return distance;
     }
-    // Função que calcula o node visto pela ultima vez online em um kbucket
 
 
     public void printTree()

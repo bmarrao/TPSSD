@@ -127,7 +127,8 @@ public class UserInterface {
                 System.out.println("Pick the number of the auction");
                 int auction = sc.nextInt();
                 Transaction t = latestInformationOnBlockChain.get(i-1);
-                placeBid(t.getServiceID(),t.getReceiver());
+                //placeBid(t.getServiceID(),t.getReceiver());
+                placeBid(t.getId().toByteArray(), t.getOwner());
                 break;
             case "2":
                 viewAuctions();

@@ -92,6 +92,7 @@ public class Kademlia
         }
     }
 
+
     public static boolean checkZeroCount(byte[] puzzle, int numOfLeadingZeros) {
         int leadingZeros = 0;
 
@@ -113,6 +114,7 @@ public class Kademlia
 
         return leadingZeros >= numOfLeadingZeros;
     }
+
 
     public static byte[] solveStaticPuzzle(int leadingZerosStatic) throws NoSuchAlgorithmException {
         /* against eclipe attacks
@@ -158,6 +160,8 @@ public class Kademlia
             return null;
         }
     }
+
+
     public static void solveDynamicPuzzle(byte[] sKadNodeId, int leadingZerosDynamic) throws NoSuchAlgorithmException {
         /* against sybil attacks
             1) NodeId = H(Spub)
@@ -273,16 +277,23 @@ public class Kademlia
                 e.printStackTrace();
             }
         }
-        //TODO ALTER THIS TO SORT BY REPUTATION/TRUST
-        allResults.sort((node1, node2) -> {
-            BigInteger distance1 = rt.calculateDistance(node1.getId().toByteArray(), nodeId);
-            BigInteger distance2 = rt.calculateDistance(node2.getId().toByteArray(), nodeId);
-            return distance1.compareTo(distance2);
-        });
 
+        // Sort by reputation
+        allResults.sort((node1, node2) -> {
+            Node n1 = node1.getSender().getNode();
+            float reputation1 = (new KademliaNode(n1.getIp(), n1.getId().toByteArray(),
+                                                  n1.getPort(), n1.getPublicKey().toByteArray())).getReputation();
+
+            Node n2 = node2.getSender().getNode();
+            float reputation2 = (new KademliaNode(n2.getIp(), n2.getId().toByteArray(),
+                                                  n2.getPort(), n2.getPublicKey().toByteArray())).getReputation();
+
+            return Float.compare(reputation1, reputation2);
+        });
 
         return allResults.get(0);
     }
+
 
     public grpcBlock sKadBlockLookup(byte[] nodeId, int d_closest_nodes)
     {
@@ -316,36 +327,24 @@ public class Kademlia
                 e.printStackTrace();
             }
         }
-        //TODO ALTER THIS TO SORT BY REPUTATION/TRUST
-        Collections.sort(allResults, (node1, node2) -> {
-            BigInteger distance1 = rt.calculateDistance(node1.toByteArray(), nodeId);
-            BigInteger distance2 = rt.calculateDistance(node2.toByteArray(), nodeId);
-            return distance1.compareTo(distance2);
-        });
 
+
+        // Sort by reputation
+        allResults.sort((node1, node2) -> {
+            Node n1 = node1.getNode();
+            float reputation1 = (new KademliaNode(n1.getIp(), n1.getId().toByteArray(),
+                                                  n1.getPort(), n1.getPublicKey().toByteArray())).getReputation();
+
+            Node n2 = node2.getNode();
+            float reputation2 = (new KademliaNode(n2.getIp(), n2.getId().toByteArray(),
+                                                  n2.getPort(), n2.getPublicKey().toByteArray())).getReputation();
+
+            return Float.compare(reputation1, reputation2);
+        });
 
         return allResults.get(0);
     }
 
-    /*
-    // node id generation without crypto puzzles
-    public static byte[] generateNodeId()
-    {
-        byte[] array = new byte[20];
-        // SecureRandom() assures that random generated word is safe for crypto purposes
-        new SecureRandom().nextBytes(array);
-
-        try
-        {
-            MessageDigest md = MessageDigest.getInstance("SHA-1");
-            return md.digest(array);
-        }
-        catch(Exception e) {
-            e.printStackTrace();
-            return null;
-        }
-    }
-    */
 
     public static void addIpPortBSFile(String ipAddress, int port, String bootstrapFilePath) {
         try {
@@ -357,6 +356,7 @@ public class Kademlia
             e.printStackTrace();
         }
     }
+
 
     private static List<String> getBootstrapNodesInfo(String filepath) {
         List<String> ipPortPairs = new ArrayList<>();
@@ -379,19 +379,18 @@ public class Kademlia
 
     public Node getOwnNode()
     {
-        Node node = Node.newBuilder()
-                //.setId(ByteString.copyFrom(nodeId)) ALTEREI ISSO
+        return Node.newBuilder()
                 .setId(ByteString.copyFrom(nodeId))
                 .setIp(protocol.ipAddress)
                 .setPort(protocol.port)
                 .setPublicKey(ByteString.copyFrom(generatedPk.getEncoded()))
                 .build();
-        return node;
     }
 
 
 
     // TODO: Delete this later
+    /*
     public static void callOps(KademliaProtocol protocol, String receiverIp, int receiverPort)
     {
         byte[] key = {0x3A, 0x7F, (byte)0xA8, (byte)0xC2, 0x19, 0x5E, (byte)0xD4, (byte)0x8B, (byte)0xB6, 0x70};
@@ -412,7 +411,7 @@ public class Kademlia
         for (Node n : findNodeRes) {
             System.out.println("      " + n);
         }
-        /*
+
         System.out.println("Response for find value:");
         FindValueResponse findValueRes = protocol.findValueOp(nodeId, key, receiverIp, receiverPort);
         if (findValueRes != null) {
@@ -423,7 +422,6 @@ public class Kademlia
                 System.out.println(n);
             }
         }
-
-         */
     }
+     */
 }
