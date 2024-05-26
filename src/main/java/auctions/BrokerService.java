@@ -13,8 +13,8 @@ public class BrokerService
 {
     Lock l =new ReentrantLock();
     byte[] serviceId ;
-     Offer highestOffer;
-     int time;
+    Offer highestOffer;
+    int time;
     Node Owner;
     BrokerService(byte[] serviceId,int time,Node Owner)
     {
@@ -45,10 +45,6 @@ public class BrokerService
         l.unlock();
         return result;
     }
-
-
-
-
 }
 
 

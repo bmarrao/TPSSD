@@ -12,7 +12,7 @@ import java.nio.charset.StandardCharsets;
 import java.security.PrivateKey;
 import java.security.PublicKey;
 import java.util.*;
-
+import static kademlia.Kademlia.rt;
 
 public class KademliaProtocol {
     public byte[] nodeId;
@@ -21,7 +21,6 @@ public class KademliaProtocol {
     public PublicKey publicKey;
     public PrivateKey privateKey;
     public byte randomX;
-
 
     public KademliaProtocol(byte[] nodeId, String ipAddress, int port, PublicKey publicKey, PrivateKey privateKey, byte randomX) {
         this.nodeId = nodeId;
@@ -72,6 +71,7 @@ public class KademliaProtocol {
         channel.shutdown();
 
         if (signVal) {
+            rt.insert(node,0);
             return response.getOnline();
         }
         return false;
@@ -115,7 +115,10 @@ public class KademliaProtocol {
 
         channel.shutdown();
 
-        if (idSignVal) {
+        if (idSignVal)
+        {
+            rt.insert(node,0);
+
             return response.getNodesList();
         }
         return new ArrayList<>();
@@ -186,11 +189,14 @@ public class KademliaProtocol {
                     e.printStackTrace();
                 }
 
-                if (signVal) {
-                    System.out.println("Transaction stored successfully: " + response.getStored());
+                if (signVal)
+                {
+                    rt.insert(senderNode,0);
+
+                    //System.out.println("Transaction stored successfully: " + response.getStored());
                     transactionSuccessful[0] = true;
                 } else {
-                    System.out.println("Signature verification failed.");
+                    //System.out.println("Signature verification failed.");
                     transactionSuccessful[0] = false;
                 }
             }
@@ -299,6 +305,8 @@ public class KademliaProtocol {
                 }
 
                 if (signVal) {
+                    rt.insert(senderNode,0);
+
                     System.out.println("Block stored successfully: " + response.getStored());
                 } else {
                     System.out.println("Signature verification failed.");
@@ -361,11 +369,12 @@ public class KademliaProtocol {
         byte[] valueToVerify = response.getT().toByteArray();
         byte[] infoToVerify = new byte[idToVerify.length + valueToVerify.length];
 
-        // TODO assinar novos nos ? <- acho que não é preciso
         System.arraycopy(idToVerify, 0, infoToVerify, 0, idToVerify.length);
         System.arraycopy(valueToVerify, 0, infoToVerify, idToVerify.length, valueToVerify.length);
 
-        try {
+        try
+        {
+
             signVal = SignatureClass.verify(infoToVerify, response.getSignature().toByteArray(), response.getPublicKey().toByteArray());
         } catch (Exception e) {
             e.printStackTrace();
@@ -373,8 +382,9 @@ public class KademliaProtocol {
 
         channel.shutdown();
 
-        if (signVal) {
-            // TODO NEED TO INSERT IN THESE CASES
+        if (signVal)
+        {
+            rt.insert(node,0);
             return response;
         }
         return null;
@@ -430,7 +440,9 @@ public class KademliaProtocol {
         System.arraycopy(idToVerify, 0, infoToVerify, 0, idToVerify.length);
         System.arraycopy(valueToVerify,  0, infoToVerify, idToVerify.length, valueToVerify.length);
 
-        try {
+        try
+        {
+
             signVal = SignatureClass.verify(infoToVerify, response.getSignature().toByteArray(), response.getPublicKey().toByteArray());
         }
         catch(Exception e) {
@@ -441,7 +453,7 @@ public class KademliaProtocol {
 
         if (signVal)
         {
-            // TODO NEED TO INSERT IN THESE CASES
+            rt.insert(node,0);
             return response;
         }
         return null;

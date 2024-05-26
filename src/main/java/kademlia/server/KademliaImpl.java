@@ -276,11 +276,8 @@ public class KademliaImpl extends KademliaGrpc.KademliaImplBase
 
 
         if (signVal && arePuzzlesValid(request.getNode().getId().toByteArray(), request.getNode().getRandomX().byteAt(0))) {
-            //Creates a new instance of storage. If already exists, use it.
             rt.insert(request.getNode(), 1);
 
-            // Get the value associated with the key from the data store
-            // TODO GET A COPY OF BLOCKCHAIN - FIX THIS
             grpcBlock value = null;//bc.findBlock(key);
             boolean hasBlock = true;
             List<Node> closestNodes = new ArrayList<>();
@@ -422,25 +419,13 @@ public class KademliaImpl extends KademliaGrpc.KademliaImplBase
 
         if (signVal && arePuzzlesValid(request.getNode().getId().toByteArray(), request.getNode().getRandomX().byteAt(0)))
         {
-            // Creates a new instance of storage. If already exists, use it.
             rt.insert(request.getNode(), 1);
 
             ArrayList<Transaction> transactions = new ArrayList<>(request.getBlock().getTransList());
 
             String previousHash = request.getBlock().getPrevHash().toString();
 
-            // TODO: define previousBlock
             Block newBlock = new Block(previousHash.getBytes(), transactions, null);
-
-            //TODO Verificar Lógica
-            //Recebo bloco
-            //Verificar se o Bloco é válido:
-                //Verificar hash do anterior
-                //Verificar se as transações são válidas
-
-            //Caso receba dois blocos ao mesmo tempo, se tiver outro storeblock quero ver o que tem maior reputação
-
-            // TODO: create newBlock grpcBlock OR change addBlock parameter to Block
             bc.addBlock(newBlock);
 
             // Check if chain is valid!
