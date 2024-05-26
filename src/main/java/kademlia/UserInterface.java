@@ -1,15 +1,17 @@
 package kademlia;
 
+import com.google.protobuf.ByteString;
+
 import java.io.UnsupportedEncodingException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Scanner;
 
-import static kademlia.Kademlia.bc;
-import static kademlia.Kademlia.auction;
-import static kademlia.Kademlia.kn;
+import static kademlia.Kademlia.*;
 
 public class UserInterface {
+    private static String ipAddress;
+    private static int port;
     private static Kademlia k;
     private static Scanner sc;
 
@@ -100,7 +102,6 @@ public class UserInterface {
         int i = 1;
         for(Transaction t : latestInformationOnBlockChain)
         {
-            //KademliaNode owner = t.getReceiver();
             Node owner = t.getOwner();
 
             System.out.println(i);
@@ -125,8 +126,9 @@ public class UserInterface {
                 System.out.println("Pick the number of the auction");
                 int auction = sc.nextInt();
                 Transaction t = latestInformationOnBlockChain.get(i-1);
-                //placeBid(t.getServiceID(),t.getReceiver());
-                placeBid(t.getId().toByteArray(), t.getOwner());
+                Node owner = t.getOwner();
+                placeBid(t.getId().toByteArray(), new KademliaNode(owner.getIp(), owner.getId().toByteArray(),
+                                                                   owner.getPort(), owner.getPublicKey().toByteArray()));
                 break;
             case "2":
                 viewAuctions();
@@ -154,7 +156,22 @@ public class UserInterface {
         boolean didTransactionGoThrough = false;
 
         try {
-            didTransactionGoThrough = k.protocol.storeTransactionOp(new Transaction(owner, bidAmount, serviceId, Transaction.TransactionType.BID ));
+            Node ownerNode  = Node.newBuilder().setId(ByteString.copyFrom(owner.getNodeId())).setIp(owner.getIpAdress()).setPort(owner.getPort()).setPublicKey(ByteString.copyFrom(owner.getPublicKey())).build();
+            Node sender = Node.newBuilder().setId(ByteString.copyFrom(nodeId)).setIp(ipAddress).setPort(port).setPublicKey(ByteString.copyFrom(generatedPk.getEncoded())).setRandomX(ByteString.copyFrom(new byte[]{randomX})).build();
+            Offer offer = Offer.newBuilder().setNode(sender).setPrice(bidAmount).build();
+
+            // Sign transaction information
+            byte[] ownerBytes = ownerNode.toByteArray();
+            byte[] offerBytes = offer.toByteArray();
+            byte[] infoToSign = new byte[serviceId.length + ownerBytes.length + offerBytes.length];
+            System.arraycopy(serviceId, 0, infoToSign, 0, serviceId.length);
+            System.arraycopy(ownerBytes, 0, infoToSign, serviceId.length, ownerBytes.length);
+            System.arraycopy(offerBytes, 0, infoToSign, serviceId.length + ownerBytes.length, offerBytes.length);
+
+            // TODO: verificar se a bid é do tipo 2
+            Transaction transaction = Transaction.newBuilder().setId(ByteString.copyFrom(serviceId)).setType(2).setOwner(ownerNode)
+                                                              .setSender(offer).setSignature(ByteString.copyFrom(infoToSign)).build();
+            didTransactionGoThrough = k.protocol.storeTransactionOp(transaction, owner.getIpAdress(), owner.getPort());
         } catch (UnsupportedEncodingException e) {
             throw new RuntimeException(e);
         }
@@ -181,7 +198,9 @@ public class UserInterface {
 
     public static void main(String[] args) {
         System.out.println("Initializing Kademlia...");
-        k = new Kademlia(args[0], args[1], Integer.parseInt(args[2]));
+        ipAddress = args[1];
+        port = Integer.parseInt(args[2]);
+        k = new Kademlia(args[0], ipAddress, port);
         sc = new Scanner(System.in);
         mainMenu();
     }

@@ -122,7 +122,7 @@ public class KademliaProtocol {
     }
 
 
-    public void storeTransactionOp(Transaction t, String receiverIp , int receiverPort) throws UnsupportedEncodingException {
+    public boolean storeTransactionOp(Transaction t, String receiverIp , int receiverPort) throws UnsupportedEncodingException {
 
         ManagedChannel channel = ManagedChannelBuilder.forAddress(receiverIp, receiverPort).usePlaintext().build();
 
@@ -170,6 +170,7 @@ public class KademliaProtocol {
                 .setSignature(ByteString.copyFrom(signature))
                 .build();
 
+        final boolean[] transactionSuccessful = {false};
         stub.storeTransaction(request, new StreamObserver<StoreTransactionResponse>() {
             @Override
             public void onNext(StoreTransactionResponse response) {
@@ -187,8 +188,10 @@ public class KademliaProtocol {
 
                 if (signVal) {
                     System.out.println("Transaction stored successfully: " + response.getStored());
+                    transactionSuccessful[0] = true;
                 } else {
                     System.out.println("Signature verification failed.");
+                    transactionSuccessful[0] = false;
                 }
             }
 
@@ -204,7 +207,7 @@ public class KademliaProtocol {
                 channel.shutdown();
             }
         });
-
+        return transactionSuccessful[0];
     }
 
     public void storeBlockOp(byte[] receiverNodeID, String receiverIp, int receiverPort, blockchain.Block block) {
