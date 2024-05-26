@@ -357,29 +357,13 @@ public class KademliaImpl extends KademliaGrpc.KademliaImplBase
             //Creates a new instance of storage. If already exists, use it.
             rt.insert(request.getNode(), 1);
 
-            //TODO Lógica
-            //bc.validateTransactionsSignature();
             boolean isValid = bc.isTransactionValid(request.getTransaction(),null);
 
             if (isValid)
             {
                 bc.addTransaction(request.getTransaction());
-                //Verificar número limite de transactions para minerar bloco
-                //Adicionar transaction a esse bloco
+
             }
-
-            //isValid ? bc.addTransaction() : break;
-                //isTransactionValid()
-                    //Verificar HashMap e ver se:
-                        //For open auction é só put
-                        //Se for Bid verificar se existe auction e se o price é maior que o anterior Se for maior atualizar BrokerService MyAuctions
-                        //Se for close auction, verificar se há auction
-
-
-
-            //Passar para todos os blocos essa transaction || Validar Transaction
-            //Cheguei no limite de transações então vou tentar minerar bloco
-
 
             // Sign RPC response (id)
             try {

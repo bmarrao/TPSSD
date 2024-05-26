@@ -246,9 +246,6 @@ public class Blockchain
         if (verifyTransactionSignature(transaction) || verifyTransactionTypeConsistency(transaction, lastTransaction)) {
 
             //Significa que a Transação é coerente com transações anteriores para a mesma auction e que tem a assinatura válida
-            //TODO Validar se o limite de transactions foi atingido
-            //Se sim, minerar bloco novo e colocar transaction lá. Isto será fora. No método que pedir a validação da transaction
-
             isValid = true;
         }
 
@@ -442,29 +439,6 @@ public class Blockchain
         }
     }
 
-
-    private boolean isBlockTransactionValid(Transaction transaction, Block block)
-    {
-
-        boolean isValid;
-
-        HashMap<Integer, Transaction> sameAuctionTransactions = getSameAuctionTransactionsFromBlockchain(transaction, block);
-
-        if (!verifyTransactionSignature(transaction) || !verifyTransactionTypeConsistency(transaction, sameAuctionTransactions)) {
-            isValid = false;
-        }
-        else
-        {
-            //Significa que a Transação é coerente com transações anteriores para a mesma auction e que tem a assinatura válida
-            //TODO Validar se o limite de transactions foi atingido
-            //Se sim, minerar bloco novo e colocar transaction lá. Isto será fora. No método que pedir a validação da transaction
-
-            isValid = true;
-        }
-
-        return isValid;
-    }
-
     private boolean verifyTransactionSignature(Transaction transaction)
     {
         boolean isValid = false;
@@ -598,7 +572,7 @@ public class Blockchain
         }
         for (Transaction transaction : transactions)
         {
-            if(!isTransactionSignValid(transaction, block))
+            if(!isTransactionValid(transaction, block))
             {
                 this.k.rt.setReputation(block.getNode(),-1)      ;
                 return false;
@@ -608,11 +582,6 @@ public class Blockchain
         this.k.rt.setReputation(block.getNode(),1);
         block.setReputation(1);
         return true;
-    }
-
-    public boolean checkValidityOfTransactions(ArrayList<Transaction> transactions, Block block)
-    {
-        return false;
     }
 
     public class AuctionId
