@@ -4,7 +4,6 @@ package blockchain;
 import auctions.BrokerService;
 import com.google.protobuf.ByteString;
 import kademlia.*;
-import org.checkerframework.checker.units.qual.Length;
 
 import java.io.ByteArrayOutputStream;
 import java.nio.ByteBuffer;
@@ -187,7 +186,7 @@ public class Blockchain
     {
         for(Transaction t: currentMiningBlock.getTransactionList())
         {
-            if (isBlockTransactionValid(t,latestMinedBlock))
+            if (isTransactionValid(t,latestMinedBlock))
             {
                 this.pendingTransactions.add(0,t);
             }

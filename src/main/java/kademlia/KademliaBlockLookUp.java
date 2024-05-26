@@ -7,7 +7,7 @@ public class KademliaBlockLookUp implements Runnable
 {
     public static KademliaRoutingTable rt;
     public static KademliaProtocol protocol;
-    grpcBlock b; ;
+    grpcBlock b;
     byte[] key ;
     int a ;
     Node n;

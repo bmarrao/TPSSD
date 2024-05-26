@@ -1,6 +1,5 @@
 package blockchain;
 
-import java.util.ArrayList;
 public class MineThread implements Runnable
 {
     Block bloco ;

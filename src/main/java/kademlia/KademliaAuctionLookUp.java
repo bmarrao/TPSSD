@@ -8,7 +8,7 @@ public class KademliaAuctionLookUp implements Runnable
 
     public static KademliaRoutingTable rt;
     public static KademliaProtocol protocol;
-    Transaction t; ;
+    Transaction t;
     byte[] key ;
     int a ;
     Node n;

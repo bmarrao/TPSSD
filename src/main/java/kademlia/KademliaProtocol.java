@@ -1,6 +1,5 @@
 package kademlia;
 
-import blockchain.Block;
 import com.google.protobuf.ByteString;
 import io.grpc.ManagedChannel;
 import io.grpc.ManagedChannelBuilder;
@@ -98,7 +97,6 @@ public class KademliaProtocol {
             e.printStackTrace();
         }
 
-
         // Send RPC request
         FindNodeRequest request = FindNodeRequest.newBuilder()
                 .setNode(node)
@@ -125,10 +123,6 @@ public class KademliaProtocol {
 
 
     public void storeTransactionOp(Transaction t, String receiverIp , int receiverPort) throws UnsupportedEncodingException {
-
-        byte[] receiverNodeID = t.getOwner().getId().toByteArray();
-
-        //int transactionType = getTransactionType(t.getType());
 
         ManagedChannel channel = ManagedChannelBuilder.forAddress(receiverIp, receiverPort).usePlaintext().build();
 
@@ -166,7 +160,6 @@ public class KademliaProtocol {
         } catch (Exception e) {
             e.printStackTrace();
         }
-
 
         KademliaGrpc.KademliaStub stub = KademliaGrpc.newStub(channel);
 
@@ -303,7 +296,7 @@ public class KademliaProtocol {
                 }
 
                 if (signVal) {
-                    System.out.println("Transaction stored successfully: " + response.getStored());
+                    System.out.println("Block stored successfully: " + response.getStored());
                 } else {
                     System.out.println("Signature verification failed.");
                 }

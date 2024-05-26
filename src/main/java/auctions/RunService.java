@@ -5,8 +5,6 @@ import kademlia.KademliaProtocol;
 import kademlia.Offer;
 import kademlia.Transaction;
 
-import java.io.UnsupportedEncodingException;
-
 
 public class RunService implements Runnable {
 

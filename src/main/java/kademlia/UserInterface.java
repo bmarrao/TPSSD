@@ -1,7 +1,5 @@
 package kademlia;
 
-import auctions.Auction;
-
 import java.io.UnsupportedEncodingException;
 import java.util.ArrayList;
 import java.util.Arrays;

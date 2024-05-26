@@ -3,8 +3,6 @@ package auctions;
 
 import kademlia.Node;
 import kademlia.Offer;
-import java.util.ArrayList;
-import java.util.concurrent.locks.Condition;
 import java.util.concurrent.locks.Lock;
 import java.util.concurrent.locks.ReentrantLock;
 
@@ -34,8 +32,6 @@ public class BrokerService
         l.unlock();
         return ret;
     }
-
-    public byte[] getServiceId() { return this.serviceId; }
     public boolean receiveOffer(Offer of)
     {
         l.lock();

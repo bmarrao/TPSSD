@@ -92,9 +92,5 @@ public class Auction
         bc.closeAuction(bs.serviceId,bs.highestOffer , k.getOwnNode());
     }
 
-    public ArrayList<BrokerService> getServices() {
-        return services;
-    }
-
 }
 

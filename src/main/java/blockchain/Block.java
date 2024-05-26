@@ -47,6 +47,7 @@ public class Block
         this.timestamp = grpcBlock.getTimestamp();
         this.nonce = grpcBlock.getNonce();
         this.transactionList = new ArrayList<>();
+        //TODO ??? Está sempre vazio
         for (Transaction t : transactionList)
         {
             this.transactionList.add(t);
@@ -94,10 +95,6 @@ public class Block
 
     public int getNonce() {
         return nonce;
-    }
-
-    public void setNonce(int nonce) {
-        this.nonce = nonce;
     }
 
     public ArrayList<Transaction> getTransactionList() {
@@ -208,12 +205,6 @@ public class Block
         transactionList.add(transaction);
         return transactionList.size() == TRANSACTIONS_LIMIT;
     }
-
-    //TODO : Faz sentido? Validate transactions in the block
-    /*public boolean validateTransactions() {
-        // Implement validation logic here (e.g., check if transactions are valid)
-        return true; // Placeholder, implement actual validation
-    }*/
 
     // Mine the block using Proof-of-Work
     public void mineBlock(int difficulty) {
