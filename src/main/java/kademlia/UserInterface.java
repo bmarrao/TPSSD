@@ -196,6 +196,17 @@ public class UserInterface {
         System.out.println("Auction service created with ID: " + Arrays.toString(serviceId));
     }
 
+    private static void closeAuction() {
+        System.out.println("========== CLOSE AUCTION SUB-MENU ===========");
+
+        System.out.print("Enter item\n-> ");
+        String item = sc.nextLine();
+        System.out.print("Enter maximum time between bids\n-> ");
+        int auctionDuration = Integer.parseInt(sc.nextLine());
+        byte[] serviceId = auction.initiateService(item,auctionDuration);
+        System.out.println("Auction service created with ID: " + Arrays.toString(serviceId));
+    }
+
     public static void main(String[] args) {
         System.out.println("Initializing Kademlia...");
         ipAddress = args[1];
