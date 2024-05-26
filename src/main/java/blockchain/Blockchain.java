@@ -4,6 +4,7 @@ package blockchain;
 import auctions.BrokerService;
 import com.google.protobuf.ByteString;
 import kademlia.*;
+import org.checkerframework.checker.units.qual.Length;
 
 import java.io.ByteArrayOutputStream;
 import java.nio.ByteBuffer;
@@ -149,11 +150,14 @@ public class Blockchain
 
         if (!Arrays.equals(bcLatestBlockHash, previousBlockHash) || !compareId(bcLatestBlockHash,previousBlockHash) || !hexString.toString().startsWith(target))
         {
-            this.k.rt.setReputation(block1.getNode(),-1);
 
             if (isBlockValid(block1))
             {
-                latestMinedBlock =block1  ;
+                if(resolveForks(block1))
+                {
+                    latestMinedBlock =block1 ;
+                    adjustCurrentMiningBlock();
+                }
             }
             else
             {
@@ -166,6 +170,8 @@ public class Blockchain
             if (isBlockValid(block1))
             {
                 latestMinedBlock =block1  ;
+                adjustCurrentMiningBlock();
+
             }
             else
             {
@@ -174,24 +180,40 @@ public class Blockchain
             }
         }
 
-        //resolveForks();
         return null;
     }
-    /*
-    private void resolveForks() {
-        // Check all orphan blocks to see if they can be connected to the main chain
-        List<Block> toBeRemoved = new ArrayList<>();
-        for (Block orphan : orphanBlocks) {
-            if (isValidNewBlock(orphan, getLastBlock())) {
-                chain.add(orphan);
-                toBeRemoved.add(orphan);
+
+    private void adjustCurrentMiningBlock()
+    {
+        for(Transaction t: currentMiningBlock.getTransactionList())
+        {
+            if (isBlockTransactionValid(t,latestMinedBlock))
+            {
+                this.pendingTransactions.add(0,t);
             }
         }
-        orphanBlocks.removeAll(toBeRemoved);
-
-        // Optionally, implement more sophisticated fork resolution
+        startMiningIfConditions();
     }
-    */
+    private boolean resolveForks(Block block)
+    {
+        LengthSumRep lrBlock = new LengthSumRep();
+        LengthSumRep lrLastMinedBlock = new LengthSumRep();
+        lrBlock = calculateChainLength(block,lrBlock);
+        lrLastMinedBlock = calculateChainLength(latestMinedBlock,lrLastMinedBlock);
+        if (lrBlock.length == lrLastMinedBlock.length)
+        {
+            if(lrBlock.sumRep >= lrLastMinedBlock.sumRep) {
+                return true;
+            }
+        }
+        else if (lrBlock.length > lrLastMinedBlock.length)
+        {
+            return true;
+        }
+
+        return false;
+
+    }
 
     private boolean hasValidTransactions(Block block, ArrayList<Transaction> transactions)
     {
@@ -286,11 +308,17 @@ public class Blockchain
         return isValid;
     }
 
-    public void addTransaction(Transaction t )
+    public void addTransaction(Transaction t)
     {
         this.pendingTransactions.add(t);
+        startMiningIfConditions();
+        gossipTransactionToOthers(t);
+    }
+
+    public void startMiningIfConditions()
+    {
         if (currentMiningBlock == null) {
-            if (this.pendingTransactions.size() == TRANSACTIONS_LIMIT) {
+            if (this.pendingTransactions.size() >= TRANSACTIONS_LIMIT) {
 
                 ArrayList<Transaction> transactionToBlock = this.maxLimitPendingTransactions(pendingTransactions);
                 currentMiningBlock = new Block(this.latestMinedBlock.getHash(), transactionToBlock, this.latestMinedBlock);
@@ -299,9 +327,8 @@ public class Blockchain
                 miningBlock.start();
             }
         }
-        this.pendingTransactions.add(t);
-        gossipTransactionToOthers(t);
     }
+
 
     private ArrayList<Transaction> maxLimitPendingTransactions(ArrayList<Transaction> pendingTransactions){
 
@@ -378,6 +405,19 @@ public class Blockchain
 
     }
 
+    public LengthSumRep calculateChainLength(Block b, LengthSumRep lr)
+    {
+        if(b == null)
+        {
+            return lr;
+        }
+        else
+        {
+            lr.length += 1;
+            lr.sumRep+=b.getReputation();
+            return lr;
+        }
+    }
     public void gossipBlockToAllOthers(Block b)
     {
         ArrayList<KademliaNode> allNodes = k.rt.getAllNodes();
@@ -589,6 +629,12 @@ public class Blockchain
         {
             return compareId(a.serviceId,this.serviceId) && a.Owner.equals(this.Owner);
         }
+    }
+
+    public class LengthSumRep
+    {
+        public int length;
+        public int sumRep;
     }
 }
 
