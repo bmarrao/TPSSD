@@ -28,7 +28,7 @@ public class Block
     private int nonce;
     private ArrayList<Transaction> transactionList;
     private int reputationScore;
-    private byte[] signature;
+    private final byte[] signature;
 
     public Block(byte[] previousHash, ArrayList<Transaction> transactionList,Block previousBlock)
     {
@@ -177,13 +177,15 @@ public class Block
 
         byte[] hashBytes = sha256.digest(input.getBytes(StandardCharsets.UTF_8)); // Compute the hash
 
+        /*
         StringBuilder hexString = new StringBuilder();
         for (byte b : hashBytes) {
             String hex = Integer.toHexString(0xFF & b); // Convert each byte to hexadecimal
             if (hex.length() == 1) hexString.append('0'); // Ensure 2-digit hexadecimal
             hexString.append(hex);
         }
-        return hexString.toString(); // Return the full hash as a string
+        */
+        return hashBytes; // Return the full hash
     }
 
 
@@ -204,11 +206,7 @@ public class Block
     {
 
         transactionList.add(transaction);
-        if(transactionList.size() == TRANSACTIONS_LIMIT)
-        {
-            return true;
-        }
-        return false;
+        return transactionList.size() == TRANSACTIONS_LIMIT;
     }
 
     //TODO : Faz sentido? Validate transactions in the block
@@ -221,11 +219,21 @@ public class Block
     public void mineBlock(int difficulty) {
         String target = new String(new char[difficulty]).replace('\0', '0'); // Create a string with difficulty * "0"
 
-        while (!Arrays.toString(hash).startsWith(target)) { // Check if the hash has the required leading zero bits
+        // Convert the byte array to a hex string
+        StringBuilder hexString = new StringBuilder();
+        for (byte b : hash) {
+            String hex = Integer.toHexString(0xff & b);
+            if (hex.length() == 1) {
+                hexString.append('0');
+            }
+            hexString.append(hex);
+        }
+
+        while (!hexString.toString().startsWith(target)) { // Check if the hash has the required leading zero bits
             nonce++;
             hash = calculateHash(); // Recalculate the hash with the incremented nonce
         }
 
-        System.out.println("Block mined: " + Arrays.toString(hash)); // Block successfully mined
+        System.out.println("Block mined: " + hexString.toString()); // Block successfully mined
     }
 }

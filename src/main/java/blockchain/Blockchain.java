@@ -2,8 +2,8 @@
 package blockchain;
 
 import auctions.BrokerService;
+import com.google.protobuf.ByteString;
 import kademlia.*;
-import kademlia.server.KademliaServer;
 
 import java.io.ByteArrayOutputStream;
 import java.nio.ByteBuffer;
@@ -11,12 +11,14 @@ import java.nio.charset.StandardCharsets;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 import java.util.*;
+import java.util.Random;
 
 
 public class Blockchain
 {
     private static final int TRANSACTIONS_LIMIT = 5;
     private static final double GOSSIP_CHANCE = 0.1;
+
     Block latestMinedBlock;
     // currentMiningBlock
     Block currentMiningBlock;
@@ -24,9 +26,11 @@ public class Blockchain
     Thread miningBlock;
     private final Kademlia k;
     private final int difficulty;
-    HashMap<AuctionId , Transaction> activeAuctions;
+    HashMap<AuctionId , BrokerService> activeAuctions;
     ArrayList<Transaction> pendingTransactions;
     ArrayList<byte[]> topicsSubscribed;
+    Random random = new Random();
+
     // Constructor
     public Blockchain(int initialDifficulty, Kademlia k)
     {
@@ -65,7 +69,7 @@ public class Blockchain
             }
         }
         grpcBlock b = this.k.sKadBlockLookup(currentHash,3);
-        return this.addBlock(b);
+        return this.addBlock(new Block(b));
     }
     // Getters
     public Block getLastBlock() {
@@ -77,25 +81,26 @@ public class Blockchain
         return difficulty;
     }
 
-    public void newBid(byte[] serviceId, Offer of)
+    public void newAuction(byte[] serviceId, Node owner, BrokerService bs)
     {
-        // Adicionar no bloco
-        // criar uma instancia de uma transaction
-        // disseminar transaction
-    }
-    public void newAuction(byte[] serviceId, Node owner)
-    {
-        // Adicionar no bloco
-        // criar uma instancia de uma transaction
-        // disseminar transaction
+        this.activeAuctions.put(new AuctionId(serviceId,owner),bs);
+        byte[] ownerData = owner.toByteArray();
+        byte[] offer = bs.getOffer().toByteArray();
+        byte[] data = new byte[serviceId.length + ownerData.length + offer.length];
+
+        System.arraycopy(serviceId, 0, data, 0, serviceId.length);
+        System.arraycopy(ownerData, 0, data, serviceId.length, ownerData.length);
+        System.arraycopy(offer, 0, data, serviceId.length+ownerData.length, offer.length);
+
+        byte[] signature = this.k.signData(data);
+
+        Transaction t= Transaction.newBuilder()
+                .setId(ByteString.copyFrom(serviceId)).setOwner(owner).setType(1)
+                .setSignature(ByteString.copyFrom(signature)).build();
+        this.addTransaction(t);
     }
 
-    public void closeAuction(byte[] serviceId, Offer highestOffer, Node owner)
-    {
-        // Adicionar no bloco
-        // criar uma instancia de uma transaction
-        // disseminar transaction
-    }
+    
 
 
     public Transaction getInformation(String service, Node owner)
@@ -128,20 +133,47 @@ public class Blockchain
     {
         // Verify previous block reference and that POW was done
         String target = new String(new char[difficulty]).replace('\0', '0');
-        byte[] bcLatestBlockHash = block1.getCurrentHash().toByteArray();
+        byte[] bcLatestBlockHash = block1.getHash();
         byte[] previousBlockHash = block1.getPreviousHash();
-        if (!Arrays.equals(bcLatestBlockHash, previousBlockHash) || !compareId(bcLatestBlockHash,previousBlockHash) || !Arrays.toString(block1.getHash()).startsWith(target))
+        block1.setPreviousBlock(findBlock(block1.getPreviousHash()));
+
+        // Convert the byte array to a hex string
+        StringBuilder hexString = new StringBuilder();
+        for (byte b : bcLatestBlockHash) {
+            String hex = Integer.toHexString(0xff & b);
+            if (hex.length() == 1) {
+                hexString.append('0');
+            }
+            hexString.append(hex);
+        }
+
+        if (!Arrays.equals(bcLatestBlockHash, previousBlockHash) || !compareId(bcLatestBlockHash,previousBlockHash) || !hexString.toString().startsWith(target))
         {
             this.k.rt.setReputation(block1.getNode(),-1);
+
             if (isBlockValid(block1))
             {
                 latestMinedBlock =block1  ;
             }
+            else
+            {
+                this.k.rt.setReputation(block1.getNode(),-1);
+
+            }
         }
         else
         {
+            if (isBlockValid(block1))
+            {
+                latestMinedBlock =block1  ;
+            }
+            else
+            {
+                this.k.rt.setReputation(block1.getNode(),-1);
 
+            }
         }
+
         //resolveForks();
         return null;
     }
@@ -177,17 +209,20 @@ public class Blockchain
     // 0 -> Bid
     // 1 -> NewAuction
     // 2 -> CloseAuction
-    public boolean isTransactionValid(Transaction transaction)
+    public boolean isTransactionValid(Transaction transaction, Block block)
     {
-        boolean isValid;
+        boolean isValid = false;
+        Transaction lastTransaction;
 
-        HashMap<Integer, Transaction> sameAuctionTransactions = getSameAuctionTransactionsFromBlockchain(transaction);
 
-        if (!verifyTransactionSignature(transaction) || !verifyTransactionTypeConsistency(transaction, sameAuctionTransactions)) {
-            isValid = false;
+        if(block == null){
+            lastTransaction = getSameAuctionTransactionsFromBlockchain(transaction, this.getLastBlock());
+        }else{
+            lastTransaction = getSameAuctionTransactionsFromBlockchain(transaction, block);
         }
-        else
-        {
+
+        if (verifyTransactionSignature(transaction) || verifyTransactionTypeConsistency(transaction, lastTransaction)) {
+
             //Significa que a Transação é coerente com transações anteriores para a mesma auction e que tem a assinatura válida
             //TODO Validar se o limite de transactions foi atingido
             //Se sim, minerar bloco novo e colocar transaction lá. Isto será fora. No método que pedir a validação da transaction
@@ -198,80 +233,56 @@ public class Blockchain
         return isValid;
     }
 
-    // Transaction Type , Transaction Object
-    private HashMap<Integer, Transaction> getSameAuctionTransactionsFromBlockchain(Transaction receivedTransaction){
+    private Transaction getSameAuctionTransactionsFromBlockchain(Transaction receivedTransaction, Block block){
 
-        HashMap<Integer, Transaction> sameAuctionTransactions = new HashMap<>();
+        Transaction lastTransactionFromAuction = null;
+        boolean hasFound = false;
 
-        for (Block b : this.blocks) {
+        while(block != null && !hasFound){
 
-            for (Transaction t : b.getTransactionList()) {
+            for(int i = block.getTransactionList().size(); i > 0 ; i--){
 
-                if(t.getId().equals(receivedTransaction.getId()) && t.getOwner().equals(receivedTransaction.getOwner())){
-                    sameAuctionTransactions.put(t.getType(), t);
-                }
-
-            }
-
-        }
-
-        return sameAuctionTransactions;
-    }
-
-    private HashMap<Integer, Transaction> getSameAuctionTransactionsFromBlockchain(Transaction receivedTransaction, Block block){
-
-        HashMap<Integer, Transaction> sameAuctionTransactions = new HashMap<>();
-
-        Block previousBlock = block.getPreviousBlock();
-
-        while(previousBlock != null){
-
-            for (Transaction t : block.getTransactionList()) {
+                Transaction t = block.getTransactionList().get(i);
 
                 if(t.getId().equals(receivedTransaction.getId()) && t.getOwner().equals(receivedTransaction.getOwner())){
-                    sameAuctionTransactions.put(t.getType(), t);
+                    lastTransactionFromAuction = t;
+                    hasFound = true;
                 }
-
             }
-            //TODO Posso fazer isto?
-            block = previousBlock;
-
-            previousBlock = block.getPreviousBlock();
-
+            block = block.getPreviousBlock();
         }
 
-        return sameAuctionTransactions;
+        return lastTransactionFromAuction;
     }
 
-    private boolean verifyTransactionTypeConsistency(Transaction transaction, HashMap<Integer, Transaction> sameAuctionTransactions){
+    private boolean verifyTransactionTypeConsistency(Transaction transaction, Transaction lastTransaction){
 
-        boolean isValid = true;
+        boolean isValid = false;
 
         switch (transaction.getType()) {
             case 1:
                 //Verificar se existe alguma Transaction.
-                if(!sameAuctionTransactions.isEmpty()){
+                if(lastTransaction == null || lastTransaction.getType() == 2){
                     isValid = true;
                 }
                 break;
             case 2:
                 //Verificar se existe uma auction a decorrer. Se sim, fazer close.
-                if(sameAuctionTransactions.get(1) != null && sameAuctionTransactions.get(2) == null){
+                if(lastTransaction.getType() == 0 || lastTransaction.getType() == 1){
                     isValid = true;
                 }
                 break;
             default:
                 //Verificar se exista uma auction a decorrer. Se sim, verificar se o valor é maior que o atual.
-                if(sameAuctionTransactions.get(1) != null && sameAuctionTransactions.get(2) == null){
-                    if(sameAuctionTransactions.get(0) == null) {
-                        isValid = true;
-                    }else if(transaction.getSender().getPrice() > sameAuctionTransactions.get(0).getSender().getPrice()) {
-                        isValid = true;
-                    }
+                if(lastTransaction.getType() == 1 && lastTransaction.getSender().getPrice() > 0){
+                    BrokerService bs = activeAuctions.get(new AuctionId(transaction.getId().toByteArray(),transaction.getOwner()));
+                    bs.receiveOffer(transaction.getSender());
+                    isValid = true;
+                }else if(lastTransaction.getType() == 0 && (transaction.getSender().getPrice() > lastTransaction.getSender().getPrice()) ){
+                    isValid = true;
                 }
                 break;
         }
-
         return isValid;
     }
 
@@ -308,7 +319,7 @@ public class Blockchain
     {
         if (this.currentMiningBlock.addTransaction(t))
         {
-            MineThread mt = new MineThread(this.currentMiningBlock.clone(),this.difficulty);
+            MineThread mt = new MineThread(this.currentMiningBlock,this.difficulty,this);
             this.miningBlock = new Thread(mt);
             miningBlock.start();
             this.currentMiningBlock = null;
@@ -319,7 +330,7 @@ public class Blockchain
     {
         if (random.nextDouble() > GOSSIP_CHANCE)
         {
-            ArrayList<KademliaNode> allNodes = k.protocol.getAllNodes();
+            ArrayList<KademliaNode> allNodes = k.rt.getAllNodes();
             for(KademliaNode n :allNodes)
             {
                 try
@@ -328,7 +339,7 @@ public class Blockchain
                 }
                 catch(Exception e)
                 {
-
+                    e.printStackTrace();
                 }
             }
         }
@@ -350,14 +361,14 @@ public class Blockchain
         gossipTransactionToAllOthers(t);
     }
 
-    public void gossipTransactionToAllOthers(Block b)
+    public void gossipTransactionToAllOthers(Transaction t)
     {
-        ArrayList<KademliaNode> allNodes = k.protocol.getAllNodes();
+        ArrayList<KademliaNode> allNodes = k.rt.getAllNodes();
         for(KademliaNode n :allNodes)
         {
             try
             {
-                k.protocol.storeBlockOp(n.getNodeId(),n.getIpAdress(),n.getPort(),b);
+                k.protocol.storeTransactionOp(t,n.getIpAdress(),n.getPort());
             }
             catch(Exception e)
             {
@@ -366,11 +377,28 @@ public class Blockchain
         }
 
     }
+
+    public void gossipBlockToAllOthers(Block b)
+    {
+        ArrayList<KademliaNode> allNodes = k.rt.getAllNodes();
+        for(KademliaNode n :allNodes)
+        {
+            try
+            {
+                k.protocol.storeBlockOp(n.getNodeId(),n.getIpAdress(),n.getPort(),b);
+            }
+            catch(Exception e)
+            {
+                e.printStackTrace();
+            }
+        }
+
+    }
     public void gossipBlockToOthers(Block b)
     {
         if (random.nextDouble() > GOSSIP_CHANCE)
         {
-            gossipTransactionToAllOthers(b);
+            gossipBlockToAllOthers(b);
         }
     }
 
@@ -476,26 +504,21 @@ public class Blockchain
     }
 
     // Method to validate the blockchain
-    public boolean isChainValid() {
-        for (int i = 1; i < chain.size(); i++) {
-            Block currentBlock = chain.get(i);
-            Block previousBlock = chain.get(i - 1);
-
-            // Validate the block's hash
-            if (!currentBlock.getHash().equals(currentBlock.calculateHash())) {
-                System.out.println("Block " + i + " has been tampered with!");
-                return false; // Hash doesn't match, block may have been tampered with
-            }
-
-            // Validate the previous hash
-            if (!currentBlock.getPreviousHash().equals(previousBlock.getHash())) {
-                System.out.println("Block " + i + " has incorrect previous hash!");
-                return false; // The block's previous hash doesn't point to the correct previous block
-            }
-        }
+    public boolean isChainValid()
+    {
+        isChainValidAux(this.latestMinedBlock);
         return true; // All checks passed, the blockchain is valid
     }
 
+    public boolean isChainValidAux(Block block)
+    {
+        if(!isBlockValid(block))
+        {
+            return false ;
+        }
+        boolean validChain = isChainValidAux(block.getPreviousBlock());
+        return validChain;
+    }
 
     public boolean isBlockValid(Block block)
     {

@@ -64,7 +64,7 @@ public class RunService implements Runnable {
         byte[] signature = this.a.k.signData(data);
 
         Transaction t= Transaction.newBuilder()
-        .setId(ByteString.copyFrom(bs.serviceId)).setOwner(bs.Owner).setSender(bs.highestOffer)
+        .setId(ByteString.copyFrom(bs.serviceId)).setOwner(bs.Owner).setType(2)
         .setSignature(ByteString.copyFrom(signature)).build();
         try
         {

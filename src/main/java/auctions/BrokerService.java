@@ -13,9 +13,10 @@ import java.util.concurrent.locks.ReentrantLock;
 // transaction
 public class BrokerService
 {
+    Lock l =new ReentrantLock();
     byte[] serviceId ;
-    Offer highestOffer;
-    int time;
+     Offer highestOffer;
+     int time;
     Node Owner;
     BrokerService(byte[] serviceId,int time,Node Owner)
     {
@@ -26,16 +27,18 @@ public class BrokerService
         highestOffer = bd.build();
         this.time = time;
     }
-    public float getPrice()
+    public Offer getOffer()
     {
-        return highestOffer.getPrice();
+        l.lock();
+        Offer ret = highestOffer;
+        l.unlock();
+        return ret;
     }
 
     public byte[] getServiceId() { return this.serviceId; }
-
     public boolean receiveOffer(Offer of)
     {
-
+        l.lock();
         boolean result = false;
 
         if (highestOffer.getPrice() < of.getPrice())
@@ -43,6 +46,7 @@ public class BrokerService
             highestOffer = of;
             result = true;
         }
+        l.unlock();
         return result;
     }
 

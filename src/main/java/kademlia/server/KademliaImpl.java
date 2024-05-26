@@ -359,7 +359,7 @@ public class KademliaImpl extends KademliaGrpc.KademliaImplBase
 
             //TODO Lógica
             //bc.validateTransactionsSignature();
-            boolean isValid = bc.isTransactionValid(request.getTransaction());
+            boolean isValid = bc.isTransactionValid(request.getTransaction(),null);
 
             if (isValid)
             {

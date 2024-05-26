@@ -43,7 +43,7 @@ public class Auction
         bs.highestOffer = nd.build();
         Thread rsThread = new Thread( new RunService(this,bs,k.protocol));
         rsThread.start();
-        bc.newAuction(serviceId, k.getOwnNode());
+        bc.newAuction(serviceId, k.getOwnNode(),bs);
         l.unlock();
         return serviceId;
     }

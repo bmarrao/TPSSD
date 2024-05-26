@@ -653,20 +653,19 @@ public class KademliaRoutingTable
         return nodeId.toString();
     }
 
-    //TODO GetAllNodes
-    public ArrayList<Node> getAllNodes(){
 
-        this.root.right. ;
-        this.root.left ;
-        if(this.root.right.kbucket == null)
-        {
-            getAllNodes(this.root.right.left)
-        }
-        else
-        {
-            addAllNodes(this.root.right.kbucket);
-        }
+    public ArrayList<KademliaNode> getAllNodes(){
+        ArrayList<KademliaNode> allNodes = new ArrayList<>();
+        getAllNodesRec(root, allNodes);
+        return allNodes;
+    }
 
+    private void getAllNodesRec(TreeNode tn, ArrayList<KademliaNode> allNodes) {
+        if (tn.kbucket != null) {
+            allNodes.addAll(tn.kbucket);
+        }
+        getAllNodesRec(tn.left, allNodes);
+        getAllNodesRec(tn.right, allNodes);
     }
 }
 
