@@ -16,7 +16,11 @@ public class MineThread implements Runnable
     public void run()
     {
         this.bloco.mineBlock(difficulty);
-        Block b = bc.addBlock(this.bloco);
+        if(this.bloco.running)
+        {
+            this.bloco.signBlockContent();
+            Block b = bc.addBlock(this.bloco);
+        }
     }
 
 }

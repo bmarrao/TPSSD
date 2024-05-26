@@ -5,6 +5,7 @@ import com.google.protobuf.ByteString;
 import java.io.UnsupportedEncodingException;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collection;
 import java.util.Scanner;
 
 import static kademlia.Kademlia.*;
@@ -21,8 +22,9 @@ public class UserInterface {
             System.out.println("Select one of the following options:");
             System.out.println("1) Subscribe/unsubscribe to auctions or get information");
             System.out.println("2) Create auction");
-            System.out.println("3) View account");
-            System.out.println("4) Exit");
+            System.out.println("3) Close auction");
+            System.out.println("4) View account");
+            System.out.println("5) Exit");
 
             int option = Integer.parseInt(sc.nextLine());
 
@@ -36,7 +38,9 @@ public class UserInterface {
                     createAuction();
                     break;
                 case 3:
-                    //System.out.println("-> Balance: ");
+                    closeAuction();
+                    break;
+                case 4:
                     System.out.println("-> Reputation: " + kn.getReputation());
                     break;
                 case 5:
@@ -66,7 +70,6 @@ public class UserInterface {
                     service = sc.nextLine();
                     byte [] serviceId1 = bc.addSubscribe(service);
                     System.out.println("Sucessfully subscribed to serviceId " + k.rt.printId(serviceId1));
-                    //System.out.println("  - Auction status: " + auction.); // if it's open or closed
                     break;
                 case 2:
                     System.out.print("Enter name of service\n-> ");
@@ -84,7 +87,7 @@ public class UserInterface {
                 case 3 :
                     System.out.print("Enter name of service\n-> ");
                     service = sc.nextLine();
-                    ArrayList<Transaction> latestInformationOnBlockChain= bc.getInformation(service);
+                    Collection<Transaction> latestInformationOnBlockChain= bc.getInformation(service);
                     showAuctionsInformation(latestInformationOnBlockChain);
                     break;
                 case 4:
@@ -96,11 +99,12 @@ public class UserInterface {
         }
     }
 
-    private static void showAuctionsInformation(ArrayList<Transaction> latestInformationOnBlockChain)
+    private static void showAuctionsInformation(Collection<Transaction> latestInformationOnBlockChain)
     {
+        ArrayList<Transaction> information = new ArrayList<>(latestInformationOnBlockChain);
         System.out.println("============= Information about auctions =============");
         int i = 1;
-        for(Transaction t : latestInformationOnBlockChain)
+        for(Transaction t : information)
         {
             Node owner = t.getOwner();
 
@@ -125,7 +129,7 @@ public class UserInterface {
             case "1":
                 System.out.println("Pick the number of the auction");
                 int auction = sc.nextInt();
-                Transaction t = latestInformationOnBlockChain.get(i-1);
+                Transaction t = information.get(i-1);
                 Node owner = t.getOwner();
                 placeBid(t.getId().toByteArray(), new KademliaNode(owner.getIp(), owner.getId().toByteArray(),
                                                                    owner.getPort(), owner.getPublicKey().toByteArray()));
@@ -144,14 +148,11 @@ public class UserInterface {
         sc.nextLine();
     }
 
-    private static void placeBid(byte[] serviceId, KademliaNode owner) {
+    private static void placeBid(byte[] serviceId, KademliaNode owner)
+    {
         System.out.println("============= PLACE BID SUB-MENU =============");
         System.out.print("Enter bid amount\n-> ");
         float bidAmount = Float.parseFloat(sc.nextLine());
-
-        //TODO : GET RECEIVER SEARCH RECEIVER WITH THE AUCTION THAT HAS THE MOST CHEAP AUCTION FOR THIS SERVICE  FALTA METODO
-        //
-        KademliaNode receiverNode = new KademliaNode("","".getBytes(),0, "".getBytes());
 
         boolean didTransactionGoThrough = false;
 
@@ -168,8 +169,7 @@ public class UserInterface {
             System.arraycopy(ownerBytes, 0, infoToSign, serviceId.length, ownerBytes.length);
             System.arraycopy(offerBytes, 0, infoToSign, serviceId.length + ownerBytes.length, offerBytes.length);
 
-            // TODO: verificar se a bid é do tipo 2
-            Transaction transaction = Transaction.newBuilder().setId(ByteString.copyFrom(serviceId)).setType(2).setOwner(ownerNode)
+            Transaction transaction = Transaction.newBuilder().setId(ByteString.copyFrom(serviceId)).setType(0).setOwner(ownerNode)
                                                               .setSender(offer).setSignature(ByteString.copyFrom(infoToSign)).build();
             didTransactionGoThrough = k.protocol.storeTransactionOp(transaction, owner.getIpAdress(), owner.getPort());
         } catch (UnsupportedEncodingException e) {
@@ -194,6 +194,15 @@ public class UserInterface {
         int auctionDuration = Integer.parseInt(sc.nextLine());
         byte[] serviceId = auction.initiateService(item,auctionDuration);
         System.out.println("Auction service created with ID: " + Arrays.toString(serviceId));
+    }
+
+    private static void closeAuction() {
+        System.out.println("========== CLOSE AUCTION SUB-MENU ===========");
+
+        System.out.print("Enter auction id\n-> ");
+        byte[] serviceId = sc.nextLine().getBytes();
+        auction.endService(serviceId);
+        System.out.println("Auction service closed with ID: " + Arrays.toString(serviceId));
     }
 
     public static void main(String[] args) {

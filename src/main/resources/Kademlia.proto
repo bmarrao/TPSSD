@@ -37,7 +37,7 @@ message Offer
 
 message Transaction
 {
-  // Tipo 1: inicio de auction | Tipo 2: bid/proposta | Tipo 3: fecho de auction
+  // Tipo 0: bid/proposta Tipo 1: inicio de auction | Tipo 2: fecho de auction
   bytes id = 1;
   uint32 type = 2;
   Node owner = 3;

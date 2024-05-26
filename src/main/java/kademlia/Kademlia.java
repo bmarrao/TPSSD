@@ -68,9 +68,10 @@ public class Kademlia
                 Float.parseFloat(properties.getProperty("reputation.percentage")));
 
         System.out.println("Initializing blockchain...");
-        bc = new Blockchain(Integer.parseInt(properties.getProperty("blockchain.difficulty")),this);
+        bc = new Blockchain(Integer.parseInt(properties.getProperty("blockchain.difficulty")),this, generatedSk);
 
         auction = new Auction(this,bc);
+
         KademliaServer server = new KademliaServer(port, auction,leadingZeros,generatedPk, generatedSk);
 
         Thread serverThread = new Thread(server);

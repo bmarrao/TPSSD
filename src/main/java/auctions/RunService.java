@@ -51,27 +51,7 @@ public class RunService implements Runnable {
         }
 
 
-        byte[] owner = bs.Owner.toByteArray();
-        byte[] offer = bs.highestOffer.toByteArray();
-        byte[] data = new byte[bs.serviceId.length + owner.length + offer.length];
-
-        System.arraycopy(bs.serviceId, 0, data, 0, bs.serviceId.length);
-        System.arraycopy(owner, 0, data, bs.serviceId.length, owner.length);
-        System.arraycopy(offer, 0, data, bs.serviceId.length+owner.length, offer.length);
-
-        byte[] signature = this.a.k.signData(data);
-
-        Transaction t= Transaction.newBuilder()
-        .setId(ByteString.copyFrom(bs.serviceId)).setOwner(bs.Owner).setType(2)
-        .setSignature(ByteString.copyFrom(signature)).build();
-        try
-        {
-            this.a.bc.addFromMyAuction(t);
-        }
-        catch (Exception e)
-        {
-            e.printStackTrace();
-        }
+        this.a.endService(bs.serviceId);
     }
 
     Offer clone (Offer o)

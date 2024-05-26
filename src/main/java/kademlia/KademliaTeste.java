@@ -12,7 +12,7 @@ import java.util.*;
 
 public class KademliaTeste
 {
-                    /*
+    /*
 
     public static void main(String[] args)
     {
@@ -90,6 +90,6 @@ public class KademliaTeste
 
         //
     }
-             */
+     */
 
 }

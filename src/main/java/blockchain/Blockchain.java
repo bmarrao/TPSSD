@@ -10,6 +10,7 @@ import java.nio.ByteBuffer;
 import java.nio.charset.StandardCharsets;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
+import java.security.PrivateKey;
 import java.util.*;
 import java.util.Random;
 
@@ -26,23 +27,23 @@ public class Blockchain
     Thread miningBlock;
     private final Kademlia k;
     private final int difficulty;
+    private PrivateKey privateKey;
     HashMap<AuctionId , BrokerService> activeAuctions;
     ArrayList<Transaction> pendingTransactions;
     ArrayList<byte[]> topicsSubscribed;
     Random random = new Random();
 
     // Constructor
-    public Blockchain(int initialDifficulty, Kademlia k)
+    public Blockchain(int initialDifficulty, Kademlia k, PrivateKey privateKey)
     {
         this. k = k;
         this.topicsSubscribed = new ArrayList<>();
         this.activeAuctions = new HashMap<>();
         this.blocks = new ArrayList<>();
         this.difficulty = initialDifficulty;
+        this.privateKey = privateKey;
         this.pendingTransactions = new ArrayList<>();
-        Block genesis = createGenesisBlock();
-        this.latestMinedBlock = genesis;
-
+        this.latestMinedBlock = createGenesisBlock();
     }
 
     // Create the genesis block
@@ -100,28 +101,12 @@ public class Blockchain
         this.addTransaction(t);
     }
 
-    
-
-
-    public Transaction getInformation(String service, Node owner)
+    public Collection<Transaction> getInformation(String service)
     {
         byte[] serviceId = encryptService(service);
-        return this.activeAuctions.get(new AuctionId(serviceId, owner));
+        return getInformationFromBlockchain(serviceId,latestMinedBlock).values();
     }
 
-    public ArrayList<Transaction> getInformation(String service)
-    {
-        byte[] serviceId = encryptService(service);
-        ArrayList<Transaction> ret = new ArrayList<>();
-        for (Transaction t : this.activeAuctions.values())
-        {
-            if (compareId(t.getId().toByteArray(),serviceId))
-            {
-                ret.add(t);
-            }
-        }
-        return ret;
-    }
     public byte[] addSubscribe(String service)
     {
         byte[] serviceId = encryptService(service);
@@ -156,6 +141,7 @@ public class Blockchain
                 {
                     latestMinedBlock =block1 ;
                     adjustCurrentMiningBlock();
+                    gossipBlockToOthers(block1);
                 }
             }
             else
@@ -170,7 +156,7 @@ public class Blockchain
             {
                 latestMinedBlock =block1  ;
                 adjustCurrentMiningBlock();
-
+                gossipBlockToAllOthers(block1);
             }
             else
             {
@@ -191,7 +177,7 @@ public class Blockchain
                 this.pendingTransactions.add(0,t);
             }
         }
-        startMiningIfConditions();
+        changeInLatestBlok();
     }
     private boolean resolveForks(Block block)
     {
@@ -201,30 +187,11 @@ public class Blockchain
         lrLastMinedBlock = calculateChainLength(latestMinedBlock,lrLastMinedBlock);
         if (lrBlock.length == lrLastMinedBlock.length)
         {
-            if(lrBlock.sumRep >= lrLastMinedBlock.sumRep) {
-                return true;
-            }
+            return lrBlock.sumRep >= lrLastMinedBlock.sumRep;
         }
-        else if (lrBlock.length > lrLastMinedBlock.length)
-        {
-            return true;
-        }
-
-        return false;
-
+        else return lrBlock.length > lrLastMinedBlock.length;
     }
 
-    private boolean hasValidTransactions(Block block, ArrayList<Transaction> transactions)
-    {
-        for (Transaction transaction : transactions)
-        {
-            if(!isTransactionValid(transaction,block))
-            {
-                return false;
-            }
-        }
-        return true;
-    }
 
     //There are 3 Transactions Type:
     // 0 -> Bid
@@ -273,6 +240,36 @@ public class Blockchain
         return lastTransactionFromAuction;
     }
 
+    private HashMap<AuctionId, Transaction> getInformationFromBlockchain(byte[] serviceId, Block block)
+    {
+
+        HashMap<AuctionId, Transaction> ret = new HashMap<>();
+
+        AuctionId key ;
+        byte[] tServiceId;
+
+        while(block != null)
+        {
+
+            for(int i = block.getTransactionList().size(); i > 0 ; i--){
+
+                Transaction t = block.getTransactionList().get(i); 
+                tServiceId = t.getId().toByteArray();
+                if(compareId(tServiceId,serviceId) )
+                {
+                    key = new AuctionId(tServiceId,t.getOwner());
+                    if(!(ret.containsKey(key)))
+                    {
+                        ret.put(key,t);
+                    }
+                }
+            }
+            block = block.getPreviousBlock();
+        }
+
+        return ret;
+    }
+
     private boolean verifyTransactionTypeConsistency(Transaction transaction, Transaction lastTransaction){
 
         boolean isValid = false;
@@ -307,13 +304,22 @@ public class Blockchain
     public void addTransaction(Transaction t)
     {
         this.pendingTransactions.add(t);
+        byte[] transactionId = t.getId().toByteArray();
+        for(byte[] id  : this.topicsSubscribed )
+        {
+            if (compareId(id,transactionId))
+            {
+                System.out.println("New bid on topic you subscribed : " + k.rt.printId(id) + "Bid of " + t.getSender().getPrice());
+            }
+        }
         startMiningIfConditions();
         gossipTransactionToOthers(t);
     }
 
     public void startMiningIfConditions()
     {
-        if (currentMiningBlock == null) {
+        if (currentMiningBlock == null)
+        {
             if (this.pendingTransactions.size() >= TRANSACTIONS_LIMIT) {
 
                 ArrayList<Transaction> transactionToBlock = this.maxLimitPendingTransactions(pendingTransactions);
@@ -322,6 +328,16 @@ public class Blockchain
                 this.miningBlock = new Thread(mt);
                 miningBlock.start();
             }
+        }
+    }
+
+    public void changeInLatestBlok()
+    {
+        if (!(currentMiningBlock != null))
+        {
+            currentMiningBlock.running = false;
+            currentMiningBlock = null;
+            startMiningIfConditions();
         }
     }
 
@@ -337,17 +353,6 @@ public class Blockchain
         return transactionsToBlock;
     }
 
-    //TODO ADD TRANSACTION TO BLOCK
-    public void addTransactionBlock(Transaction t)
-    {
-        if (this.currentMiningBlock.addTransaction(t))
-        {
-            MineThread mt = new MineThread(this.currentMiningBlock,this.difficulty,this);
-            this.miningBlock = new Thread(mt);
-            miningBlock.start();
-            this.currentMiningBlock = null;
-        }
-    }
 
     public void gossipTransactionToOthers(Transaction t)
     {
@@ -395,7 +400,7 @@ public class Blockchain
             }
             catch(Exception e)
             {
-
+                e.printStackTrace();
             }
         }
 
@@ -403,16 +408,11 @@ public class Blockchain
 
     public LengthSumRep calculateChainLength(Block b, LengthSumRep lr)
     {
-        if(b == null)
-        {
-            return lr;
-        }
-        else
-        {
+        if (b != null) {
             lr.length += 1;
-            lr.sumRep+=b.getReputation();
-            return lr;
+            lr.sumRep += b.getReputation();
         }
+        return lr;
     }
     public void gossipBlockToAllOthers(Block b)
     {
@@ -529,8 +529,7 @@ public class Blockchain
         {
             return false ;
         }
-        boolean validChain = isChainValidAux(block.getPreviousBlock());
-        return validChain;
+        return isChainValidAux(block.getPreviousBlock());
     }
 
     public boolean isBlockValid(Block block)
@@ -546,6 +545,8 @@ public class Blockchain
             outputStream.write(ByteBuffer.allocate(4).putInt(block.getNonce()).array());
             outputStream.write(ByteBuffer.allocate(4).putFloat(block.getReputation()).array());
             outputStream.close();
+
+            byte[] signature = SignatureClass.sign(outputStream.toByteArray(), privateKey);
         }
         catch(Exception e) {
             e.printStackTrace();
@@ -599,7 +600,7 @@ public class Blockchain
         }
     }
 
-    public class LengthSumRep
+    public static class LengthSumRep
     {
         public int length;
         public int sumRep;

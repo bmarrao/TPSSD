@@ -1,6 +1,7 @@
 package auctions;
 
 import blockchain.Blockchain;
+import com.google.protobuf.ByteString;
 import kademlia.*;
 
 import java.util.ArrayList;
@@ -12,7 +13,7 @@ import java.nio.charset.StandardCharsets;
 public class Auction
 {
     Kademlia k;
-    private ReentrantLock l ;
+    private final ReentrantLock l;
     ArrayList<BrokerService> services;
     Blockchain bc ;
     public Auction(Kademlia k, Blockchain bc)
@@ -89,8 +90,27 @@ public class Auction
             services.remove(bs);
         }
         l.unlock();
-        bc.closeAuction(bs.serviceId,bs.highestOffer , k.getOwnNode());
-    }
+        byte[] owner = bs.Owner.toByteArray();
+        byte[] offer = bs.highestOffer.toByteArray();
+        byte[] data = new byte[bs.serviceId.length + owner.length + offer.length];
+
+        System.arraycopy(bs.serviceId, 0, data, 0, bs.serviceId.length);
+        System.arraycopy(owner, 0, data, bs.serviceId.length, owner.length);
+        System.arraycopy(offer, 0, data, bs.serviceId.length+owner.length, offer.length);
+
+        byte[] signature = this.k.signData(data);
+
+        Transaction t= Transaction.newBuilder()
+                .setId(ByteString.copyFrom(bs.serviceId)).setOwner(bs.Owner).setType(2)
+                .setSignature(ByteString.copyFrom(signature)).build();
+        try
+        {
+            this.bc.addFromMyAuction(t);
+        }
+        catch (Exception e)
+        {
+            e.printStackTrace();
+        }    }
 
 }
 

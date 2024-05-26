@@ -13,12 +13,13 @@ import kademlia.grpcBlock;
 import org.bouncycastle.jcajce.provider.digest.SHA256;
 import java.nio.charset.StandardCharsets;
 
+import kademlia.SignatureClass;
 import static kademlia.KademliaNode.reputation;
+import static kademlia.Kademlia.generatedSk;
 
 public class Block
 {
-    //TODO Needed?
-    //private int index;
+    public volatile boolean running = true;
     private static final int TRANSACTIONS_LIMIT = 5;
     Node node;
     public byte[] hash;
@@ -28,7 +29,7 @@ public class Block
     private int nonce;
     private ArrayList<Transaction> transactionList;
     private int reputationScore;
-    private final byte[] signature;
+    private byte[] signature;
 
     public Block(byte[] previousHash, ArrayList<Transaction> transactionList,Block previousBlock)
     {
@@ -47,7 +48,6 @@ public class Block
         this.timestamp = grpcBlock.getTimestamp();
         this.nonce = grpcBlock.getNonce();
         this.transactionList = new ArrayList<>();
-        //TODO ??? Está sempre vazio
         for (Transaction t : transactionList)
         {
             this.transactionList.add(t);
@@ -149,7 +149,7 @@ public class Block
     }
 
 
-    private void signBlockContent() {
+    public void signBlockContent() {
         try {
             ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
 
@@ -161,6 +161,7 @@ public class Block
             outputStream.write(ByteBuffer.allocate(4).putInt(reputationScore).array());
 
             outputStream.close();
+            this.signature = SignatureClass.sign(outputStream.toByteArray(), generatedSk);
         }
         catch(Exception e) {
             e.printStackTrace();
@@ -198,16 +199,10 @@ public class Block
         );
     }
 
-    // Add a transaction to the block
-    public boolean addTransaction(Transaction transaction)
-    {
-
-        transactionList.add(transaction);
-        return transactionList.size() == TRANSACTIONS_LIMIT;
-    }
 
     // Mine the block using Proof-of-Work
-    public void mineBlock(int difficulty) {
+    public void mineBlock(int difficulty)
+    {
         String target = new String(new char[difficulty]).replace('\0', '0'); // Create a string with difficulty * "0"
 
         // Convert the byte array to a hex string
@@ -220,11 +215,20 @@ public class Block
             hexString.append(hex);
         }
 
-        while (!hexString.toString().startsWith(target)) { // Check if the hash has the required leading zero bits
+        while (this.running)
+        { // Control check
             nonce++;
-            hash = calculateHash(); // Recalculate the hash with the incremented nonce
+            byte[] newHash = calculateHash();
+            String hs = hexString.toString();
+            hs = Arrays.toString(newHash); // Recalculate the hash with the incremented nonce
+            if(!hs.startsWith(target) )
+            {
+                this.hash = newHash;
+                break;
+            }
         }
 
         System.out.println("Block mined: " + hexString.toString()); // Block successfully mined
     }
+
 }
