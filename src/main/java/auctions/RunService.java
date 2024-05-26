@@ -1,9 +1,7 @@
 package auctions;
 
-import com.google.protobuf.ByteString;
 import kademlia.KademliaProtocol;
 import kademlia.Offer;
-import kademlia.Transaction;
 
 
 public class RunService implements Runnable {

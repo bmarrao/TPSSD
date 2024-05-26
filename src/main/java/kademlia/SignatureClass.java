@@ -18,7 +18,7 @@ public class SignatureClass {
 
     // Verify signatures from received RPC messages
     public static boolean verify(byte[] data, byte[] signature, byte[] publicKeyBytes) throws Exception {
-        // Convert public key from String to PublicKey
+        // Convert public key from byte[] to PublicKey
         PublicKey publicKey = KeyFactory.getInstance("RSA").generatePublic(new X509EncodedKeySpec(publicKeyBytes));
 
         Signature sig = Signature.getInstance("SHA256withRSA");

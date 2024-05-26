@@ -129,33 +129,21 @@ public class KademliaProtocol {
 
         ManagedChannel channel = ManagedChannelBuilder.forAddress(receiverIp, receiverPort).usePlaintext().build();
 
-        Node ownerNode = t.getOwner();
 
-        Node senderNode = Node.newBuilder()
+        Node node = Node.newBuilder()
                 .setId(ByteString.copyFrom(this.nodeId))
                 .setIp(this.ipAddress)
                 .setPort(this.port)
-                .setRandomX(ByteString.copyFrom(new byte[]{randomX}))
-                .setPublicKey(ByteString.copyFrom(publicKey.getEncoded())).build();
-
-        Offer senderOffer = t.getSender();
-
-        Transaction transaction = Transaction.newBuilder()
-                .setId(t.getId())
-                .setType(t.getType())
-                .setOwner(ownerNode)
-                .setSender(senderOffer)
+                .setRandomX(ByteString.copyFrom(new byte[]{this.randomX}))
+                .setPublicKey(ByteString.copyFrom(this.publicKey.getEncoded()))
                 .build();
 
-
-        // Sign node content (senderNode + nodeId + transaction)
-        byte[] senderNodeToSign  = senderNode.toByteArray();
-        byte[] transactionToSign = transaction.toByteArray();
-        byte[] infoToSign = new byte[senderNodeToSign.length + nodeId.length + transactionToSign.length];
-
-        System.arraycopy(senderNodeToSign, 0, infoToSign, 0, senderNodeToSign.length);
-        System.arraycopy(this.nodeId, 0, infoToSign, senderNodeToSign.length, this.nodeId.length);
-        System.arraycopy(transactionToSign, 0, infoToSign, senderNodeToSign.length + this.nodeId.length, transactionToSign.length);
+        // Sign message content (node + transaction)
+        byte[] nodeToSign  = node.toByteArray();
+        byte[] transactionToSign = t.toByteArray();
+        byte[] infoToSign = new byte[nodeToSign.length + transactionToSign.length];
+        System.arraycopy(nodeToSign, 0, infoToSign, 0, nodeToSign.length);
+        System.arraycopy(transactionToSign, 0, infoToSign, nodeToSign.length, transactionToSign.length);
 
         byte[] signature = null;
         try {
@@ -167,9 +155,8 @@ public class KademliaProtocol {
         KademliaGrpc.KademliaStub stub = KademliaGrpc.newStub(channel);
 
         StoreTransactionRequest request = StoreTransactionRequest.newBuilder()
-                .setNode(senderNode)
-                .setNodeID(ByteString.copyFrom(nodeId))
-                .setTransaction(transaction)
+                .setNode(node)
+                .setTransaction(t)
                 .setSignature(ByteString.copyFrom(signature))
                 .build();
 
@@ -191,7 +178,7 @@ public class KademliaProtocol {
 
                 if (signVal)
                 {
-                    rt.insert(senderNode,0);
+                    rt.insert(t.getSender().getNode(),0);
 
                     //System.out.println("Transaction stored successfully: " + response.getStored());
                     transactionSuccessful[0] = true;

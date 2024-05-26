@@ -662,9 +662,11 @@ public class KademliaRoutingTable
 
     private void getAllNodesRec(TreeNode tn, ArrayList<KademliaNode> allNodes) {
         System.out.println("root is: " + root);
-        if (tn.kbucket != null) {
-            allNodes.addAll(tn.kbucket);
+        if (tn == null) {
+            return;
         }
+        // (tn.kbucket != null) {
+        allNodes.addAll(tn.kbucket);
         getAllNodesRec(tn.left, allNodes);
         getAllNodesRec(tn.right, allNodes);
     }

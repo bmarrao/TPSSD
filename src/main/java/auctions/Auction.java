@@ -79,38 +79,35 @@ public class Auction
     }
 
 
-    public void endService(byte[] serviceId)
-    {
+    public void endService(byte[] serviceId) {
 
         l.lock();
         BrokerService bs = this.getService(serviceId);
         System.out.println();
-        if (bs != null)
-        {
+        if (bs != null) {
             services.remove(bs);
         }
         l.unlock();
-        byte[] owner = bs.Owner.toByteArray();
-        byte[] offer = bs.highestOffer.toByteArray();
-        byte[] data = new byte[bs.serviceId.length + owner.length + offer.length];
+        if (bs != null) {
+            byte[] owner = bs.Owner.toByteArray();
+            byte[] offer = bs.highestOffer.toByteArray();
+            byte[] data = new byte[bs.serviceId.length + owner.length + offer.length];
 
-        System.arraycopy(bs.serviceId, 0, data, 0, bs.serviceId.length);
-        System.arraycopy(owner, 0, data, bs.serviceId.length, owner.length);
-        System.arraycopy(offer, 0, data, bs.serviceId.length+owner.length, offer.length);
+            System.arraycopy(bs.serviceId, 0, data, 0, bs.serviceId.length);
+            System.arraycopy(owner, 0, data, bs.serviceId.length, owner.length);
+            System.arraycopy(offer, 0, data, bs.serviceId.length + owner.length, offer.length);
 
-        byte[] signature = this.k.signData(data);
+            byte[] signature = this.k.signData(data);
 
-        Transaction t= Transaction.newBuilder()
-                .setId(ByteString.copyFrom(bs.serviceId)).setOwner(bs.Owner).setType(2)
-                .setSignature(ByteString.copyFrom(signature)).build();
-        try
-        {
-            this.bc.addFromMyAuction(t);
+            Transaction t = Transaction.newBuilder()
+                    .setId(ByteString.copyFrom(bs.serviceId)).setOwner(bs.Owner).setType(2)
+                    .setSignature(ByteString.copyFrom(signature)).build();
+            try {
+                this.bc.addFromMyAuction(t);
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
         }
-        catch (Exception e)
-        {
-            e.printStackTrace();
-        }    }
-
+    }
 }
 

@@ -173,17 +173,7 @@ public class Block
     private byte[] applySha256(String input) {
         SHA256.Digest sha256 = new SHA256.Digest(); // Create a new SHA-256 digest with BouncyCastle
 
-        byte[] hashBytes = sha256.digest(input.getBytes(StandardCharsets.UTF_8)); // Compute the hash
-
-        /*
-        StringBuilder hexString = new StringBuilder();
-        for (byte b : hashBytes) {
-            String hex = Integer.toHexString(0xFF & b); // Convert each byte to hexadecimal
-            if (hex.length() == 1) hexString.append('0'); // Ensure 2-digit hexadecimal
-            hexString.append(hex);
-        }
-        */
-        return hashBytes; // Return the full hash
+        return sha256.digest(input.getBytes(StandardCharsets.UTF_8)); // Compute the hash
     }
 
 
@@ -219,8 +209,7 @@ public class Block
         { // Control check
             nonce++;
             byte[] newHash = calculateHash();
-            String hs = hexString.toString();
-            hs = Arrays.toString(newHash); // Recalculate the hash with the incremented nonce
+            String hs = Arrays.toString(newHash); // Recalculate the hash with the incremented nonce
             if(!hs.startsWith(target) )
             {
                 this.hash = newHash;
@@ -228,7 +217,7 @@ public class Block
             }
         }
 
-        System.out.println("Block mined: " + hexString.toString()); // Block successfully mined
+        System.out.println("Block mined: " + hexString); // Block successfully mined
     }
 
 }

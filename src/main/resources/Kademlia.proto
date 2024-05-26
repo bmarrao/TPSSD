@@ -59,9 +59,8 @@ message grpcBlock
 message StoreTransactionRequest
 {
   Node node = 1;
-  bytes nodeID = 2;
-  Transaction transaction = 3;
-  bytes signature = 4;
+  Transaction transaction = 2;
+  bytes signature = 3;
 }
 
 message StoreTransactionResponse

@@ -27,7 +27,7 @@ public class Blockchain
     Thread miningBlock;
     private final Kademlia k;
     private final int difficulty;
-    private PrivateKey privateKey;
+    private final PrivateKey privateKey;
     HashMap<AuctionId , BrokerService> activeAuctions;
     ArrayList<Transaction> pendingTransactions;
     ArrayList<byte[]> topicsSubscribed;
@@ -96,7 +96,7 @@ public class Blockchain
         byte[] signature = this.k.signData(data);
 
         Transaction t= Transaction.newBuilder()
-                .setId(ByteString.copyFrom(serviceId)).setOwner(owner).setType(1)
+                .setId(ByteString.copyFrom(serviceId)).setOwner(owner).setType(1).setSender(bs.getOffer())
                 .setSignature(ByteString.copyFrom(signature)).build();
         this.addTransaction(t);
     }
@@ -333,7 +333,7 @@ public class Blockchain
 
     public void changeInLatestBlok()
     {
-        if (!(currentMiningBlock != null))
+        if (currentMiningBlock == null)
         {
             currentMiningBlock.running = false;
             currentMiningBlock = null;
@@ -438,8 +438,7 @@ public class Blockchain
         }
     }
 
-    private boolean verifyTransactionSignature(Transaction transaction)
-    {
+    private boolean verifyTransactionSignature(Transaction transaction) {
         boolean isValid = false;
         byte[] transactionOriginalSign = transaction.getSignature().toByteArray();
 
@@ -456,6 +455,8 @@ public class Blockchain
 
         try {
             byte[] publicKey = transaction.getSender().getNode().getPublicKey().toByteArray();
+            //ByteString publicKeyBs = Base64.getDecoder().decode(transaction.getSender().getNode().getPublicKey());
+
             if (SignatureClass.verify(infoToVerify, transactionOriginalSign, publicKey)) {
                 isValid = true;
             }
@@ -467,143 +468,126 @@ public class Blockchain
         return isValid;
 
     }
-
-    public boolean removeSubscribe(String service)
-    {
-        byte[] serviceId = encryptService(service);
-        byte[] toRemove = this.getSubscription(serviceId);
-        return topicsSubscribed.remove(toRemove);
-    }
-    public byte[] encryptService(String service)
-    {
-        byte[] serviceId  = null;
-        try {
-            MessageDigest sha1 = MessageDigest.getInstance("SHA-1");
-            serviceId = sha1.digest(service.getBytes(StandardCharsets.UTF_8));
-        }
-        catch (NoSuchAlgorithmException e)
+        public boolean removeSubscribe (String service)
         {
-            e.printStackTrace();
+            byte[] serviceId = encryptService(service);
+            byte[] toRemove = this.getSubscription(serviceId);
+            return topicsSubscribed.remove(toRemove);
         }
-        return serviceId;
-    }
-
-    private boolean compareId(byte[] id1, byte[] id2)
-    {
-
-        // Iterate through each byte and compare them
-        for (int i = 0; i < id1.length; i++)
+        public byte[] encryptService (String service)
         {
-            if (id1[i] != id2[i])
-            {
-                return false; // If any byte differs, return false
+            byte[] serviceId = null;
+            try {
+                MessageDigest sha1 = MessageDigest.getInstance("SHA-1");
+                serviceId = sha1.digest(service.getBytes(StandardCharsets.UTF_8));
+            } catch (NoSuchAlgorithmException e) {
+                e.printStackTrace();
             }
+            return serviceId;
         }
 
-
-        // If all bytes are the same, return true
-        return true;
-    }
-    public byte[] getSubscription(byte[] serviceId)
-    {
-        for(byte[] bs : this.topicsSubscribed)
+        private boolean compareId ( byte[] id1, byte[] id2)
         {
-            if (compareId(bs,serviceId))
-            {
-                return bs;
+
+            // Iterate through each byte and compare them
+            for (int i = 0; i < id1.length; i++) {
+                if (id1[i] != id2[i]) {
+                    return false; // If any byte differs, return false
+                }
             }
+
+
+            // If all bytes are the same, return true
+            return true;
         }
-        return null;
-    }
-
-    // Method to validate the blockchain
-    public boolean isChainValid()
-    {
-        isChainValidAux(this.latestMinedBlock);
-        return true; // All checks passed, the blockchain is valid
-    }
-
-    public boolean isChainValidAux(Block block)
-    {
-        if(!isBlockValid(block))
+        public byte[] getSubscription ( byte[] serviceId)
         {
-            return false ;
-        }
-        return isChainValidAux(block.getPreviousBlock());
-    }
-
-    public boolean isBlockValid(Block block)
-    {
-        // TODO TEST THIS
-        // Verify block signature
-        ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
-        try {
-            outputStream.write(block.getPreviousHash());
-            outputStream.write(block.getTransactionList().toString().getBytes(StandardCharsets.UTF_8));
-            outputStream.write(block.getHash());
-            outputStream.write(ByteBuffer.allocate(8).putLong(block.getTimestamp()).array());
-            outputStream.write(ByteBuffer.allocate(4).putInt(block.getNonce()).array());
-            outputStream.write(ByteBuffer.allocate(4).putFloat(block.getReputation()).array());
-            outputStream.close();
-
-            byte[] signature = SignatureClass.sign(outputStream.toByteArray(), privateKey);
-        }
-        catch(Exception e) {
-            e.printStackTrace();
+            for (byte[] bs : this.topicsSubscribed) {
+                if (compareId(bs, serviceId)) {
+                    return bs;
+                }
+            }
+            return null;
         }
 
-        try {
-            if (!SignatureClass.verify(outputStream.toByteArray(), block.getSignature(), block.getNode().getPublicKey().toByteArray()))
-            {
-                this.k.rt.setReputation(block.getNode(),-1);
+        // Method to validate the blockchain
+        public boolean isChainValid ()
+        {
+            isChainValidAux(this.latestMinedBlock);
+            return true; // All checks passed, the blockchain is valid
+        }
+
+        public boolean isChainValidAux (Block block)
+        {
+            if (!isBlockValid(block)) {
                 return false;
             }
-        }
-        catch(Exception e) {
-            e.printStackTrace();
+            return isChainValidAux(block.getPreviousBlock());
         }
 
-        // Verify block transactions
-        ArrayList<Transaction> transactions = block.getTransactionList();
-        if (transactions.isEmpty())
+        public boolean isBlockValid (Block block)
         {
-            this.k.rt.setReputation(block.getNode(),-1);
-            return false;
-        }
-        for (Transaction transaction : transactions)
-        {
-            if(!isTransactionValid(transaction, block))
-            {
-                this.k.rt.setReputation(block.getNode(),-1)      ;
+            // TODO TEST THIS
+            // Verify block signature
+            ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
+            try {
+                outputStream.write(block.getPreviousHash());
+                outputStream.write(block.getTransactionList().toString().getBytes(StandardCharsets.UTF_8));
+                outputStream.write(block.getHash());
+                outputStream.write(ByteBuffer.allocate(8).putLong(block.getTimestamp()).array());
+                outputStream.write(ByteBuffer.allocate(4).putInt(block.getNonce()).array());
+                outputStream.write(ByteBuffer.allocate(4).putFloat(block.getReputation()).array());
+                outputStream.close();
+
+                byte[] signature = SignatureClass.sign(outputStream.toByteArray(), privateKey);
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+
+            try {
+                if (!SignatureClass.verify(outputStream.toByteArray(), block.getSignature(), block.getNode().getPublicKey().toByteArray())) {
+                    this.k.rt.setReputation(block.getNode(), -1);
+                    return false;
+                }
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+
+            // Verify block transactions
+            ArrayList<Transaction> transactions = block.getTransactionList();
+            if (transactions.isEmpty()) {
+                this.k.rt.setReputation(block.getNode(), -1);
                 return false;
+            }
+            for (Transaction transaction : transactions) {
+                if (!isTransactionValid(transaction, block)) {
+                    this.k.rt.setReputation(block.getNode(), -1);
+                    return false;
+                }
+            }
+
+            this.k.rt.setReputation(block.getNode(), 1);
+            block.setReputation(1);
+            return true;
+        }
+
+        public class AuctionId {
+            byte[] serviceId;
+            Node Owner;
+
+            AuctionId(byte[] serviceId, Node owner) {
+                this.serviceId = serviceId;
+                this.Owner = owner;
+            }
+
+            public boolean equals(AuctionId a) {
+                return compareId(a.serviceId, this.serviceId) && a.Owner.equals(this.Owner);
             }
         }
 
-        this.k.rt.setReputation(block.getNode(),1);
-        block.setReputation(1);
-        return true;
-    }
-
-    public class AuctionId
-    {
-        byte[] serviceId;
-        Node Owner;
-        AuctionId(byte[] serviceId, Node owner)
-        {
-            this.serviceId = serviceId;
-            this.Owner = owner;
+        public static class LengthSumRep {
+            public int length;
+            public int sumRep;
         }
-
-        public boolean equals(AuctionId a)
-        {
-            return compareId(a.serviceId,this.serviceId) && a.Owner.equals(this.Owner);
-        }
-    }
-
-    public static class LengthSumRep
-    {
-        public int length;
-        public int sumRep;
-    }
 }
 

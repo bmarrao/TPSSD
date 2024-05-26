@@ -329,17 +329,12 @@ public class KademliaImpl extends KademliaGrpc.KademliaImplBase
         // Verify signature (senderNode + id + transaction)
         boolean signVal = false;
         byte[] signature = request.getSignature().toByteArray();
-        byte[] senderNodeToVerify = request.getNode().toByteArray();
-        byte[] nodeID = request.getNodeID().toByteArray();
+        byte[] nodeToVerify = request.getNode().toByteArray();
         byte[] transactionToVerify = request.getTransaction().toByteArray();
 
-        int senderAndTransactionLength = senderNodeToVerify.length + transactionToVerify.length;
-        int totalLength = senderAndTransactionLength + nodeID.length;
-
-        byte[] infoToVerify = new byte[totalLength];
-        System.arraycopy(senderNodeToVerify, 0, infoToVerify, 0, senderNodeToVerify.length);
-        System.arraycopy(nodeID, 0, infoToVerify, senderNodeToVerify.length, nodeID.length);
-        System.arraycopy(transactionToVerify, 0, infoToVerify, senderAndTransactionLength, transactionToVerify.length );
+        byte[] infoToVerify = new byte[nodeToVerify.length + transactionToVerify.length];
+        System.arraycopy(nodeToVerify, 0, infoToVerify, 0, nodeToVerify.length);
+        System.arraycopy(transactionToVerify, 0, infoToVerify, nodeToVerify.length, transactionToVerify.length);
 
         try {
             signVal = SignatureClass.verify(infoToVerify, signature, request.getNode().getPublicKey().toByteArray());
