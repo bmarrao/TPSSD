@@ -26,7 +26,7 @@ public class KademliaAuctionLookUp implements Runnable
     public void run() {
         // Initialize a set to keep track of visited nodes to avoid loops
         Set<Node> visitedNodes = new HashSet<>();
-        // TODO FIX THIS COMPARATOR
+
         PriorityQueue<Node> closestNodesQueue = new PriorityQueue<>((node1, node2) -> {
             BigInteger distance1 = rt.calculateDistance(node1.getId().toByteArray(), key);
             BigInteger distance2 = rt.calculateDistance(node2.getId().toByteArray(), key);
@@ -67,13 +67,8 @@ public class KademliaAuctionLookUp implements Runnable
 
                     // Add the additional closest nodes found to the queue
                     closestNodesQueue.addAll(additionalClosestNodes);
-
-
                 }
             }
         }
-
-
     }
-
 }

@@ -5,7 +5,6 @@ import java.util.*;
 
 public class KademliaLookUp implements Runnable
 {
-
     public static KademliaRoutingTable rt;
     public static KademliaProtocol protocol;
     ArrayList<Node> nodes ;
@@ -27,7 +26,7 @@ public class KademliaLookUp implements Runnable
     {
         // Initialize a set to keep track of visited nodes to avoid loops
         Set<Node> visitedNodes = new HashSet<>();
-        // TODO FIX THIS COMPARATOR
+
         PriorityQueue<Node> closestNodesQueue = new PriorityQueue<>((node1, node2) -> {
             BigInteger distance1 = rt.calculateDistance(node1.getId().toByteArray(), nodeId);
             BigInteger distance2 = rt.calculateDistance(node2.getId().toByteArray(), nodeId);
@@ -59,12 +58,7 @@ public class KademliaLookUp implements Runnable
 
                 // Add the additional closest nodes found to the queue
                 closestNodesQueue.addAll(additionalClosestNodes);
-
-
             }
-
-            // Check if termination condition is met (e.g., desired number of closest nodes found)
-            // Not implemented in this example, you can add your termination condition here
         }
 
         // Initialize a list to store the result nodes

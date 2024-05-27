@@ -208,8 +208,7 @@ public class KademliaImpl extends KademliaGrpc.KademliaImplBase
             rt.insert(request.getNode(), 1);
 
             // Get the value associated with the key from the data store
-            // TODO GET A COPY OF BLOCKCHAIN
-            Transaction value = null;//bc.findTransaction(key);
+            Transaction value = null;
             boolean hasTransaction = true;
             List<Node> closestNodes = new ArrayList<>();
             if (value == null)

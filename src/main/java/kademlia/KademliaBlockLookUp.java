@@ -25,12 +25,13 @@ public class KademliaBlockLookUp implements Runnable
     public void run() {
         // Initialize a set to keep track of visited nodes to avoid loops
         Set<Node> visitedNodes = new HashSet<>();
-        // TODO FIX THIS COMPARATOR
+
         PriorityQueue<Node> closestNodesQueue = new PriorityQueue<>((node1, node2) -> {
             BigInteger distance1 = rt.calculateDistance(node1.getId().toByteArray(), key);
             BigInteger distance2 = rt.calculateDistance(node2.getId().toByteArray(), key);
             return distance1.compareTo(distance2);
         });
+
         // Start by finding the closest nodes in the routing table to the target key
         FindBlockResponse response = protocol.findBlockOp(key, n.getIp(), n.getPort());
 
@@ -66,14 +67,8 @@ public class KademliaBlockLookUp implements Runnable
 
                     // Add the additional closest nodes found to the queue
                     closestNodesQueue.addAll(additionalClosestNodes);
-
-
                 }
             }
         }
-
-
     }
-
-
 }

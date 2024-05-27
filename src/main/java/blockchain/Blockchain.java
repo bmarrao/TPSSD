@@ -13,6 +13,8 @@ import java.security.NoSuchAlgorithmException;
 import java.security.PrivateKey;
 import java.util.*;
 import java.util.Random;
+import java.util.concurrent.locks.Lock;
+import java.util.concurrent.locks.ReentrantLock;
 
 
 public class Blockchain
@@ -20,6 +22,7 @@ public class Blockchain
     private static final int TRANSACTIONS_LIMIT = 5;
     private static final double GOSSIP_CHANCE = 0.1;
 
+    private Lock l = new ReentrantLock();
     Block latestMinedBlock;
     // currentMiningBlock
     Block currentMiningBlock;
@@ -49,12 +52,13 @@ public class Blockchain
     // Create the genesis block
     private Block createGenesisBlock()
     {
+        l.lock();
         // Implement logic to create the first block in the blockchain
         ArrayList<Transaction> transactions = new ArrayList<>();
         Block genesisBlock = new Block(null, transactions,null);
         // Ensure the genesis block has valid proof-of-work
         genesisBlock.mineBlock(difficulty);
-
+        l.unlock();
         return genesisBlock;
     }
 
@@ -84,6 +88,7 @@ public class Blockchain
 
     public void newAuction(byte[] serviceId, Node owner, BrokerService bs)
     {
+        l.lock();
         this.activeAuctions.put(new AuctionId(serviceId,owner),bs);
         byte[] ownerData = owner.toByteArray();
         byte[] offer = bs.getOffer().toByteArray();
@@ -99,23 +104,30 @@ public class Blockchain
                 .setId(ByteString.copyFrom(serviceId)).setOwner(owner).setType(1).setSender(bs.getOffer())
                 .setSignature(ByteString.copyFrom(signature)).build();
         this.addTransaction(t);
+        l.unlock();
     }
 
     public Collection<Transaction> getInformation(String service)
     {
+        l.lock();
         byte[] serviceId = encryptService(service);
-        return getInformationFromBlockchain(serviceId,latestMinedBlock).values();
+        Collection<Transaction>ret = getInformationFromBlockchain(serviceId,latestMinedBlock).values();
+        l.unlock();
+        return ret;
     }
 
     public byte[] addSubscribe(String service)
     {
+        l.lock();
         byte[] serviceId = encryptService(service);
         this.topicsSubscribed.add(serviceId);
+        l.unlock();
         return serviceId;
     }
 
     public Block addBlock(Block block1)
     {
+        l.lock();
         // Verify previous block reference and that POW was done
         String target = new String(new char[difficulty]).replace('\0', '0');
         byte[] bcLatestBlockHash = block1.getHash();
@@ -164,6 +176,7 @@ public class Blockchain
 
             }
         }
+        l.unlock();
 
         return null;
     }
@@ -199,6 +212,7 @@ public class Blockchain
     // 2 -> CloseAuction
     public boolean isTransactionValid(Transaction transaction, Block block)
     {
+        l.lock();
         boolean isValid = false;
         Transaction lastTransaction;
 
@@ -214,7 +228,7 @@ public class Blockchain
             //Significa que a Transação é coerente com transações anteriores para a mesma auction e que tem a assinatura válida
             isValid = true;
         }
-
+        l.unlock();
         return isValid;
     }
 
@@ -303,6 +317,7 @@ public class Blockchain
 
     public void addTransaction(Transaction t)
     {
+        l.lock();
         this.pendingTransactions.add(t);
         byte[] transactionId = t.getId().toByteArray();
         for(byte[] id  : this.topicsSubscribed )
@@ -313,6 +328,7 @@ public class Blockchain
             }
         }
         startMiningIfConditions();
+        l.unlock();
         gossipTransactionToOthers(t);
     }
 
@@ -375,6 +391,7 @@ public class Blockchain
 
     public void addFromMyAuction(Transaction t)
     {
+        l.lock();
         this.pendingTransactions.add(t);
         if (currentMiningBlock == null) {
             if (this.pendingTransactions.size() == TRANSACTIONS_LIMIT) {
@@ -387,6 +404,7 @@ public class Blockchain
             }
         }
         gossipTransactionToAllOthers(t);
+        l.unlock();
     }
 
     public void gossipTransactionToAllOthers(Transaction t)
@@ -470,9 +488,12 @@ public class Blockchain
     }
         public boolean removeSubscribe (String service)
         {
+            l.lock();
             byte[] serviceId = encryptService(service);
             byte[] toRemove = this.getSubscription(serviceId);
-            return topicsSubscribed.remove(toRemove);
+            boolean ret = topicsSubscribed.remove(toRemove);
+            l.unlock();
+            return ret;
         }
         public byte[] encryptService (String service)
         {
@@ -502,11 +523,14 @@ public class Blockchain
         }
         public byte[] getSubscription ( byte[] serviceId)
         {
+            l.lock();
             for (byte[] bs : this.topicsSubscribed) {
                 if (compareId(bs, serviceId)) {
+                    l.unlock();
                     return bs;
                 }
             }
+            l.unlock();
             return null;
         }
 
@@ -527,8 +551,8 @@ public class Blockchain
 
         public boolean isBlockValid (Block block)
         {
-            // TODO TEST THIS
             // Verify block signature
+            byte[] signature = null;
             ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
             try {
                 outputStream.write(block.getPreviousHash());
@@ -539,13 +563,13 @@ public class Blockchain
                 outputStream.write(ByteBuffer.allocate(4).putFloat(block.getReputation()).array());
                 outputStream.close();
 
-                byte[] signature = SignatureClass.sign(outputStream.toByteArray(), privateKey);
+                signature = SignatureClass.sign(outputStream.toByteArray(), privateKey);
             } catch (Exception e) {
                 e.printStackTrace();
             }
 
             try {
-                if (!SignatureClass.verify(outputStream.toByteArray(), block.getSignature(), block.getNode().getPublicKey().toByteArray())) {
+                if (!SignatureClass.verify(signature, block.getSignature(), block.getNode().getPublicKey().toByteArray())) {
                     this.k.rt.setReputation(block.getNode(), -1);
                     return false;
                 }

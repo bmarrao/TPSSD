@@ -75,39 +75,5 @@ public class KademliaJoinNetwork implements Runnable {
                 }
             }
         }
-
-        /*
-        boolean foundNewClosestNodes = true;
-        while (res.size() == 0)
-        {
-            foundNewClosestNodes = false;
-            ArrayList<Node> newRes;
-            for (Node n : res.getNodesList())
-            {
-                protocol = new KademliaProtocol(nodeId, n.getIp(), n.getPort());
-                KademliaFindOpResult closestNodes = protocol.findNodeOp(nodeId, ipAddress, port, nodeId);
-                for (Node n : res.getNodesList())
-                {
-                    if (!insert(n))
-                    {
-                        newRes.add(n);
-                    }
-                }
-                res = newRes;
-            }
-            for (Node n : res.getNodesList())
-            {
-                KademliaFindOpResult closestNodes = protocol.findNodeOp(nodeId, ipAddress, port, nodeId,n.ipAdress, n.port);
-                for (Node j : res.getNodesList())
-                {
-                    if (rt.insert(new KademliaNode(j.get)))
-                    {
-                        //Nothing for now
-                        protocol = new KademliaProtocol(nodeId, n.ipAdress, n.port);
-                    }
-                }
-            }
-        }
-        */
     }
 }

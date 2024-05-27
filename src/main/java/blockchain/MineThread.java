@@ -19,7 +19,7 @@ public class MineThread implements Runnable
         if(this.bloco.running)
         {
             this.bloco.signBlockContent();
-            Block b = bc.addBlock(this.bloco);
+            bc.addBlock(this.bloco);
         }
     }
 

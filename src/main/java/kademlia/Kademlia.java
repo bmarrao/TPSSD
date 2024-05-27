@@ -201,7 +201,7 @@ public class Kademlia
 
     public ArrayList<Node> skadLookup(byte[] nodeId, int d_closest_nodes)
     {
-        // get closest nodes to destinationKey (non recursive)
+        // get closest nodes to destinationKey
         ArrayList<Node> closestNodes = rt.findClosestNode(nodeId, d_closest_nodes);
         ArrayList<Node>[] results = new ArrayList[closestNodes.size()];
         ArrayList<Node> allResults = new ArrayList<>();
@@ -298,7 +298,7 @@ public class Kademlia
 
     public grpcBlock sKadBlockLookup(byte[] nodeId, int d_closest_nodes)
     {
-        // get closest nodes to destinationKey (non recursive)
+        // get closest nodes to destinationKey
         ArrayList<Node> closestNodes = rt.findClosestNode(nodeId, d_closest_nodes);
         grpcBlock[] results = new grpcBlock[closestNodes.size()];
         ArrayList<grpcBlock> allResults = new ArrayList<>();
@@ -377,7 +377,6 @@ public class Kademlia
     }
 
 
-
     public Node getOwnNode()
     {
         return Node.newBuilder()
@@ -387,42 +386,4 @@ public class Kademlia
                 .setPublicKey(ByteString.copyFrom(generatedPk.getEncoded()))
                 .build();
     }
-
-
-
-    // TODO: Delete this later
-    /*
-    public static void callOps(KademliaProtocol protocol, String receiverIp, int receiverPort)
-    {
-        byte[] key = {0x3A, 0x7F, (byte)0xA8, (byte)0xC2, 0x19, 0x5E, (byte)0xD4, (byte)0x8B, (byte)0xB6, 0x70};
-        Node val = Node.newBuilder()
-                .setId(ByteString.copyFrom(nodeId))
-                .setIp("127.0.0.1")
-                .setPort(5002)
-                .setRandomX(ByteString.copyFrom(new byte[]{0x01, 0x02, 0x03})).build();
-
-
-        System.out.println("Response for ping: " + protocol.pingOp(receiverIp, receiverPort));
-        //System.out.println("Response for store: " + protocol.storeOp(key, val, receiverIp, receiverPort));
-
-        System.out.println("Response for find node:");
-        List<Node> findNodeRes = protocol.findNodeOp(nodeId, receiverIp, receiverPort);
-
-        System.out.println("   nodes: ");
-        for (Node n : findNodeRes) {
-            System.out.println("      " + n);
-        }
-
-        System.out.println("Response for find value:");
-        FindValueResponse findValueRes = protocol.findValueOp(nodeId, key, receiverIp, receiverPort);
-        if (findValueRes != null) {
-            System.out.println("   id: " + findValueRes.getId());
-            System.out.println("   value: " + findValueRes.getValue());
-            System.out.println("   nodes: ");
-            for (Node n : findValueRes.getNodesList()) {
-                System.out.println(n);
-            }
-        }
-    }
-     */
 }

@@ -470,7 +470,6 @@ public class KademliaRoutingTable
         }
     }
 
-    // TOdo testar
     // Função que testa se o no visto pela ultima vez online ainda esta online e neste caso descarta a variavel 'node' caso contrario
     //Remove o no que foi visto pela ultima vez online e adiciona a variavel 'node' a o kbucket
     public boolean testLeastRecentlySeen(SortedArrayList<KademliaNode> kbucket, KademliaNode node)
@@ -501,7 +500,7 @@ public class KademliaRoutingTable
         int tamanho = siblingList.size();
         if (tamanho >= this.s)
         {
-            this.siblingList.remove(tamanho); // TODO ??
+            this.siblingList.remove(tamanho);
         }
     }
 
@@ -560,7 +559,7 @@ public class KademliaRoutingTable
         }
     }
 
-    // TODO testar se isso funciona direito
+
     // Função que calcula a distancia de um no
     public BigInteger calculateDistance (byte[] node1, byte[] node2)
     {
@@ -575,7 +574,6 @@ public class KademliaRoutingTable
                 // Testa se o no
                 if (bit1 != bit2)
                 {
-                    //TODO Ver se é assim mesmo
                     distance = distance.add(BigInteger.valueOf((long) Math.pow(2,(((node1.length-i-1)*8)+j))));
                 }
             }
@@ -665,7 +663,7 @@ public class KademliaRoutingTable
         if (tn == null) {
             return;
         }
-        // (tn.kbucket != null) {
+
         allNodes.addAll(tn.kbucket);
         getAllNodesRec(tn.left, allNodes);
         getAllNodesRec(tn.right, allNodes);

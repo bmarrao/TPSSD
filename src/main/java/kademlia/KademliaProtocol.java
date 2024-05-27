@@ -161,6 +161,7 @@ public class KademliaProtocol {
                 .build();
 
         final boolean[] transactionSuccessful = {false};
+
         stub.storeTransaction(request, new StreamObserver<StoreTransactionResponse>() {
             @Override
             public void onNext(StoreTransactionResponse response) {
@@ -179,11 +180,8 @@ public class KademliaProtocol {
                 if (signVal)
                 {
                     rt.insert(t.getSender().getNode(),0);
-
-                    //System.out.println("Transaction stored successfully: " + response.getStored());
                     transactionSuccessful[0] = true;
                 } else {
-                    //System.out.println("Signature verification failed.");
                     transactionSuccessful[0] = false;
                 }
             }
@@ -378,7 +376,6 @@ public class KademliaProtocol {
     }
 
 
-    // TODO UNDO PROTO
     public FindBlockResponse findBlockOp(byte[] key, String receiverIp, int receiverPort)
     {
         ManagedChannel channel = ManagedChannelBuilder.forAddress(receiverIp, receiverPort).usePlaintext().build();
@@ -423,13 +420,11 @@ public class KademliaProtocol {
         byte[] valueToVerify = response.getB().toByteArray();
         byte[] infoToVerify = new byte[idToVerify.length + valueToVerify.length];
 
-        // TODO assinar novos nos ? <- acho que não é preciso
         System.arraycopy(idToVerify, 0, infoToVerify, 0, idToVerify.length);
         System.arraycopy(valueToVerify,  0, infoToVerify, idToVerify.length, valueToVerify.length);
 
         try
         {
-
             signVal = SignatureClass.verify(infoToVerify, response.getSignature().toByteArray(), response.getPublicKey().toByteArray());
         }
         catch(Exception e) {
